@@ -2,8 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Domain\bulletin\BulletinCrawlService;
-use App\Domain\church\MSCH;
+use App\Domain\church\msch\crwal\BrightSoriCrawlService;
+use App\Domain\church\msch\crwal\JuboCrawlService;
+use App\Domain\church\msch\MSCH;
 use Illuminate\Console\Command;
 
 class BulletinCommand extends Command
@@ -27,8 +28,12 @@ class BulletinCommand extends Command
      */
     public function handle()
     {
-        $bulletinCrawlService = app(BulletinCrawlService::class);
+        $bulletinCrawlService = app(JuboCrawlService::class);
+        $brightSoriCrawlService = app(BrightSoriCrawlService::class);
+
         $msch = app(Msch::class);
+
         $bulletinCrawlService->crawl($msch);
+        $brightSoriCrawlService->crawl($msch);
     }
 }

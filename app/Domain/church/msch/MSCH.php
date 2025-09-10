@@ -1,8 +1,11 @@
 <?php
 
-namespace App\Domain\church;
+namespace App\Domain\church\msch;
 
+use App\Domain\church\ChurchInterface;
+use App\Domain\church\ChurchNewsInterface;
 use App\Models\Department;
+use Carbon\Carbon;
 
 class MSCH implements ChurchInterface, ChurchNewsInterface
 {
@@ -24,4 +27,19 @@ class MSCH implements ChurchInterface, ChurchNewsInterface
     {
         return "https://app.msch.or.kr/data/2_sori/{$year}";
     }
+
+    public function getContentsTitle(MSCHContentsType $type, Carbon $date): string
+    {
+        $formattedDate = $date->format('Y년 n월 j일');
+
+        if ($type == MSCHContentsType::BULLETIN) {
+            return $formattedDate . " 주보";
+        }
+        if ($type == MSCHContentsType::NEWS) {
+            return $formattedDate . " 밝은소리";
+        }
+
+        return $formattedDate . " 소식";
+    }
+
 }
