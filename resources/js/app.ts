@@ -1,4 +1,14 @@
 import '../css/app.css';
+import '../template/vendor/swiper/swiper-bundle.min.css';
+import '../css/style.css';
+
+import '../template/js/jquery';
+import '../template/vendor/bootstrap/js/bootstrap.bundle.min';
+import '../template/vendor/swiper/swiper-bundle.min';
+import '../template/js/noui-slider.init';
+import '../template/js/custom.js';
+
+
 
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';

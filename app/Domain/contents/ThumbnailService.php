@@ -21,22 +21,22 @@ class ThumbnailService
 
         $type = $contents->type;
         $cachePath = "$type/before/{$contents->id}";
-        Storage::put($cachePath, $response->body() . 'local');
+        Storage::disk('public')->put($cachePath, $response->body());
 
-        $pdf = new Pdf(Storage::disk('local')->path($cachePath));
+        $pdf = new Pdf(Storage::disk('public')->path($cachePath));
 
         // directory 있는지 확인
-        $dir = Storage::disk('local')->path($type . "/after");
+        $dir = Storage::disk('public')->path($type . "/after");
         if (!is_dir($dir)) {
             mkdir($dir, 0755, true); // 재귀적으로 디렉터리 생성
         }
 
         // pdf to webp 로 변환
-        $path = $dir . "/" . $contents->id;
-        $pdf->format(OutputFormat::Webp)->save($path);
+        $savePath = $dir . "/" . $contents->id;
+        $pdf->format(OutputFormat::Webp)->save($savePath);
 
         // contents update
-        Storage::disk('local')->delete($cachePath);
-        $contents->update(['thumbnail_url' => $cachePath . "." . OutputFormat::Webp->value]);
+        Storage::disk('public')->delete($cachePath);
+        $contents->update(['thumbnail_url' => $savePath . "." . OutputFormat::Webp->value]);
     }
 }
