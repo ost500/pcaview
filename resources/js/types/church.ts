@@ -3,6 +3,7 @@ export type Church = {
     name: string;
     icon_url: string;
     logo_url: string;
+    worship_time_image: string;
     address: string;
     address_url: string;
 };

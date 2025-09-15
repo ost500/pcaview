@@ -20,6 +20,7 @@ class ChurchSeeder extends Seeder
             'name' => '명성교회',
             'icon_url' => '/image/msch.webp',
             'logo_url' => '/image/msch_logo.jpg',
+            'worship_time_image' => '/image/worship_time_image.png',
             'address' => '서울시 강동구 구천면로 452',
             'address_url' => '/image/msch_address.png'
         ]);
