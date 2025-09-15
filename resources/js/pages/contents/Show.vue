@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Header from '@/components/template/Header.vue';
-import MenuBar from '@/components/template/MenuBar.vue';
 import { Contents } from '@/types/contents';
 import { ref } from 'vue';
 import VueEasyLightbox from 'vue-easy-lightbox';
@@ -37,7 +36,7 @@ function close() {
                                 <h5 class="card-title">{{ contents.title }}</h5>
                             </div>
                             <div v-for="(image, index) in contents.images" v-bind:key="image.id">
-                                <img :src="image.file_url" @click="open(index)" class="card-img-top" :alt="contents.title" />
+                                <img :src="'/storage' + image.file_url" @click="open(index)" class="card-img-top" :alt="contents.title" />
                             </div>
                             <VueEasyLightbox @hide="close" :visible="showViewer" :imgs="images" :index="index" />
 
