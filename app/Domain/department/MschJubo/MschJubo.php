@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Domain\department\MschJubo;
+
+use App\Domain\department\DepartmentInterface;
+use App\Models\Department;
+use Carbon\Carbon;
+
+class MschJubo implements DepartmentInterface
+{
+    public function getModel(): Department
+    {
+        return Department::where('name', '명성교회 주보')->first();
+    }
+
+    public function contentsUrl(string $path): string
+    {
+        return "https://app.msch.or.kr/data/1_jubo/{$path}";
+    }
+
+    public function contentsTile(Carbon $date): string
+    {
+        $formattedDate = $date->format('Y년 n월 j일');
+
+        return $formattedDate . " 주보";
+    }
+}

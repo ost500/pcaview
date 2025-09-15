@@ -2,9 +2,9 @@
 
 namespace App\Domain\church\msch\crwal;
 
-use App\Domain\church\ChurchInterface;
+use App\Domain\church\DepartmentInterface;
 
 interface CrawlInterface
 {
-    public function crawl(ChurchInterface $church);
+    public function crawl(DepartmentInterface $church);
 }

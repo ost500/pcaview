@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Domain\church\msch\crwal;
+namespace App\Domain\department\BrightSound;
 
-use App\Domain\church\ChurchInterface;
 use App\Domain\church\msch\MSCHContentsType;
 use App\Domain\contents\ContentsImageService;
 use App\Domain\contents\ThumbnailService;
+use App\Domain\department\DepartmentInterface;
 use App\Models\Contents;
 use Carbon\Carbon;
 use DOMDocument;
@@ -14,11 +14,11 @@ use Illuminate\Support\Facades\Http;
 
 class BrightSoriCrawlService
 {
-    public function crawl(ChurchInterface $church)
+    public function crawl(DepartmentInterface $department)
     {
         $today = Carbon::today();
 
-        $baseUrl = $church->getNewsUrl($today->year);
+        $baseUrl = $department->contentsUrl($today->year);
         $response = Http::get($baseUrl);
 
         if ($response->successful()) {
@@ -49,7 +49,7 @@ class BrightSoriCrawlService
                 }
 
                 $newContents = Contents::create([
-                    'department_id' => $church->getDepartmentId(),
+                    'department_id' => $department->getModel()->id,
                     'title' => $this->getTitle($pdf),
                     'type' => $type->name,
                     'file_url' => $fileUrl,

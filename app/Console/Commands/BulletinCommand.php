@@ -2,9 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Domain\church\msch\crwal\BrightSoriCrawlService;
-use App\Domain\church\msch\crwal\JuboCrawlService;
 use App\Domain\church\msch\MSCH;
+use App\Domain\department\BrightSound\BrightSoriCrawlService;
+use App\Domain\department\BrightSound\BrightSound;
+use App\Domain\department\MschJubo\JuboCrawlService;
+use App\Domain\department\MschJubo\MschJubo;
 use Illuminate\Console\Command;
 
 class BulletinCommand extends Command
@@ -14,7 +16,7 @@ class BulletinCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'fetch:bulletin';
+    protected $signature = 'contents:seed';
 
     /**
      * The console command description.
@@ -31,9 +33,10 @@ class BulletinCommand extends Command
         $bulletinCrawlService = app(JuboCrawlService::class);
         $brightSoriCrawlService = app(BrightSoriCrawlService::class);
 
-        $msch = app(Msch::class);
+        $mschJubo = app(MschJubo::class);
+        $bulletinCrawlService->crawl($mschJubo);
 
-        $bulletinCrawlService->crawl($msch);
-        $brightSoriCrawlService->crawl($msch);
+        $brightSound = app(BrightSound::class);
+        $brightSoriCrawlService->crawl($brightSound);
     }
 }

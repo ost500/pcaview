@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Domain\church\msch\crwal;
+namespace App\Domain\department\MschJubo;
 
-use App\Domain\church\ChurchInterface;
 use App\Domain\church\msch\MSCHContentsType;
 use App\Domain\contents\ContentsImageService;
 use App\Domain\contents\ThumbnailService;
+use App\Domain\department\DepartmentInterface;
 use App\Models\Contents;
 use Carbon\Carbon;
 use DOMDocument;
@@ -14,11 +14,11 @@ use Illuminate\Support\Facades\Http;
 
 class JuboCrawlService
 {
-    public function crawl(ChurchInterface $church)
+    public function crawl(DepartmentInterface $department)
     {
         $today = Carbon::today();
 
-        $baseUrl = $church->bulletinUrl() . $today->year . "/";
+        $baseUrl = $department->contentsUrl($today->year. "/");
         $response = Http::get($baseUrl);
 
         if ($response->successful()) {
@@ -50,8 +50,8 @@ class JuboCrawlService
                 }
 
                 $newContents = Contents::create([
-                    'department_id' => $church->getDepartmentId(),
-                    'title' => $this->getTitle($church, $pdf, $type),
+                    'department_id' => $department->getModel()->id,
+                    'title' => $this->getTitle($department, $pdf, $type),
                     'type' => $type->name,
                     'file_url' => $fileUrl,
                     'published_at' => $this->getPublishedAt($pdf),
@@ -64,11 +64,11 @@ class JuboCrawlService
         }
     }
 
-    public function getTitle(ChurchInterface $church, $fileName, MSCHContentsType $contentType)
+    public function getTitle(DepartmentInterface $department, $fileName, MSCHContentsType $contentType)
     {
         $date = $this->getPublishedAt($fileName);
 
-        return $church->getContentsTitle($contentType, $date);
+        return $department->contentsTile($date);
     }
 
     public function getPublishedAt(string $fileName)

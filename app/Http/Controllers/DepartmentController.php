@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Contents;
+use App\Models\Department;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+
+class DepartmentController extends Controller
+{
+    public function index()
+    {
+        $departments = Department::all();
+
+        return Inertia::render('department/Index', ['departments' => $departments]);
+    }
+
+    public function show(int $id)
+    {
+        $department = Department::find($id);
+        $contents = Contents::where('department_id', $id)->latest('published_at')->paginate(20);
+
+        return Inertia::render('department/Show', ['department' => $department, 'contents' => $contents]);
+    }
+}
