@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Spatie\PdfToImage\Enums\OutputFormat;
 use Spatie\PdfToImage\Pdf;
-use function Pest\Laravel\options;
 
 class ThumbnailService
 {
@@ -21,7 +20,7 @@ class ThumbnailService
 
         $type = $contents->type;
         $cachePath = "$type/before/{$contents->id}";
-        Storage::disk('public')->put($cachePath, $response->body());
+        Storage::disk('public')->put($cachePath, $response->getBody()->getContents());
 
         $pdf = new Pdf(Storage::disk('public')->path($cachePath));
 

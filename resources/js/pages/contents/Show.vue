@@ -1,0 +1,52 @@
+<script setup lang="ts">
+import MenuBar from '@/components/template/MenuBar.vue';
+import Header from '@/components/template/Header.vue';
+import { ref } from 'vue';
+import VueEasyLightbox from 'vue-easy-lightbox';
+
+const images = ['/storage/BULLETIN/after/36.webp'];
+const showViewer = ref(false);
+const index = ref(0);
+
+function open(indexNumber: number) {
+    index.value = indexNumber;
+    showViewer.value = true;
+}
+
+function close() {
+    showViewer.value = false;
+}
+</script>
+
+<template>
+    <div>
+        <Header title="주보" :backbutton="true"></Header>
+
+        <div class="page-content space-top p-b60">
+            <div class="container">
+                <div class="title-bar">
+                    <h6 class="title">소식</h6>
+                </div>
+                <div class="row" id="contentArea">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">명성교회 주보</h5>
+                            </div>
+                            <img src="/storage/BULLETIN/after/36.webp" @click="open(0)" class="card-img-top" alt="..." />
+                            <VueEasyLightbox @hide="close" :visible="showViewer" :imgs="images" :index="index" />
+                            <div class="card-body">
+                                <h5 class="card-title">명성교회 2025년 9월 10일 주보</h5>
+                                <!--                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <MenuBar></MenuBar>
+    </div>
+</template>
+
+<style scoped></style>

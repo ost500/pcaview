@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
+import { route } from 'ziggy-js';
+import MenuBar from '@/components/template/MenuBar.vue';
+import Header from '@/components/template/Header.vue';
 
 onMounted(() => {
     if (import.meta.hot) {
@@ -21,19 +24,7 @@ onMounted(() => {
     </div>
     <!-- Preloader end-->
 
-    <!-- Header -->
-    <header class="header header-fixed">
-        <div class="container">
-            <div class="header-content">
-                <div class="left-content">
-                    <h6 class="title">홈</h6>
-                </div>
-                <div class="mid-content"></div>
-                <div class="right-content"></div>
-            </div>
-        </div>
-    </header>
-    <!-- Header -->
+    <Header title="홈"></Header>
 
     <!-- Page Content Start -->
     <div class="page-content space-top p-b60">
@@ -63,8 +54,8 @@ onMounted(() => {
                         <div class="card-body">
                             <h5 class="card-title">명성교회 2025년 9월 10일 주보</h5>
                             <!--                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
-                            <p class="text-right">
-                                <a href="javascript:void(0);" class="btn btn-primary text-right">자세히</a>
+                            <p class="text-right mb-0">
+                                <a :href="route('contents.show', { id: 36 })" class="btn btn-primary text-right">자세히</a>
                             </p>
                         </div>
                     </div>
@@ -80,7 +71,7 @@ onMounted(() => {
                         <div class="card-body">
                             <h5 class="card-title">명성교회 2025년 9월 10일 밝은소리</h5>
                             <!--                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
-                            <p class="text-right">
+                            <p class="text-right mb-0">
                                 <a href="javascript:void(0);" class="btn btn-primary text-right">자세히</a>
                             </p>
                         </div>
@@ -91,30 +82,5 @@ onMounted(() => {
     </div>
     <!-- Page Content End -->
 
-    <!-- Menubar -->
-    <div class="menubar-area style-2 footer-fixed">
-        <div class="toolbar-inner menubar-nav">
-            <a href="components/components.html" class="nav-link">
-                <i class="icon feather icon-heart-on"></i>
-                <span>Features</span>
-            </a>
-            <a href="media.html" class="nav-link">
-                <i class="fa-solid fa-image"></i>
-                <span>Media</span>
-            </a>
-            <a href="index.html" class="nav-link active">
-                <i class="fa-solid fa-house"></i>
-                <span>Home</span>
-            </a>
-            <a href="pages.html" class="nav-link">
-                <i class="icon feather icon-grid"></i>
-                <span>Pages</span>
-            </a>
-            <a href="home-setting.html" class="nav-link">
-                <i class="fa-solid fa-gear"></i>
-                <span>Settings</span>
-            </a>
-        </div>
-    </div>
-    <!-- Menubar -->
+    <MenuBar></MenuBar>
 </template>
