@@ -17,13 +17,13 @@ class DepartmentSeeder extends Seeder
         DB::table('departments')->truncate();
 
         Department::create([
-            'name' => '밝은소리',
-            'icon_image' => '/image/bright_sori_icon.png'
+            'name' => '명성교회 주보',
+            'icon_image' => '/image/msch.webp'
         ]);
 
         Department::create([
-            'name' => '명성교회 주보',
-            'icon_image' => '/image/msch.webp'
+            'name' => '밝은소리',
+            'icon_image' => '/image/bright_sori_icon.png'
         ]);
     }
 }

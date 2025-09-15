@@ -1,13 +1,14 @@
 <script setup lang="ts">
+import ContentsList from '@/components/contents/ContentsList.vue';
 import Header from '@/components/template/Header.vue';
-import MenuBar from '@/components/template/MenuBar.vue';
+import { Church } from '@/types/church';
 import { Contents } from '@/types/contents';
+import { Department } from '@/types/department';
 import { Pagination } from '@/types/pagination';
 import { onMounted } from 'vue';
 import { route } from 'ziggy-js';
-import ContentsList from '@/components/contents/ContentsList.vue';
 
-const props = defineProps<{ contents: Pagination<Contents> }>();
+const props = defineProps<{ contents: Pagination<Contents>; churches: Church[]; departments: Department[] }>();
 
 onMounted(() => {
     if (import.meta.hot) {
@@ -15,7 +16,6 @@ onMounted(() => {
         if (preloader) preloader.style.display = 'none';
     }
 });
-
 </script>
 
 <template>
@@ -25,12 +25,20 @@ onMounted(() => {
         <div class="container">
             <div class="swiper chat-swiper">
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide m-r15">
-                        <a href="chat.html" class="recent active">
+<!--                    <div v-for="church in churches" class="swiper-slide m-r15" v-bind:key="church.id">-->
+<!--                        <a :href="route('church', { id: church.id })" class="recent active">-->
+<!--                            <div class="media media-60 rounded-circle">-->
+<!--                                <img :src="church.icon_url" :alt="church.name + 'icon'" />-->
+<!--                            </div>-->
+<!--                            <span>{{ church.name }}</span>-->
+<!--                        </a>-->
+<!--                    </div>-->
+                    <div v-for="department in departments" class="swiper-slide m-r15" v-bind:key="department.id">
+                        <a :href="route('church', { id: department.id })" class="recent active">
                             <div class="media media-60 rounded-circle">
-                                <img src="/storage/msch.webp" alt="" />
+                                <img :src="department.icon_image" :alt="department.name + 'icon'" />
                             </div>
-                            <span>명성교회</span>
+                            <span>{{ department.name }}</span>
                         </a>
                     </div>
                 </div>
@@ -41,5 +49,4 @@ onMounted(() => {
             <ContentsList :contents="contents"></ContentsList>
         </div>
     </div>
-
 </template>
