@@ -16,14 +16,14 @@ const goBack = () => {
 </script>
 <template>
 <!--     Preloader -->
-<!--    <div id="preloader">-->
-<!--        <div class="loader">-->
-<!--            <div class="load-circle">-->
-<!--                <div></div>-->
-<!--                <div></div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
+    <div id="preloader">
+        <div class="loader">
+            <div class="load-circle">
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    </div>
     <!-- Preloader end-->
 
     <header class="header header-fixed">
