@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import MenuBar from '@/components/template/MenuBar.vue';
+
 interface Props {
     title: string;
     backbutton?: boolean;
@@ -13,6 +15,17 @@ const goBack = () => {
 };
 </script>
 <template>
+<!--     Preloader -->
+<!--    <div id="preloader">-->
+<!--        <div class="loader">-->
+<!--            <div class="load-circle">-->
+<!--                <div></div>-->
+<!--                <div></div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+    <!-- Preloader end-->
+
     <header class="header header-fixed">
         <div class="container">
             <div class="header-content">
@@ -28,6 +41,9 @@ const goBack = () => {
             </div>
         </div>
     </header>
+
+    <MenuBar></MenuBar>
+
 </template>
 
 <style scoped></style>

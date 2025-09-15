@@ -50,8 +50,6 @@ function close() {
                 </div>
             </div>
         </div>
-
-        <MenuBar></MenuBar>
     </div>
 </template>
 

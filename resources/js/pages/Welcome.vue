@@ -21,17 +21,6 @@ function goToContent(id: number) {
 </script>
 
 <template>
-    <!-- Preloader -->
-    <div id="preloader">
-        <div class="loader">
-            <div class="load-circle">
-                <div></div>
-                <div></div>
-            </div>
-        </div>
-    </div>
-    <!-- Preloader end-->
-
     <Header title="홈"></Header>
 
     <!-- Page Content Start -->
@@ -73,5 +62,4 @@ function goToContent(id: number) {
     </div>
     <!-- Page Content End -->
 
-    <MenuBar></MenuBar>
 </template>
