@@ -6,7 +6,7 @@ import VueEasyLightbox from 'vue-easy-lightbox';
 
 const props = defineProps<{ contents: Contents }>();
 
-const images = props.contents.images.map(image => image.file_url);
+const images = props.contents.images.map(image => '/storage' +image.file_url);
 const showViewer = ref(false);
 const index = ref(0);
 
