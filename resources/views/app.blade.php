@@ -18,7 +18,21 @@
             }
         })();
     </script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HVL5EFDXYN"></script>
+    @if(app()->isProduction())
+        <script>
+            window.dataLayer = window.dataLayer || [];
 
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+
+            gtag('js', new Date());
+
+            gtag('config', 'G-HVL5EFDXYN');
+        </script>
+    @endif
     {{-- Inline style to set the HTML background color based on our theme in app.css --}}
     <style>
         html {
