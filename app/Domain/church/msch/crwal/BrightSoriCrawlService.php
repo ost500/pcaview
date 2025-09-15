@@ -4,6 +4,7 @@ namespace App\Domain\church\msch\crwal;
 
 use App\Domain\church\ChurchInterface;
 use App\Domain\church\msch\MSCHContentsType;
+use App\Domain\contents\ContentsImageService;
 use App\Domain\contents\ThumbnailService;
 use App\Models\Contents;
 use Carbon\Carbon;
@@ -33,7 +34,8 @@ class BrightSoriCrawlService
                 $pdfFiles[] = $link->getAttribute('href');
             }
 
-            $latestContents = null;
+            $contentsImageService = app(ContentsImageService::class);
+            $thumbnailService = app(ThumbnailService::class);
 
             // 결과 출력
             foreach ($pdfFiles as $pdf) {
@@ -43,26 +45,41 @@ class BrightSoriCrawlService
                 $findContent = Contents::where('file_url', $fileUrl)->first();
 
                 if ($findContent) {
-                    break;
+                    continue;
                 }
 
-                $latestContents = Contents::create([
+                $newContents = Contents::create([
                     'department_id' => $church->getDepartmentId(),
                     'title' => $this->getTitle($pdf),
                     'type' => $type->name,
                     'file_url' => $fileUrl,
-                    'published_at' => $today,
+                    'published_at' => $this->getPublishedAt($pdf),
                 ]);
+
+                $contentsImages = $contentsImageService->getImagesFromPdf($newContents);
+                $thumbnailService->getPdfThumbnail($newContents, $contentsImages->first());
             }
 
-            if ($latestContents) {
-                $thumbnailService = app(ThumbnailService::class);
-                $thumbnailService->getPdfThumbnail($latestContents);
-            }
         }
     }
 
     public function getTitle($fileName)
+    {
+        $raw = pathinfo($fileName, PATHINFO_FILENAME); // "20250420"
+        // 1. URL 디코딩
+        $decoded = urldecode($raw); // "2025.0105-900호"
+
+        // 2. 정규식으로 년, 월일, 호 추출
+        preg_match('/(\d{4})\.(\d{2})(\d{2})-(.+)호/', $decoded, $matches);
+
+        $issue = $matches[4];
+
+        $date = $this->getPublishedAt($fileName);
+
+        return $date->format('Y년 n월 j일') . " {$issue}호 밝은소리";
+    }
+
+    public function getPublishedAt(string $fileName)
     {
         $raw = pathinfo($fileName, PATHINFO_FILENAME); // "20250420"
         // 1. URL 디코딩
@@ -80,6 +97,6 @@ class BrightSoriCrawlService
         // 3. Carbon 객체 생성
         $date = Carbon::createFromFormat('Ymd', "$year$month$day");
 
-        return $date->format('Y년 n월 j일') . " {$issue}호 밝은소리";
+        return $date;
     }
 }

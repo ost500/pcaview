@@ -1,8 +1,12 @@
 <script setup lang="ts">
+import Header from '@/components/template/Header.vue';
+import MenuBar from '@/components/template/MenuBar.vue';
+import { Contents } from '@/types/contents';
+import { Pagination } from '@/types/pagination';
 import { onMounted } from 'vue';
 import { route } from 'ziggy-js';
-import MenuBar from '@/components/template/MenuBar.vue';
-import Header from '@/components/template/Header.vue';
+
+const props = defineProps<{ contents: Pagination<Contents> }>();
 
 onMounted(() => {
     if (import.meta.hot) {
@@ -10,6 +14,10 @@ onMounted(() => {
         if (preloader) preloader.style.display = 'none';
     }
 });
+
+function goToContent(id: number) {
+    window.location.href = route('contents.show', { id: id });
+}
 </script>
 
 <template>
@@ -45,34 +53,17 @@ onMounted(() => {
                 <h6 class="title">소식</h6>
             </div>
             <div class="row" id="contentArea">
-                <div class="col-12">
-                    <div class="card">
+                <div v-for="content in props.contents.data" class="col-12" v-bind:key="content.id">
+                    <div class="card" @click="goToContent(content.id)">
                         <div class="card-header">
-                            <h5 class="card-title">명성교회 주보</h5>
+                            <h5 class="card-title">{{ content.title }}</h5>
                         </div>
-                        <img src="/storage/BULLETIN/after/36.webp" class="card-img-top" alt="..." />
+                        <img :src="content.thumbnail_url" class="card-img-top" alt="..." />
                         <div class="card-body">
-                            <h5 class="card-title">명성교회 2025년 9월 10일 주보</h5>
+                            <!--                            <h5 class="card-title">명성교회 2025년 9월 10일 주보</h5>-->
                             <!--                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
-                            <p class="text-right mb-0">
-                                <a :href="route('contents.show', { id: 36 })" class="btn btn-primary text-right">자세히</a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row" id="contentArea">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-title">명성교회 밝은소리</h5>
-                        </div>
-                        <img src="/storage/NEWS/after/72.webp" class="card-img-top" alt="..." />
-                        <div class="card-body">
-                            <h5 class="card-title">명성교회 2025년 9월 10일 밝은소리</h5>
-                            <!--                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
-                            <p class="text-right mb-0">
-                                <a href="javascript:void(0);" class="btn btn-primary text-right">자세히</a>
+                            <p class="mb-0 text-right">
+                                <a :href="route('contents.show', { id: content.id })" class="btn btn-primary text-right">자세히</a>
                             </p>
                         </div>
                     </div>
