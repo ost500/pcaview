@@ -25,16 +25,8 @@ onMounted(() => {
         <div class="container">
             <div class="swiper chat-swiper">
                 <div class="swiper-wrapper">
-<!--                    <div v-for="church in churches" class="swiper-slide m-r15" v-bind:key="church.id">-->
-<!--                        <a :href="route('church', { id: church.id })" class="recent active">-->
-<!--                            <div class="media media-60 rounded-circle">-->
-<!--                                <img :src="church.icon_url" :alt="church.name + 'icon'" />-->
-<!--                            </div>-->
-<!--                            <span>{{ church.name }}</span>-->
-<!--                        </a>-->
-<!--                    </div>-->
                     <div v-for="department in departments" class="swiper-slide m-r15" v-bind:key="department.id">
-                        <a :href="route('church', { id: department.id })" class="recent active">
+                        <a :href="route('department', { id: department.id })" class="recent active">
                             <div class="media media-60 rounded-circle">
                                 <img :src="department.icon_image" :alt="department.name + 'icon'" />
                             </div>
