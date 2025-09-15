@@ -17,7 +17,7 @@ import { route } from 'ziggy-js';
                 <i class="fa-solid fa-star"></i>
                 <span>구독</span>
             </a>
-            <a href="media.html" class="nav-link">
+            <a href="javascript:alert('준비중입니다')" class="nav-link">
                 <i class="fa-solid fa-person"></i>
                 <span>프로필</span>
             </a>
