@@ -10,7 +10,7 @@ class NewsongJJubo implements DepartmentInterface
 {
     public function name()
     {
-        return '뉴송J 주보';
+        return '뉴송J';
     }
 
     public function getModel(): Department
