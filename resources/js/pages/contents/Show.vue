@@ -6,7 +6,7 @@ import VueEasyLightbox from 'vue-easy-lightbox';
 
 const props = defineProps<{ contents: Contents }>();
 
-const images = props.contents.images.map(image => image.file_url);
+const images = props.contents.images.map((image) => image.file_url);
 const showViewer = ref(false);
 const index = ref(0);
 
@@ -25,10 +25,12 @@ function close() {
         <Header title="주보" :backbutton="true"></Header>
 
         <div class="page-content space-top p-b60">
-            <div class="container">
+            <div class="container p-b0">
                 <div class="title-bar">
                     <h6 class="title">소식</h6>
                 </div>
+            </div>
+            <div class="p-0 container">
                 <div class="row" id="contentArea">
                     <div class="col-12">
                         <div class="card">
