@@ -27,7 +27,7 @@ class DepartmentSeeder extends Seeder
         ]);
 
         Department::create([
-            'name' => '뉴송J',
+            'name' => '뉴송J 청년부',
             'icon_image' => '/image/newsongj.png'
         ]);
     }
