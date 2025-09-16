@@ -20,6 +20,7 @@ class ContentsSeeder extends Seeder
     public function run(): void
     {
         DB::table('contents')->truncate();
+        DB::table('contents_images')->truncate();
 
         $bulletinCrawlService = app(JuboCrawlService::class);
         $brightSoriCrawlService = app(BrightSoriCrawlService::class);
