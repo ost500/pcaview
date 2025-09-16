@@ -42,7 +42,7 @@ class ContentsImageService
                 ->format(OutputFormat::Webp)
                 ->save(Storage::disk('public')->path("$type/after/{$contents->id}_{$page}"));
 
-            $afterFile = "/$type/after/{$contents->id}_{$page}." . OutputFormat::Webp->value;
+            $afterFile = "/storage/$type/after/{$contents->id}_{$page}." . OutputFormat::Webp->value;
             $contentsImages->push(ContentsImage::create([
                 'contents_id' => $contents->id,
                 'page' => $page,

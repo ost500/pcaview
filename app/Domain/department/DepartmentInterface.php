@@ -9,7 +9,7 @@ interface DepartmentInterface
 {
     public function getModel(): Department;
 
-    public function contentsUrl(string $path): string;
+    public function contentsUrl(?string $path = null): string;
 
-    public function contentsTile(Carbon $date): string;
+    public function contentsTitle(Carbon $date): string;
 }

@@ -13,12 +13,12 @@ class MschJubo implements DepartmentInterface
         return Department::where('name', '명성교회 주보')->first();
     }
 
-    public function contentsUrl(string $path): string
+    public function contentsUrl(?string $path = null): string
     {
         return "https://app.msch.or.kr/data/1_jubo/{$path}";
     }
 
-    public function contentsTile(Carbon $date): string
+    public function contentsTitle(Carbon $date): string
     {
         $formattedDate = $date->format('Y년 n월 j일');
 

@@ -17,7 +17,9 @@ function goToContent(id: number) {
                 <div class="card-header">
                     <h5 class="card-title">{{ content.title }}</h5>
                 </div>
-                <img :src="'/storage' + content.thumbnail_url" class="card-img-top" alt="..." />
+                <div style="max-height: 600px; overflow: hidden">
+                    <img :src="content.thumbnail_url" class="card-img-top" alt="..." />
+                </div>
                 <div class="card-body">
                     <!--                            <h5 class="card-title">명성교회 2025년 9월 10일 주보</h5>-->
                     <!--                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->

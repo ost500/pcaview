@@ -68,7 +68,7 @@ class JuboCrawlService
     {
         $date = $this->getPublishedAt($fileName);
 
-        return $department->contentsTile($date);
+        return $department->contentsTitle($date);
     }
 
     public function getPublishedAt(string $fileName)
