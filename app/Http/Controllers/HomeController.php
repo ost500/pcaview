@@ -12,7 +12,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $contents = Contents::latest('published_at')->paginate(100);
+        $contents = Contents::latest('published_at')->paginate(10);
         $churches = Church::all();
         $departments = Department::all();
         return Inertia::render('Welcome', [
