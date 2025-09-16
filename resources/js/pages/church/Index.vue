@@ -27,7 +27,7 @@ function goToContent(id: number) {
                                 <h5 class="card-title">{{ church.address }}</h5>
                                 <!--                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
                                 <p class="mb-0 text-right">
-                                    <a :href="route('church.show', { id: church.id })" class="btn btn-primary text-right">자세히</a>
+                                    <a :href="route('church.show', { id: church.id })" class="btn btn-primary text-right btn-sm">자세히</a>
                                 </p>
                             </div>
                         </div>
