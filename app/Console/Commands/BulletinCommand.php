@@ -7,6 +7,8 @@ use App\Domain\department\BrightSound\BrightSoriCrawlService;
 use App\Domain\department\BrightSound\BrightSound;
 use App\Domain\department\MschJubo\JuboCrawlService;
 use App\Domain\department\MschJubo\MschJubo;
+use App\Domain\department\NewsongJ\NewsongJCrawlService;
+use App\Domain\department\NewsongJ\NewsongJJubo;
 use Illuminate\Console\Command;
 
 class BulletinCommand extends Command
@@ -31,12 +33,15 @@ class BulletinCommand extends Command
     public function handle()
     {
         $bulletinCrawlService = app(JuboCrawlService::class);
-        $brightSoriCrawlService = app(BrightSoriCrawlService::class);
-
         $mschJubo = app(MschJubo::class);
         $bulletinCrawlService->crawl($mschJubo);
 
+        $brightSoriCrawlService = app(BrightSoriCrawlService::class);
         $brightSound = app(BrightSound::class);
         $brightSoriCrawlService->crawl($brightSound);
+
+        $newsongJCrawlService = app(NewsongJCrawlService::class);
+        $newsongJ = app(NewsongJJubo::class);
+        $newsongJCrawlService->crawl($newsongJ);
     }
 }
