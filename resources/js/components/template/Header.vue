@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Logo from '@/components/template/Logo.vue';
 import MenuBar from '@/components/template/MenuBar.vue';
 
 interface Props {
@@ -13,10 +14,12 @@ const props = defineProps<Props>();
 const goBack = () => {
     window.history.back();
 };
+
+const isProduction = import.meta.env.PROD; // vite 기본 제공 플래그
 </script>
 <template>
-<!--     Preloader -->
-    <div id="preloader">
+    <!--     Preloader -->
+    <div v-if="isProduction" id="preloader">
         <div class="loader">
             <div class="load-circle">
                 <div></div>
@@ -34,6 +37,8 @@ const goBack = () => {
                         <i class="icon feather icon-arrow-left"></i>
                     </a>
 
+                    <Logo></Logo>
+
                     <h6 class="title">{{ props.title }}</h6>
                 </div>
                 <div class="mid-content"></div>
@@ -43,7 +48,6 @@ const goBack = () => {
     </header>
 
     <MenuBar></MenuBar>
-
 </template>
 
 <style scoped></style>
