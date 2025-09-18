@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="naver-site-verification" content="358f4b99dd28e63e78d5a4f7d986ab6cdd0df452" />
 
     {{-- Inline script to detect system dark mode preference and apply it immediately --}}
     <script>
