@@ -5,7 +5,7 @@ import { route } from 'ziggy-js';
 
 <template>
     <a :href="route('home')">
-        <img style="height: 50px" src="/image/logo.png" alt="cplus logo">
+        <img style="height: 50px" src="/jubogo_logo.png" alt="cplus logo">
     </a>
 </template>
 
