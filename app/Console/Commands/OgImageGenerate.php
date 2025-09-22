@@ -2,13 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Contents;
+use App\Domain\ogimage\OgImageGenerateService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
-use Imagick;
-use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\Image;
-use Intervention\Image\ImageManager;
 
 class OgImageGenerate extends Command
 {
@@ -31,7 +26,7 @@ class OgImageGenerate extends Command
      */
     public function handle()
     {
-        $ogImageGenerator = app(OgImageGenerate::class);
+        $ogImageGenerator = app(OgImageGenerateService::class);
         $ogImageGenerator->generate();
     }
 }
