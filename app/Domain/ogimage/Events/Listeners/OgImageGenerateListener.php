@@ -3,6 +3,7 @@
 namespace App\Domain\ogimage\Events\Listeners;
 
 use App\Domain\ogimage\Events\ContentsNewEvent;
+use App\Domain\ogimage\Jobs\OgImageKakaoFlushJob;
 use App\Domain\ogimage\OgImageGenerateService;
 use Illuminate\Support\Facades\Log;
 
@@ -23,5 +24,7 @@ class OgImageGenerateListener
     {
         $ogImageGenerator = app(OgImageGenerateService::class);
         $ogImageGenerator->generate();
+
+        dispatch(new OgImageKakaoFlushJob());
     }
 }
