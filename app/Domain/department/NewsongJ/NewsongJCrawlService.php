@@ -4,6 +4,7 @@ namespace App\Domain\department\NewsongJ;
 
 use App\Domain\church\msch\MSCHContentsType;
 use App\Domain\department\DepartmentInterface;
+use App\Domain\ogimage\Events\ContentsNewEvent;
 use App\Models\Contents;
 use App\Models\ContentsImage;
 use Carbon\Carbon;
@@ -55,6 +56,7 @@ class NewsongJCrawlService
                             'title' => $media['title'] ?? null,
                         ]);
                     }
+                    event(new ContentsNewEvent($contents));
                 }
             });
         }

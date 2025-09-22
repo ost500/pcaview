@@ -22,6 +22,10 @@ return Application::configure(basePath: dirname(__DIR__))
             AddLinkHeadersForPreloadedAssets::class,
         ]);
     })
+    ->withEvents(discover: [
+        __DIR__.'/../app/Domain/*/*/event',
+        __DIR__.'/../app/Domain/*/*/Events',
+        __DIR__.'/../app/Domain/*/Events'])
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

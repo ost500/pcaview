@@ -6,6 +6,7 @@ use App\Domain\church\msch\MSCHContentsType;
 use App\Domain\contents\ContentsImageService;
 use App\Domain\contents\ThumbnailService;
 use App\Domain\department\DepartmentInterface;
+use App\Domain\ogimage\Events\ContentsNewEvent;
 use App\Models\Contents;
 use Carbon\Carbon;
 use DOMDocument;
@@ -59,8 +60,9 @@ class JuboCrawlService
 
                 $contentsImages = $contentsImageService->getImagesFromPdf($newContents);
                 $thumbnailService->getPdfThumbnail($newContents, $contentsImages->first());
-            }
 
+                event(new ContentsNewEvent($newContents));
+            }
         }
     }
 
