@@ -29,7 +29,6 @@ async function run() {
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
-                '--start-maximized', // 전체화면
                 '--disable-blink-features=AutomationControlled', // 자동화 탐지 방지
             ],
         });
@@ -48,8 +47,13 @@ async function run() {
 
         await page.waitForResponse(url);
 
+        await page.evaluate(() => {
+            document.querySelector('.KDC_Input__root__3M8Hf').value = '';
+        });
         await page.type('.KDC_Input__root__3M8Hf', 'jubogo.com');
         await page.click('button.KDC_Button__root__N26ep.KDC_Button__normal_medium__mu29P.KDC_Button__color_special__CUcY7.purge-btn')
+
+        await page.waitForResponse(url);
 
         await browser.close();
     } catch (error) {
