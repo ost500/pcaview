@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import Logo from '@/components/template/Logo.vue';
 import MenuBar from '@/components/template/MenuBar.vue';
+import { Head } from '@inertiajs/vue3';
+
 
 interface Props {
     title: string;
@@ -29,7 +31,7 @@ const isProduction = import.meta.env.PROD; // vite 기본 제공 플래그
     </div>
     <!-- Preloader end-->
 
-    <header class="header header-fixed">
+    <header class="header header-fixed" :title="props.title">
         <div class="container">
             <div class="header-content">
                 <div class="left-content">

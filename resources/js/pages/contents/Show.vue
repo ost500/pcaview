@@ -3,6 +3,7 @@ import Header from '@/components/template/Header.vue';
 import { Contents } from '@/types/contents';
 import { ref } from 'vue';
 import VueEasyLightbox from 'vue-easy-lightbox';
+import { Head } from '@inertiajs/vue3';
 
 const props = defineProps<{ contents: Contents }>();
 
@@ -22,6 +23,7 @@ function close() {
 
 <template>
     <div>
+        <Head :title="contents.title"></Head>
         <Header title="주보" :backbutton="true"></Header>
 
         <div class="page-content space-top p-b60">
