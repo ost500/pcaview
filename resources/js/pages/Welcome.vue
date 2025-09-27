@@ -39,6 +39,15 @@ onMounted(() => {
                 <h6 class="title">소식</h6>
             </div>
             <ContentsList :contents="contents"></ContentsList>
+            <iframe
+                src="https://ads-partners.coupang.com/widgets.html?id=927016&template=carousel&trackingCode=AF7527668&subId=&width=680&height=140&tsource="
+                width="100%"
+                height="140"
+                frameborder="0"
+                scrolling="no"
+                referrerpolicy="unsafe-url"
+                browsingtopics
+            ></iframe>
         </div>
     </div>
 </template>
