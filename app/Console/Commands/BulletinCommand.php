@@ -7,6 +7,8 @@ use App\Domain\department\BrightSound\BrightSoriCrawlService;
 use App\Domain\department\BrightSound\BrightSound;
 use App\Domain\department\MschJubo\JuboCrawlService;
 use App\Domain\department\MschJubo\MschJubo;
+use App\Domain\department\MschYoutube\MschYoutube;
+use App\Domain\department\MschYoutube\MschYoutubeCrawlService;
 use App\Domain\department\NewsongJ\NewsongJCrawlService;
 use App\Domain\department\NewsongJ\NewsongJJubo;
 use Illuminate\Console\Command;
@@ -43,5 +45,9 @@ class BulletinCommand extends Command
         $newsongJCrawlService = app(NewsongJCrawlService::class);
         $newsongJ = app(NewsongJJubo::class);
         $newsongJCrawlService->crawl($newsongJ);
+
+        $mschYoutube = app(MschYoutube::class);
+        $mschYoutubeCrawler = app(MschYoutubeCrawlService::class);
+        $mschYoutubeCrawler->crawl($mschYoutube);
     }
 }

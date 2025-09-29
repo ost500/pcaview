@@ -6,4 +6,5 @@ enum MSCHContentsType
 {
     case BULLETIN;
     case NEWS;
+    case VIDEO;
 }

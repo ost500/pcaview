@@ -5,7 +5,8 @@ export type Contents = {
     file_url: string;
     thumbnail_url: string;
     published_at: string;
-    images: ContentsImage[];
+    images: ContentsImage[] | null;
+    file_type: string | null;
 };
 
 export type ContentsImage = {
