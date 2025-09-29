@@ -16,7 +16,7 @@ class MschYoutube implements DepartmentInterface
         if (!$department) {
             $department = Department::create([
                 'name' => $departmentName,
-                'icon_image' =>  "/image/msch_youtube.png"
+                'icon_image' => "/image/msch_youtube.png"
             ]);
         }
         return $department;
