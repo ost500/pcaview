@@ -12,7 +12,15 @@ function goToContent(id: number) {
 
 <template>
     <div class="row">
-        <div v-for="content in props.contents.data" class="col-12" v-bind:key="content.id">
+        <ins
+            class="kakao_ad_area"
+            style="display: block"
+            data-ad-unit="DAN-WGXmCBWunDboP7Xa"
+            data-ad-width="320"
+            data-ad-height="50"
+        ></ins>
+
+        <div v-for="(content) in props.contents.data" class="col-12" v-bind:key="content.id">
             <div class="card" @click="goToContent(content.id)">
                 <div class="card-header">
                     <h5 class="card-title">{{ content.title }}</h5>
@@ -24,7 +32,7 @@ function goToContent(id: number) {
                     <!--                            <h5 class="card-title">명성교회 2025년 9월 10일 주보</h5>-->
                     <!--                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
                     <p class="mb-0 text-right">
-                        <a :href="route('contents.show', { id: content.id })" class="btn btn-primary text-right btn-sm">자세히</a>
+                        <a :href="route('contents.show', { id: content.id })" class="btn btn-primary btn-sm text-right">자세히</a>
                     </p>
                 </div>
             </div>
