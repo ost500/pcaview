@@ -3,7 +3,7 @@ import { route } from 'ziggy-js';
 
 function not_ready() {
     alert('준비중 입니다');
-    FlutterAlert.postMessage('Flutter에서 표시되는 alert입니다!');
+    FlutterAlert.postMessage('준비중 입니다');
 }
 </script>
 
