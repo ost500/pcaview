@@ -36,7 +36,6 @@
     @endif
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8665007420370986"
             crossorigin="anonymous"></script>
-    <script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
 
     {{-- Inline style to set the HTML background color based on our theme in app.css --}}
     <style>
