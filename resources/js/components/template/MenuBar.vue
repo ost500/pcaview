@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import { route } from 'ziggy-js';
+
+function not_ready() {
+    alert('준비중 입니다');
+    FlutterAlert.postMessage('Flutter에서 표시되는 alert입니다!');
+}
 </script>
 
 <template>
@@ -17,7 +22,7 @@ import { route } from 'ziggy-js';
                 <i class="fa-solid fa-star"></i>
                 <span>부서</span>
             </a>
-            <a href="javascript:alert('준비중입니다')" class="nav-link" :class="{ active: route().current('profile') }">
+            <a href="#" @click.prevent="not_ready" class="nav-link" :class="{ active: route().current('profile') }">
                 <i class="fa-solid fa-person"></i>
                 <span>프로필</span>
             </a>
