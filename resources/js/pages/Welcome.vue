@@ -158,7 +158,7 @@ onMounted(() => {
             <ins
                 class="kakao_ad_area"
                 style="display: block"
-                data-ad-unit="DAN-WGXmCBWunDboP7Xa"
+                data-ad-unit="DAN-bE302RQ73kwLuzKI"
                 data-ad-width="320"
                 data-ad-height="50"
             ></ins>
