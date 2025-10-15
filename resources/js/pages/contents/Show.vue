@@ -2,7 +2,7 @@
 import Header from '@/components/template/Header.vue';
 import { Contents } from '@/types/contents';
 import { Head } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import VueEasyLightbox from 'vue-easy-lightbox';
 
 const props = defineProps<{ contents: Contents }>();
@@ -19,6 +19,30 @@ function open(indexNumber: number) {
 function close() {
     showViewer.value = false;
 }
+
+// Kakao AdFit 광고 로드
+const loadKakaoAd = () => {
+    // 기존 스크립트가 있으면 제거 (중복 방지)
+    const existingScript = document.querySelector('script[src*="t1.daumcdn.net/kas"]');
+    if (existingScript) {
+        existingScript.remove();
+    }
+
+    // 새 스크립트 생성 및 로드
+    const script = document.createElement('script');
+    script.async = true;
+    script.type = 'text/javascript';
+    script.src = 'https://t1.daumcdn.net/kas/static/ba.min.js';
+    document.head.appendChild(script);
+};
+
+onMounted(() => {
+    // Kakao AdFit 광고 로드
+    // DOM이 완전히 렌더링된 후 실행
+    setTimeout(() => {
+        loadKakaoAd();
+    }, 100);
+});
 </script>
 
 <template>
