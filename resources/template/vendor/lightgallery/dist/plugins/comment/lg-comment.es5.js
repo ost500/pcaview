@@ -169,7 +169,7 @@ var CommentBox = /** @class */ (function () {
         });
         this.core.LGel.on(lGEvents.afterSlide + ".comment", function (event) {
             var index = event.detail.index;
-            // eslint-disable-next-line @typescript-eslint/no-this-alias
+             
             var _this = _this_1;
             // DISQUS needs sometime to intialize when lightGallery is opened from direct url(hash plugin).
             setTimeout(function () {

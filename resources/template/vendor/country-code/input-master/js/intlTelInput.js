@@ -176,7 +176,7 @@
             });
         };
         // this is our plugin class that we will create an instance of
-        // eslint-disable-next-line no-unused-vars
+         
         var Iti = /*#__PURE__*/ function() {
             function Iti(input, options) {
                 var _this = this;
