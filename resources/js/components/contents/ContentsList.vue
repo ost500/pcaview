@@ -1,13 +1,52 @@
 <script setup lang="ts">
 import { Contents } from '@/types/contents';
-import { Pagination } from '@/types/pagination';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { route } from 'ziggy-js';
 
-const props = defineProps<{ contents: Pagination<Contents> }>();
+const props = defineProps<{
+    contents: Contents[];
+    isLoading?: boolean;
+    hasMore?: boolean;
+}>();
+
+const emit = defineEmits<{
+    loadMore: [];
+}>();
+
+const loadMoreTrigger = ref<HTMLElement | null>(null);
+let observer: IntersectionObserver | null = null;
 
 function goToContent(id: number) {
     window.location.href = route('contents.show', { id: id });
 }
+
+onMounted(() => {
+    // Setup Intersection Observer for infinite scroll
+    if (loadMoreTrigger.value && props.hasMore) {
+        observer = new IntersectionObserver(
+            (entries) => {
+                const [entry] = entries;
+                if (entry.isIntersecting && !props.isLoading && props.hasMore) {
+                    emit('loadMore');
+                }
+            },
+            {
+                root: null,
+                rootMargin: '200px',
+                threshold: 0.1,
+            }
+        );
+
+        observer.observe(loadMoreTrigger.value);
+    }
+});
+
+onUnmounted(() => {
+    if (observer && loadMoreTrigger.value) {
+        observer.unobserve(loadMoreTrigger.value);
+        observer.disconnect();
+    }
+});
 </script>
 
 <template>
@@ -20,7 +59,7 @@ function goToContent(id: number) {
             data-ad-height="50"
         ></ins>
 
-        <div v-for="(content) in props.contents.data" class="col-12" v-bind:key="content.id">
+        <div v-for="content in props.contents" class="col-12" v-bind:key="content.id">
             <div class="card" @click="goToContent(content.id)">
                 <div class="card-header">
                     <h5 class="card-title">{{ content.title }}</h5>
@@ -38,20 +77,15 @@ function goToContent(id: number) {
             </div>
         </div>
 
-        <nav class="text-center">
-            <ul class="pagination pagination-sm pagination-gutter pagination-info justify-content-center">
-                <li class="page-item page-indicator">
-                    <a class="page-link" v-if="contents.prev_page_url" :href="contents.prev_page_url">
-                        <i class="icon feather icon-chevron-left"></i
-                    ></a>
-                </li>
-                <li class="page-item page-indicator">
-                    <a class="page-link" v-if="contents.next_page_url" :href="contents.next_page_url">
-                        <i class="icon feather icon-chevron-right"></i
-                    ></a>
-                </li>
-            </ul>
-        </nav>
+        <!-- Infinite scroll trigger -->
+        <div ref="loadMoreTrigger" class="col-12 text-center py-4">
+            <div v-if="isLoading" class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">로딩 중...</span>
+            </div>
+            <div v-else-if="!hasMore" class="text-muted">
+                <small>모든 소식을 불러왔습니다</small>
+            </div>
+        </div>
     </div>
 </template>
 
