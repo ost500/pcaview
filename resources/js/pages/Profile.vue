@@ -1,18 +1,36 @@
 <script setup lang="ts">
 import Header from '@/components/template/Header.vue';
-import { router, usePage } from '@inertiajs/vue3';
+import { router, usePage, useForm } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
 import { computed, ref } from 'vue';
 import type { Department } from '@/types/department';
+import AuthenticatedSessionController from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
 
 interface Props {
     allDepartments?: Department[];
     subscribedDepartmentIds?: number[];
+    canResetPassword?: boolean;
 }
 
 const props = defineProps<Props>();
 const page = usePage();
 const user = computed(() => page.props.auth.user);
+
+// 로그인 폼
+const loginForm = useForm({
+    email: '',
+    password: '',
+    remember: false,
+});
+
+const handleLogin = () => {
+    loginForm.post(route('login'), {
+        preserveScroll: true,
+        onSuccess: () => {
+            loginForm.reset('password');
+        },
+    });
+};
 
 // 구독 상태 관리
 const subscribed = ref<Set<number>>(new Set(props.subscribedDepartmentIds || []));
@@ -54,14 +72,80 @@ const toggleSubscription = (departmentId: number) => {
 
     <div class="page-content space-top p-b60">
         <div class="container">
-            <!-- 로그인 안 된 경우 -->
+            <!-- 로그인 안 된 경우 - 인라인 로그인 폼 -->
             <div v-if="!user" class="card">
-                <div class="card-body text-center py-5">
-                    <i class="fa-solid fa-user-circle" style="font-size: 80px; color: #ccc; margin-bottom: 20px;"></i>
-                    <h5 class="mb-3">로그인이 필요합니다</h5>
-                    <p class="text-muted mb-4">프로필을 보려면 로그인해주세요</p>
-                    <a :href="route('login')" class="btn btn-primary btn-block">로그인</a>
-                    <a :href="route('register')" class="btn btn-outline-primary btn-block mt-2">회원가입</a>
+                <div class="card-body py-4">
+                    <div class="text-center mb-4">
+                        <i class="fa-solid fa-user-circle" style="font-size: 60px; color: #007bff;"></i>
+                        <h5 class="mt-3 mb-1">로그인</h5>
+                        <p class="text-muted small">프로필을 보려면 로그인해주세요</p>
+                    </div>
+
+                    <form @submit.prevent="handleLogin">
+                        <!-- 이메일 -->
+                        <div class="mb-3">
+                            <label for="email" class="form-label">이메일</label>
+                            <input
+                                id="email"
+                                type="email"
+                                class="form-control"
+                                v-model="loginForm.email"
+                                placeholder="email@example.com"
+                                required
+                                autofocus
+                                autocomplete="email"
+                            />
+                            <div v-if="loginForm.errors.email" class="invalid-feedback d-block">
+                                {{ loginForm.errors.email }}
+                            </div>
+                        </div>
+
+                        <!-- 비밀번호 -->
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <label for="password" class="form-label mb-0">비밀번호</label>
+                                <a v-if="canResetPassword" :href="route('password.request')" class="text-muted small">
+                                    비밀번호 찾기
+                                </a>
+                            </div>
+                            <input
+                                id="password"
+                                type="password"
+                                class="form-control"
+                                v-model="loginForm.password"
+                                placeholder="비밀번호를 입력하세요"
+                                required
+                                autocomplete="current-password"
+                            />
+                            <div v-if="loginForm.errors.password" class="invalid-feedback d-block">
+                                {{ loginForm.errors.password }}
+                            </div>
+                        </div>
+
+                        <!-- 자동 로그인 -->
+                        <div class="mb-3 form-check">
+                            <input
+                                type="checkbox"
+                                class="form-check-input"
+                                id="remember"
+                                v-model="loginForm.remember"
+                            />
+                            <label class="form-check-label" for="remember">
+                                로그인 상태 유지
+                            </label>
+                        </div>
+
+                        <!-- 로그인 버튼 -->
+                        <button type="submit" class="btn btn-primary btn-block w-100" :disabled="loginForm.processing">
+                            <span v-if="loginForm.processing" class="spinner-border spinner-border-sm me-2"></span>
+                            로그인
+                        </button>
+
+                        <!-- 회원가입 버튼 -->
+                        <a :href="route('register')" class="btn btn-outline-secondary btn-block w-100 mt-2">
+                            회원가입
+                        </a>
+                    </form>
                 </div>
             </div>
 

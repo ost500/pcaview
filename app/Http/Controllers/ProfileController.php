@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Department;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 class ProfileController extends Controller
@@ -22,6 +23,7 @@ class ProfileController extends Controller
         return Inertia::render('Profile', [
             'allDepartments' => $allDepartments,
             'subscribedDepartmentIds' => $subscribedDepartmentIds,
+            'canResetPassword' => Route::has('password.request'),
         ]);
     }
 
