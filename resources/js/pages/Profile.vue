@@ -251,6 +251,18 @@ const toggleSubscription = (departmentId: number) => {
                         <p class="mb-0 text-muted small">© 2025 Bulletin App</p>
                     </div>
                 </div>
+
+                <!-- 사업자 정보 -->
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <h6 class="card-title mb-3">사업자 정보</h6>
+                        <p class="mb-1 text-muted small">해시미터</p>
+                        <p class="mb-1 text-muted small">사업자 번호: 175-40-01411</p>
+                        <p class="mb-0 text-muted small">
+                            문의: <a href="mailto:ost5253@gmail.com" class="text-decoration-none">ost5253@gmail.com</a>
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
