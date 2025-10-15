@@ -23,6 +23,7 @@ class HomeController extends Controller
         } else {
             // 비로그인 사용자는 모든 콘텐츠 표시
             $contents = Contents::latest('published_at')->paginate(20);
+            $subscribedDepartmentIds = collect();
         }
 
         $churches = Church::all();
@@ -34,6 +35,7 @@ class HomeController extends Controller
                 'contents' => $contents,
                 'churches' => $churches,
                 'departments' => $departments,
+                'subscribedDepartmentIds' => $subscribedDepartmentIds->toArray(),
             ]);
         }
 
@@ -41,6 +43,7 @@ class HomeController extends Controller
             'contents' => $contents,
             'churches' => $churches,
             'departments' => $departments,
+            'subscribedDepartmentIds' => $subscribedDepartmentIds->toArray(),
         ]);
     }
 }

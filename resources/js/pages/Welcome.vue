@@ -5,11 +5,21 @@ import { Church } from '@/types/church';
 import { Contents } from '@/types/contents';
 import { Department } from '@/types/department';
 import { Pagination } from '@/types/pagination';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch, computed } from 'vue';
 import { router, useRemember } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
 
-const props = defineProps<{ contents: Pagination<Contents>; churches: Church[]; departments: Department[] }>();
+const props = defineProps<{
+    contents: Pagination<Contents>;
+    churches: Church[];
+    departments: Department[];
+    subscribedDepartmentIds?: number[];
+}>();
+
+// 구독 여부 확인 함수
+const isSubscribed = (departmentId: number) => {
+    return props.subscribedDepartmentIds?.includes(departmentId) ?? false;
+};
 
 // Infinite scroll state with persistence
 const allContents = useRemember<Contents[]>([...props.contents.data], 'home-contents');
@@ -74,7 +84,7 @@ onMounted(() => {
             <div class="swiper chat-swiper">
                 <div class="swiper-wrapper">
                     <div v-for="department in departments" class="swiper-slide m-r15" v-bind:key="department.id">
-                        <a :href="route('department.show', { id: department.id })" class="recent active">
+                        <a :href="route('department.show', { id: department.id })" class="recent" :class="{ active: isSubscribed(department.id) }">
                             <div class="media media-60 rounded-circle">
                                 <img :src="department.icon_image" :alt="department.name + 'icon'" />
                             </div>
