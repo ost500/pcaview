@@ -119,22 +119,6 @@ onMounted(() => {
 
         <!-- Canonical URL -->
         <link rel="canonical" :href="route('home')" />
-
-        <!-- Schema.org JSON-LD -->
-        <script type="application/ld+json">
-            {
-                "@context": "https://schema.org",
-                "@type": "WebSite",
-                "name": "주보고",
-                "url": "{{ url('/') }}",
-                "description": "교회의 모든 부서 주보와 소식을 한곳에 모았습니다. 하나님께 보고 드리는 시간 주보고가 올려 드립니다.",
-                "potentialAction": {
-                    "@type": "SearchAction",
-                    "target": "{{ url('/') }}?search={search_term_string}",
-                    "query-input": "required name=search_term_string"
-                }
-            }
-        </script>
     </Head>
     <Header title="홈"></Header>
 

@@ -72,31 +72,6 @@ onMounted(() => {
 
             <!-- Canonical URL -->
             <link rel="canonical" :href="route('contents.show', { id: contents.id })" />
-
-            <!-- Schema.org JSON-LD -->
-            <script type="application/ld+json">
-                {
-                    "@context": "https://schema.org",
-                    "@type": "Article",
-                    "headline": "{{ contents.title }}",
-                    "image": "{{ contents.thumbnail_url }}",
-                    "datePublished": "{{ contents.published_at }}",
-                    "dateModified": "{{ contents.updated_at }}",
-                    "author": {
-                        "@type": "Organization",
-                        "name": "{{ contents.department?.name || '주보고' }}"
-                    },
-                    "publisher": {
-                        "@type": "Organization",
-                        "name": "주보고",
-                        "logo": {
-                            "@type": "ImageObject",
-                            "url": "{{ url('/jubogo_favicon.ico') }}"
-                        }
-                    },
-                    "description": "{{ contents.title }}"
-                }
-            </script>
         </Head>
         <Header title="주보" :backbutton="true"></Header>
 

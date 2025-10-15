@@ -248,7 +248,7 @@ const toggleSubscription = (departmentId: number) => {
                     <div class="card-body">
                         <h6 class="card-title mb-3">앱 정보</h6>
                         <p class="mb-1 text-muted small">버전: 1.0.0</p>
-                        <p class="mb-0 text-muted small">© 2025 Bulletin App</p>
+                        <p class="mb-0 text-muted small">© 2025 Jubogo App</p>
                     </div>
                 </div>
 

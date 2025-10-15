@@ -67,18 +67,6 @@ const loadMore = () => {
 
         <!-- Canonical URL -->
         <link rel="canonical" :href="route('department.show', { id: department.id })" />
-
-        <!-- Schema.org JSON-LD -->
-        <script type="application/ld+json">
-            {
-                "@context": "https://schema.org",
-                "@type": "CollectionPage",
-                "name": "{{ department.name }}",
-                "description": "{{ department.name }} 부서의 주보와 소식",
-                "url": "{{ route('department.show', { id: department.id }) }}",
-                "image": "{{ department.icon_image }}"
-            }
-        </script>
     </Head>
     <Header :title="'부서 / ' + department.name" :backbutton="true"></Header>
 
