@@ -91,7 +91,7 @@ onMounted(() => {
                         "name": "주보고",
                         "logo": {
                             "@type": "ImageObject",
-                            "url": "{{ url('/jubogo_favicon.png') }}"
+                            "url": "{{ url('/jubogo_favicon.ico') }}"
                         }
                     },
                     "description": "{{ contents.title }}"
