@@ -6,15 +6,15 @@ import { Contents } from '@/types/contents';
 import { Department } from '@/types/department';
 import { Pagination } from '@/types/pagination';
 import { onMounted, ref, watch } from 'vue';
-import { router } from '@inertiajs/vue3';
+import { router, useRemember } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
 
 const props = defineProps<{ contents: Pagination<Contents>; churches: Church[]; departments: Department[] }>();
 
-// Infinite scroll state
-const allContents = ref<Contents[]>([...props.contents.data]);
-const currentPage = ref(props.contents.current_page);
-const hasMorePages = ref(!!props.contents.next_page_url);
+// Infinite scroll state with persistence
+const allContents = useRemember<Contents[]>([...props.contents.data], 'home-contents');
+const currentPage = useRemember(props.contents.current_page, 'home-page');
+const hasMorePages = useRemember(!!props.contents.next_page_url, 'home-has-more');
 const isLoading = ref(false);
 
 // Load more contents
@@ -30,6 +30,7 @@ const loadMore = () => {
         {
             preserveState: true,
             preserveScroll: true,
+            replace: true, // Prevent history stacking
             only: ['contents'],
             onSuccess: (page) => {
                 const newContents = page.props.contents as Pagination<Contents>;
