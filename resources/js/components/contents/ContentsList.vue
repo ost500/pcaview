@@ -51,14 +51,6 @@ onUnmounted(() => {
 
 <template>
     <div class="row">
-        <ins
-            class="kakao_ad_area"
-            style="display: block"
-            data-ad-unit="DAN-WGXmCBWunDboP7Xa"
-            data-ad-width="320"
-            data-ad-height="50"
-        ></ins>
-
         <div v-for="content in props.contents" class="col-12" v-bind:key="content.id">
             <div class="card" @click="goToContent(content.id)">
                 <div class="card-header">

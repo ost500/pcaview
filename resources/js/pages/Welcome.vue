@@ -68,11 +68,33 @@ watch(
     }
 );
 
+// Kakao AdFit 광고 로드
+const loadKakaoAd = () => {
+    // 기존 스크립트가 있으면 제거 (중복 방지)
+    const existingScript = document.querySelector('script[src*="t1.daumcdn.net/kas"]');
+    if (existingScript) {
+        existingScript.remove();
+    }
+
+    // 새 스크립트 생성 및 로드
+    const script = document.createElement('script');
+    script.async = true;
+    script.type = 'text/javascript';
+    script.src = 'https://t1.daumcdn.net/kas/static/ba.min.js';
+    document.head.appendChild(script);
+};
+
 onMounted(() => {
     if (import.meta.hot) {
         const preloader = document.getElementById('preloader');
         if (preloader) preloader.style.display = 'none';
     }
+
+    // Kakao AdFit 광고 로드
+    // DOM이 완전히 렌더링된 후 실행
+    setTimeout(() => {
+        loadKakaoAd();
+    }, 100);
 });
 </script>
 
@@ -96,6 +118,13 @@ onMounted(() => {
             <div class="title-bar">
                 <h6 class="title">소식</h6>
             </div>
+            <ins
+                class="kakao_ad_area"
+                style="display: block"
+                data-ad-unit="DAN-WGXmCBWunDboP7Xa"
+                data-ad-width="320"
+                data-ad-height="50"
+            ></ins>
             <ContentsList :contents="allContents" :is-loading="isLoading" :has-more="hasMorePages" @load-more="loadMore"></ContentsList>
             <iframe
                 src="https://ads-partners.coupang.com/widgets.html?id=927016&template=carousel&trackingCode=AF7527668&subId=&width=680&height=140&tsource="

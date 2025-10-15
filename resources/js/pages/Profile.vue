@@ -166,6 +166,15 @@ const toggleSubscription = (departmentId: number) => {
                             <i class="fa-solid fa-exclamation-circle"></i> 이메일 미인증
                         </span>
                     </div>
+                    <iframe
+                        src="https://ads-partners.coupang.com/widgets.html?id=927016&template=carousel&trackingCode=AF7527668&subId=&width=680&height=140&tsource="
+                        width="100%"
+                        height="140"
+                        frameborder="0"
+                        scrolling="no"
+                        referrerpolicy="unsafe-url"
+                        browsingtopics
+                    ></iframe>
                 </div>
 
                 <!-- 구독 부서 관리 -->
