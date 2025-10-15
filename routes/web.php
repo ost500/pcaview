@@ -14,6 +14,9 @@ Route::get('/church/{id}', [ChurchController::class, 'show'])->name('church.show
 Route::get('/department', [DepartmentController::class, 'index'])->name('department');
 Route::get('/department/{id}', [DepartmentController::class, 'show'])->name('department.show');
 
+Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile');
+Route::post('/profile/subscribe', [App\Http\Controllers\ProfileController::class, 'toggleSubscription'])->middleware('auth')->name('profile.subscribe');
+
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

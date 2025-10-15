@@ -1,0 +1,4135 @@
+[
+    "contents"
+    =>
+    array
+    :
+    31
+    [
+        0
+        =>
+        array
+        :
+        1
+        [
+            "richItemRenderer"
+            =>
+            array
+            :
+            2
+            [
+                "content"
+                =>
+                array
+                :
+                1
+                [
+                    "videoRenderer"
+                    =>
+                    array
+                    :
+                    13
+                    [
+                        "videoId"
+                        =>
+                        "4mqdBr1dBs0"
+                        "thumbnail"
+                        =>
+                        array
+                        :
+                        1
+                        [
+                            "thumbnails"
+                            =>
+                            array
+                            :
+                            4
+                            [
+                                0
+                                =>
+                                array
+                                :
+                                3
+                                [
+                                    "url"
+                                    =>
+                                    "https://i.ytimg.com/vi/4mqdBr1dBs0/hqdefault.jpg?sqp=-oaymwEiCKgBEF5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLCfDhskpB4r5x53cuRfH1uxfmy11A"
+                                    "width"
+                                    =>
+                                    168
+                                    "height"
+                                    =>
+                                    94
+                                ]
+                                1
+                                =>
+                                array
+                                :
+                                3
+                                [
+                                    "url"
+                                    =>
+                                    "https://i.ytimg.com/vi/4mqdBr1dBs0/hqdefault.jpg?sqp=-oaymwEiCMQBEG5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLBWPWl6Monq1iHyPwiZ1ZeAfFlrcA"
+                                    "width"
+                                    =>
+                                    196
+                                    "height"
+                                    =>
+                                    110
+                                ]
+                                2
+                                =>
+                                array
+                                :
+                                3
+                                [
+                                    "url"
+                                    =>
+                                    "https://i.ytimg.com/vi/4mqdBr1dBs0/hqdefault.jpg?sqp=-oaymwEjCPYBEIoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLChU_dcZ22iTrk8Lfdmjv2gIB2rcg"
+                                    "width"
+                                    =>
+                                    246
+                                    "height"
+                                    =>
+                                    138
+                                ]
+                                3
+                                =>
+                                array
+                                :
+                                3
+                                [
+                                    "url"
+                                    =>
+                                    "https://i.ytimg.com/vi/4mqdBr1dBs0/hqdefault.jpg?sqp=-oaymwEjCNACELwBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLAruvcRaWqc-EN4uy4Ue82wzJ_G3g"
+                                    "width"
+                                    =>
+                                    336
+                                    "height"
+                                    =>
+                                    188
+                                ]
+                            ]
+                        ]
+                        "title"
+                        =>
+                        array
+                        :
+                        2
+                        [
+                            "runs"
+                            =>
+                            array
+                            :
+                            1
+                            [
+                                0
+                                =>
+                                array
+                                :
+                                1
+                                [
+                                    "text"
+                                    =>
+                                    "[명성교회] 2025.09.28 주일 낮 예배 : 하나님의 뜻을 이루는 결심의 능력 - 김하나 담임목사"
+                                ]
+                            ]
+                            "accessibility"
+                            =>
+                            array
+                            :
+                            1
+                            [
+                                "accessibilityData"
+                                =>
+                                array
+                                :
+                                1
+                                [
+                                    "label"
+                                    =>
+                                    "[명성교회] 2025.09.28 주일 낮 예배 : 하나님의 뜻을 이루는 결심의 능력 - 김하나 담임목사 31분"
+                                ]
+                            ]
+                        ]
+                        "descriptionSnippet"
+                        =>
+                        array
+                        :
+                        1
+                        [
+                            "runs"
+                            =>
+                            array
+                            :
+                            1
+                            [
+                                0
+                                =>
+                                array
+                                :
+                                1
+                                [
+                                    "text"
+                                    =>
+                                    ""
+                                    "
+                                    일자
+                                    :
+                                    2025년
+                                    09월
+                                    28일
+                                    주일
+                                    낮
+                                    예배
+                                    \
+                                    n
+                                    제목
+                                    :
+                                    하나님의
+                                    뜻을
+                                    이루는
+                                    결심의
+                                    능력
+                                    \
+                                    n
+                                    설교
+                                    :
+                                    김하나
+                                    담임목사
+                                    \
+                                    n
+                                    본문
+                                    :
+                                    느헤미야
+                                    2장
+                                    17-20절
+                                    \
+                                    n
+                                    \
+                                    n
+                                    17.
+                                    후에
+                                    그들에게...
+                                    ""
+                                    "
+                                ]
+                            ]
+                        ]
+                        "publishedTimeText"
+                        =>
+                        array
+                        :
+                        1
+                        [
+                            "simpleText"
+                            =>
+                            "23시간 전"
+                        ]
+                        "lengthText"
+                        =>
+                        array
+                        :
+                        2
+                        [
+                            "accessibility"
+                            =>
+                            array
+                            :
+                            1
+                            [
+                                "accessibilityData"
+                                =>
+                                array
+                                :
+                                1
+                                [
+                                    "label"
+                                    =>
+                                    "31분 52초"
+                                ]
+                            ]
+                            "simpleText"
+                            =>
+                            "31:52"
+                        ]
+                        "viewCountText"
+                        =>
+                        array
+                        :
+                        1
+                        [
+                            "simpleText"
+                            =>
+                            "조회수 4,520회"
+                        ]
+                        "navigationEndpoint"
+                        =>
+                        array
+                        :
+                        3
+                        [
+                            "clickTrackingParams"
+                            =>
+                            "CNkBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bWhhVQ25DdlNQZXNveEpKZ1Z0V3hIdVZFUFGaAQMQ8jjKAQTOnvKY"
+                            "commandMetadata"
+                            =>
+                            array
+                            :
+                            1
+                            [
+                                "webCommandMetadata"
+                                =>
+                                array
+                                :
+                                3
+                                [
+                                    "url"
+                                    =>
+                                    "/watch?v=4mqdBr1dBs0&pp=0gcJCfYJAYcqIYzv"
+                                    "webPageType"
+                                    =>
+                                    "WEB_PAGE_TYPE_WATCH"
+                                    "rootVe"
+                                    =>
+                                    3832
+                                ]
+                            ]
+                            "watchEndpoint"
+                            =>
+                            array
+                            :
+                            3
+                            [
+                                "videoId"
+                                =>
+                                "4mqdBr1dBs0"
+                                "playerParams"
+                                =>
+                                "0gcJCfYJAYcqIYzv"
+                                "watchEndpointSupportedOnesieConfig"
+                                =>
+                                array
+                                :
+                                1
+                                [
+                                    "html5PlaybackOnesieConfig"
+                                    =>
+                                    array
+                                    :
+                                    1
+                                    [
+                                        …
+                                    1
+                                ]
+                            ]
+                        ]
+                    ]
+                    "trackingParams"
+                    =>
+                    "CNkBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bQM2N9OrroKe14gE="
+                    "showActionMenu"
+                    =>
+                    false
+                    "shortViewCountText"
+                    =>
+                    array
+                    :
+                    2
+                    [
+                        "accessibility"
+                        =>
+                        array
+                        :
+                        1
+                        [
+                            "accessibilityData"
+                            =>
+                            array
+                            :
+                            1
+                            [
+                                "label"
+                                =>
+                                "조회수 4.5천회"
+                            ]
+                        ]
+                        "simpleText"
+                        =>
+                        "조회수 4.5천회"
+                    ]
+                    "menu"
+                    =>
+                    array
+                    :
+                    1
+                    [
+                        "menuRenderer"
+                        =>
+                        array
+                        :
+                        3
+                        [
+                            "items"
+                            =>
+                            array
+                            :
+                            2
+                            [
+                                0
+                                =>
+                                array
+                                :
+                                1
+                                [
+                                    …
+                                1
+                            ]
+                            1
+                            =>
+                            array
+                            :
+                            1
+                            [
+                                …
+                            1
+                        ]
+                    ]
+                    "trackingParams"
+                    =>
+                    "CNkBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+                    "accessibility"
+                    =>
+                    array
+                    :
+                    1
+                    [
+                        "accessibilityData"
+                        =>
+                        array
+                        :
+                        1
+                        [
+                            …
+                        1
+                    ]
+                ]
+            ]
+        ]
+        "thumbnailOverlays"
+        =>
+        array
+        :
+        4
+        [
+            0
+            =>
+            array
+            :
+            1
+            [
+                "thumbnailOverlayTimeStatusRenderer"
+                =>
+                array
+                :
+                2
+                [
+                    "text"
+                    =>
+                    array
+                    :
+                    2
+                    [
+                        …
+                    2
+                ]
+                "style"
+                =>
+                "DEFAULT"
+            ]
+        ]
+        1
+        =>
+        array
+        :
+        1
+        [
+            "thumbnailOverlayToggleButtonRenderer"
+            =>
+            array
+            :
+            10
+            [
+                "isToggled"
+                =>
+                false
+                "untoggledIcon"
+                =>
+                array
+                :
+                1
+                [
+                    …
+                1
+            ]
+            "toggledIcon"
+            =>
+            array
+            :
+            1
+            [
+                …
+            1
+        ]
+        "untoggledTooltip"
+        =>
+        "나중에 볼 동영상"
+        "toggledTooltip"
+        =>
+        "추가됨"
+        "untoggledServiceEndpoint"
+        =>
+        array
+        :
+        3
+        [
+            …
+        3
+    ]
+    "toggledServiceEndpoint"
+    =>
+    array
+    :
+    3
+    [
+        …
+    3
+]
+"untoggledAccessibility" => array:1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CNsBEPnnAxgBIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 [
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "현재 재생목록에 추가"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CNoBEMfsBBgCIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 [
+"text" => array: 1 […1]
+]
+]
+]
+]
+]
+"trackingParams" => "CNgBEJmNBRgAIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+1 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "6LX3mzAbXDI"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 [
+"url" => "https://i.ytimg.com/vi/6LX3mzAbXDI/hqdefault.jpg?sqp=-oaymwEiCKgBEF5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLDvBQ9lfJ1_F-BDlonrbrKly8XW3Q"
+"width" => 168
+"height" => 94
+]
+1 => array: 3 [
+"url" => "https://i.ytimg.com/vi/6LX3mzAbXDI/hqdefault.jpg?sqp=-oaymwEiCMQBEG5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLBY0xOCxQwdEgMJxAUEbNtzFRvGow"
+"width" => 196
+"height" => 110
+]
+2 => array: 3 [
+"url" => "https://i.ytimg.com/vi/6LX3mzAbXDI/hqdefault.jpg?sqp=-oaymwEjCPYBEIoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLBp-3W61c7bnKDroSpSRUyFG8thUg"
+"width" => 246
+"height" => 138
+]
+3 => array: 3 [
+"url" => "https://i.ytimg.com/vi/6LX3mzAbXDI/hqdefault.jpg?sqp=-oaymwEjCNACELwBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLArpjifIcevfhnwWiMYgiPJYcRVwA"
+"width" => 336
+"height" => 188
+]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => "[명성교회] 2025.09.27 토요 새벽을 깨우는 가정 - 김하나 담임목사"
+]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "[명성교회] 2025.09.27 토요 새벽을 깨우는 가정 - 김하나 담임목사 34분"
+]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => """
+일자: 2025년 09월 27일 토요 새벽을 깨우는 가정\n
+설교: 김하나 담임목사\n
+본문: 사도행전 8장 4-8절\n
+\n
+4. 그 흩어진 사람들이 두루 다니며 복음의 말씀을...
+"""
+]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "2일 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "34분 6초"
+]
+]
+"simpleText" => "34:06"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 3,617회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CNMBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bWhhVQ25DdlNQZXNveEpKZ1Z0V3hIdVZFUFGaAQMQ8jjKAQTOnvKY"
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 [
+"url" => "/watch?v=6LX3mzAbXDI"
+"webPageType" => "WEB_PAGE_TYPE_WATCH"
+"rootVe" => 3832
+]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "6LX3mzAbXDI"
+"watchEndpointSupportedOnesieConfig" => array: 1 [
+"html5PlaybackOnesieConfig" => array: 1 […1]
+]
+]
+]
+"trackingParams" => "CNMBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bQLK47YCz8_3a6AE="
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "조회수 3.6천회"
+]
+]
+"simpleText" => "조회수 3.6천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 [
+0 => array: 1 […1]
+1 => array: 1 […1]
+]
+"trackingParams" => "CNMBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 [
+"text" => array: 2 […2]
+"style" => "DEFAULT"
+]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 [
+"isToggled" => false
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "나중에 볼 동영상"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"toggledServiceEndpoint" => array: 3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CNUBEPnnAxgBIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 [
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "현재 재생목록에 추가"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CNQBEMfsBBgCIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 [
+"text" => array: 1 […1]
+]
+]
+]
+]
+]
+"trackingParams" => "CNIBEJmNBRgBIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+2 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "lFL4nSZB0ik"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 [
+"url" => "https://i.ytimg.com/vi/lFL4nSZB0ik/hqdefault.jpg?sqp=-oaymwEiCKgBEF5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLC0Za-4VS3WsPPKBbIYKewiSU1BLg"
+"width" => 168
+"height" => 94
+]
+1 => array: 3 [
+"url" => "https://i.ytimg.com/vi/lFL4nSZB0ik/hqdefault.jpg?sqp=-oaymwEiCMQBEG5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLCcQtiruXS2Xz2c9XluHMO-NWsQkA"
+"width" => 196
+"height" => 110
+]
+2 => array: 3 [
+"url" => "https://i.ytimg.com/vi/lFL4nSZB0ik/hqdefault.jpg?sqp=-oaymwEjCPYBEIoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLDCj26-Q3vvc12KV0R8xtpoW3rnrQ"
+"width" => 246
+"height" => 138
+]
+3 => array: 3 [
+"url" => "https://i.ytimg.com/vi/lFL4nSZB0ik/hqdefault.jpg?sqp=-oaymwEjCNACELwBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLC8y1OMWemMktSRwfEJMRw0XSPt3g"
+"width" => 336
+"height" => 188
+]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => "[명성교회] 2025.09.26 새벽기도회 : 보고 있는 사람이 있다 - 김하나 담임목사"
+]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "[명성교회] 2025.09.26 새벽기도회 : 보고 있는 사람이 있다 - 김하나 담임목사 22분"
+]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => """
+일자: 2025년 09월 26일 새벽기도회\n
+제목: 보고 있는 사람이 있다\n
+설교: 김하나 담임목사\n
+본문: 디모데전서 4장 12-13절\n
+\n
+12. 누구든지 네 연소함을...
+"""
+]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "3일 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "22분 31초"
+]
+]
+"simpleText" => "22:31"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 3,980회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CM0BENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bWhhVQ25DdlNQZXNveEpKZ1Z0V3hIdVZFUFGaAQMQ8jjKAQTOnvKY"
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 [
+"url" => "/watch?v=lFL4nSZB0ik"
+"webPageType" => "WEB_PAGE_TYPE_WATCH"
+"rootVe" => 3832
+]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "lFL4nSZB0ik"
+"watchEndpointSupportedOnesieConfig" => array: 1 [
+"html5PlaybackOnesieConfig" => array: 1 […1]
+]
+]
+]
+"trackingParams" => "CM0BENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bQKmkh7LSk76plAE="
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "조회수 3.9천회"
+]
+]
+"simpleText" => "조회수 3.9천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 [
+0 => array: 1 […1]
+1 => array: 1 […1]
+]
+"trackingParams" => "CM0BENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 [
+"text" => array: 2 […2]
+"style" => "DEFAULT"
+]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 [
+"isToggled" => false
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "나중에 볼 동영상"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"toggledServiceEndpoint" => array: 3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CM8BEPnnAxgBIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 [
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "현재 재생목록에 추가"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CM4BEMfsBBgCIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 [
+"text" => array: 1 […1]
+]
+]
+]
+]
+]
+"trackingParams" => "CMwBEJmNBRgCIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+3 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "FHlGla9c_Fw"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 [
+"url" => "https://i.ytimg.com/vi/FHlGla9c_Fw/hqdefault.jpg?sqp=-oaymwEiCKgBEF5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLDafTjZ0u3b3ZBnk4gQJ1rBSfk53g"
+"width" => 168
+"height" => 94
+]
+1 => array: 3 [
+"url" => "https://i.ytimg.com/vi/FHlGla9c_Fw/hqdefault.jpg?sqp=-oaymwEiCMQBEG5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLCwpXGtBN3-VKdgu2Z-WjmsHaVWUg"
+"width" => 196
+"height" => 110
+]
+2 => array: 3 [
+"url" => "https://i.ytimg.com/vi/FHlGla9c_Fw/hqdefault.jpg?sqp=-oaymwEjCPYBEIoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLBloC43qM6ADk14HhpNlUepaI5fzg"
+"width" => 246
+"height" => 138
+]
+3 => array: 3 [
+"url" => "https://i.ytimg.com/vi/FHlGla9c_Fw/hqdefault.jpg?sqp=-oaymwEjCNACELwBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLDf5tGMVklnJtIYnIv3DLruLjkW5w"
+"width" => 336
+"height" => 188
+]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => "[명성교회] 2025.09.25 새벽기도회 - 손지목 목사"
+]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "[명성교회] 2025.09.25 새벽기도회 - 손지목 목사 20분"
+]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => """
+일자: 2025년 09월 25일 새벽기도회\n
+설교: 손지목 목사\n
+본문: 디모데전서 1장 12-17절\n
+\n
+12. 나를 능하게 하신 그리스도 예수 우리 주께 내가 감사함은...
+"""
+]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "4일 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "20분 55초"
+]
+]
+"simpleText" => "20:55"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 1,765회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CMcBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bWhhVQ25DdlNQZXNveEpKZ1Z0V3hIdVZFUFGaAQMQ8jjKAQTOnvKY"
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 [
+"url" => "/watch?v=FHlGla9c_Fw"
+"webPageType" => "WEB_PAGE_TYPE_WATCH"
+"rootVe" => 3832
+]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "FHlGla9c_Fw"
+"watchEndpointSupportedOnesieConfig" => array: 1 [
+"html5PlaybackOnesieConfig" => array: 1 […1]
+]
+]
+]
+"trackingParams" => "CMcBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bQNz48_ra0tG8FA=="
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "조회수 1.7천회"
+]
+]
+"simpleText" => "조회수 1.7천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 [
+0 => array: 1 […1]
+1 => array: 1 […1]
+]
+"trackingParams" => "CMcBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 [
+"text" => array: 2 […2]
+"style" => "DEFAULT"
+]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 [
+"isToggled" => false
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "나중에 볼 동영상"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"toggledServiceEndpoint" => array: 3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CMkBEPnnAxgBIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 [
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "현재 재생목록에 추가"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CMgBEMfsBBgCIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 [
+"text" => array: 1 […1]
+]
+]
+]
+]
+]
+"trackingParams" => "CMYBEJmNBRgDIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+4 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "BrIKOvK02j4"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 [
+"url" => "https://i.ytimg.com/vi/BrIKOvK02j4/hqdefault.jpg?sqp=-oaymwEiCKgBEF5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLBq_Xgx48CikH8HkqRvfc8vQvyBXg"
+"width" => 168
+"height" => 94
+]
+1 => array: 3 [
+"url" => "https://i.ytimg.com/vi/BrIKOvK02j4/hqdefault.jpg?sqp=-oaymwEiCMQBEG5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLB5eUz_0GAM67BwLGtMAktqmloDXA"
+"width" => 196
+"height" => 110
+]
+2 => array: 3 [
+"url" => "https://i.ytimg.com/vi/BrIKOvK02j4/hqdefault.jpg?sqp=-oaymwEjCPYBEIoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLDZEWjzT3IeTD7TkmUjztppM0JJwA"
+"width" => 246
+"height" => 138
+]
+3 => array: 3 [
+"url" => "https://i.ytimg.com/vi/BrIKOvK02j4/hqdefault.jpg?sqp=-oaymwEjCNACELwBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLBT7y8ZFoV1U-FieynvkJ41HnG6jg"
+"width" => 336
+"height" => 188
+]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => "[명성교회] 2025.09.24 새벽기도회 - 김영태 목사(증경총회장)"
+]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "[명성교회] 2025.09.24 새벽기도회 - 김영태 목사(증경총회장) 19분"
+]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => """
+일자: 2025년 09월 24일 새벽기도회\n
+설교: 김영태 목사(증경총회장)\n
+본문: 마태복음 20장 24-28절\n
+\n
+24. 열 제자가 듣고 그 두 형제에 대하여 분히 여기거...
+"""
+]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "5일 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "19분 50초"
+]
+]
+"simpleText" => "19:50"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 2,574회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CMEBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bWhhVQ25DdlNQZXNveEpKZ1Z0V3hIdVZFUFGaAQMQ8jjKAQTOnvKY"
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 [
+"url" => "/watch?v=BrIKOvK02j4"
+"webPageType" => "WEB_PAGE_TYPE_WATCH"
+"rootVe" => 3832
+]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "BrIKOvK02j4"
+"watchEndpointSupportedOnesieConfig" => array: 1 [
+"html5PlaybackOnesieConfig" => array: 1 […1]
+]
+]
+]
+"trackingParams" => "CMEBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bQL6005Wvx4LZBg=="
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "조회수 2.5천회"
+]
+]
+"simpleText" => "조회수 2.5천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 [
+0 => array: 1 […1]
+1 => array: 1 […1]
+]
+"trackingParams" => "CMEBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 [
+"text" => array: 2 […2]
+"style" => "DEFAULT"
+]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 [
+"isToggled" => false
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "나중에 볼 동영상"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"toggledServiceEndpoint" => array: 3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CMMBEPnnAxgBIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 [
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "현재 재생목록에 추가"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CMIBEMfsBBgCIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 [
+"text" => array: 1 […1]
+]
+]
+]
+]
+]
+"trackingParams" => "CMABEJmNBRgEIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+5 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "4MnY3k05-Mc"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 [
+"url" => "https://i.ytimg.com/vi/4MnY3k05-Mc/hqdefault.jpg?sqp=-oaymwEiCKgBEF5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLAikqw9yychaJrHOLFjiOJUe4JJjQ"
+"width" => 168
+"height" => 94
+]
+1 => array: 3 [
+"url" => "https://i.ytimg.com/vi/4MnY3k05-Mc/hqdefault.jpg?sqp=-oaymwEiCMQBEG5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLC7oto2PNP8osUVEl7z8nO022yvyQ"
+"width" => 196
+"height" => 110
+]
+2 => array: 3 [
+"url" => "https://i.ytimg.com/vi/4MnY3k05-Mc/hqdefault.jpg?sqp=-oaymwEjCPYBEIoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLCdB9CIM1C4vrqw6oHwpliJozGL7g"
+"width" => 246
+"height" => 138
+]
+3 => array: 3 [
+"url" => "https://i.ytimg.com/vi/4MnY3k05-Mc/hqdefault.jpg?sqp=-oaymwEjCNACELwBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLA-b5_velyv68zOqAVMAGFc-Tdmxw"
+"width" => 336
+"height" => 188
+]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => "[명성교회] 2025.09.23 새벽기도회 - 김삼환 원로목사"
+]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "[명성교회] 2025.09.23 새벽기도회 - 김삼환 원로목사 22분"
+]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => """
+일자: 2025년 09월 23일 새벽기도회\n
+설교: 김삼환 원로목사\n
+본문: 히브리서 10장 19-25절\n
+\n
+19. 그러므로 형제들아 우리가 예수의 피를 힘입어 성소에...
+"""
+]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "6일 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "22분 41초"
+]
+]
+"simpleText" => "22:41"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 3,669회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CLsBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bWhhVQ25DdlNQZXNveEpKZ1Z0V3hIdVZFUFGaAQMQ8jjKAQTOnvKY"
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 [
+"url" => "/watch?v=4MnY3k05-Mc&pp=0gcJCfYJAYcqIYzv"
+"webPageType" => "WEB_PAGE_TYPE_WATCH"
+"rootVe" => 3832
+]
+]
+"watchEndpoint" => array: 3 [
+"videoId" => "4MnY3k05-Mc"
+"playerParams" => "0gcJCfYJAYcqIYzv"
+"watchEndpointSupportedOnesieConfig" => array:1 [
+"html5PlaybackOnesieConfig" => array: 1 […1]
+]
+]
+]
+"trackingParams" => "CLsBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bQMfx5-nkm_bk4AE="
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "조회수 3.6천회"
+]
+]
+"simpleText" => "조회수 3.6천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 [
+0 => array: 1 […1]
+1 => array: 1 […1]
+]
+"trackingParams" => "CLsBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 [
+"text" => array: 2 […2]
+"style" => "DEFAULT"
+]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 [
+"isToggled" => false
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "나중에 볼 동영상"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"toggledServiceEndpoint" => array: 3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CL0BEPnnAxgBIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 [
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "현재 재생목록에 추가"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CLwBEMfsBBgCIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 [
+"text" => array: 1 […1]
+]
+]
+]
+]
+]
+"trackingParams" => "CLoBEJmNBRgFIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+6 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "pZ7rNkQH2bE"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 [
+"url" => "https://i.ytimg.com/vi/pZ7rNkQH2bE/hqdefault.jpg?sqp=-oaymwEiCKgBEF5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLCSBC0MZ_-wsGH7CSuEONviKqrq5g"
+"width" => 168
+"height" => 94
+]
+1 => array: 3 [
+"url" => "https://i.ytimg.com/vi/pZ7rNkQH2bE/hqdefault.jpg?sqp=-oaymwEiCMQBEG5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLDXaVHvWvUax-HhUCu_ra9m1Z2JhQ"
+"width" => 196
+"height" => 110
+]
+2 => array: 3 [
+"url" => "https://i.ytimg.com/vi/pZ7rNkQH2bE/hqdefault.jpg?sqp=-oaymwEjCPYBEIoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLDN0aI6EJL-8QCKzbZj843G1-PukA"
+"width" => 246
+"height" => 138
+]
+3 => array: 3 [
+"url" => "https://i.ytimg.com/vi/pZ7rNkQH2bE/hqdefault.jpg?sqp=-oaymwEjCNACELwBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLDmeb7ewKRKRZi-W7ZRZWTTNPvgFA"
+"width" => 336
+"height" => 188
+]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => "[명성교회] 2025.09.21 주일 낮 예배 : 받은 은혜, 오늘의 은혜 그리고 영원히 누릴 은혜 - 김삼환 원로목사"
+]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "[명성교회] 2025.09.21 주일 낮 예배 : 받은 은혜, 오늘의 은혜 그리고 영원히 누릴 은혜 - 김삼환 원로목사 46분"
+]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => """
+일자: 2025년 09월 21일 주일 낮 예배\n
+제목: 받은 은혜, 오늘의 은혜 그리고 영원히 누릴 은혜\n
+설교: 김삼환 원로목사\n
+본문: 디모데전서 1장 12-17절...
+"""
+]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "7일 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "46분"
+]
+]
+"simpleText" => "46:00"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 8,359회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CLUBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bWhhVQ25DdlNQZXNveEpKZ1Z0V3hIdVZFUFGaAQMQ8jjKAQTOnvKY"
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 [
+"url" => "/watch?v=pZ7rNkQH2bE"
+"webPageType" => "WEB_PAGE_TYPE_WATCH"
+"rootVe" => 3832
+]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "pZ7rNkQH2bE"
+"watchEndpointSupportedOnesieConfig" => array: 1 [
+"html5PlaybackOnesieConfig" => array: 1 […1]
+]
+]
+]
+"trackingParams" => "CLUBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bQLGzn6Dk5rrPpQE="
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "조회수 8.3천회"
+]
+]
+"simpleText" => "조회수 8.3천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 [
+0 => array: 1 […1]
+1 => array: 1 […1]
+]
+"trackingParams" => "CLUBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 [
+"text" => array: 2 […2]
+"style" => "DEFAULT"
+]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 [
+"isToggled" => false
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "나중에 볼 동영상"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"toggledServiceEndpoint" => array: 3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CLcBEPnnAxgBIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 [
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "현재 재생목록에 추가"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CLYBEMfsBBgCIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 [
+"text" => array: 1 […1]
+]
+]
+]
+]
+]
+"trackingParams" => "CLQBEJmNBRgGIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+7 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "NBhqz5aAThM"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 [
+"url" => "https://i.ytimg.com/vi/NBhqz5aAThM/hqdefault.jpg?sqp=-oaymwEiCKgBEF5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLB7q7Q6JKI2kcy3GFZhqy7R9ZyLWg"
+"width" => 168
+"height" => 94
+]
+1 => array: 3 [
+"url" => "https://i.ytimg.com/vi/NBhqz5aAThM/hqdefault.jpg?sqp=-oaymwEiCMQBEG5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLBtElNCHntnm3lfPeFV-pAUm30hZg"
+"width" => 196
+"height" => 110
+]
+2 => array: 3 [
+"url" => "https://i.ytimg.com/vi/NBhqz5aAThM/hqdefault.jpg?sqp=-oaymwEjCPYBEIoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLBQRQW4bLs4UkxxlCCZVcS8bXMvVg"
+"width" => 246
+"height" => 138
+]
+3 => array: 3 [
+"url" => "https://i.ytimg.com/vi/NBhqz5aAThM/hqdefault.jpg?sqp=-oaymwEjCNACELwBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLDs0vkQhQhnVb6p9uG7vZUHB2J3NQ"
+"width" => 336
+"height" => 188
+]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => "[명성교회] 2025.09.20 토요 새벽을 깨우는 가정 - 김삼환 원로목사"
+]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "[명성교회] 2025.09.20 토요 새벽을 깨우는 가정 - 김삼환 원로목사 39분"
+]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => """
+일자: 2025년 09월 20일 토요 새벽을 깨우는 가정\n
+설교: 김삼환 원로목사\n
+본문: 창세기 28장 10-15절\n
+\n
+10. 야곱이 브엘세바에서 떠나 하란으로 향하여...
+"""
+]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "9일 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "39분 17초"
+]
+]
+"simpleText" => "39:17"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 3,720회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CK8BENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bWhhVQ25DdlNQZXNveEpKZ1Z0V3hIdVZFUFGaAQMQ8jjKAQTOnvKY"
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 [
+"url" => "/watch?v=NBhqz5aAThM"
+"webPageType" => "WEB_PAGE_TYPE_WATCH"
+"rootVe" => 3832
+]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "NBhqz5aAThM"
+"watchEndpointSupportedOnesieConfig" => array: 1 [
+"html5PlaybackOnesieConfig" => array: 1 […1]
+]
+]
+]
+"trackingParams" => "CK8BENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bQJOcgbT52ZqMNA=="
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "조회수 3.7천회"
+]
+]
+"simpleText" => "조회수 3.7천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 [
+0 => array: 1 […1]
+1 => array: 1 […1]
+]
+"trackingParams" => "CK8BENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 [
+"text" => array: 2 […2]
+"style" => "DEFAULT"
+]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 [
+"isToggled" => false
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "나중에 볼 동영상"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"toggledServiceEndpoint" => array: 3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CLEBEPnnAxgBIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 [
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "현재 재생목록에 추가"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CLABEMfsBBgCIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 [
+"text" => array: 1 […1]
+]
+]
+]
+]
+]
+"trackingParams" => "CK4BEJmNBRgHIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+8 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "rk5-Dy8TEuE"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 [
+"url" => "https://i.ytimg.com/vi/rk5-Dy8TEuE/hqdefault.jpg?sqp=-oaymwEiCKgBEF5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLBkgrx4TGbvO05lZc0SmjmENByydw"
+"width" => 168
+"height" => 94
+]
+1 => array: 3 [
+"url" => "https://i.ytimg.com/vi/rk5-Dy8TEuE/hqdefault.jpg?sqp=-oaymwEiCMQBEG5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLDTnW0TMm1NQc9ZnGQ4YhTeItmwWQ"
+"width" => 196
+"height" => 110
+]
+2 => array: 3 [
+"url" => "https://i.ytimg.com/vi/rk5-Dy8TEuE/hqdefault.jpg?sqp=-oaymwEjCPYBEIoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLDnt53CFL_YW6LRpqm0vrfGar50TQ"
+"width" => 246
+"height" => 138
+]
+3 => array: 3 [
+"url" => "https://i.ytimg.com/vi/rk5-Dy8TEuE/hqdefault.jpg?sqp=-oaymwEjCNACELwBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLBmzo1NfjFBZOHH-Zi-PwG926OsMw"
+"width" => 336
+"height" => 188
+]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => "[명성교회] 2025.09.19 새벽기도회 : 순수함을 사모하라 - 김하나 담임목사"
+]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "[명성교회] 2025.09.19 새벽기도회 : 순수함을 사모하라 - 김하나 담임목사 21분"
+]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => """
+일자: 2025년 09월 19일 새벽기도회\n
+제목: 순수함을 사모하라\n
+설교: 김하나 담임목사\n
+본문: 시편24편 1-6절\n
+\n
+1. 땅과 거기에 충만한 것과 세계와 그...
+"""
+]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "10일 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "21분 39초"
+]
+]
+"simpleText" => "21:39"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 4,766회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CKkBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bWhhVQ25DdlNQZXNveEpKZ1Z0V3hIdVZFUFGaAQMQ8jjKAQTOnvKY"
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 [
+"url" => "/watch?v=rk5-Dy8TEuE"
+"webPageType" => "WEB_PAGE_TYPE_WATCH"
+"rootVe" => 3832
+]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "rk5-Dy8TEuE"
+"watchEndpointSupportedOnesieConfig" => array: 1 [
+"html5PlaybackOnesieConfig" => array: 1 […1]
+]
+]
+]
+"trackingParams" => "CKkBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bQOGlzPjywZ-nrgE="
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "조회수 4.7천회"
+]
+]
+"simpleText" => "조회수 4.7천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 [
+0 => array: 1 […1]
+1 => array: 1 […1]
+]
+"trackingParams" => "CKkBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 [
+"text" => array: 2 […2]
+"style" => "DEFAULT"
+]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 [
+"isToggled" => false
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "나중에 볼 동영상"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"toggledServiceEndpoint" => array: 3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CKsBEPnnAxgBIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 [
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "현재 재생목록에 추가"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CKoBEMfsBBgCIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 [
+"text" => array: 1 […1]
+]
+]
+]
+]
+]
+"trackingParams" => "CKgBEJmNBRgIIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+9 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "RqFTv_nxHuM"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 [
+"url" => "https://i.ytimg.com/vi/RqFTv_nxHuM/hqdefault.jpg?sqp=-oaymwEiCKgBEF5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLDXysCf6lN_56vBDAZXog5vvszmqw"
+"width" => 168
+"height" => 94
+]
+1 => array: 3 [
+"url" => "https://i.ytimg.com/vi/RqFTv_nxHuM/hqdefault.jpg?sqp=-oaymwEiCMQBEG5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLBQh2V1bf1V8woP75ey4HfqaCk0hg"
+"width" => 196
+"height" => 110
+]
+2 => array: 3 [
+"url" => "https://i.ytimg.com/vi/RqFTv_nxHuM/hqdefault.jpg?sqp=-oaymwEjCPYBEIoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLDIgLlC64dTnhLaWObJLLaTb92-MQ"
+"width" => 246
+"height" => 138
+]
+3 => array: 3 [
+"url" => "https://i.ytimg.com/vi/RqFTv_nxHuM/hqdefault.jpg?sqp=-oaymwEjCNACELwBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLBWtTcmzGC1NXai7umyQd_eYsifcw"
+"width" => 336
+"height" => 188
+]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => "[명성교회] 2025.09.18 새벽기도회 - 박현규 목사"
+]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "[명성교회] 2025.09.18 새벽기도회 - 박현규 목사 19분"
+]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => """
+일자: 2025년 09월 18일 새벽기도회\n
+설교: 박현규 목사\n
+본문: 빌립보서 3장 1-9절\n
+\n
+1. 끝으로 나의 형제들아 주 안에서 기뻐하라 너희에게 같은 말을...
+"""
+]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "11일 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "19분 51초"
+]
+]
+"simpleText" => "19:51"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 2,103회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CKMBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bWhhVQ25DdlNQZXNveEpKZ1Z0V3hIdVZFUFGaAQMQ8jjKAQTOnvKY"
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 [
+"url" => "/watch?v=RqFTv_nxHuM"
+"webPageType" => "WEB_PAGE_TYPE_WATCH"
+"rootVe" => 3832
+]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "RqFTv_nxHuM"
+"watchEndpointSupportedOnesieConfig" => array: 1 [
+"html5PlaybackOnesieConfig" => array: 1 […1]
+]
+]
+]
+"trackingParams" => "CKMBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bQOO9xM__99TQRg=="
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "조회수 2.1천회"
+]
+]
+"simpleText" => "조회수 2.1천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 [
+0 => array: 1 […1]
+1 => array: 1 […1]
+]
+"trackingParams" => "CKMBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 [
+"text" => array: 2 […2]
+"style" => "DEFAULT"
+]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 [
+"isToggled" => false
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "나중에 볼 동영상"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"toggledServiceEndpoint" => array: 3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CKUBEPnnAxgBIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 [
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "현재 재생목록에 추가"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CKQBEMfsBBgCIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 [
+"text" => array: 1 […1]
+]
+]
+]
+]
+]
+"trackingParams" => "CKIBEJmNBRgJIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+10 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "d5-ZvttxIEw"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 [
+"url" => "https://i.ytimg.com/vi/d5-ZvttxIEw/hqdefault.jpg?sqp=-oaymwEiCKgBEF5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLDeyp55EhpTEG_M6mbYSWREC7xEmg"
+"width" => 168
+"height" => 94
+]
+1 => array: 3 [
+"url" => "https://i.ytimg.com/vi/d5-ZvttxIEw/hqdefault.jpg?sqp=-oaymwEiCMQBEG5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLDIBrQe1k5mxoGFHmVgtzi6UtGioA"
+"width" => 196
+"height" => 110
+]
+2 => array: 3 [
+"url" => "https://i.ytimg.com/vi/d5-ZvttxIEw/hqdefault.jpg?sqp=-oaymwEjCPYBEIoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLCFAACq232Jx1NxFOCL9eXg1aJ_Wg"
+"width" => 246
+"height" => 138
+]
+3 => array: 3 [
+"url" => "https://i.ytimg.com/vi/d5-ZvttxIEw/hqdefault.jpg?sqp=-oaymwEjCNACELwBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLBEq4Z4niaAFSr6MpXPwX0ftYMwSA"
+"width" => 336
+"height" => 188
+]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => "[명성교회] 2025.09.17 새벽기도회 : 거듭난 헌신 - 황대석 목사"
+]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "[명성교회] 2025.09.17 새벽기도회 : 거듭난 헌신 - 황대석 목사 21분"
+]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => """
+일자: 2025년 09월 17일 새벽기도회\n
+제목: 거듭난 헌신\n
+설교: 황대석 목사\n
+본문: 출애굽기 32장 25-29절\n
+\n
+25. 모세가 본즉 백성이 방자하니 이는 아론이...
+"""
+]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "12일 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "21분 15초"
+]
+]
+"simpleText" => "21:15"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 2,449회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CJ0BENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bWhhVQ25DdlNQZXNveEpKZ1Z0V3hIdVZFUFGaAQMQ8jjKAQTOnvKY"
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 [
+"url" => "/watch?v=d5-ZvttxIEw"
+"webPageType" => "WEB_PAGE_TYPE_WATCH"
+"rootVe" => 3832
+]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "d5-ZvttxIEw"
+"watchEndpointSupportedOnesieConfig" => array: 1 [
+"html5PlaybackOnesieConfig" => array: 1 […1]
+]
+]
+]
+"trackingParams" => "CJ0BENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bQMzAxNvtt-bPdw=="
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "조회수 2.4천회"
+]
+]
+"simpleText" => "조회수 2.4천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 [
+0 => array: 1 […1]
+1 => array: 1 […1]
+]
+"trackingParams" => "CJ0BENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 [
+"text" => array: 2 […2]
+"style" => "DEFAULT"
+]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 [
+"isToggled" => false
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "나중에 볼 동영상"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"toggledServiceEndpoint" => array: 3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CJ8BEPnnAxgBIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 [
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "현재 재생목록에 추가"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CJ4BEMfsBBgCIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 [
+"text" => array: 1 […1]
+]
+]
+]
+]
+]
+"trackingParams" => "CJwBEJmNBRgKIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+11 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "p-_dBlCl0cs"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 [
+"url" => "https://i.ytimg.com/vi/p-_dBlCl0cs/hqdefault.jpg?sqp=-oaymwEiCKgBEF5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLBjuhWzCi_gmTHOFTdijZJuppbzYQ"
+"width" => 168
+"height" => 94
+]
+1 => array: 3 [
+"url" => "https://i.ytimg.com/vi/p-_dBlCl0cs/hqdefault.jpg?sqp=-oaymwEiCMQBEG5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLCfT8WKYKKT5KLstm67ClokDneOog"
+"width" => 196
+"height" => 110
+]
+2 => array: 3 [
+"url" => "https://i.ytimg.com/vi/p-_dBlCl0cs/hqdefault.jpg?sqp=-oaymwEjCPYBEIoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLAs4fu_u7Nu8gL18oXVgyOh6K5NeA"
+"width" => 246
+"height" => 138
+]
+3 => array: 3 [
+"url" => "https://i.ytimg.com/vi/p-_dBlCl0cs/hqdefault.jpg?sqp=-oaymwEjCNACELwBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLDaJapzS21ftvpzq27RFQLUwdZY5g"
+"width" => 336
+"height" => 188
+]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => "[명성교회] 2025.09.16 새벽기도회: 놀라운 하나님의 은혜 - 한정민 목사"
+]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "[명성교회] 2025.09.16 새벽기도회: 놀라운 하나님의 은혜 - 한정민 목사 21분"
+]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => """
+일자: 2025년 09월 16일 새벽기도회\n
+제목: 놀라운 하나님의 은혜\n
+설교 : 한정민 목사\n
+본문: 요한복음 1장 12-16절\n
+\n
+12. 영접하는 자 곧 그 이름을 믿는...
+"""
+]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "13일 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "21분 24초"
+]
+]
+"simpleText" => "21:24"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 2,850회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CJcBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bWhhVQ25DdlNQZXNveEpKZ1Z0V3hIdVZFUFGaAQMQ8jjKAQTOnvKY"
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 [
+"url" => "/watch?v=p-_dBlCl0cs"
+"webPageType" => "WEB_PAGE_TYPE_WATCH"
+"rootVe" => 3832
+]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "p-_dBlCl0cs"
+"watchEndpointSupportedOnesieConfig" => array: 1 [
+"html5PlaybackOnesieConfig" => array: 1 […1]
+]
+]
+]
+"trackingParams" => "CJcBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bQMujl4XloPf3pwE="
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "조회수 2.8천회"
+]
+]
+"simpleText" => "조회수 2.8천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 [
+0 => array: 1 […1]
+1 => array: 1 […1]
+]
+"trackingParams" => "CJcBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 [
+"text" => array: 2 […2]
+"style" => "DEFAULT"
+]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 [
+"isToggled" => false
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "나중에 볼 동영상"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"toggledServiceEndpoint" => array: 3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CJkBEPnnAxgBIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 [
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "현재 재생목록에 추가"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CJgBEMfsBBgCIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 [
+"text" => array: 1 […1]
+]
+]
+]
+]
+]
+"trackingParams" => "CJYBEJmNBRgLIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+12 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "7tIg_LmN5Uw"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 [
+"url" => "https://i.ytimg.com/vi/7tIg_LmN5Uw/hqdefault.jpg?sqp=-oaymwEiCKgBEF5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLDU9_TTu4kIyRVQGFMp6OH7Ja8FGQ"
+"width" => 168
+"height" => 94
+]
+1 => array: 3 [
+"url" => "https://i.ytimg.com/vi/7tIg_LmN5Uw/hqdefault.jpg?sqp=-oaymwEiCMQBEG5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLAZzrRz68Sj0eXfsJE1xc8P_Xkv3w"
+"width" => 196
+"height" => 110
+]
+2 => array: 3 [
+"url" => "https://i.ytimg.com/vi/7tIg_LmN5Uw/hqdefault.jpg?sqp=-oaymwEjCPYBEIoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLDGdqpgXyXLuMACM3wV2SotroEpFw"
+"width" => 246
+"height" => 138
+]
+3 => array: 3 [
+"url" => "https://i.ytimg.com/vi/7tIg_LmN5Uw/hqdefault.jpg?sqp=-oaymwEjCNACELwBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLB66zsQHYesHrEmSgMad5xYknSF_A"
+"width" => 336
+"height" => 188
+]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => "[명성교회] 2025.09.14 주일 낮 예배 : 거듭나지 않은 사람의 위험성 - 김하나 담임목사"
+]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "[명성교회] 2025.09.14 주일 낮 예배 : 거듭나지 않은 사람의 위험성 - 김하나 담임목사 35분"
+]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => """
+일자: 2025년 09월 14일 주일 낮 예배\n
+제목: 거듭나지 않은 사람의 위험성\n
+설교: 김하나 담임목사\n
+본문: 누가복음 22장 28-32절\n
+\n
+28. 너희는 나의 모든...
+"""
+]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "2주 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "35분 15초"
+]
+]
+"simpleText" => "35:15"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 10,300회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CJEBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bWhhVQ25DdlNQZXNveEpKZ1Z0V3hIdVZFUFGaAQMQ8jjKAQTOnvKY"
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 [
+"url" => "/watch?v=7tIg_LmN5Uw"
+"webPageType" => "WEB_PAGE_TYPE_WATCH"
+"rootVe" => 3832
+]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "7tIg_LmN5Uw"
+"watchEndpointSupportedOnesieConfig" => array: 1 [
+"html5PlaybackOnesieConfig" => array: 1 […1]
+]
+]
+]
+"trackingParams" => "CJEBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bQMzKt8zLn4jp7gE="
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "조회수 1만회"
+]
+]
+"simpleText" => "조회수 1만회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 [
+0 => array: 1 […1]
+1 => array: 1 […1]
+]
+"trackingParams" => "CJEBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 [
+"text" => array: 2 […2]
+"style" => "DEFAULT"
+]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 [
+"isToggled" => false
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "나중에 볼 동영상"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"toggledServiceEndpoint" => array: 3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CJMBEPnnAxgBIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 [
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "현재 재생목록에 추가"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CJIBEMfsBBgCIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 [
+"text" => array: 1 […1]
+]
+]
+]
+]
+]
+"trackingParams" => "CJABEJmNBRgMIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+13 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "L8vmHnLoPXg"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 [
+"url" => "https://i.ytimg.com/vi/L8vmHnLoPXg/hqdefault.jpg?sqp=-oaymwEiCKgBEF5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLAm9m6ehsw_GfzdD9yRaKxDK-EPzA"
+"width" => 168
+"height" => 94
+]
+1 => array: 3 [
+"url" => "https://i.ytimg.com/vi/L8vmHnLoPXg/hqdefault.jpg?sqp=-oaymwEiCMQBEG5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLBAqr63SUpU5DQbTaYLTXgDC5yfzQ"
+"width" => 196
+"height" => 110
+]
+2 => array: 3 [
+"url" => "https://i.ytimg.com/vi/L8vmHnLoPXg/hqdefault.jpg?sqp=-oaymwEjCPYBEIoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLBnvup8Ii_sHMxyGZm4B0Cy0CuleA"
+"width" => 246
+"height" => 138
+]
+3 => array: 3 [
+"url" => "https://i.ytimg.com/vi/L8vmHnLoPXg/hqdefault.jpg?sqp=-oaymwEjCNACELwBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLBeulh0SFZV_FDtLxgtyaUwFUK52g"
+"width" => 336
+"height" => 188
+]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => "[명성교회] 2025.09.13 토요 새벽을 깨우는 가정 : 하늘을 바라보는 영성 - 김하나 담임목사"
+]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "[명성교회] 2025.09.13 토요 새벽을 깨우는 가정 : 하늘을 바라보는 영성 - 김하나 담임목사 34분"
+]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => """
+일자: 2025년 09월 13일 토요 새벽을 깨우는 가정\n
+제목: 하늘을 바라보는 영성\n
+설교: 김하나 담임목사\n
+본문: 사도행전 7장 54-60절\n
+\n
+54. 그들이 이...
+"""
+]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "2주 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "34분 18초"
+]
+]
+"simpleText" => "34:18"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 4,339회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CIsBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bWhhVQ25DdlNQZXNveEpKZ1Z0V3hIdVZFUFGaAQMQ8jjKAQTOnvKY"
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 [
+"url" => "/watch?v=L8vmHnLoPXg"
+"webPageType" => "WEB_PAGE_TYPE_WATCH"
+"rootVe" => 3832
+]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "L8vmHnLoPXg"
+"watchEndpointSupportedOnesieConfig" => array: 1 [
+"html5PlaybackOnesieConfig" => array: 1 […1]
+]
+]
+]
+"trackingParams" => "CIsBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bQPj6oJfnw_nlLw=="
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "조회수 4.3천회"
+]
+]
+"simpleText" => "조회수 4.3천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 [
+0 => array: 1 […1]
+1 => array: 1 […1]
+]
+"trackingParams" => "CIsBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 [
+"text" => array: 2 […2]
+"style" => "DEFAULT"
+]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 [
+"isToggled" => false
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "나중에 볼 동영상"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"toggledServiceEndpoint" => array: 3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CI0BEPnnAxgBIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 [
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "현재 재생목록에 추가"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CIwBEMfsBBgCIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 [
+"text" => array: 1 […1]
+]
+]
+]
+]
+]
+"trackingParams" => "CIoBEJmNBRgNIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+14 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "8fngyYs5I-o"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 [
+"url" => "https://i.ytimg.com/vi/8fngyYs5I-o/hqdefault.jpg?sqp=-oaymwEiCKgBEF5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLAh9cVkGI5nKpWLQ7_cqGCUAYYUyw"
+"width" => 168
+"height" => 94
+]
+1 => array: 3 [
+"url" => "https://i.ytimg.com/vi/8fngyYs5I-o/hqdefault.jpg?sqp=-oaymwEiCMQBEG5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLD1A5p4biXDZAuI7ZV82GuR2rKOYA"
+"width" => 196
+"height" => 110
+]
+2 => array: 3 [
+"url" => "https://i.ytimg.com/vi/8fngyYs5I-o/hqdefault.jpg?sqp=-oaymwEjCPYBEIoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLAk_1DI5-NCyo7TzdkwlFOdxqFGeg"
+"width" => 246
+"height" => 138
+]
+3 => array: 3 [
+"url" => "https://i.ytimg.com/vi/8fngyYs5I-o/hqdefault.jpg?sqp=-oaymwEjCNACELwBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLAjgpxQ5yeXObx9-hnt9Iy2ANg7iw"
+"width" => 336
+"height" => 188
+]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => "[명성교회] 2025.09.12 새벽기도회 : 슬기로운 믿음은 무엇인가 - 김하나 담임목사"
+]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "[명성교회] 2025.09.12 새벽기도회 : 슬기로운 믿음은 무엇인가 - 김하나 담임목사 21분"
+]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => """
+일자: 2025년 09월 12일 새벽기도회\n
+제목: 슬기로운 믿음은 무엇인가\n
+설교 : 김하나 담임목사\n
+본문: 마태복음 25장 13절\n
+\n
+13그런즉 깨어 있으라 너희는...
+"""
+]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "2주 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "21분 6초"
+]
+]
+"simpleText" => "21:06"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 4,538회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CIUBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bWhhVQ25DdlNQZXNveEpKZ1Z0V3hIdVZFUFGaAQMQ8jjKAQTOnvKY"
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 [
+"url" => "/watch?v=8fngyYs5I-o"
+"webPageType" => "WEB_PAGE_TYPE_WATCH"
+"rootVe" => 3832
+]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "8fngyYs5I-o"
+"watchEndpointSupportedOnesieConfig" => array: 1 [
+"html5PlaybackOnesieConfig" => array: 1 […1]
+]
+]
+]
+"trackingParams" => "CIUBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9bQOrH5NmYmfj88QE="
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "조회수 4.5천회"
+]
+]
+"simpleText" => "조회수 4.5천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 [
+0 => array: 1 […1]
+1 => array: 1 […1]
+]
+"trackingParams" => "CIUBENwwIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 [
+"text" => array: 2 […2]
+"style" => "DEFAULT"
+]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 [
+"isToggled" => false
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "나중에 볼 동영상"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"toggledServiceEndpoint" => array: 3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CIcBEPnnAxgBIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 [
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "현재 재생목록에 추가"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CIYBEMfsBBgCIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 [
+"text" => array: 1 […1]
+]
+]
+]
+]
+]
+"trackingParams" => "CIQBEJmNBRgOIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+15 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "jpwGW-Taorw"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 [
+"url" => "https://i.ytimg.com/vi/jpwGW-Taorw/hqdefault.jpg?sqp=-oaymwEiCKgBEF5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLBdyS56uR_huBJkaEoCdhCvGxMlNQ"
+"width" => 168
+"height" => 94
+]
+1 => array: 3 [
+"url" => "https://i.ytimg.com/vi/jpwGW-Taorw/hqdefault.jpg?sqp=-oaymwEiCMQBEG5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLC7rq7Ac5GovnZ4aq8E5UcjZC9FEQ"
+"width" => 196
+"height" => 110
+]
+2 => array: 3 [
+"url" => "https://i.ytimg.com/vi/jpwGW-Taorw/hqdefault.jpg?sqp=-oaymwEjCPYBEIoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLBU1rhBYkviPn4Dg1iZoxJHhILjAA"
+"width" => 246
+"height" => 138
+]
+3 => array: 3 [
+"url" => "https://i.ytimg.com/vi/jpwGW-Taorw/hqdefault.jpg?sqp=-oaymwEjCNACELwBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLALr65fYFoy6LRZBZuZ6JTJgyXiaA"
+"width" => 336
+"height" => 188
+]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => "[명성교회] 2025.09.11 새벽기도회 - 이서구 목사"
+]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "[명성교회] 2025.09.11 새벽기도회 - 이서구 목사 18분"
+]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => """
+일자: 2025년 09월 11일 새벽기도회\n
+설교: 이서구 목사\n
+본문: 신명기 8장 2-3절\n
+\n
+2. 네 하나님 여호와께서 이 사십 년 동안에 네게 광야 길을 걷게...
+"""
+]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "2주 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "18분 41초"
+]
+]
+"simpleText" => "18:41"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 1,587회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CH8Q3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1taGFVDbkN2U1Blc294SkpnVnRXeEh1VkVQUZoBAxDyOMoBBM6e8pg="
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 [
+"url" => "/watch?v=jpwGW-Taorw"
+"webPageType" => "WEB_PAGE_TYPE_WATCH"
+"rootVe" => 3832
+]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "jpwGW-Taorw"
+"watchEndpointSupportedOnesieConfig" => array: 1 [
+"html5PlaybackOnesieConfig" => array: 1 […1]
+]
+]
+]
+"trackingParams" => "CH8Q3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1tAvMXqpr7Lgc6OAQ=="
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "조회수 1.5천회"
+]
+]
+"simpleText" => "조회수 1.5천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 [
+0 => array: 1 […1]
+1 => array: 1 […1]
+]
+"trackingParams" => "CH8Q3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 [
+"text" => array: 2 […2]
+"style" => "DEFAULT"
+]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 [
+"isToggled" => false
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "나중에 볼 동영상"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"toggledServiceEndpoint" => array: 3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CIEBEPnnAxgBIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 [
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "현재 재생목록에 추가"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CIABEMfsBBgCIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 [
+"text" => array: 1 […1]
+]
+]
+]
+]
+]
+"trackingParams" => "CH4QmY0FGA8iEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+]
+]
+16 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "yYGcgqI0YaY"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 [
+"url" => "https://i.ytimg.com/vi/yYGcgqI0YaY/hqdefault.jpg?sqp=-oaymwEiCKgBEF5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLAhRFhc6_ne_yis_aTrr8a7U_jeKw"
+"width" => 168
+"height" => 94
+]
+1 => array: 3 [
+"url" => "https://i.ytimg.com/vi/yYGcgqI0YaY/hqdefault.jpg?sqp=-oaymwEiCMQBEG5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLB7eW5tLh0Dohcodrj2b73Izq8Zag"
+"width" => 196
+"height" => 110
+]
+2 => array: 3 [
+"url" => "https://i.ytimg.com/vi/yYGcgqI0YaY/hqdefault.jpg?sqp=-oaymwEjCPYBEIoBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLC4HbNgRyJnJgMwtXLwa4B1v_dgxQ"
+"width" => 246
+"height" => 138
+]
+3 => array: 3 [
+"url" => "https://i.ytimg.com/vi/yYGcgqI0YaY/hqdefault.jpg?sqp=-oaymwEjCNACELwBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLCsA7o3A_c43XttrYJBBAZHap7YHg"
+"width" => 336
+"height" => 188
+]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => "[명성교회] 2025.09.10 새벽기도회 - 김삼환 원로목사"
+]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "[명성교회] 2025.09.10 새벽기도회 - 김삼환 원로목사 24분"
+]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 [
+"text" => """
+일자: 2025년 09월 10일 새벽기도회\n
+설교: 김삼환 원로목사\n
+본문: 시편 73편 16-17절\n
+\n
+16. 내가 어쩌면 이를 알까 하여 생각한즉 그것이 내게 심한 고통이...
+"""
+]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "2주 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "24분 59초"
+]
+]
+"simpleText" => "24:59"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 4,443회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CHkQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1taGFVDbkN2U1Blc294SkpnVnRXeEh1VkVQUZoBAxDyOMoBBM6e8pg="
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 [
+"url" => "/watch?v=yYGcgqI0YaY"
+"webPageType" => "WEB_PAGE_TYPE_WATCH"
+"rootVe" => 3832
+]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "yYGcgqI0YaY"
+"watchEndpointSupportedOnesieConfig" => array: 1 [
+"html5PlaybackOnesieConfig" => array: 1 […1]
+]
+]
+]
+"trackingParams" => "CHkQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1tApsPRkaqQ58DJAQ=="
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 [
+"label" => "조회수 4.4천회"
+]
+]
+"simpleText" => "조회수 4.4천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 [
+0 => array: 1 […1]
+1 => array: 1 […1]
+]
+"trackingParams" => "CHkQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 [
+"text" => array: 2 […2]
+"style" => "DEFAULT"
+]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 [
+"isToggled" => false
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "나중에 볼 동영상"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"toggledServiceEndpoint" => array: 3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CHsQ-ecDGAEiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 [
+"untoggledIcon" => array: 1 […1]
+"toggledIcon" => array: 1 […1]
+"untoggledTooltip" => "현재 재생목록에 추가"
+"toggledTooltip" => "추가됨"
+"untoggledServiceEndpoint" => array:3 […3]
+"untoggledAccessibility" => array: 1 […1]
+"toggledAccessibility" => array: 1 […1]
+"trackingParams" => "CHoQx-wEGAIiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 [
+"text" => array: 1 […1]
+]
+]
+]
+]
+]
+"trackingParams" => "CHgQmY0FGBAiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+]
+]
+17 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "1osmo-OofKw"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 [
+"url" => "https://i.ytimg.com/vi/1osmo-OofKw/hqdefault.jpg?sqp=-oaymwEiCKgBEF5IWvKriqkDFQgBFQAAAAAYASUAAMhCPQCAokN4AQ==&rs=AOn4CLCudJMpNl56aJJC0qi55i5gkeRzEw"
+…2
+]
+1 => array: 3 […3]
+2 => array: 3 […3]
+3 => array: 3 […3]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "2주 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "20:50"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 5,134회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CHMQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1taGFVDbkN2U1Blc294SkpnVnRXeEh1VkVQUZoBAxDyOMoBBM6e8pg="
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 […3]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "1osmo-OofKw"
+"watchEndpointSupportedOnesieConfig" => array: 1 […1]
+]
+]
+"trackingParams" => "CHMQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1tArPmhnb7UycXWAQ=="
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "조회수 5.1천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 […2]
+"trackingParams" => "CHMQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+"accessibility" => array: 1 […1]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 […2]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 […10]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 […8]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 […1]
+]
+]
+]
+]
+"trackingParams" => "CHIQmY0FGBEiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+]
+]
+18 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "5O9tICRyTKU"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 […3]
+1 => array: 3 […3]
+2 => array: 3 […3]
+3 => array: 3 […3]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "3주 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "36:04"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 9,343회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CG0Q3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1taGFVDbkN2U1Blc294SkpnVnRXeEh1VkVQUZoBAxDyOMoBBM6e8pg="
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 […3]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "5O9tICRyTKU"
+"watchEndpointSupportedOnesieConfig" => array: 1 […1]
+]
+]
+"trackingParams" => "CG0Q3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1tApZnJo4Kk2_fkAQ=="
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "조회수 9.3천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 […2]
+"trackingParams" => "CG0Q3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+"accessibility" => array: 1 […1]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 […2]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 […10]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 […8]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 […1]
+]
+]
+]
+]
+"trackingParams" => "CGwQmY0FGBIiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+]
+]
+19 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "b2rIOjt4EeM"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 […3]
+1 => array: 3 […3]
+2 => array: 3 […3]
+3 => array: 3 […3]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "4주 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "39:01"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 1,815회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CGcQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1taGFVDbkN2U1Blc294SkpnVnRXeEh1VkVQUZoBAxDyOMoBBM6e8pg="
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 […3]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "b2rIOjt4EeM"
+"watchEndpointSupportedOnesieConfig" => array: 1 […1]
+]
+]
+"trackingParams" => "CGcQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1tA46Pg26OHsrVv"
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "조회수 1.8천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 […2]
+"trackingParams" => "CGcQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+"accessibility" => array: 1 […1]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 […2]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 […10]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 […8]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 […1]
+]
+]
+]
+]
+"trackingParams" => "CGYQmY0FGBMiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+]
+]
+20 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "15jzJHsPXPA"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 […3]
+1 => array: 3 […3]
+2 => array: 3 […3]
+3 => array: 3 […3]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "4주 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "32:27"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 1,057회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CGEQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1taGFVDbkN2U1Blc294SkpnVnRXeEh1VkVQUZoBAxDyOMoBBM6e8pg="
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 […3]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "15jzJHsPXPA"
+"watchEndpointSupportedOnesieConfig" => array: 1 […1]
+]
+]
+"trackingParams" => "CGEQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1tA8Lm92MfkvMzXAQ=="
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "조회수 1천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 […2]
+"trackingParams" => "CGEQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+"accessibility" => array: 1 […1]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 […2]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 […10]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 […8]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 […1]
+]
+]
+]
+]
+"trackingParams" => "CGAQmY0FGBQiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+]
+]
+21 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "Q8eiijRuLzQ"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 […3]
+1 => array: 3 […3]
+2 => array: 3 […3]
+3 => array: 3 […3]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "4주 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "34:51"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 1,499회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CFsQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1taGFVDbkN2U1Blc294SkpnVnRXeEh1VkVQUZoBAxDyOMoBBM6e8pg="
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 […3]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "Q8eiijRuLzQ"
+"watchEndpointSupportedOnesieConfig" => array: 1 […1]
+]
+]
+"trackingParams" => "CFsQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1tAtN64o6PR6OND"
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "조회수 1.4천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 […2]
+"trackingParams" => "CFsQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+"accessibility" => array: 1 […1]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 […2]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 […10]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 […8]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 […1]
+]
+]
+]
+]
+"trackingParams" => "CFoQmY0FGBUiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+]
+]
+22 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "hlQAcLQ_Jns"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 […3]
+1 => array: 3 […3]
+2 => array: 3 […3]
+3 => array: 3 […3]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "4주 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "34:04"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 1,636회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CFUQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1taGFVDbkN2U1Blc294SkpnVnRXeEh1VkVQUZoBAxDyOMoBBM6e8pg="
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 […3]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "hlQAcLQ_Jns"
+"watchEndpointSupportedOnesieConfig" => array: 1 […1]
+]
+]
+"trackingParams" => "CFUQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1tA-8z8oYuOgKqGAQ=="
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "조회수 1.6천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 […2]
+"trackingParams" => "CFUQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+"accessibility" => array: 1 […1]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 […2]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 […10]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 […8]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 […1]
+]
+]
+]
+]
+"trackingParams" => "CFQQmY0FGBYiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+]
+]
+23 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "Ffh9P6kE1J0"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 […3]
+1 => array: 3 […3]
+2 => array: 3 […3]
+3 => array: 3 […3]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "4주 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "27:20"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 2,845회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CE8Q3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1taGFVDbkN2U1Blc294SkpnVnRXeEh1VkVQUZoBAxDyOMoBBM6e8pg="
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 […3]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "Ffh9P6kE1J0"
+"watchEndpointSupportedOnesieConfig" => array: 1 […1]
+]
+]
+"trackingParams" => "CE8Q3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1tAnamTyPqnn_wV"
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "조회수 2.8천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 […2]
+"trackingParams" => "CE8Q3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+"accessibility" => array: 1 […1]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 […2]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 […10]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 […8]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 […1]
+]
+]
+]
+]
+"trackingParams" => "CE4QmY0FGBciEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+]
+]
+24 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "oX7pOjFgQj4"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 […3]
+1 => array: 3 […3]
+2 => array: 3 […3]
+3 => array: 3 […3]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "4주 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "4:21"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 3,278회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CEkQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1taGFVDbkN2U1Blc294SkpnVnRXeEh1VkVQUZoBAxDyOMoBBM6e8pg="
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 […3]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "oX7pOjFgQj4"
+"watchEndpointSupportedOnesieConfig" => array: 1 […1]
+]
+]
+"trackingParams" => "CEkQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1tAvoSBi6Onur-hAQ=="
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "조회수 3.2천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 […2]
+"trackingParams" => "CEkQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+"accessibility" => array: 1 […1]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 […2]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 […10]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 […8]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 […1]
+]
+]
+]
+]
+"trackingParams" => "CEgQmY0FGBgiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+]
+]
+25 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "hpHKAh7vLns"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 […3]
+1 => array: 3 […3]
+2 => array: 3 […3]
+3 => array: 3 […3]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "4주 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "5:24"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 3,015회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CEMQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1taGFVDbkN2U1Blc294SkpnVnRXeEh1VkVQUZoBAxDyOMoBBM6e8pg="
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 […3]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "hpHKAh7vLns"
+"watchEndpointSupportedOnesieConfig" => array: 1 […1]
+]
+]
+"trackingParams" => "CEMQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1tA-9y896HA8siGAQ=="
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "조회수 3천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 […2]
+"trackingParams" => "CEMQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+"accessibility" => array: 1 […1]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 […2]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 […10]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 […8]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 […1]
+]
+]
+]
+]
+"trackingParams" => "CEIQmY0FGBkiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+]
+]
+26 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "pjtcn1EoQnM"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 […3]
+1 => array: 3 […3]
+2 => array: 3 […3]
+3 => array: 3 […3]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "4주 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "33:03"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 3,943회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CD0Q3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1taGFVDbkN2U1Blc294SkpnVnRXeEh1VkVQUZoBAxDyOMoBBM6e8pg="
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 […3]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "pjtcn1EoQnM"
+"watchEndpointSupportedOnesieConfig" => array: 1 […1]
+]
+]
+"trackingParams" => "CD0Q3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1tA84ShifWT152mAQ=="
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "조회수 3.9천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 […2]
+"trackingParams" => "CD0Q3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+"accessibility" => array: 1 […1]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 […2]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 […10]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 […8]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 […1]
+]
+]
+]
+]
+"trackingParams" => "CDwQmY0FGBoiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+]
+]
+27 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "fyDzLMMvBbs"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 […3]
+1 => array: 3 […3]
+2 => array: 3 […3]
+3 => array: 3 […3]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "4주 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "5:23"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 564회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CDcQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1taGFVDbkN2U1Blc294SkpnVnRXeEh1VkVQUZoBAxDyOMoBBM6e8pg="
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 […3]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "fyDzLMMvBbs"
+"watchEndpointSupportedOnesieConfig" => array: 1 […1]
+]
+]
+"trackingParams" => "CDcQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1tAu4u8mczlvJB_"
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "조회수 564회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 […2]
+"trackingParams" => "CDcQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+"accessibility" => array: 1 […1]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 […2]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 […10]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 […8]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 […1]
+]
+]
+]
+]
+"trackingParams" => "CDYQmY0FGBsiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+]
+]
+28 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "CYZPBvJ_CEw"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 […3]
+1 => array: 3 […3]
+2 => array: 3 […3]
+3 => array: 3 […3]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "1개월 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "24:30"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 4,863회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CDEQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1taGFVDbkN2U1Blc294SkpnVnRXeEh1VkVQUZoBAxDyOMoBBM6e8pg="
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 […3]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "CYZPBvJ_CEw"
+"watchEndpointSupportedOnesieConfig" => array: 1 […1]
+]
+]
+"trackingParams" => "CDEQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1tAzJD8k-_gk8MJ"
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "조회수 4.8천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 […2]
+"trackingParams" => "CDEQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+"accessibility" => array: 1 […1]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 […2]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 […10]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 […8]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 […1]
+]
+]
+]
+]
+"trackingParams" => "CDAQmY0FGBwiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+]
+]
+29 => array: 1 [
+"richItemRenderer" => array: 2 [
+"content" => array: 1 [
+"videoRenderer" => array: 13 [
+"videoId" => "UX9YrghNxFQ"
+"thumbnail" => array: 1 [
+"thumbnails" => array: 4 [
+0 => array: 3 […3]
+1 => array: 3 […3]
+2 => array: 3 […3]
+3 => array: 3 […3]
+]
+]
+"title" => array: 2 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+]
+"descriptionSnippet" => array: 1 [
+"runs" => array: 1 [
+0 => array: 1 […1]
+]
+]
+"publishedTimeText" => array: 1 [
+"simpleText" => "1개월 전"
+]
+"lengthText" => array: 2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "3:37"
+]
+"viewCountText" => array: 1 [
+"simpleText" => "조회수 5,729회"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CCsQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1taGFVDbkN2U1Blc294SkpnVnRXeEh1VkVQUZoBAxDyOMoBBM6e8pg="
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 3 […3]
+]
+"watchEndpoint" => array: 2 [
+"videoId" => "UX9YrghNxFQ"
+"watchEndpointSupportedOnesieConfig" => array: 1 […1]
+]
+]
+"trackingParams" => "CCsQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1tA1Ii3wuCV1r9R"
+"showActionMenu" => false
+"shortViewCountText" => array:2 [
+"accessibility" => array: 1 [
+"accessibilityData" => array: 1 […1]
+]
+"simpleText" => "조회수 5.7천회"
+]
+"menu" => array: 1 [
+"menuRenderer" => array: 3 [
+"items" => array: 2 […2]
+"trackingParams" => "CCsQ3DAiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+"accessibility" => array: 1 […1]
+]
+]
+"thumbnailOverlays" => array: 4 [
+0 => array: 1 [
+"thumbnailOverlayTimeStatusRenderer" => array: 2 […2]
+]
+1 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 10 […10]
+]
+2 => array: 1 [
+"thumbnailOverlayToggleButtonRenderer" => array: 8 […8]
+]
+3 => array: 1 [
+"thumbnailOverlayNowPlayingRenderer" => array: 1 […1]
+]
+]
+]
+]
+"trackingParams" => "CCoQmY0FGB0iEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+]
+]
+30 => array: 1 [
+"continuationItemRenderer" => array: 2 [
+"trigger" => "CONTINUATION_TRIGGER_ON_ITEM_SHOWN"
+"continuationEndpoint" => array: 3 [
+"clickTrackingParams" => "CCMQ8eIEIhMI4Pr95Mf9jwMVYEAPAh0sbh9bygEEzp7ymA=="
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 2 [
+"sendPost" => true
+"apiUrl" => "/youtubei/v1/browse"
+]
+]
+"continuationCommand" => array: 2 [
+"token" => "4qmFsgLZCRIYVUNuQ3ZTUGVzb3hKSmdWdFd4SHVWRVBRGrwJOGdhRUJ4cUJCM3ItQmdyNUJnclFCa0ZqZVhORmN6bE1iRVJ6Y1hoM1h6YzFPR1JzYlV4d1IxVjZibEZWV2s1UWRHRkplWEp3UW5WSExWZExXRGR2Ynkwd1VWTmljSFIwYkZWVVdtVmxNa0Y2TW5odFMzUklkRXhwZEVoRVRFTm9aazV6WkVkTVZGZENNRmc1ZGtwTmRFSlpiVVJVVFd0WmEydGZTVlZpY25Wa01GbHBabkpSWkVsWFZIcHJOVlE0T1RoTU9XaGFkRU5IZEVWemVFa3lXVkUxWkU5NFVWRkphV2t6UVhaTFVGTnVhMDEyT1VoS1FqaDFMVU5DYkZWSExWZHRNSGs0TUU5eFdIUnBTMGRaVTJoTU5tZzVORVpzWjFCV1FYcEtOVU5YVURRemNtVTRPWFF3V20xNlZXNXZXV3N4VVdwaFRFbGhMVEpqTjNsbGNtRjVVRmRKWXpkNldHbExhMHN5UlhNeVlWRjNiekV0WVU0NFEwRmtZV1pITVZscWMxWnFUMm8wYkVSb2JFNUhNM0JrUjNrNFJrWlhhR05NVnpSRlMyWjBWRGxSVVdwMFdXOVFja0pqUWtwQmVFUlNSVzFVVmpWNWVVYzVMVzF1ZUVaclRFTkdRMUJpY0RsUFpHSnVZVkJ5YWxkWlFUVjJaRXBRVmpVeVJGVnNiRlpNWlVOT2RuUllhR0Z3YTFORGQxRTVWMGd3ZWxkUlMydEtRbTVNY2t0b2N6TklOVTVHWWtGVWNqSjJNRU13UWxGbVNqSnNjVEIzTVdWQ2RGVlFaSGR3TkVOM01qUjFRVVJFUkZobVkxa3dkMFp1WkhadFQxaDRUa0p5U0hCZk5sTlhXblZKU2pnM1ltUXdRV3RNUzNGcWVFeFdlVEZmTW05YU1FbFJaRzh3VTA1cU5WVjNiSFJDWW1oWlNGSlBaM2g1YTJ4NVFtTTNjWGxwY1daWlUzcE5PSEpCZFhkbU1VdzVOakZQVlRab1JWbDBWVXBhVVZkMmIyMXlSRGRhTURrNFpHaE9SbkpFZEVsUFNqUkhlREZ4WTB4WllrUk9iblZRU3pOc1FVMUlZV2MyVHpoSE5VcEZkRXRsUlVwbVJVUmFRVWh3Y0drelVFRkJORVJJTUZoRlVsUTNhbmxwYXpSa2FWUmpOVkJyVkZSb01HbEhZMVpOYkcxS1EyRmlSM0V4YUdjNE56aG5la3hmWTJsTVprbGlWbFZqVUZGeWRHNTBiVEo0U0ZjeGRXcEJTbTFPWTJSTU9EbG5UR0ZaTkU1c09VeFVaV1UwY0hsVE5EWTNVRWxmVEU1SWRFNVllSEp3YlVSSlFuaHRhamM1ZDI5WWRVZE1ZM0kzZFd4b2IwWjRWVGhhZUdSM1lWUkRWRVoxTTBOdWRVNTFWRmxhVTJoYVVWOURaVWxrVFVKR2FqazNkVlJDTUV4S00xbHNOems0UmtwdFVsRm1WbEpWZUdkdE16RjVSR05mUkVSdFlYZE1TVVJ4TVRkeVlsazNWSGRMVlhGQ1dWSnJUVGt4RWlRMll6RmpObVEyTXkwd01EQXdMVEpsTW1NdE9XRm1NaTAxT0RJME1qbGhaVGd6TW1NZ0JBJTNEJTNE"
+"request" => "CONTINUATION_REQUEST_TYPE_BROWSE"
+]
+]
+]
+]
+]
+"trackingParams" => "CCMQ8eIEIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+"header" => array: 1 [
+"feedFilterChipBarRenderer" => array: 5 [
+"contents" => array: 3 [
+0 => array: 1 [
+"chipCloudChipRenderer" => array: 4 [
+"text" => array: 1 [
+"simpleText" => "최신순"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CCkQ_V0YACITCOD6_eTH_Y8DFWBADwIdLG4fW8oBBM6e8pg="
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 2 […2]
+]
+"continuationCommand" => array: 3 [
+"token" => "4qmFsgJkEhhVQ25DdlNQZXNveEpKZ1Z0V3hIdVZFUFEaSDhnWXVHaXg2S2hJbUNpUTJZekZqTm1RMk15MHdNREF3TFRKbE1tTXRPV0ZtTWkwMU9ESTBNamxoWlRnek1tTWdCQSUzRCUzRA%3D%3D"
+"request" => "CONTINUATION_REQUEST_TYPE_BROWSE"
+"command" => array:2 […2]
+]
+]
+"trackingParams" => "CCkQ_V0YACITCOD6_eTH_Y8DFWBADwIdLG4fWw=="
+"isSelected" => true
+]
+]
+1 => array: 1 [
+"chipCloudChipRenderer" => array: 4 [
+"text" => array: 1 [
+"simpleText" => "인기순"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CCgQ_V0YASITCOD6_eTH_Y8DFWBADwIdLG4fW8oBBM6e8pg="
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 2 […2]
+]
+"continuationCommand" => array: 3 [
+"token" => "4qmFsgJkEhhVQ25DdlNQZXNveEpKZ1Z0V3hIdVZFUFEaSDhnWXVHaXg2S2hJbUNpUTJZekZqTm1RMk15MHdNREF3TFRKbE1tTXRPV0ZtTWkwMU9ESTBNamxoWlRnek1tTWdBZyUzRCUzRA%3D%3D"
+"request" => "CONTINUATION_REQUEST_TYPE_BROWSE"
+"command" => array:2 […2]
+]
+]
+"trackingParams" => "CCgQ_V0YASITCOD6_eTH_Y8DFWBADwIdLG4fWw=="
+"isSelected" => false
+]
+]
+2 => array: 1 [
+"chipCloudChipRenderer" => array: 4 [
+"text" => array: 1 [
+"simpleText" => "날짜순"
+]
+"navigationEndpoint" => array: 3 [
+"clickTrackingParams" => "CCcQ_V0YAiITCOD6_eTH_Y8DFWBADwIdLG4fW8oBBM6e8pg="
+"commandMetadata" => array: 1 [
+"webCommandMetadata" => array: 2 […2]
+]
+"continuationCommand" => array: 3 [
+"token" => "4qmFsgJkEhhVQ25DdlNQZXNveEpKZ1Z0V3hIdVZFUFEaSDhnWXVHaXg2S2hJbUNpUTJZekZqTm1RMk15MHdNREF3TFRKbE1tTXRPV0ZtTWkwMU9ESTBNamxoWlRnek1tTWdCUSUzRCUzRA%3D%3D"
+"request" => "CONTINUATION_REQUEST_TYPE_BROWSE"
+"command" => array:2 […2]
+]
+]
+"trackingParams" => "CCcQ_V0YAiITCOD6_eTH_Y8DFWBADwIdLG4fWw=="
+"isSelected" => false
+]
+]
+]
+"trackingParams" => "CCQQ4M4DIhMI4Pr95Mf9jwMVYEAPAh0sbh9b"
+"nextButton" => array: 1 [
+"buttonRenderer" => array: 7 [
+"style" => "STYLE_DEFAULT"
+"size" => "SIZE_DEFAULT"
+"isDisabled" => false
+"icon" => array: 1 [
+"iconType" => "CHEVRON_RIGHT"
+]
+"tooltip" => "다음"
+"trackingParams" => "CCYQ8FsiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+"accessibilityData" => array:1 [
+"accessibilityData" => array: 1 [
+"label" => "다음"
+]
+]
+]
+]
+"previousButton" => array: 1 [
+"buttonRenderer" => array: 7 [
+"style" => "STYLE_DEFAULT"
+"size" => "SIZE_DEFAULT"
+"isDisabled" => false
+"icon" => array: 1 [
+"iconType" => "CHEVRON_LEFT"
+]
+"tooltip" => "이전"
+"trackingParams" => "CCUQ8FsiEwjg-v3kx_2PAxVgQA8CHSxuH1s="
+"accessibilityData" => array:1 [
+"accessibilityData" => array: 1 [
+"label" => "이전"
+]
+]
+]
+]
+"styleType" => "FEED_FILTER_CHIP_BAR_STYLE_TYPE_CHANNEL_PAGE_GRID"
+]
+]
+"targetId" => "6c1c6d63-0000-2e2c-9af2-582429ae832c"
+"style" => "RICH_GRID_STYLE_SLIM"
+]

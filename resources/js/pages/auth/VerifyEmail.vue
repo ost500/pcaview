@@ -13,20 +13,20 @@ defineProps<{
 </script>
 
 <template>
-    <AuthLayout title="Verify email" description="Please verify your email address by clicking on the link we just emailed to you.">
-        <Head title="Email verification" />
+    <AuthLayout title="이메일 인증" description="이메일로 전송된 링크를 클릭하여 이메일 주소를 인증해주세요.">
+        <Head title="이메일 인증" />
 
         <div v-if="status === 'verification-link-sent'" class="mb-4 text-center text-sm font-medium text-green-600">
-            A new verification link has been sent to the email address you provided during registration.
+            회원가입 시 입력하신 이메일 주소로 새로운 인증 링크가 전송되었습니다.
         </div>
 
         <Form v-bind="EmailVerificationNotificationController.store.form()" class="space-y-6 text-center" v-slot="{ processing }">
             <Button :disabled="processing" variant="secondary">
                 <LoaderCircle v-if="processing" class="h-4 w-4 animate-spin" />
-                Resend verification email
+                인증 이메일 재전송
             </Button>
 
-            <TextLink :href="logout()" as="button" class="mx-auto block text-sm"> Log out </TextLink>
+            <TextLink :href="logout()" as="button" class="mx-auto block text-sm">로그아웃</TextLink>
         </Form>
     </AuthLayout>
 </template>

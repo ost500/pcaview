@@ -45,4 +45,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * 사용자가 구독한 부서들
+     */
+    public function departments()
+    {
+        return $this->belongsToMany(Department::class)->withTimestamps();
+    }
 }

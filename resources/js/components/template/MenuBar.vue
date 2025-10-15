@@ -1,10 +1,15 @@
 <script setup lang="ts">
+import { usePage } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
+import { computed } from 'vue';
 
-function not_ready() {
-    alert('준비중 입니다');
-    FlutterAlert.postMessage('준비중 입니다');
-}
+const page = usePage();
+const auth = computed(() => page.props.auth);
+
+// 프로필 클릭 핸들러 - 항상 프로필 페이지로 이동 (페이지 내에서 로그인 상태 체크)
+const handleProfileClick = () => {
+    window.location.href = route('profile');
+};
 </script>
 
 <template>
@@ -22,9 +27,14 @@ function not_ready() {
                 <i class="fa-solid fa-star"></i>
                 <span>부서</span>
             </a>
-            <a href="#" @click.prevent="not_ready" class="nav-link" :class="{ active: route().current('profile') }">
+            <a
+                href="#"
+                @click.prevent="handleProfileClick"
+                class="nav-link"
+                :class="{ active: route().current('profile*') || route().current('settings*') }"
+            >
                 <i class="fa-solid fa-person"></i>
-                <span>프로필</span>
+                <span>{{ auth.user ? '프로필' : '로그인' }}</span>
             </a>
         </div>
     </div>

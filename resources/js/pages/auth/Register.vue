@@ -12,8 +12,8 @@ import { LoaderCircle } from 'lucide-vue-next';
 </script>
 
 <template>
-    <AuthBase title="Create an account" description="Enter your details below to create your account">
-        <Head title="Register" />
+    <AuthBase title="회원가입" description="아래 정보를 입력하여 계정을 만드세요">
+        <Head title="회원가입" />
 
         <Form
             v-bind="RegisteredUserController.store.form()"
@@ -23,25 +23,25 @@ import { LoaderCircle } from 'lucide-vue-next';
         >
             <div class="grid gap-6">
                 <div class="grid gap-2">
-                    <Label for="name">Name</Label>
-                    <Input id="name" type="text" required autofocus :tabindex="1" autocomplete="name" name="name" placeholder="Full name" />
+                    <Label for="name">이름</Label>
+                    <Input id="name" type="text" required autofocus :tabindex="1" autocomplete="name" name="name" placeholder="이름을 입력하세요" />
                     <InputError :message="errors.name" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="email">Email address</Label>
+                    <Label for="email">이메일</Label>
                     <Input id="email" type="email" required :tabindex="2" autocomplete="email" name="email" placeholder="email@example.com" />
                     <InputError :message="errors.email" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password">Password</Label>
-                    <Input id="password" type="password" required :tabindex="3" autocomplete="new-password" name="password" placeholder="Password" />
+                    <Label for="password">비밀번호</Label>
+                    <Input id="password" type="password" required :tabindex="3" autocomplete="new-password" name="password" placeholder="비밀번호" />
                     <InputError :message="errors.password" />
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="password_confirmation">Confirm password</Label>
+                    <Label for="password_confirmation">비밀번호 확인</Label>
                     <Input
                         id="password_confirmation"
                         type="password"
@@ -49,20 +49,20 @@ import { LoaderCircle } from 'lucide-vue-next';
                         :tabindex="4"
                         autocomplete="new-password"
                         name="password_confirmation"
-                        placeholder="Confirm password"
+                        placeholder="비밀번호 확인"
                     />
                     <InputError :message="errors.password_confirmation" />
                 </div>
 
                 <Button type="submit" class="mt-2 w-full" tabindex="5" :disabled="processing">
                     <LoaderCircle v-if="processing" class="h-4 w-4 animate-spin" />
-                    Create account
+                    가입하기
                 </Button>
             </div>
 
             <div class="text-center text-sm text-muted-foreground">
-                Already have an account?
-                <TextLink :href="login()" class="underline underline-offset-4" :tabindex="6">Log in</TextLink>
+                이미 계정이 있으신가요?
+                <TextLink :href="login()" class="underline underline-offset-4" :tabindex="6">로그인</TextLink>
             </div>
         </Form>
     </AuthBase>
