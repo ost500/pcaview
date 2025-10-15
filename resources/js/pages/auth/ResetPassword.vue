@@ -19,7 +19,9 @@ const inputEmail = ref(props.email);
 
 <template>
     <AuthLayout title="비밀번호 재설정" description="새로운 비밀번호를 입력하세요">
-        <Head title="비밀번호 재설정" />
+        <Head title="비밀번호 재설정 - 주보고">
+            <meta name="robots" content="noindex, nofollow" />
+        </Head>
 
         <Form
             v-bind="NewPasswordController.store.form()"

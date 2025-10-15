@@ -11,7 +11,9 @@ import { LoaderCircle } from 'lucide-vue-next';
 
 <template>
     <AuthLayout title="Confirm your password" description="This is a secure area of the application. Please confirm your password before continuing.">
-        <Head title="Confirm password" />
+        <Head title="Confirm password - 주보고">
+            <meta name="robots" content="noindex, nofollow" />
+        </Head>
 
         <Form v-bind="ConfirmablePasswordController.store.form()" reset-on-success v-slot="{ errors, processing }">
             <div class="space-y-6">

@@ -17,7 +17,9 @@ defineProps<{
 
 <template>
     <AuthLayout title="비밀번호 찾기" description="비밀번호 재설정 링크를 받을 이메일을 입력하세요">
-        <Head title="비밀번호 찾기" />
+        <Head title="비밀번호 찾기 - 주보고">
+            <meta name="robots" content="noindex, nofollow" />
+        </Head>
 
         <div v-if="status" class="mb-4 text-center text-sm font-medium text-green-600">
             {{ status }}

@@ -3,6 +3,8 @@ import Header from '@/components/template/Header.vue';
 import { Church } from '@/types/church';
 import { ref } from 'vue';
 import VueEasyLightbox from 'vue-easy-lightbox';
+import { Head } from '@inertiajs/vue3';
+import { route } from 'ziggy-js';
 
 const props = defineProps<{ church: Church }>();
 
@@ -21,6 +23,44 @@ function close() {
 </script>
 
 <template>
+    <Head :title="church.name + ' - 주보고'">
+        <!-- Basic Meta Tags -->
+        <meta name="description" :content="church.name + ' 교회 정보 - 예배시간과 약도를 확인하세요.'" />
+        <meta name="keywords" :content="'교회, ' + church.name + ', 예배시간, 교회 위치, 약도'" />
+
+        <!-- Open Graph -->
+        <meta property="og:type" content="place" />
+        <meta property="og:url" :content="route('church.show', { id: church.id })" />
+        <meta property="og:title" :content="church.name + ' - 주보고'" />
+        <meta property="og:description" :content="church.name + ' 교회 정보 - 예배시간과 약도를 확인하세요.'" />
+        <meta property="og:image" :content="church.icon_url" />
+        <meta property="og:site_name" content="주보고" />
+
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:url" :content="route('church.show', { id: church.id })" />
+        <meta name="twitter:title" :content="church.name + ' - 주보고'" />
+        <meta name="twitter:description" :content="church.name + ' 교회 정보 - 예배시간과 약도를 확인하세요.'" />
+        <meta name="twitter:image" :content="church.icon_url" />
+
+        <!-- Canonical URL -->
+        <link rel="canonical" :href="route('church.show', { id: church.id })" />
+
+        <!-- Schema.org JSON-LD -->
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "Church",
+                "name": "{{ church.name }}",
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "{{ church.address }}"
+                },
+                "image": "{{ church.icon_url }}",
+                "url": "{{ route('church.show', { id: church.id }) }}"
+            }
+        </script>
+    </Head>
     <Header :title="'교회 / ' + church.name" :backbutton="true"></Header>
 
     <div class="page-content space-top p-b60">
@@ -29,7 +69,7 @@ function close() {
                 <div class="main-profile">
                     <div class="about-profile">
                         <div class="media rounded-circle">
-                            <img :src="church.icon_url" alt="profile-image" />
+                            <img :src="church.icon_url" :alt="church.name + ' 아이콘'" loading="lazy" decoding="async" />
                             <svg class="radial-progress m-b20" data-percentage="100" viewBox="0 0 80 80">
                                 <circle class="incomplete" cx="40" cy="40" r="35"></circle>
                                 <circle class="complete" cx="40" cy="40" r="35" style="stroke-dashoffset: 0"></circle>
@@ -46,7 +86,7 @@ function close() {
                     <div class="about">
                         <h6 class="title">예배시간</h6>
                         <p class="para-text">
-                            <img :src="church.worship_time_image" @click="open(0)" :alt="church.name + '예배 시간'" />
+                            <img :src="church.worship_time_image" @click="open(0)" :alt="church.name + ' 예배 시간'" loading="lazy" decoding="async" />
                         </p>
                     </div>
                 </div>
@@ -54,7 +94,7 @@ function close() {
                     <div class="about">
                         <h6 class="title">약도</h6>
                         <p class="para-text">
-                            <img :src="church.address_url" @click="open(1)" :alt="church.name + '약도'" />
+                            <img :src="church.address_url" @click="open(1)" :alt="church.name + ' 약도'" loading="lazy" decoding="async" />
                         </p>
                     </div>
                 </div>

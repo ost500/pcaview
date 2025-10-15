@@ -47,7 +47,57 @@ onMounted(() => {
 
 <template>
     <div>
-        <Head :title="contents.title"></Head>
+        <Head :title="contents.title + ' - 주보고'">
+            <!-- Basic Meta Tags -->
+            <meta name="description" :content="contents.title + ' - ' + (contents.department?.name || '교회 소식')" />
+            <meta name="keywords" :content="'교회, 주보, ' + (contents.department?.name || '') + ', ' + contents.title" />
+
+            <!-- Open Graph / Facebook -->
+            <meta property="og:type" content="article" />
+            <meta property="og:url" :content="route('contents.show', { id: contents.id })" />
+            <meta property="og:title" :content="contents.title" />
+            <meta property="og:description" :content="contents.title + ' - ' + (contents.department?.name || '교회 소식')" />
+            <meta property="og:image" :content="contents.thumbnail_url" />
+            <meta property="og:image:width" content="1200" />
+            <meta property="og:image:height" content="630" />
+            <meta property="og:site_name" content="주보고" />
+            <meta property="article:published_time" :content="contents.published_at" />
+
+            <!-- Twitter Card -->
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:url" :content="route('contents.show', { id: contents.id })" />
+            <meta name="twitter:title" :content="contents.title" />
+            <meta name="twitter:description" :content="contents.title + ' - ' + (contents.department?.name || '교회 소식')" />
+            <meta name="twitter:image" :content="contents.thumbnail_url" />
+
+            <!-- Canonical URL -->
+            <link rel="canonical" :href="route('contents.show', { id: contents.id })" />
+
+            <!-- Schema.org JSON-LD -->
+            <script type="application/ld+json">
+                {
+                    "@context": "https://schema.org",
+                    "@type": "Article",
+                    "headline": "{{ contents.title }}",
+                    "image": "{{ contents.thumbnail_url }}",
+                    "datePublished": "{{ contents.published_at }}",
+                    "dateModified": "{{ contents.updated_at }}",
+                    "author": {
+                        "@type": "Organization",
+                        "name": "{{ contents.department?.name || '주보고' }}"
+                    },
+                    "publisher": {
+                        "@type": "Organization",
+                        "name": "주보고",
+                        "logo": {
+                            "@type": "ImageObject",
+                            "url": "{{ url('/jubogo_favicon.png') }}"
+                        }
+                    },
+                    "description": "{{ contents.title }}"
+                }
+            </script>
+        </Head>
         <Header title="주보" :backbutton="true"></Header>
 
         <div class="page-content space-top p-b60">
@@ -82,7 +132,14 @@ onMounted(() => {
                             </div>
                             <div v-if="contents.file_type != 'YOUTUBE'">
                                 <div v-for="(image, index) in contents.images" v-bind:key="image.id">
-                                    <img :src="image.file_url" @click="open(index)" class="card-img-top" :alt="contents.title" />
+                                    <img
+                                        :src="image.file_url"
+                                        @click="open(index)"
+                                        class="card-img-top"
+                                        :alt="contents.title"
+                                        loading="lazy"
+                                        decoding="async"
+                                    />
                                 </div>
                                 <VueEasyLightbox @hide="close" :visible="showViewer" :imgs="images" :index="index" />
                             </div>

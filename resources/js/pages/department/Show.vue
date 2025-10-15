@@ -4,7 +4,7 @@ import Header from '@/components/template/Header.vue';
 import { Contents } from '@/types/contents';
 import { Department } from '@/types/department';
 import { Pagination } from '@/types/pagination';
-import { router } from '@inertiajs/vue3';
+import { router, Head } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
 import { route } from 'ziggy-js';
 
@@ -45,6 +45,41 @@ const loadMore = () => {
 </script>
 
 <template>
+    <Head :title="department.name + ' - 주보고'">
+        <!-- Basic Meta Tags -->
+        <meta name="description" :content="department.name + ' 부서의 주보와 소식을 확인하세요.'" />
+        <meta name="keywords" :content="'교회, 주보, ' + department.name + ', 부서 소식'" />
+
+        <!-- Open Graph -->
+        <meta property="og:type" content="website" />
+        <meta property="og:url" :content="route('department.show', { id: department.id })" />
+        <meta property="og:title" :content="department.name + ' - 주보고'" />
+        <meta property="og:description" :content="department.name + ' 부서의 주보와 소식을 확인하세요.'" />
+        <meta property="og:image" :content="department.icon_image" />
+        <meta property="og:site_name" content="주보고" />
+
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:url" :content="route('department.show', { id: department.id })" />
+        <meta name="twitter:title" :content="department.name + ' - 주보고'" />
+        <meta name="twitter:description" :content="department.name + ' 부서의 주보와 소식을 확인하세요.'" />
+        <meta name="twitter:image" :content="department.icon_image" />
+
+        <!-- Canonical URL -->
+        <link rel="canonical" :href="route('department.show', { id: department.id })" />
+
+        <!-- Schema.org JSON-LD -->
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "CollectionPage",
+                "name": "{{ department.name }}",
+                "description": "{{ department.name }} 부서의 주보와 소식",
+                "url": "{{ route('department.show', { id: department.id }) }}",
+                "image": "{{ department.icon_image }}"
+            }
+        </script>
+    </Head>
     <Header :title="'부서 / ' + department.name" :backbutton="true"></Header>
 
     <div class="page-content space-top p-b60">
@@ -53,7 +88,7 @@ const loadMore = () => {
                 <div class="main-profile">
                     <div class="about-profile">
                         <div class="media rounded-circle">
-                            <img :src="department.icon_image" alt="profile-image" />
+                            <img :src="department.icon_image" :alt="department.name + ' 아이콘'" loading="lazy" decoding="async" />
                             <svg class="radial-progress m-b20" data-percentage="100" viewBox="0 0 80 80">
                                 <circle class="incomplete" cx="40" cy="40" r="35"></circle>
                                 <circle class="complete" cx="40" cy="40" r="35" style="stroke-dashoffset: 0"></circle>

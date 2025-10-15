@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import { register } from '@/routes';
 import { request } from '@/routes/password';
-import { Form } from '@inertiajs/vue3';
+import { Form, Head } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 
 defineProps<{
@@ -20,6 +20,9 @@ defineProps<{
 </script>
 
 <template>
+    <Head title="로그인 - 주보고">
+        <meta name="robots" content="noindex, nofollow" />
+    </Head>
     <Header title="로그인"></Header>
 
     <AuthLayout title="로그인" description="">

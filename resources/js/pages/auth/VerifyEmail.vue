@@ -14,7 +14,9 @@ defineProps<{
 
 <template>
     <AuthLayout title="이메일 인증" description="이메일로 전송된 링크를 클릭하여 이메일 주소를 인증해주세요.">
-        <Head title="이메일 인증" />
+        <Head title="이메일 인증 - 주보고">
+            <meta name="robots" content="noindex, nofollow" />
+        </Head>
 
         <div v-if="status === 'verification-link-sent'" class="mb-4 text-center text-sm font-medium text-green-600">
             회원가입 시 입력하신 이메일 주소로 새로운 인증 링크가 전송되었습니다.
