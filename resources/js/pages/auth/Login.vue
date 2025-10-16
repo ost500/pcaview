@@ -2,6 +2,7 @@
 import AuthenticatedSessionController from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
 import InputError from '@/components/InputError.vue';
 import Header from '@/components/template/Header.vue';
+import BusinessInfo from '@/components/BusinessInfo.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -83,5 +84,6 @@ defineProps<{
                 <p class="text-center text-sm"></p>
             </div>
         </div>
+        <BusinessInfo class="mt-6" />
     </AuthLayout>
 </template>

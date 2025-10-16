@@ -4,7 +4,7 @@ import { router, usePage, useForm } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
 import { computed, ref } from 'vue';
 import type { Department } from '@/types/department';
-import AuthenticatedSessionController from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
+import BusinessInfo from '@/components/BusinessInfo.vue';
 
 interface Props {
     allDepartments?: Department[];
@@ -233,7 +233,7 @@ const toggleSubscription = (departmentId: number) => {
                             <li class="list-group-item" @click="handleLogout" style="cursor: pointer;">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <i class="fa-solid fa-sign-out-alt me-3 text-danger"></i>
+                                        <i class="fa-solid fa-sign -out-alt me-3 text-danger"></i>
                                         <span class="text-danger">로그아웃</span>
                                     </div>
                                     <i class="fa-solid fa-chevron-right text-muted"></i>
@@ -251,20 +251,11 @@ const toggleSubscription = (departmentId: number) => {
                         <p class="mb-0 text-muted small">© 2025 Jubogo App</p>
                     </div>
                 </div>
-
-                <!-- 사업자 정보 -->
-                <div class="card mt-3">
-                    <div class="card-body">
-                        <h6 class="card-title mb-3">사업자 정보</h6>
-                        <p class="mb-1 text-muted small">해시미터</p>
-                        <p class="mb-1 text-muted small">사업자 번호: 175-40-01411</p>
-                        <p class="mb-0 text-muted small">
-                            문의: <a href="mailto:ost5253@gmail.com" class="text-decoration-none">ost5253@gmail.com</a>
-                        </p>
-                    </div>
-                </div>
             </div>
+            <BusinessInfo></BusinessInfo>
+
         </div>
+
     </div>
 </template>
 
