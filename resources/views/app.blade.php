@@ -76,15 +76,15 @@
     <!-- Schema.org Organization -->
     <script type="application/ld+json">
     {
-        "@context": "https://schema.org",
-        "@type": "Organization",
+        "@@context": "https://schema.org",
+        "@@type": "Organization",
         "name": "주보고",
         "legalName": "해시미터",
         "url": "{{ url('/') }}",
         "logo": "{{ url('/og_image.png') }}",
         "foundingDate": "2025",
         "contactPoint": {
-            "@type": "ContactPoint",
+            "@@type": "ContactPoint",
             "contactType": "customer service",
             "email": "ost5253@gmail.com"
         },
