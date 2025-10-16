@@ -3,12 +3,33 @@ import Header from '@/components/template/Header.vue';
 import BusinessInfo from '@/components/BusinessInfo.vue';
 import { route } from 'ziggy-js';
 import { Department } from '@/types/department';
+import { onMounted } from 'vue';
 
 const props = defineProps<{ departments: Department[] }>();
 
 function goToContent(id: number) {
     window.location.href = route('department.show', { id: id });
 }
+
+// Kakao AdFit 광고 로드
+const loadKakaoAd = () => {
+    const existingScript = document.querySelector('script[src*="t1.daumcdn.net/kas"]');
+    if (existingScript) {
+        existingScript.remove();
+    }
+
+    const script = document.createElement('script');
+    script.async = true;
+    script.type = 'text/javascript';
+    script.src = 'https://t1.daumcdn.net/kas/static/ba.min.js';
+    document.head.appendChild(script);
+};
+
+onMounted(() => {
+    setTimeout(() => {
+        loadKakaoAd();
+    }, 100);
+});
 </script>
 
 <template>
@@ -17,6 +38,13 @@ function goToContent(id: number) {
 
         <div class="page-content space-top p-b60">
             <div class="container">
+                <ins
+                    class="kakao_ad_area"
+                    style="display: block"
+                    data-ad-unit="DAN-bE302RQ73kwLuzKI"
+                    data-ad-width="320"
+                    data-ad-height="50"
+                ></ins>
                 <div class="row g-3">
                     <div v-for="department in departments" class="col-6" v-bind:key="department.id">
                         <div class="card" @click="goToContent(department.id)">
@@ -30,6 +58,15 @@ function goToContent(id: number) {
                         </div>
                     </div>
                 </div>
+                <iframe
+                    src="https://ads-partners.coupang.com/widgets.html?id=927016&template=carousel&trackingCode=AF7527668&subId=&width=680&height=140&tsource="
+                    width="100%"
+                    height="140"
+                    frameborder="0"
+                    scrolling="no"
+                    referrerpolicy="unsafe-url"
+                    browsingtopics
+                ></iframe>
                 <BusinessInfo class="mt-3" />
             </div>
         </div>
