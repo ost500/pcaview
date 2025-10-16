@@ -40,7 +40,10 @@ class SitemapController extends Controller
             $xml .= '<changefreq>monthly</changefreq>';
             $xml .= '<priority>0.7</priority>';
             if ($church->updated_at) {
-                $xml .= '<lastmod>' . $church->updated_at->toAtomString() . '</lastmod>';
+                $lastmod = is_string($church->updated_at)
+                    ? $church->updated_at
+                    : $church->updated_at->toAtomString();
+                $xml .= '<lastmod>' . $lastmod . '</lastmod>';
             }
             $xml .= '</url>';
         }
@@ -59,7 +62,10 @@ class SitemapController extends Controller
             $xml .= '<changefreq>daily</changefreq>';
             $xml .= '<priority>0.8</priority>';
             if ($department->updated_at) {
-                $xml .= '<lastmod>' . $department->updated_at->toAtomString() . '</lastmod>';
+                $lastmod = is_string($department->updated_at)
+                    ? $department->updated_at
+                    : $department->updated_at->toAtomString();
+                $xml .= '<lastmod>' . $lastmod . '</lastmod>';
             }
             $xml .= '</url>';
         }
@@ -71,7 +77,10 @@ class SitemapController extends Controller
             $xml .= '<changefreq>weekly</changefreq>';
             $xml .= '<priority>0.6</priority>';
             if ($content->published_at) {
-                $xml .= '<lastmod>' . $content->published_at->toAtomString() . '</lastmod>';
+                $lastmod = is_string($content->published_at)
+                    ? $content->published_at
+                    : $content->published_at->toAtomString();
+                $xml .= '<lastmod>' . $lastmod . '</lastmod>';
             }
             $xml .= '</url>';
         }
