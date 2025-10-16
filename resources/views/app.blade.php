@@ -73,6 +73,25 @@
     <link rel="icon" href="/jubogo_favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
+    <!-- Schema.org Organization -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "주보고",
+        "legalName": "해시미터",
+        "url": "{{ url('/') }}",
+        "logo": "{{ url('/og_image.png') }}",
+        "foundingDate": "2025",
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer service",
+            "email": "ost5253@gmail.com"
+        },
+        "sameAs": []
+    }
+    </script>
+
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 

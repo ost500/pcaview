@@ -1,2 +1,8 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /dashboard
+Disallow: /settings
+Disallow: /login
+Disallow: /register
+
+Sitemap: https://jubogo.com/sitemap.xml

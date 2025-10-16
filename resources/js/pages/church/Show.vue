@@ -46,6 +46,19 @@ function close() {
 
         <!-- Canonical URL -->
         <link rel="canonical" :href="route('church.show', { id: church.id })" />
+
+        <!-- Schema.org JSON-LD -->
+        <script type="application/ld+json" v-html="JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Church',
+            'name': church.name,
+            'address': {
+                '@type': 'PostalAddress',
+                'addressLocality': church.address
+            },
+            'image': church.icon_url,
+            'url': route('church.show', { id: church.id })
+        })"></script>
     </Head>
     <Header :title="'교회 / ' + church.name" :backbutton="true"></Header>
 
