@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Header from '@/components/template/Header.vue';
+import BusinessInfo from '@/components/BusinessInfo.vue';
 import { route } from 'ziggy-js';
 import { Department } from '@/types/department';
 
@@ -29,6 +30,7 @@ function goToContent(id: number) {
                         </div>
                     </div>
                 </div>
+                <BusinessInfo class="mt-3" />
             </div>
         </div>
     </div>

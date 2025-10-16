@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ContentsList from '@/components/contents/ContentsList.vue';
 import Header from '@/components/template/Header.vue';
+import BusinessInfo from '@/components/BusinessInfo.vue';
 import { Contents } from '@/types/contents';
 import { Department } from '@/types/department';
 import { Pagination } from '@/types/pagination';
@@ -93,6 +94,7 @@ const loadMore = () => {
                         <ContentsList :contents="allContents" :isLoading="isLoading" :hasMore="hasMorePages" @loadMore="loadMore"></ContentsList>
                     </div>
                 </div>
+                <BusinessInfo class="mt-3" />
             </div>
         </div>
     </div>

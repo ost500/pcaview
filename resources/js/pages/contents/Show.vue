@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Header from '@/components/template/Header.vue';
+import BusinessInfo from '@/components/BusinessInfo.vue';
 import { Contents } from '@/types/contents';
 import { Head } from '@inertiajs/vue3';
 import { ref, onMounted } from 'vue';
@@ -137,6 +138,7 @@ onMounted(() => {
                         </div>
                     </div>
                 </div>
+                <BusinessInfo class="mt-3" />
             </div>
         </div>
     </div>

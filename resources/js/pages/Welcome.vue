@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ContentsList from '@/components/contents/ContentsList.vue';
 import Header from '@/components/template/Header.vue';
+import BusinessInfo from '@/components/BusinessInfo.vue';
 import { Church } from '@/types/church';
 import { Contents } from '@/types/contents';
 import { Department } from '@/types/department';
@@ -156,6 +157,7 @@ onMounted(() => {
                 referrerpolicy="unsafe-url"
                 browsingtopics
             ></iframe>
+            <BusinessInfo class="mt-3" />
         </div>
     </div>
 </template>

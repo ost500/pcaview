@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Header from '@/components/template/Header.vue';
+import BusinessInfo from '@/components/BusinessInfo.vue';
 import { Church } from '@/types/church';
 import { ref } from 'vue';
 import VueEasyLightbox from 'vue-easy-lightbox';
@@ -85,6 +86,7 @@ function close() {
                 </div>
 
                 <VueEasyLightbox @hide="close" :visible="showViewer" :imgs="images" :index="index" />
+                <BusinessInfo class="mt-3" />
             </div>
         </div>
     </div>
