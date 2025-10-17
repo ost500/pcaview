@@ -2,6 +2,7 @@
 import ContentsList from '@/components/contents/ContentsList.vue';
 import Header from '@/components/template/Header.vue';
 import BusinessInfo from '@/components/BusinessInfo.vue';
+import InstallPrompt from '@/components/InstallPrompt.vue';
 import { Church } from '@/types/church';
 import { Contents } from '@/types/contents';
 import { Department } from '@/types/department';
@@ -121,6 +122,10 @@ onMounted(() => {
         <!-- Canonical URL -->
         <link rel="canonical" :href="route('home')" />
     </Head>
+
+    <!-- PWA 설치 프롬프트 -->
+    <InstallPrompt />
+
     <Header title="홈"></Header>
 
     <div class="page-content space-top p-b60">
@@ -160,4 +165,5 @@ onMounted(() => {
             <BusinessInfo class="mt-3" />
         </div>
     </div>
+
 </template>
