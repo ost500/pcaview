@@ -1,15 +1,20 @@
 <script setup lang="ts">
-import ContentsList from '@/components/contents/ContentsList.vue';
-import Header from '@/components/template/Header.vue';
 import BusinessInfo from '@/components/BusinessInfo.vue';
+import ContentsList from '@/components/contents/ContentsList.vue';
 import InstallPrompt from '@/components/InstallPrompt.vue';
+import IOSInstallInstructions from '@/components/IOSInstallInstructions.vue';
+import Header from '@/components/template/Header.vue';
+import { usePWA } from '@/composables/usePWA';
 import { Church } from '@/types/church';
 import { Contents } from '@/types/contents';
 import { Department } from '@/types/department';
 import { Pagination } from '@/types/pagination';
-import { onMounted, ref, watch, computed } from 'vue';
-import { router, useRemember, Head } from '@inertiajs/vue3';
+import { Head, router, useRemember } from '@inertiajs/vue3';
+import { onMounted, ref, watch } from 'vue';
 import { route } from 'ziggy-js';
+
+// PWA 상태 관리
+const { showIOSInstructions, isIOS, closeIOSInstructions, dismissPermanently } = usePWA();
 
 const props = defineProps<{
     contents: Pagination<Contents>;
@@ -18,6 +23,17 @@ const props = defineProps<{
     subscribedDepartmentIds?: number[];
 }>();
 
+// 개발 환경 확인
+const isDev = import.meta.env.DEV;
+
+// 개발용: PWA 프롬프트 초기화 함수
+const debugResetPWA = () => {
+    localStorage.removeItem('pwa-prompt-dismissed');
+    localStorage.removeItem('pwa-prompt-never-show');
+    alert('PWA 프롬프트 초기화 완료! 페이지를 새로고침합니다.');
+    location.reload();
+};
+
 // 구독 여부 확인 함수
 const isSubscribed = (departmentId: number) => {
     return props.subscribedDepartmentIds?.includes(departmentId) ?? false;
@@ -25,8 +41,8 @@ const isSubscribed = (departmentId: number) => {
 
 // Infinite scroll state with persistence
 const allContents = useRemember<Contents[]>([...props.contents.data], 'home-contents');
-const currentPage = useRemember(props.contents.current_page, 'home-page');
-const hasMorePages = useRemember(!!props.contents.next_page_url, 'home-has-more');
+const currentPage = ref(props.contents.current_page);
+const hasMorePages = ref(!!props.contents.next_page_url);
 const isLoading = ref(false);
 
 // Load more contents
@@ -54,7 +70,7 @@ const loadMore = () => {
             onError: () => {
                 isLoading.value = false;
             },
-        }
+        },
     );
 };
 
@@ -67,7 +83,7 @@ watch(
             currentPage.value = newContents.current_page;
             hasMorePages.value = !!newContents.next_page_url;
         }
-    }
+    },
 );
 
 // Kakao AdFit 광고 로드
@@ -126,6 +142,19 @@ onMounted(() => {
     <!-- PWA 설치 프롬프트 -->
     <InstallPrompt />
 
+    <!-- iOS 설치 안내 모달 -->
+    <IOSInstallInstructions
+        :show-i-o-s-instructions="showIOSInstructions"
+        :is-i-o-s="isIOS"
+        @close="closeIOSInstructions"
+        @dismiss-permanently="dismissPermanently"
+    />
+
+    <!-- 개발용 디버그 버튼 (임시) -->
+    <div v-if="isDev" class="fixed right-4 bottom-20 z-50">
+        <button @click="debugResetPWA" class="rounded bg-red-600 px-3 py-2 text-xs text-white shadow-lg hover:bg-red-700">PWA 초기화</button>
+    </div>
+
     <Header title="홈"></Header>
 
     <div class="page-content space-top p-b60">
@@ -145,13 +174,7 @@ onMounted(() => {
             <div class="title-bar">
                 <h6 class="title">소식</h6>
             </div>
-            <ins
-                class="kakao_ad_area"
-                style="display: block"
-                data-ad-unit="DAN-bE302RQ73kwLuzKI"
-                data-ad-width="320"
-                data-ad-height="50"
-            ></ins>
+            <ins class="kakao_ad_area" style="display: block" data-ad-unit="DAN-bE302RQ73kwLuzKI" data-ad-width="320" data-ad-height="50"></ins>
             <ContentsList :contents="allContents" :is-loading="isLoading" :has-more="hasMorePages" @load-more="loadMore"></ContentsList>
             <iframe
                 src="https://ads-partners.coupang.com/widgets.html?id=927016&template=carousel&trackingCode=AF7527668&subId=&width=680&height=140&tsource="
@@ -165,5 +188,4 @@ onMounted(() => {
             <BusinessInfo class="mt-3" />
         </div>
     </div>
-
 </template>

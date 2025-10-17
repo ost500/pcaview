@@ -43,6 +43,32 @@ onMounted(() => {
     setTimeout(() => {
         loadKakaoAd();
     }, 100);
+
+    // JSON-LD structured data 추가
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        'headline': props.contents.title,
+        'image': props.contents.thumbnail_url,
+        'datePublished': props.contents.published_at,
+        'dateModified': props.contents.updated_at || props.contents.published_at,
+        'author': {
+            '@type': 'Organization',
+            'name': props.contents.department?.name || '주보고'
+        },
+        'publisher': {
+            '@type': 'Organization',
+            'name': '주보고',
+            'logo': {
+                '@type': 'ImageObject',
+                'url': window.location.origin + '/og_image.png'
+            }
+        },
+        'description': props.contents.title + ' - ' + (props.contents.department?.name || '교회 소식')
+    });
+    document.head.appendChild(script);
 });
 </script>
 
@@ -73,29 +99,6 @@ onMounted(() => {
 
             <!-- Canonical URL -->
             <link rel="canonical" :href="route('contents.show', { id: contents.id })" />
-
-            <!-- Schema.org JSON-LD -->
-            <script type="application/ld+json" v-html="JSON.stringify({
-                '@context': 'https://schema.org',
-                '@type': 'Article',
-                'headline': contents.title,
-                'image': contents.thumbnail_url,
-                'datePublished': contents.published_at,
-                'dateModified': contents.updated_at || contents.published_at,
-                'author': {
-                    '@type': 'Organization',
-                    'name': contents.department?.name || '주보고'
-                },
-                'publisher': {
-                    '@type': 'Organization',
-                    'name': '주보고',
-                    'logo': {
-                        '@type': 'ImageObject',
-                        'url': window.location.origin + '/og_image.png'
-                    }
-                },
-                'description': contents.title + ' - ' + (contents.department?.name || '교회 소식')
-            })"></script>
         </Head>
         <Header title="주보" :backbutton="true"></Header>
 
