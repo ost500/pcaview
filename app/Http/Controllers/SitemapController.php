@@ -15,79 +15,68 @@ class SitemapController extends Controller
         $departments = Department::all();
         $contents = Contents::orderBy('published_at', 'desc')->take(1000)->get();
 
-        $xml = '<?xml version="1.0" encoding="UTF-8"?>';
-        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+        $xml = new \DOMDocument('1.0', 'UTF-8');
+        $xml->formatOutput = false;
+
+        $urlset = $xml->createElement('urlset');
+        $urlset->setAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
+        $xml->appendChild($urlset);
 
         // Homepage
-        $xml .= '<url>';
-        $xml .= '<loc>' . route('home') . '</loc>';
-        $xml .= '<changefreq>daily</changefreq>';
-        $xml .= '<priority>1.0</priority>';
-        $xml .= '<lastmod>' . now()->format('c') . '</lastmod>';
-        $xml .= '</url>';
+        $this->addUrl($xml, $urlset, route('home'), 'daily', '1.0', now()->format('c'));
 
         // Church Index
-        $xml .= '<url>';
-        $xml .= '<loc>' . route('church') . '</loc>';
-        $xml .= '<changefreq>weekly</changefreq>';
-        $xml .= '<priority>0.8</priority>';
-        $xml .= '</url>';
+        $this->addUrl($xml, $urlset, route('church'), 'weekly', '0.8');
 
         // Churches
         foreach ($churches as $church) {
-            $xml .= '<url>';
-            $xml .= '<loc>' . route('church.show', $church->id) . '</loc>';
-            $xml .= '<changefreq>monthly</changefreq>';
-            $xml .= '<priority>0.7</priority>';
-            if ($church->updated_at) {
-                $lastmod = is_string($church->updated_at)
-                    ? $church->updated_at
-                    : $church->updated_at->format('c');
-                $xml .= '<lastmod>' . $lastmod . '</lastmod>';
-            }
-            $xml .= '</url>';
+            $lastmod = $church->updated_at
+                ? (is_string($church->updated_at) ? $church->updated_at : $church->updated_at->format('c'))
+                : null;
+            $this->addUrl($xml, $urlset, route('church.show', $church->id), 'monthly', '0.7', $lastmod);
         }
 
         // Department Index
-        $xml .= '<url>';
-        $xml .= '<loc>' . route('department') . '</loc>';
-        $xml .= '<changefreq>weekly</changefreq>';
-        $xml .= '<priority>0.8</priority>';
-        $xml .= '</url>';
+        $this->addUrl($xml, $urlset, route('department'), 'weekly', '0.8');
 
         // Departments
         foreach ($departments as $department) {
-            $xml .= '<url>';
-            $xml .= '<loc>' . route('department.show', $department->id) . '</loc>';
-            $xml .= '<changefreq>daily</changefreq>';
-            $xml .= '<priority>0.8</priority>';
-            if ($department->updated_at) {
-                $lastmod = is_string($department->updated_at)
-                    ? $department->updated_at
-                    : $department->updated_at->format('c');
-                $xml .= '<lastmod>' . $lastmod . '</lastmod>';
-            }
-            $xml .= '</url>';
+            $lastmod = $department->updated_at
+                ? (is_string($department->updated_at) ? $department->updated_at : $department->updated_at->format('c'))
+                : null;
+            $this->addUrl($xml, $urlset, route('department.show', $department->id), 'daily', '0.8', $lastmod);
         }
 
         // Contents
         foreach ($contents as $content) {
-            $xml .= '<url>';
-            $xml .= '<loc>' . route('contents.show', $content->id) . '</loc>';
-            $xml .= '<changefreq>weekly</changefreq>';
-            $xml .= '<priority>0.6</priority>';
-            if ($content->published_at) {
-                $lastmod = is_string($content->published_at)
-                    ? $content->published_at
-                    : $content->published_at->format('c');
-                $xml .= '<lastmod>' . $lastmod . '</lastmod>';
-            }
-            $xml .= '</url>';
+            $lastmod = $content->published_at
+                ? (is_string($content->published_at) ? $content->published_at : $content->published_at->format('c'))
+                : null;
+            $this->addUrl($xml, $urlset, route('contents.show', $content->id), 'weekly', '0.6', $lastmod);
         }
 
-        $xml .= '</urlset>';
+        return response($xml->saveXML(), 200)
+            ->header('Content-Type', 'application/xml; charset=utf-8');
+    }
 
-        return response($xml, 200)
-            ->header('Content-Type', 'application/xml');
+    private function addUrl(\DOMDocument $xml, \DOMElement $urlset, string $loc, string $changefreq, string $priority, ?string $lastmod = null): void
+    {
+        $url = $xml->createElement('url');
+
+        $locElement = $xml->createElement('loc', htmlspecialchars($loc, ENT_XML1, 'UTF-8'));
+        $url->appendChild($locElement);
+
+        $changefreqElement = $xml->createElement('changefreq', $changefreq);
+        $url->appendChild($changefreqElement);
+
+        $priorityElement = $xml->createElement('priority', $priority);
+        $url->appendChild($priorityElement);
+
+        if ($lastmod) {
+            $lastmodElement = $xml->createElement('lastmod', htmlspecialchars($lastmod, ENT_XML1, 'UTF-8'));
+            $url->appendChild($lastmodElement);
+        }
+
+        $urlset->appendChild($url);
     }
 }

@@ -1,0 +1,23 @@
+{
+    "name": "주보고",
+    "short_name": "주보고",
+    "description": "교회의 모든 부서 주보와 소식을 한곳에 모았습니다",
+    "icons": [
+        {
+            "src": "/jubogo_favicon.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/apple-touch-icon.png",
+            "sizes": "180x180",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
+    "display": "standalone",
+    "start_url": "/",
+    "scope": "/"
+}

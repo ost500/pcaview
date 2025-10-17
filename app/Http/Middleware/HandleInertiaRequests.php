@@ -18,6 +18,19 @@ class HandleInertiaRequests extends Middleware
     protected $rootView = 'app';
 
     /**
+     * Handle the incoming request.
+     */
+    public function handle(Request $request, \Closure $next)
+    {
+        // Skip Inertia middleware for sitemap
+        if ($request->is('sitemap.xml')) {
+            return $next($request);
+        }
+
+        return parent::handle($request, $next);
+    }
+
+    /**
      * Determines the current asset version.
      *
      * @see https://inertiajs.com/asset-versioning
