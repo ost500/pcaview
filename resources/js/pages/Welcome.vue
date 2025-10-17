@@ -14,7 +14,7 @@ import { onMounted, ref, watch } from 'vue';
 import { route } from 'ziggy-js';
 
 // PWA 상태 관리
-const { showIOSInstructions, isIOS, closeIOSInstructions, dismissPermanently } = usePWA();
+const { showInstallPrompt, showIOSInstructions, isIOS, promptInstall, dismissPrompt, closeIOSInstructions, dismissPermanently } = usePWA();
 
 const props = defineProps<{
     contents: Pagination<Contents>;
@@ -140,7 +140,12 @@ onMounted(() => {
     </Head>
 
     <!-- PWA 설치 프롬프트 -->
-    <InstallPrompt />
+    <InstallPrompt
+        :show-install-prompt="showInstallPrompt"
+        @install="promptInstall"
+        @dismiss="dismissPrompt"
+        @dismiss-permanently="dismissPermanently"
+    />
 
     <!-- iOS 설치 안내 모달 -->
     <IOSInstallInstructions

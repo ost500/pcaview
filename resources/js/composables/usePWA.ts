@@ -94,7 +94,7 @@ export function usePWA() {
     const dismissPrompt = () => {
         showInstallPrompt.value = false;
 
-        // 사용자가 닫으면 7일 동안 다시 표시하지 않음
+        // 사용자가 닫으면 1일(내일) 동안 다시 표시하지 않음
         localStorage.setItem('pwa-prompt-dismissed', Date.now().toString());
     };
 
@@ -103,8 +103,8 @@ export function usePWA() {
         showInstallPrompt.value = false;
         showIOSInstructions.value = false;
 
-        // 영구적으로 표시하지 않음
-        localStorage.setItem('pwa-prompt-never-show', 'true');
+        // 7일 동안 표시하지 않음
+        localStorage.setItem('pwa-prompt-never-show', Date.now().toString());
     };
 
     // iOS 안내 모달 닫기
@@ -114,20 +114,25 @@ export function usePWA() {
 
     // 프롬프트를 다시 표시해도 되는지 확인
     const shouldShowPrompt = () => {
-        // 영구 닫기 상태 확인
-        const neverShow = localStorage.getItem('pwa-prompt-never-show');
-        if (neverShow === 'true') {
-            return false;
+        // "다시 보지 않기" 상태 확인 (7일)
+        const neverShowTime = localStorage.getItem('pwa-prompt-never-show');
+        if (neverShowTime && neverShowTime !== 'true') {
+            const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
+            const timeSinceNeverShow = Date.now() - parseInt(neverShowTime);
+            if (timeSinceNeverShow <= sevenDaysInMs) {
+                return false;
+            }
         }
 
+        // "나중에" 상태 확인 (1일)
         const dismissedTime = localStorage.getItem('pwa-prompt-dismissed');
         if (!dismissedTime) return true;
 
-        // 7일 후에 다시 표시
-        const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
+        // 1일(내일) 후에 다시 표시
+        const oneDayInMs = 1 * 24 * 60 * 60 * 1000;
         const timeSinceDismissed = Date.now() - parseInt(dismissedTime);
 
-        return timeSinceDismissed > sevenDaysInMs;
+        return timeSinceDismissed > oneDayInMs;
     };
 
     onMounted(() => {
