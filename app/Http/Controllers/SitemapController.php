@@ -23,7 +23,7 @@ class SitemapController extends Controller
         $xml->appendChild($urlset);
 
         // Homepage
-        $this->addUrl($xml, $urlset, route('home'), 'daily', '1.0', now()->toIso8601String());
+        $this->addUrl($xml, $urlset, route('home'), 'daily', '1.0', now()->format('Y-m-d'));
 
         // Church Index
         $this->addUrl($xml, $urlset, route('church'), 'weekly', '0.8');
@@ -31,7 +31,7 @@ class SitemapController extends Controller
         // Churches
         foreach ($churches as $church) {
             $lastmod = $church->updated_at
-                ? (is_string($church->updated_at) ? $church->updated_at : $church->updated_at->toIso8601String())
+                ? (is_string($church->updated_at) ? $church->updated_at : $church->updated_at->format('Y-m-d'))
                 : null;
             $this->addUrl($xml, $urlset, route('church.show', $church->id), 'monthly', '0.7', $lastmod);
         }
@@ -42,16 +42,22 @@ class SitemapController extends Controller
         // Departments
         foreach ($departments as $department) {
             $lastmod = $department->updated_at
-                ? (is_string($department->updated_at) ? $department->updated_at : $department->updated_at->toIso8601String())
+                ? (is_string($department->updated_at) ? $department->updated_at : $department->updated_at->format('Y-m-d'))
                 : null;
             $this->addUrl($xml, $urlset, route('department.show', $department->id), 'daily', '0.8', $lastmod);
         }
 
         // Contents
         foreach ($contents as $content) {
-            $lastmod = $content->published_at
-                ? (is_string($content->published_at) ? $content->published_at : $content->published_at->toIso8601String())
-                : null;
+            $lastmod = null;
+            if ($content->published_at) {
+                if (is_string($content->published_at)) {
+                    // Convert string datetime to Y-m-d format
+                    $lastmod = date('Y-m-d', strtotime($content->published_at));
+                } else {
+                    $lastmod = $content->published_at->format('Y-m-d');
+                }
+            }
             $this->addUrl($xml, $urlset, route('contents.show', $content->id), 'weekly', '0.6', $lastmod);
         }
 
