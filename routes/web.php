@@ -24,5 +24,9 @@ Route::get('dashboard', function () {
 
 Route::get('contents/{id}', [ContentsController::class, 'show'])->name('contents.show');
 
+Route::get('/privacy-policy', function () {
+    return Inertia::render('PrivacyPolicy');
+})->name('privacy-policy');
+
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
