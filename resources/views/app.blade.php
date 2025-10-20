@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="{{ (($appearance ?? 'system') == 'dark') ? 'dark' : '' }}">
+<html lang="ko" class="{{ (($appearance ?? 'system') == 'dark') ? 'dark' : '' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="naver-site-verification" content="d38dc0cb3c08594d6f931db8566686d940c6c9e7" />
+    <meta name="language" content="Korean" />
 
     {{-- Inline script to detect system dark mode preference and apply it immediately --}}
     <script>
@@ -97,6 +98,23 @@
             "email": "ost5253@gmail.com"
         },
         "sameAs": []
+    }
+    </script>
+
+    <!-- Schema.org WebSite -->
+    <script type="application/ld+json">
+    {
+        "@@context": "https://schema.org",
+        "@@type": "WebSite",
+        "name": "주보고",
+        "alternateName": "교회 주보와 소식",
+        "url": "{{ url('/') }}",
+        "description": "교회의 모든 부서 주보와 소식을 한곳에 모았습니다. 하나님께 보고 드리는 시간 주보고가 올려 드립니다.",
+        "inLanguage": "ko-KR",
+        "publisher": {
+            "@@type": "Organization",
+            "name": "주보고"
+        }
     }
     </script>
 

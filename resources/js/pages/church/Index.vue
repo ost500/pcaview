@@ -3,6 +3,7 @@ import Header from '@/components/template/Header.vue';
 import BusinessInfo from '@/components/BusinessInfo.vue';
 import { Church } from '@/types/church';
 import { route } from 'ziggy-js';
+import { Head } from '@inertiajs/vue3';
 import { onMounted } from 'vue';
 
 const props = defineProps<{ churches: Church[] }>();
@@ -29,11 +30,53 @@ onMounted(() => {
     setTimeout(() => {
         loadKakaoAd();
     }, 100);
+
+    // JSON-LD structured data 추가
+    const structuredData = document.createElement('script');
+    structuredData.type = 'application/ld+json';
+    structuredData.text = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        'name': '교회 목록',
+        'description': '주보고에 등록된 교회 목록',
+        'numberOfItems': props.churches.length,
+        'itemListElement': props.churches.map((church, index) => ({
+            '@type': 'ListItem',
+            'position': index + 1,
+            'item': {
+                '@type': 'Place',
+                '@id': route('church.show', { id: church.id }),
+                'name': church.name,
+                'address': church.address,
+                'image': church.icon_url
+            }
+        }))
+    });
+    document.head.appendChild(structuredData);
 });
 </script>
 
 <template>
     <div>
+        <Head title="교회 목록 - 주보고">
+            <meta name="description" content="주보고에 등록된 교회 목록입니다. 다양한 교회의 주보와 소식을 확인하세요." />
+            <meta name="keywords" content="교회, 교회 목록, 주보, 교회 소식" />
+
+            <!-- Open Graph -->
+            <meta property="og:type" content="website" />
+            <meta property="og:url" :content="route('church')" />
+            <meta property="og:title" content="교회 목록 - 주보고" />
+            <meta property="og:description" content="주보고에 등록된 교회 목록입니다. 다양한 교회의 주보와 소식을 확인하세요." />
+
+            <!-- Twitter Card -->
+            <meta name="twitter:card" content="summary" />
+            <meta name="twitter:title" content="교회 목록 - 주보고" />
+            <meta name="twitter:description" content="주보고에 등록된 교회 목록입니다." />
+
+            <!-- Canonical URL -->
+            <link rel="canonical" :href="route('church')" />
+        </Head>
+
         <Header title="교회"></Header>
 
         <div class="page-content space-top p-b60">

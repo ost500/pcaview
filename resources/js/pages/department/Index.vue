@@ -3,6 +3,7 @@ import Header from '@/components/template/Header.vue';
 import BusinessInfo from '@/components/BusinessInfo.vue';
 import { route } from 'ziggy-js';
 import { Department } from '@/types/department';
+import { Head } from '@inertiajs/vue3';
 import { onMounted } from 'vue';
 
 const props = defineProps<{ departments: Department[] }>();
@@ -29,11 +30,52 @@ onMounted(() => {
     setTimeout(() => {
         loadKakaoAd();
     }, 100);
+
+    // JSON-LD structured data 추가
+    const structuredData = document.createElement('script');
+    structuredData.type = 'application/ld+json';
+    structuredData.text = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        'name': '부서 목록',
+        'description': '주보고에 등록된 교회 부서 목록',
+        'numberOfItems': props.departments.length,
+        'itemListElement': props.departments.map((department, index) => ({
+            '@type': 'ListItem',
+            'position': index + 1,
+            'item': {
+                '@type': 'Organization',
+                '@id': route('department.show', { id: department.id }),
+                'name': department.name,
+                'image': department.icon_image
+            }
+        }))
+    });
+    document.head.appendChild(structuredData);
 });
 </script>
 
 <template>
     <div>
+        <Head title="부서 목록 - 주보고">
+            <meta name="description" content="주보고에 등록된 교회 부서 목록입니다. 각 부서의 주보와 소식을 확인하세요." />
+            <meta name="keywords" content="교회, 부서, 청년부, 유치부, 주일학교, 찬양대, 교회 부서" />
+
+            <!-- Open Graph -->
+            <meta property="og:type" content="website" />
+            <meta property="og:url" :content="route('department')" />
+            <meta property="og:title" content="부서 목록 - 주보고" />
+            <meta property="og:description" content="주보고에 등록된 교회 부서 목록입니다. 각 부서의 주보와 소식을 확인하세요." />
+
+            <!-- Twitter Card -->
+            <meta name="twitter:card" content="summary" />
+            <meta name="twitter:title" content="부서 목록 - 주보고" />
+            <meta name="twitter:description" content="주보고에 등록된 교회 부서 목록입니다." />
+
+            <!-- Canonical URL -->
+            <link rel="canonical" :href="route('department')" />
+        </Head>
+
         <Header title="부서"></Header>
 
         <div class="page-content space-top p-b60">

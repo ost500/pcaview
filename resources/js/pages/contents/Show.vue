@@ -5,6 +5,7 @@ import { Contents } from '@/types/contents';
 import { Head } from '@inertiajs/vue3';
 import { ref, onMounted } from 'vue';
 import VueEasyLightbox from 'vue-easy-lightbox';
+import { route } from 'ziggy-js';
 
 const props = defineProps<{ contents: Contents }>();
 
@@ -50,6 +51,10 @@ onMounted(() => {
     script.text = JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'Article',
+        'mainEntityOfPage': {
+            '@type': 'WebPage',
+            '@id': window.location.href
+        },
         'headline': props.contents.title,
         'image': props.contents.thumbnail_url,
         'datePublished': props.contents.published_at,
@@ -66,7 +71,10 @@ onMounted(() => {
                 'url': window.location.origin + '/og_image.png'
             }
         },
-        'description': props.contents.title + ' - ' + (props.contents.department?.name || '교회 소식')
+        'description': props.contents.title + ' - ' + (props.contents.department?.name || '교회 소식'),
+        'inLanguage': 'ko-KR',
+        'articleSection': props.contents.department?.name || '교회 소식',
+        'keywords': '교회, 주보, ' + (props.contents.department?.name || '') + ', ' + props.contents.title
     });
     document.head.appendChild(script);
 });
