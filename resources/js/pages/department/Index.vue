@@ -38,7 +38,7 @@ onMounted(() => {
         '@context': 'https://schema.org',
         '@type': 'ItemList',
         'name': '부서 목록',
-        'description': '주보고에 등록된 교회 부서 목록',
+        'description': '명성교회 주보고에 등록된 교회 부서 목록',
         'numberOfItems': props.departments.length,
         'itemListElement': props.departments.map((department, index) => ({
             '@type': 'ListItem',
@@ -57,20 +57,20 @@ onMounted(() => {
 
 <template>
     <div>
-        <Head title="부서 목록 - 주보고">
-            <meta name="description" content="주보고에 등록된 교회 부서 목록입니다. 각 부서의 주보와 소식을 확인하세요." />
+        <Head title="부서 목록 - 명성교회 주보고">
+            <meta name="description" content="명성교회 주보고에 등록된 교회 부서 목록입니다. 각 부서의 주보와 소식을 확인하세요." />
             <meta name="keywords" content="교회, 부서, 청년부, 유치부, 주일학교, 찬양대, 교회 부서" />
 
             <!-- Open Graph -->
             <meta property="og:type" content="website" />
             <meta property="og:url" :content="route('department')" />
-            <meta property="og:title" content="부서 목록 - 주보고" />
-            <meta property="og:description" content="주보고에 등록된 교회 부서 목록입니다. 각 부서의 주보와 소식을 확인하세요." />
+            <meta property="og:title" content="부서 목록 - 명성교회 주보고" />
+            <meta property="og:description" content="명성교회 주보고에 등록된 교회 부서 목록입니다. 각 부서의 주보와 소식을 확인하세요." />
 
             <!-- Twitter Card -->
             <meta name="twitter:card" content="summary" />
-            <meta name="twitter:title" content="부서 목록 - 주보고" />
-            <meta name="twitter:description" content="주보고에 등록된 교회 부서 목록입니다." />
+            <meta name="twitter:title" content="부서 목록 - 명성교회 주보고" />
+            <meta name="twitter:description" content="명성교회 주보고에 등록된 교회 부서 목록입니다." />
 
             <!-- Canonical URL -->
             <link rel="canonical" :href="route('department')" />

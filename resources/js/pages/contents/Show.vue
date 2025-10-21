@@ -61,11 +61,11 @@ onMounted(() => {
         'dateModified': props.contents.updated_at || props.contents.published_at,
         'author': {
             '@type': 'Organization',
-            'name': props.contents.department?.name || '주보고'
+            'name': props.contents.department?.name || '명성교회 주보고'
         },
         'publisher': {
             '@type': 'Organization',
-            'name': '주보고',
+            'name': '명성교회 주보고',
             'logo': {
                 '@type': 'ImageObject',
                 'url': window.location.origin + '/og_image.png'
@@ -82,7 +82,7 @@ onMounted(() => {
 
 <template>
     <div>
-        <Head :title="contents.title + ' - 주보고'">
+        <Head :title="contents.title + ' - 명성교회 주보고'">
             <!-- Basic Meta Tags -->
             <meta name="description" :content="contents.title + ' - ' + (contents.department?.name || '교회 소식')" />
             <meta name="keywords" :content="'교회, 주보, ' + (contents.department?.name || '') + ', ' + contents.title" />
@@ -95,7 +95,7 @@ onMounted(() => {
             <meta property="og:image" :content="contents.thumbnail_url" />
             <meta property="og:image:width" content="1200" />
             <meta property="og:image:height" content="630" />
-            <meta property="og:site_name" content="주보고" />
+            <meta property="og:site_name" content="명성교회 주보고" />
             <meta property="article:published_time" :content="contents.published_at" />
 
             <!-- Twitter Card -->

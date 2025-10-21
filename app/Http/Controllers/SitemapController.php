@@ -25,6 +25,9 @@ class SitemapController extends Controller
         // Homepage
         $this->addUrl($xml, $urlset, route('home'), 'daily', '1.0', now()->format('Y-m-d'));
 
+        // Privacy Policy
+        $this->addUrl($xml, $urlset, route('privacy-policy'), 'monthly', '0.5');
+
         // Church Index
         $this->addUrl($xml, $urlset, route('church'), 'weekly', '0.8');
 

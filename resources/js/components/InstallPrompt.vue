@@ -49,9 +49,9 @@ const handleDismissPermanently = () => {
                             <div class="w-100 text-center">
                                 <!-- 앱 아이콘 -->
                                 <div class="mx-auto mb-3" style="width: 80px; height: 80px; background: white; border-radius: 20px; padding: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-                                    <img src="/jubogo_favicon.png" alt="주보고" style="width: 100%; height: 100%; border-radius: 12px;" />
+                                    <img src="/jubogo_favicon.png" alt="명성교회 주보고" style="width: 100%; height: 100%; border-radius: 12px;" />
                                 </div>
-                                <h5 class="modal-title text-white fw-bold mb-1" style="font-size: 1.5rem;">주보고</h5>
+                                <h5 class="modal-title text-white fw-bold mb-1" style="font-size: 1.5rem;">명성교회 주보고</h5>
                                 <p class="text-white-50 mb-0" style="font-size: 0.875rem;">앱으로 더 편리하게 이용하세요</p>
                             </div>
                             <button @click="handleDismiss" type="button" class="btn-close btn-close-white position-absolute" style="top: 1rem; right: 1rem; opacity: 0.8;" aria-label="닫기"></button>

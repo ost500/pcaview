@@ -51,15 +51,18 @@
     </style>
 
     <title inertia>{{ config('app.name', 'Laravel') }}</title>
-    <meta name="description" content="교회의 모든 부서 주보와 소식을 한곳에 모았습니다. 하나님께 보고 드리는 시간 주보고가 올려 드립니다.">
+    <meta name="description" content="교회의 모든 부서 주보와 소식을 한곳에 모았습니다. 하나님께 보고 드리는 시간 명성교회 주보고가 올려 드립니다.">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ request()->url() }}" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="ko_KR" />
     <meta property="og:url" content="{{ url('/') }}" />
-    <meta property="og:site_name" content="주보고" />
-    <meta property="og:title" content="주보고 - 교회 주보와 소식" />
-    <meta property="og:description" content="교회의 모든 부서 주보와 소식을 한곳에 모았습니다. 하나님께 보고 드리는 시간 주보고가 올려 드립니다." />
+    <meta property="og:site_name" content="명성교회 주보고" />
+    <meta property="og:title" content="명성교회 주보고 - 교회 주보와 소식" />
+    <meta property="og:description" content="교회의 모든 부서 주보와 소식을 한곳에 모았습니다. 하나님께 보고 드리는 시간 명성교회 주보고가 올려 드립니다." />
     <meta property="og:image" content="{{ url('/og_image.png') }}" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -67,8 +70,8 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="{{ url('/') }}" />
-    <meta name="twitter:title" content="주보고 - 교회 주보와 소식" />
-    <meta name="twitter:description" content="교회의 모든 부서 주보와 소식을 한곳에 모았습니다. 하나님께 보고 드리는 시간 주보고가 올려 드립니다." />
+    <meta name="twitter:title" content="명성교회 주보고 - 교회 주보와 소식" />
+    <meta name="twitter:description" content="교회의 모든 부서 주보와 소식을 한곳에 모았습니다. 하나님께 보고 드리는 시간 명성교회 주보고가 올려 드립니다." />
     <meta name="twitter:image" content="{{ url('/og_image.png') }}" />
 
     <!-- Favicon -->
@@ -87,7 +90,7 @@
     {
         "@@context": "https://schema.org",
         "@@type": "Organization",
-        "name": "주보고",
+        "name": "명성교회 주보고",
         "legalName": "해시미터",
         "url": "{{ url('/') }}",
         "logo": "{{ url('/og_image.png') }}",
@@ -106,14 +109,14 @@
     {
         "@@context": "https://schema.org",
         "@@type": "WebSite",
-        "name": "주보고",
+        "name": "명성교회 주보고",
         "alternateName": "교회 주보와 소식",
         "url": "{{ url('/') }}",
-        "description": "교회의 모든 부서 주보와 소식을 한곳에 모았습니다. 하나님께 보고 드리는 시간 주보고가 올려 드립니다.",
+        "description": "교회의 모든 부서 주보와 소식을 한곳에 모았습니다. 하나님께 보고 드리는 시간 명성교회 주보고가 올려 드립니다.",
         "inLanguage": "ko-KR",
         "publisher": {
             "@@type": "Organization",
-            "name": "주보고"
+            "name": "명성교회 주보고"
         }
     }
     </script>

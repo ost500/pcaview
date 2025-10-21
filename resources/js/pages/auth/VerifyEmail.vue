@@ -14,7 +14,7 @@ defineProps<{
 
 <template>
     <AuthLayout title="이메일 인증" description="이메일로 전송된 링크를 클릭하여 이메일 주소를 인증해주세요.">
-        <Head title="이메일 인증 - 주보고">
+        <Head title="이메일 인증 - 명성교회 주보고">
             <meta name="robots" content="noindex, nofollow" />
         </Head>
 

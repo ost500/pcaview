@@ -21,7 +21,7 @@ defineProps<{
 </script>
 
 <template>
-    <Head title="로그인 - 주보고">
+    <Head title="로그인 - 명성교회 주보고">
         <meta name="robots" content="noindex, nofollow" />
     </Head>
     <Header title="로그인"></Header>
