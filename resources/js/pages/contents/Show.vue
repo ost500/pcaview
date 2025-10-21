@@ -137,10 +137,23 @@ onMounted(() => {
                 <div class="row" id="contentArea">
                     <div class="col-12">
                         <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title">{{ contents.title }}</h5>
+                            <!-- Department 정보 -->
+                            <div v-if="contents.department" class="card-header department-header">
+                                <div class="d-flex align-items-center">
+                                    <div class="department-icon">
+                                        <img :src="contents.department.icon_image" :alt="contents.department.name" />
+                                    </div>
+                                    <span class="department-name">{{ contents.department.name }}</span>
+                                </div>
                             </div>
-                            <div v-if="contents.file_type != 'YOUTUBE'">
+
+                            <!-- Title -->
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">{{ contents.title }}</h5>
+                            </div>
+
+                            <!-- 이미지 또는 비디오 -->
+                            <div v-if="contents.file_type != 'YOUTUBE' && contents.file_type != 'HTML'">
                                 <div v-for="(image, index) in contents.images" v-bind:key="image.id">
                                     <img
                                         :src="image.file_url"
@@ -154,7 +167,7 @@ onMounted(() => {
                                 <VueEasyLightbox @hide="close" :visible="showViewer" :imgs="images" :index="index" />
                             </div>
                             <iframe
-                                v-else
+                                v-else-if="contents.file_type == 'YOUTUBE'"
                                 width="100%"
                                 height="315"
                                 :src="'https://www.youtube.com/embed/' + contents.file_url"
@@ -165,9 +178,9 @@ onMounted(() => {
                                 allowfullscreen
                             ></iframe>
 
-                            <div class="card-body">
-                                <!--                                <h5 class="card-title">명성교회 2025년 9월 10일 주보</h5>-->
-                                <!--                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+                            <!-- HTML 본문 내용 -->
+                            <div class="card-body" v-if="contents.body">
+                                <div class="content-body" v-html="contents.body"></div>
                             </div>
                         </div>
                     </div>
@@ -178,4 +191,75 @@ onMounted(() => {
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.content-body {
+    line-height: 1.6;
+    word-break: keep-all;
+}
+
+.content-body :deep(p) {
+    margin-bottom: 1rem;
+}
+
+.content-body :deep(table) {
+    width: 100%;
+    margin: 1rem 0;
+    border-collapse: collapse;
+}
+
+.content-body :deep(table td),
+.content-body :deep(table th) {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.content-body :deep(table th) {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.content-body :deep(a) {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.content-body :deep(a:hover) {
+    text-decoration: underline;
+}
+
+.content-body :deep(img) {
+    max-width: 100%;
+    height: auto;
+}
+
+.department-header {
+    background-color: transparent;
+    border-bottom: none;
+    padding: 0.75rem 1rem;
+}
+
+.department-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+}
+
+.department-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.department-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #495057;
+}
+</style>

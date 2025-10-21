@@ -17,12 +17,15 @@ class HomeController extends Controller
         // 로그인한 사용자의 경우 구독한 부서의 콘텐츠만 표시
         if ($user) {
             $subscribedDepartmentIds = $user->departments()->pluck('departments.id');
-            $contents = Contents::whereIn('department_id', $subscribedDepartmentIds)
+            $contents = Contents::with('department')
+                ->whereIn('department_id', $subscribedDepartmentIds)
                 ->latest('published_at')
                 ->paginate(20);
         } else {
             // 비로그인 사용자는 모든 콘텐츠 표시
-            $contents = Contents::latest('published_at')->paginate(20);
+            $contents = Contents::with('department')
+                ->latest('published_at')
+                ->paginate(20);
             $subscribedDepartmentIds = collect();
         }
 

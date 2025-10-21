@@ -19,7 +19,10 @@ class DepartmentController extends Controller
     public function show(int $id)
     {
         $department = Department::find($id);
-        $contents = Contents::where('department_id', $id)->latest('published_at')->paginate(20);
+        $contents = Contents::with('department')
+            ->where('department_id', $id)
+            ->latest('published_at')
+            ->paginate(20);
 
         return Inertia::render('department/Show', ['department' => $department, 'contents' => $contents]);
     }

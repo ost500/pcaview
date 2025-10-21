@@ -11,6 +11,8 @@ use App\Domain\department\MschYoutube\MschYoutube;
 use App\Domain\department\MschYoutube\MschYoutubeCrawlService;
 use App\Domain\department\NewsongJ\NewsongJCrawlService;
 use App\Domain\department\NewsongJ\NewsongJJubo;
+use App\Domain\department\NFriends\NFriendsCrawlService;
+use App\Domain\department\NFriends\NFriendsJubo;
 use Illuminate\Console\Command;
 
 class BulletinCommand extends Command
@@ -34,20 +36,24 @@ class BulletinCommand extends Command
      */
     public function handle()
     {
-        $bulletinCrawlService = app(JuboCrawlService::class);
-        $mschJubo = app(MschJubo::class);
-        $bulletinCrawlService->crawl($mschJubo);
+//        $bulletinCrawlService = app(JuboCrawlService::class);
+//        $mschJubo = app(MschJubo::class);
+//        $bulletinCrawlService->crawl($mschJubo);
+//
+//        $brightSoriCrawlService = app(BrightSoriCrawlService::class);
+//        $brightSound = app(BrightSound::class);
+//        $brightSoriCrawlService->crawl($brightSound);
+//
+//        $newsongJCrawlService = app(NewsongJCrawlService::class);
+//        $newsongJ = app(NewsongJJubo::class);
+//        $newsongJCrawlService->crawl($newsongJ);
+//
+//        $mschYoutube = app(MschYoutube::class);
+//        $mschYoutubeCrawler = app(MschYoutubeCrawlService::class);
+//        $mschYoutubeCrawler->crawl($mschYoutube);
 
-        $brightSoriCrawlService = app(BrightSoriCrawlService::class);
-        $brightSound = app(BrightSound::class);
-        $brightSoriCrawlService->crawl($brightSound);
-
-        $newsongJCrawlService = app(NewsongJCrawlService::class);
-        $newsongJ = app(NewsongJJubo::class);
-        $newsongJCrawlService->crawl($newsongJ);
-
-        $mschYoutube = app(MschYoutube::class);
-        $mschYoutubeCrawler = app(MschYoutubeCrawlService::class);
-        $mschYoutubeCrawler->crawl($mschYoutube);
+        $nfriendsCrawlService = app(NFriendsCrawlService::class);
+        $nfriends = app(NFriendsJubo::class);
+        $nfriendsCrawlService->crawl($nfriends);
     }
 }

@@ -30,5 +30,15 @@ class DepartmentSeeder extends Seeder
             'name' => '뉴송J 청년부',
             'icon_image' => '/image/newsongj.png'
         ]);
+
+        Department::create([
+            'name' => '명성교회 유튜브',
+            'icon_image' => '/image/msch_youtube.png'
+        ]);
+
+        Department::create([
+            'name' => 'NFriends',
+            'icon_image' => '/image/nfriends.png'
+        ]);
     }
 }

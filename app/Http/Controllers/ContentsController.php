@@ -10,7 +10,7 @@ class ContentsController extends Controller
 {
     public function show(int $id)
     {
-        $contents = Contents::with('images')->find($id);
+        $contents = Contents::with('images', 'department')->find($id);
         return Inertia::render('contents/Show', ['contents' => $contents]);
     }
 }
