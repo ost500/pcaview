@@ -75,12 +75,12 @@
     <meta name="twitter:image" content="{{ url('/og_image.png') }}" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/jubogo_favicon.png">
-    <link rel="icon" type="image/x-icon" href="/jubogo_favicon.ico">
-    <link rel="shortcut icon" href="/jubogo_favicon.ico">
+    <link rel="icon" type="image/png" href="/jubogo_favicon.png?v=2">
+    <link rel="icon" type="image/x-icon" href="/jubogo_favicon.ico?v=2">
+    <link rel="shortcut icon" href="/jubogo_favicon.ico?v=2">
 
     <!-- Apple Touch Icon -->
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
 
     <!-- PWA Manifest -->
     <link rel="manifest" href="/site.webmanifest">
