@@ -55,6 +55,9 @@ export function usePWA() {
         console.log('isIOS:', isIOS.value);
         console.log('isMobile:', isMobile.value);
 
+        // 설치하기 버튼 클릭 시 3일간 표시 안 함
+        localStorage.setItem('pwa-prompt-never-show', Date.now().toString());
+
         // Android Chrome/Edge - 네이티브 프롬프트
         if (deferredPrompt.value) {
             console.log('Android 네이티브 프롬프트 실행');
@@ -90,12 +93,10 @@ export function usePWA() {
         deferredPrompt.value = null;
     };
 
-    // 프롬프트 닫기 (나중에)
+    // 프롬프트 닫기 (나중에) - 0일 (페이지 재진입 시 다시 표시)
     const dismissPrompt = () => {
         showInstallPrompt.value = false;
-
-        // 사용자가 닫으면 1일(내일) 동안 다시 표시하지 않음
-        localStorage.setItem('pwa-prompt-dismissed', Date.now().toString());
+        // localStorage에 저장하지 않음 (즉시 다시 표시)
     };
 
     // 프롬프트 영구 닫기 (다시 보지 않기)
@@ -103,7 +104,7 @@ export function usePWA() {
         showInstallPrompt.value = false;
         showIOSInstructions.value = false;
 
-        // 7일 동안 표시하지 않음
+        // 3일 동안 표시하지 않음
         localStorage.setItem('pwa-prompt-never-show', Date.now().toString());
     };
 
@@ -114,25 +115,20 @@ export function usePWA() {
 
     // 프롬프트를 다시 표시해도 되는지 확인
     const shouldShowPrompt = () => {
-        // "다시 보지 않기" 상태 확인 (7일)
+        // "다시 보지 않기" 상태 확인 (3일)
         const neverShowTime = localStorage.getItem('pwa-prompt-never-show');
         if (neverShowTime && neverShowTime !== 'true') {
-            const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
+            const threeDaysInMs = 3 * 24 * 60 * 60 * 1000;
             const timeSinceNeverShow = Date.now() - parseInt(neverShowTime);
-            if (timeSinceNeverShow <= sevenDaysInMs) {
+            if (timeSinceNeverShow <= threeDaysInMs) {
                 return false;
             }
         }
 
-        // "나중에" 상태 확인 (1일)
-        const dismissedTime = localStorage.getItem('pwa-prompt-dismissed');
-        if (!dismissedTime) return true;
+        // "나중에" 상태 확인 (0일 - 항상 표시)
+        // localStorage를 체크하지 않음
 
-        // 1일(내일) 후에 다시 표시
-        const oneDayInMs = 1 * 24 * 60 * 60 * 1000;
-        const timeSinceDismissed = Date.now() - parseInt(dismissedTime);
-
-        return timeSinceDismissed > oneDayInMs;
+        return true;
     };
 
     onMounted(() => {
