@@ -69,7 +69,7 @@ onMounted(() => {
                 root: null,
                 rootMargin: '200px',
                 threshold: 0.1,
-            },
+            }
         );
 
         observer.observe(loadMoreTrigger.value);
@@ -103,7 +103,7 @@ onUnmounted(() => {
                     <img :src="content.thumbnail_url" class="card-img-top" alt="..." />
                 </div>
                 <div v-if="isHtmlType(content)" class="card-body">
-                    <p class="card-text preview-text mb-0 text-muted">
+                    <p class="card-text text-muted mb-0 preview-text">
                         {{ extractTextFromHtml(content.body) }}
                     </p>
                 </div>
@@ -119,7 +119,7 @@ onUnmounted(() => {
         </div>
 
         <!-- Infinite scroll trigger -->
-        <div ref="loadMoreTrigger" class="col-12 py-4 text-center">
+        <div ref="loadMoreTrigger" class="col-12 text-center py-4">
             <div v-if="isLoading" class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">로딩 중...</span>
             </div>

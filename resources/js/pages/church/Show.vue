@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import BusinessInfo from '@/components/BusinessInfo.vue';
 import Header from '@/components/template/Header.vue';
+import BusinessInfo from '@/components/BusinessInfo.vue';
 import { Church } from '@/types/church';
-import { Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import VueEasyLightbox from 'vue-easy-lightbox';
+import { Head } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
 
 const props = defineProps<{ church: Church }>();
@@ -48,22 +48,17 @@ function close() {
         <link rel="canonical" :href="route('church.show', { id: church.id })" />
 
         <!-- Schema.org JSON-LD -->
-        <script
-            type="application/ld+json"
-            v-html="
-                JSON.stringify({
-                    '@context': 'https://schema.org',
-                    '@type': 'Church',
-                    name: church.name,
-                    address: {
-                        '@type': 'PostalAddress',
-                        addressLocality: church.address,
-                    },
-                    image: church.icon_url,
-                    url: route('church.show', { id: church.id }),
-                })
-            "
-        ></script>
+        <script type="application/ld+json" v-html="JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Church',
+            'name': church.name,
+            'address': {
+                '@type': 'PostalAddress',
+                'addressLocality': church.address
+            },
+            'image': church.icon_url,
+            'url': route('church.show', { id: church.id })
+        })"></script>
     </Head>
     <Header :title="'교회 / ' + church.name" :backbutton="true"></Header>
 
@@ -90,13 +85,7 @@ function close() {
                     <div class="about">
                         <h6 class="title">예배시간</h6>
                         <p class="para-text">
-                            <img
-                                :src="church.worship_time_image"
-                                @click="open(0)"
-                                :alt="church.name + ' 예배 시간'"
-                                loading="lazy"
-                                decoding="async"
-                            />
+                            <img :src="church.worship_time_image" @click="open(0)" :alt="church.name + ' 예배 시간'" loading="lazy" decoding="async" />
                         </p>
                     </div>
                 </div>

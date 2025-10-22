@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
 import { route } from 'ziggy-js';
+import { computed } from 'vue';
 
 const page = usePage();
 const auth = computed(() => page.props.auth);

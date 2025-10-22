@@ -20,16 +20,14 @@ OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 
-var __assign = function () {
-    __assign =
-        Object.assign ||
-        function __assign(t) {
-            for (var s, i = 1, n = arguments.length; i < n; i++) {
-                s = arguments[i];
-                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-            }
-            return t;
-        };
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
     return __assign.apply(this, arguments);
 };
 
@@ -112,37 +110,40 @@ var Autoplay = /** @class */ (function () {
         }
         // Start autoplay
         if (this.settings.slideShowAutoplay) {
-            this.core.LGel.once(lGEvents.slideItemLoad + '.autoplay', function () {
+            this.core.LGel.once(lGEvents.slideItemLoad + ".autoplay", function () {
                 _this.startAutoPlay();
             });
         }
         // cancel interval on touchstart and dragstart
-        this.core.LGel.on(lGEvents.dragStart + '.autoplay touchstart.lg.autoplay', function () {
+        this.core.LGel.on(lGEvents.dragStart + ".autoplay touchstart.lg.autoplay", function () {
             if (_this.interval) {
                 _this.stopAutoPlay();
                 _this.pausedOnTouchDrag = true;
             }
         });
         // restore autoplay if autoplay canceled from touchstart / dragstart
-        this.core.LGel.on(lGEvents.dragEnd + '.autoplay touchend.lg.autoplay', function () {
+        this.core.LGel.on(lGEvents.dragEnd + ".autoplay touchend.lg.autoplay", function () {
             if (!_this.interval && _this.pausedOnTouchDrag) {
                 _this.startAutoPlay();
                 _this.pausedOnTouchDrag = false;
             }
         });
-        this.core.LGel.on(lGEvents.beforeSlide + '.autoplay', function () {
+        this.core.LGel.on(lGEvents.beforeSlide + ".autoplay", function () {
             _this.showProgressBar();
             if (!_this.fromAuto && _this.interval) {
                 _this.stopAutoPlay();
                 _this.pausedOnSlideChange = true;
-            } else {
+            }
+            else {
                 _this.pausedOnSlideChange = false;
             }
             _this.fromAuto = false;
         });
         // restore autoplay if autoplay canceled from touchstart / dragstart
-        this.core.LGel.on(lGEvents.afterSlide + '.autoplay', function () {
-            if (_this.pausedOnSlideChange && !_this.interval && _this.settings.forceSlideShowAutoplay) {
+        this.core.LGel.on(lGEvents.afterSlide + ".autoplay", function () {
+            if (_this.pausedOnSlideChange &&
+                !_this.interval &&
+                _this.settings.forceSlideShowAutoplay) {
                 _this.startAutoPlay();
                 _this.pausedOnSlideChange = false;
             }
@@ -159,7 +160,10 @@ var Autoplay = /** @class */ (function () {
                 _$progress_1.removeAttr('style');
                 _$progressBar_1.removeClass('lg-start');
                 setTimeout(function () {
-                    _$progress_1.css('transition', 'width ' + (_this.core.settings.speed + _this.settings.slideShowInterval) + 'ms ease 0s');
+                    _$progress_1.css('transition', 'width ' +
+                        (_this.core.settings.speed +
+                            _this.settings.slideShowInterval) +
+                        'ms ease 0s');
                     _$progressBar_1.addClass('lg-start');
                 }, 20);
             }
@@ -168,31 +172,34 @@ var Autoplay = /** @class */ (function () {
     // Manage autoplay via play/stop buttons
     Autoplay.prototype.controls = function () {
         var _this = this;
-        var _html =
-            '<button aria-label="' +
-            this.settings.autoplayPluginStrings['toggleAutoplay'] +
-            '" type="button" class="lg-autoplay-button lg-icon"></button>';
+        var _html = "<button aria-label=\"" + this.settings.autoplayPluginStrings['toggleAutoplay'] + "\" type=\"button\" class=\"lg-autoplay-button lg-icon\"></button>";
         // Append autoplay controls
-        this.core.outer.find(this.settings.appendAutoplayControlsTo).append(_html);
+        this.core.outer
+            .find(this.settings.appendAutoplayControlsTo)
+            .append(_html);
         this.core.outer
             .find('.lg-autoplay-button')
             .first()
             .on('click.lg.autoplay', function () {
-                if (_this.core.outer.hasClass('lg-show-autoplay')) {
-                    _this.stopAutoPlay();
-                } else {
-                    if (!_this.interval) {
-                        _this.startAutoPlay();
-                    }
+            if (_this.core.outer.hasClass('lg-show-autoplay')) {
+                _this.stopAutoPlay();
+            }
+            else {
+                if (!_this.interval) {
+                    _this.startAutoPlay();
                 }
-            });
+            }
+        });
     };
     // Autostart gallery
     Autoplay.prototype.startAutoPlay = function () {
         var _this = this;
         this.core.outer
             .find('.lg-progress')
-            .css('transition', 'width ' + (this.core.settings.speed + this.settings.slideShowInterval) + 'ms ease 0s');
+            .css('transition', 'width ' +
+            (this.core.settings.speed +
+                this.settings.slideShowInterval) +
+            'ms ease 0s');
         this.core.outer.addClass('lg-show-autoplay');
         this.core.outer.find('.lg-progress-bar').addClass('lg-start');
         this.core.LGel.trigger(lGEvents.autoplayStart, {
@@ -201,7 +208,8 @@ var Autoplay = /** @class */ (function () {
         this.interval = setInterval(function () {
             if (_this.core.index + 1 < _this.core.galleryItems.length) {
                 _this.core.index++;
-            } else {
+            }
+            else {
                 _this.core.index = 0;
             }
             _this.core.LGel.trigger(lGEvents.autoplay, {
@@ -236,7 +244,7 @@ var Autoplay = /** @class */ (function () {
         this.core.LGel.off('.autoplay');
     };
     return Autoplay;
-})();
+}());
 
 export default Autoplay;
 //# sourceMappingURL=lg-autoplay.es5.js.map

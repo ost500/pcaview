@@ -20,16 +20,14 @@ OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 
-var __assign = function () {
-    __assign =
-        Object.assign ||
-        function __assign(t) {
-            for (var s, i = 1, n = arguments.length; i < n; i++) {
-                s = arguments[i];
-                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-            }
-            return t;
-        };
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
     return __assign.apply(this, arguments);
 };
 
@@ -83,14 +81,7 @@ var Pager = /** @class */ (function () {
     Pager.prototype.getPagerHtml = function (items) {
         var pagerList = '';
         for (var i = 0; i < items.length; i++) {
-            pagerList +=
-                '<span  data-lg-item-id="' +
-                i +
-                '" class="lg-pager-cont"> \n                    <span data-lg-item-id="' +
-                i +
-                '" class="lg-pager"></span>\n                    <div class="lg-pager-thumb-cont"><span class="lg-caret"></span> <img src="' +
-                items[i].thumb +
-                '" /></div>\n                    </span>';
+            pagerList += "<span  data-lg-item-id=\"" + i + "\" class=\"lg-pager-cont\"> \n                    <span data-lg-item-id=\"" + i + "\" class=\"lg-pager\"></span>\n                    <div class=\"lg-pager-thumb-cont\"><span class=\"lg-caret\"></span> <img src=\"" + items[i].thumb + "\" /></div>\n                    </span>";
         }
         return pagerList;
     };
@@ -121,11 +112,11 @@ var Pager = /** @class */ (function () {
                 $pagerOuter.removeClass('lg-pager-hover');
             });
         });
-        this.core.LGel.on(lGEvents.beforeSlide + '.pager', function (event) {
+        this.core.LGel.on(lGEvents.beforeSlide + ".pager", function (event) {
             var index = event.detail.index;
             _this.manageActiveClass.call(_this, index);
         });
-        this.core.LGel.on(lGEvents.updateSlides + '.pager', function () {
+        this.core.LGel.on(lGEvents.updateSlides + ".pager", function () {
             $pagerOuter.empty();
             $pagerOuter.html(_this.getPagerHtml(_this.core.galleryItems));
             _this.manageActiveClass(_this.core.index);
@@ -142,7 +133,7 @@ var Pager = /** @class */ (function () {
         this.core.LGel.off('.pager');
     };
     return Pager;
-})();
+}());
 
 export default Pager;
 //# sourceMappingURL=lg-pager.es5.js.map

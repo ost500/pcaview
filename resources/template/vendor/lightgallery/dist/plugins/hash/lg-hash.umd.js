@@ -6,13 +6,10 @@
  */
 
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined'
-        ? (module.exports = factory())
-        : typeof define === 'function' && define.amd
-          ? define(factory)
-          : ((global = typeof globalThis !== 'undefined' ? globalThis : global || self), (global.lgHash = factory()));
-})(this, function () {
-    'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.lgHash = factory());
+}(this, (function () { 'use strict';
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation.
@@ -29,16 +26,14 @@
     PERFORMANCE OF THIS SOFTWARE.
     ***************************************************************************** */
 
-    var __assign = function () {
-        __assign =
-            Object.assign ||
-            function __assign(t) {
-                for (var s, i = 1, n = arguments.length; i < n; i++) {
-                    s = arguments[i];
-                    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-                }
-                return t;
-            };
+    var __assign = function() {
+        __assign = Object.assign || function __assign(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+            }
+            return t;
+        };
         return __assign.apply(this, arguments);
     };
 
@@ -101,22 +96,27 @@
                 _this.buildFromHash();
             }, 100);
             // Change hash value on after each slide transition
-            this.core.LGel.on(lGEvents.afterSlide + '.hash', this.onAfterSlide.bind(this));
-            this.core.LGel.on(lGEvents.afterClose + '.hash', this.onCloseAfter.bind(this));
+            this.core.LGel.on(lGEvents.afterSlide + ".hash", this.onAfterSlide.bind(this));
+            this.core.LGel.on(lGEvents.afterClose + ".hash", this.onCloseAfter.bind(this));
             // Listen hash change and change the slide according to slide value
-            this.$LG(window).on('hashchange.lg.hash.global' + this.core.lgId, this.onHashchange.bind(this));
+            this.$LG(window).on("hashchange.lg.hash.global" + this.core.lgId, this.onHashchange.bind(this));
         };
         Hash.prototype.onAfterSlide = function (event) {
             var slideName = this.core.galleryItems[event.detail.index].slideName;
-            slideName = this.settings.customSlideName ? slideName || event.detail.index : event.detail.index;
+            slideName = this.settings.customSlideName
+                ? slideName || event.detail.index
+                : event.detail.index;
             if (history.replaceState) {
-                history.replaceState(
-                    null,
-                    '',
-                    window.location.pathname + window.location.search + '#lg=' + this.settings.galleryId + '&slide=' + slideName,
-                );
-            } else {
-                window.location.hash = 'lg=' + this.settings.galleryId + '&slide=' + slideName;
+                history.replaceState(null, '', window.location.pathname +
+                    window.location.search +
+                    '#lg=' +
+                    this.settings.galleryId +
+                    '&slide=' +
+                    slideName);
+            }
+            else {
+                window.location.hash =
+                    'lg=' + this.settings.galleryId + '&slide=' + slideName;
             }
         };
         /**
@@ -125,9 +125,7 @@
          * @returns {Number} Index of the slide.
          */
         Hash.prototype.getIndexFromUrl = function (hash) {
-            if (hash === void 0) {
-                hash = window.location.hash;
-            }
+            if (hash === void 0) { hash = window.location.hash; }
             var slideName = hash.split('&slide=')[1];
             var _idx = 0;
             if (this.settings.customSlideName) {
@@ -138,7 +136,8 @@
                         break;
                     }
                 }
-            } else {
+            }
+            else {
                 _idx = parseInt(slideName, 10);
             }
             return isNaN(_idx) ? 0 : _idx;
@@ -157,28 +156,34 @@
         };
         Hash.prototype.onCloseAfter = function () {
             // Reset to old hash value
-            if (this.oldHash && this.oldHash.indexOf('lg=' + this.settings.galleryId) < 0) {
+            if (this.oldHash &&
+                this.oldHash.indexOf('lg=' + this.settings.galleryId) < 0) {
                 if (history.replaceState) {
                     history.replaceState(null, '', this.oldHash);
-                } else {
+                }
+                else {
                     window.location.hash = this.oldHash;
                 }
-            } else {
+            }
+            else {
                 if (history.replaceState) {
                     history.replaceState(null, document.title, window.location.pathname + window.location.search);
-                } else {
+                }
+                else {
                     window.location.hash = '';
                 }
             }
         };
         Hash.prototype.onHashchange = function () {
-            if (!this.core.lgOpened) return;
+            if (!this.core.lgOpened)
+                return;
             var _hash = window.location.hash;
             var index = this.getIndexFromUrl(_hash);
             // it galleryId doesn't exist in the url close the gallery
             if (_hash.indexOf('lg=' + this.settings.galleryId) > -1) {
                 this.core.slide(index, false, false);
-            } else if (this.core.lGalleryOn) {
+            }
+            else if (this.core.lGalleryOn) {
                 this.core.closeGallery();
             }
         };
@@ -190,11 +195,12 @@
         Hash.prototype.destroy = function () {
             this.core.LGel.off('.lg.hash');
             this.core.LGel.off('.hash');
-            this.$LG(window).off('hashchange.lg.hash.global' + this.core.lgId);
+            this.$LG(window).off("hashchange.lg.hash.global" + this.core.lgId);
         };
         return Hash;
-    })();
+    }());
 
     return Hash;
-});
+
+})));
 //# sourceMappingURL=lg-hash.umd.js.map

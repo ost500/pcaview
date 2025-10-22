@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import BusinessInfo from '@/components/BusinessInfo.vue';
 import ContentsList from '@/components/contents/ContentsList.vue';
 import Header from '@/components/template/Header.vue';
+import BusinessInfo from '@/components/BusinessInfo.vue';
 import { Contents } from '@/types/contents';
 import { Department } from '@/types/department';
 import { Pagination } from '@/types/pagination';
-import { Head, router } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { router, Head } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
 import { route } from 'ziggy-js';
 
 const props = defineProps<{ department: Department; contents: Pagination<Contents> }>();
@@ -40,7 +40,7 @@ const loadMore = () => {
             onError: () => {
                 isLoading.value = false;
             },
-        },
+        }
     );
 };
 </script>

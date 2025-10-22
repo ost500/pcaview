@@ -20,16 +20,14 @@ OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 
-var __assign = function () {
-    __assign =
-        Object.assign ||
-        function __assign(t) {
-            for (var s, i = 1, n = arguments.length; i < n; i++) {
-                s = arguments[i];
-                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-            }
-            return t;
-        };
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
     return __assign.apply(this, arguments);
 };
 
@@ -115,11 +113,9 @@ var MediumZoom = /** @class */ (function () {
         if (!this.settings.mediumZoom) {
             return;
         }
-        this.core.LGel.on(lGEvents.beforeOpen + '.medium', function () {
-            _this.core.$backdrop.css(
-                'background-color',
-                _this.core.galleryItems[_this.core.index].lgBackgroundColor || _this.settings.backgroundColor,
-            );
+        this.core.LGel.on(lGEvents.beforeOpen + ".medium", function () {
+            _this.core.$backdrop.css('background-color', _this.core.galleryItems[_this.core.index].lgBackgroundColor ||
+                _this.settings.backgroundColor);
         });
         this.toggleItemClass();
         this.core.outer.on('click.lg.medium', function () {
@@ -130,7 +126,7 @@ var MediumZoom = /** @class */ (function () {
         this.toggleItemClass();
     };
     return MediumZoom;
-})();
+}());
 
 export default MediumZoom;
 //# sourceMappingURL=lg-medium-zoom.es5.js.map

@@ -20,22 +20,22 @@ OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 
-var __assign = function () {
-    __assign =
-        Object.assign ||
-        function __assign(t) {
-            for (var s, i = 1, n = arguments.length; i < n; i++) {
-                s = arguments[i];
-                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-            }
-            return t;
-        };
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
     return __assign.apply(this, arguments);
 };
 
 function __spreadArrays() {
     for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++) for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++) r[k] = a[j];
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
     return r;
 }
 
@@ -154,7 +154,8 @@ var lightGalleryCoreSettings = {
 
 function initLgPolyfills() {
     (function () {
-        if (typeof window.CustomEvent === 'function') return false;
+        if (typeof window.CustomEvent === 'function')
+            return false;
         function CustomEvent(event, params) {
             params = params || {
                 bubbles: false,
@@ -169,28 +170,32 @@ function initLgPolyfills() {
     })();
     (function () {
         if (!Element.prototype.matches) {
-            Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
+            Element.prototype.matches =
+                Element.prototype.msMatchesSelector ||
+                    Element.prototype.webkitMatchesSelector;
         }
     })();
 }
 var lgQuery = /** @class */ (function () {
     function lgQuery(selector) {
-        this.cssVenderPrefixes = ['TransitionDuration', 'TransitionTimingFunction', 'Transform', 'Transition'];
+        this.cssVenderPrefixes = [
+            'TransitionDuration',
+            'TransitionTimingFunction',
+            'Transform',
+            'Transition',
+        ];
         this.selector = this._getSelector(selector);
         this.firstElement = this._getFirstEl();
         return this;
     }
     lgQuery.generateUUID = function () {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = (Math.random() * 16) | 0,
-                v = c == 'x' ? r : (r & 0x3) | 0x8;
+            var r = (Math.random() * 16) | 0, v = c == 'x' ? r : (r & 0x3) | 0x8;
             return v.toString(16);
         });
     };
     lgQuery.prototype._getSelector = function (selector, context) {
-        if (context === void 0) {
-            context = document;
-        }
+        if (context === void 0) { context = document; }
         if (typeof selector !== 'string') {
             return selector;
         }
@@ -198,7 +203,8 @@ var lgQuery = /** @class */ (function () {
         var fl = selector.substring(0, 1);
         if (fl === '#') {
             return context.querySelector(selector);
-        } else {
+        }
+        else {
             return context.querySelectorAll(selector);
         }
     };
@@ -208,7 +214,8 @@ var lgQuery = /** @class */ (function () {
         }
         if (this.selector.length !== undefined) {
             [].forEach.call(this.selector, func);
-        } else {
+        }
+        else {
             func(this.selector, 0);
         }
         return this;
@@ -224,14 +231,16 @@ var lgQuery = /** @class */ (function () {
             el.style['moz' + property] = value;
             el.style['ms' + property] = value;
             el.style['o' + property] = value;
-        } else {
+        }
+        else {
             el.style[property] = value;
         }
     };
     lgQuery.prototype._getFirstEl = function () {
         if (this.selector && this.selector.length !== undefined) {
             return this.selector[0];
-        } else {
+        }
+        else {
             return this.selector;
         }
     };
@@ -239,12 +248,10 @@ var lgQuery = /** @class */ (function () {
         var eventNamespace = eventName.split('.');
         return event
             .split('.')
-            .filter(function (e) {
-                return e;
-            })
+            .filter(function (e) { return e; })
             .every(function (e) {
-                return eventNamespace.indexOf(e) !== -1;
-            });
+            return eventNamespace.indexOf(e) !== -1;
+        });
     };
     lgQuery.prototype.attr = function (attr, value) {
         if (value === undefined) {
@@ -264,7 +271,8 @@ var lgQuery = /** @class */ (function () {
     lgQuery.prototype.first = function () {
         if (this.selector && this.selector.length !== undefined) {
             return $LG(this.selector[0]);
-        } else {
+        }
+        else {
             return $LG(this.selector);
         }
     };
@@ -280,9 +288,7 @@ var lgQuery = /** @class */ (function () {
     lgQuery.prototype.removeAttr = function (attributes) {
         var attrs = attributes.split(' ');
         this._each(function (el) {
-            attrs.forEach(function (attr) {
-                return el.removeAttribute(attr);
-            });
+            attrs.forEach(function (attr) { return el.removeAttribute(attr); });
         });
         return this;
     };
@@ -298,9 +304,7 @@ var lgQuery = /** @class */ (function () {
         return this;
     };
     lgQuery.prototype.addClass = function (classNames) {
-        if (classNames === void 0) {
-            classNames = '';
-        }
+        if (classNames === void 0) { classNames = ''; }
         this._each(function (el) {
             // IE doesn't support multiple arguments
             classNames.split(' ').forEach(function (className) {
@@ -340,7 +344,8 @@ var lgQuery = /** @class */ (function () {
         }
         if (this.hasClass(className)) {
             this.removeClass(className);
-        } else {
+        }
+        else {
             this.addClass(className);
         }
         return this;
@@ -405,12 +410,10 @@ var lgQuery = /** @class */ (function () {
     lgQuery.prototype.load = function (url) {
         var _this = this;
         fetch(url)
-            .then(function (res) {
-                return res.text();
-            })
+            .then(function (res) { return res.text(); })
             .then(function (html) {
-                _this.selector.innerHTML = html;
-            });
+            _this.selector.innerHTML = html;
+        });
         return this;
     };
     lgQuery.prototype.html = function (html) {
@@ -429,7 +432,8 @@ var lgQuery = /** @class */ (function () {
         this._each(function (el) {
             if (typeof html === 'string') {
                 el.insertAdjacentHTML('beforeend', html);
-            } else {
+            }
+            else {
                 el.appendChild(html);
             }
         });
@@ -458,8 +462,12 @@ var lgQuery = /** @class */ (function () {
             document.body.scrollTop = scrollTop;
             document.documentElement.scrollTop = scrollTop;
             return this;
-        } else {
-            return window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+        }
+        else {
+            return (window.pageYOffset ||
+                document.documentElement.scrollTop ||
+                document.body.scrollTop ||
+                0);
         }
     };
     lgQuery.prototype.scrollLeft = function (scrollLeft) {
@@ -467,8 +475,12 @@ var lgQuery = /** @class */ (function () {
             document.body.scrollLeft = scrollLeft;
             document.documentElement.scrollLeft = scrollLeft;
             return this;
-        } else {
-            return window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0;
+        }
+        else {
+            return (window.pageXOffset ||
+                document.documentElement.scrollLeft ||
+                document.body.scrollLeft ||
+                0);
         }
     };
     lgQuery.prototype.offset = function () {
@@ -490,21 +502,26 @@ var lgQuery = /** @class */ (function () {
         if (!this.firstElement) {
             return {};
         }
-        return this.firstElement.currentStyle || window.getComputedStyle(this.firstElement);
+        return (this.firstElement.currentStyle ||
+            window.getComputedStyle(this.firstElement));
     };
     // Width without padding and border even if box-sizing is used.
     lgQuery.prototype.width = function () {
         var style = this.style();
-        return this.firstElement.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+        return (this.firstElement.clientWidth -
+            parseFloat(style.paddingLeft) -
+            parseFloat(style.paddingRight));
     };
     // Height without padding and border even if box-sizing is used.
     lgQuery.prototype.height = function () {
         var style = this.style();
-        return this.firstElement.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+        return (this.firstElement.clientHeight -
+            parseFloat(style.paddingTop) -
+            parseFloat(style.paddingBottom));
     };
     lgQuery.eventListeners = {};
     return lgQuery;
-})();
+}());
 function $LG(selector) {
     initLgPolyfills();
     return new lgQuery(selector);
@@ -544,9 +561,7 @@ function convertToData(attr) {
     }
     attr = attr.replace('data-', '');
     attr = attr.charAt(0).toLowerCase() + attr.slice(1);
-    attr = attr.replace(/-([a-z])/g, function (g) {
-        return g[1].toUpperCase();
-    });
+    attr = attr.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); });
     return attr;
 }
 var utils = {
@@ -554,9 +569,7 @@ var utils = {
      * get possible width and height from the lgSize attribute. Used for ZoomFromOrigin option
      */
     getSize: function (el, container, spacing, defaultLgSize) {
-        if (spacing === void 0) {
-            spacing = 0;
-        }
+        if (spacing === void 0) { spacing = 0; }
         var LGel = $LG(el);
         var lgSize = LGel.attr('data-lg-size') || defaultLgSize;
         if (!lgSize) {
@@ -609,15 +622,13 @@ var utils = {
         var elWidth = LGel.width();
         var elHeight = LGel.height();
         var elStyle = LGel.style();
-        var x =
-            (wWidth - elWidth) / 2 -
+        var x = (wWidth - elWidth) / 2 -
             LGel.offset().left +
             (parseFloat(elStyle.paddingLeft) || 0) +
             (parseFloat(elStyle.borderLeft) || 0) +
             $LG(window).scrollLeft() +
             containerRect.left;
-        var y =
-            (wHeight - elHeight) / 2 -
+        var y = (wHeight - elHeight) / 2 -
             LGel.offset().top +
             (parseFloat(elStyle.paddingTop) || 0) +
             (parseFloat(elStyle.borderTop) || 0) +
@@ -625,32 +636,25 @@ var utils = {
             top;
         var scX = elWidth / imageSize.width;
         var scY = elHeight / imageSize.height;
-        var transform = 'translate3d(' + (x *= -1) + 'px, ' + (y *= -1) + 'px, 0) scale3d(' + scX + ', ' + scY + ', 1)';
+        var transform = 'translate3d(' +
+            (x *= -1) +
+            'px, ' +
+            (y *= -1) +
+            'px, 0) scale3d(' +
+            scX +
+            ', ' +
+            scY +
+            ', 1)';
         return transform;
     },
     getIframeMarkup: function (iframeWidth, iframeHeight, iframeMaxWidth, iframeMaxHeight, src, iframeTitle) {
         var title = iframeTitle ? 'title="' + iframeTitle + '"' : '';
-        return (
-            '<div class="lg-video-cont lg-has-iframe" style="width:' +
-            iframeWidth +
-            '; max-width:' +
-            iframeMaxWidth +
-            '; height: ' +
-            iframeHeight +
-            '; max-height:' +
-            iframeMaxHeight +
-            '">\n                    <iframe class="lg-object" frameborder="0" ' +
-            title +
-            ' src="' +
-            src +
-            '"  allowfullscreen="true"></iframe>\n                </div>'
-        );
+        return "<div class=\"lg-video-cont lg-has-iframe\" style=\"width:" + iframeWidth + "; max-width:" + iframeMaxWidth + "; height: " + iframeHeight + "; max-height:" + iframeMaxHeight + "\">\n                    <iframe class=\"lg-object\" frameborder=\"0\" " + title + " src=\"" + src + "\"  allowfullscreen=\"true\"></iframe>\n                </div>";
     },
     getImgMarkup: function (index, src, altAttr, srcset, sizes, sources) {
-        var srcsetAttr = srcset ? 'srcset="' + srcset + '"' : '';
-        var sizesAttr = sizes ? 'sizes="' + sizes + '"' : '';
-        var imgMarkup =
-            '<img ' + altAttr + ' ' + srcsetAttr + '  ' + sizesAttr + ' class="lg-object lg-image" data-index="' + index + '" src="' + src + '" />';
+        var srcsetAttr = srcset ? "srcset=\"" + srcset + "\"" : '';
+        var sizesAttr = sizes ? "sizes=\"" + sizes + "\"" : '';
+        var imgMarkup = "<img " + altAttr + " " + srcsetAttr + "  " + sizesAttr + " class=\"lg-object lg-image\" data-index=\"" + index + "\" src=\"" + src + "\" />";
         var sourceTag = '';
         if (sources) {
             var sourceObj = typeof sources === 'string' ? JSON.parse(sources) : sources;
@@ -658,12 +662,12 @@ var utils = {
                 var attrs = '';
                 Object.keys(source).forEach(function (key) {
                     // Do not remove the first space as it is required to separate the attributes
-                    attrs += ' ' + key + '="' + source[key] + '"';
+                    attrs += " " + key + "=\"" + source[key] + "\"";
                 });
-                return '<source ' + attrs + '></source>';
+                return "<source " + attrs + "></source>";
             });
         }
-        return '' + sourceTag + imgMarkup;
+        return "" + sourceTag + imgMarkup;
     },
     // Get src from responsive src
     getResponsiveSrc: function (srcItms) {
@@ -689,7 +693,8 @@ var utils = {
         return src;
     },
     isImageLoaded: function (img) {
-        if (!img) return false;
+        if (!img)
+            return false;
         // During the onload event, IE correctly identifies any images that
         // weren’t downloaded as not complete. Others should too. Gecko-based
         // browsers act like NS4 in that they report this incorrectly.
@@ -709,31 +714,17 @@ var utils = {
         var videoClass = '';
         if (_isVideo && _isVideo.youtube) {
             videoClass = 'lg-has-youtube';
-        } else if (_isVideo && _isVideo.vimeo) {
+        }
+        else if (_isVideo && _isVideo.vimeo) {
             videoClass = 'lg-has-vimeo';
-        } else {
+        }
+        else {
             videoClass = 'lg-has-html5';
         }
-        return (
-            '<div class="lg-video-cont ' +
-            videoClass +
-            '" style="' +
-            videoContStyle +
-            '">\n                <div class="lg-video-play-button">\n                <svg\n                    viewBox="0 0 20 20"\n                    preserveAspectRatio="xMidYMid"\n                    focusable="false"\n                    aria-labelledby="' +
-            playVideoString +
-            '"\n                    role="img"\n                    class="lg-video-play-icon"\n                >\n                    <title>' +
-            playVideoString +
-            '</title>\n                    <polygon class="lg-video-play-icon-inner" points="1,0 20,10 1,20"></polygon>\n                </svg>\n                <svg class="lg-video-play-icon-bg" viewBox="0 0 50 50" focusable="false">\n                    <circle cx="50%" cy="50%" r="20"></circle></svg>\n                <svg class="lg-video-play-icon-circle" viewBox="0 0 50 50" focusable="false">\n                    <circle cx="50%" cy="50%" r="20"></circle>\n                </svg>\n            </div>\n            ' +
-            (dummyImg || '') +
-            '\n            <img class="lg-object lg-video-poster" src="' +
-            _poster +
-            '" />\n        </div>'
-        );
+        return "<div class=\"lg-video-cont " + videoClass + "\" style=\"" + videoContStyle + "\">\n                <div class=\"lg-video-play-button\">\n                <svg\n                    viewBox=\"0 0 20 20\"\n                    preserveAspectRatio=\"xMidYMid\"\n                    focusable=\"false\"\n                    aria-labelledby=\"" + playVideoString + "\"\n                    role=\"img\"\n                    class=\"lg-video-play-icon\"\n                >\n                    <title>" + playVideoString + "</title>\n                    <polygon class=\"lg-video-play-icon-inner\" points=\"1,0 20,10 1,20\"></polygon>\n                </svg>\n                <svg class=\"lg-video-play-icon-bg\" viewBox=\"0 0 50 50\" focusable=\"false\">\n                    <circle cx=\"50%\" cy=\"50%\" r=\"20\"></circle></svg>\n                <svg class=\"lg-video-play-icon-circle\" viewBox=\"0 0 50 50\" focusable=\"false\">\n                    <circle cx=\"50%\" cy=\"50%\" r=\"20\"></circle>\n                </svg>\n            </div>\n            " + (dummyImg || '') + "\n            <img class=\"lg-object lg-video-poster\" src=\"" + _poster + "\" />\n        </div>";
     },
     getFocusableElements: function (container) {
-        var elements = container.querySelectorAll(
-            'a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled])',
-        );
+        var elements = container.querySelectorAll('a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled])');
         var visibleElements = [].filter.call(elements, function (element) {
             var style = window.getComputedStyle(element);
             return style.display !== 'none' && style.visibility !== 'hidden';
@@ -768,7 +759,9 @@ var utils = {
             var currentItem = $LG(item);
             var alt = currentItem.find('img').first().attr('alt');
             var title = currentItem.attr('title');
-            var thumb = exThumbImage ? currentItem.attr(exThumbImage) : currentItem.find('img').first().attr('src');
+            var thumb = exThumbImage
+                ? currentItem.attr(exThumbImage)
+                : currentItem.find('img').first().attr('src');
             dynamicEl.thumb = thumb;
             if (getCaptionFromTitleOrAlt && !dynamicEl.subHtml) {
                 dynamicEl.subHtml = title || alt || '';
@@ -795,12 +788,11 @@ var utils = {
                 return {
                     html5: true,
                 };
-            } else {
-                console.error(
-                    'lightGallery :- data-src is not provided on slide item ' +
-                        (index + 1) +
-                        '. Please make sure the selector property is properly configured. More info - https://www.lightgalleryjs.com/demos/html-markup/',
-                );
+            }
+            else {
+                console.error('lightGallery :- data-src is not provided on slide item ' +
+                    (index + 1) +
+                    '. Please make sure the selector property is properly configured. More info - https://www.lightgalleryjs.com/demos/html-markup/');
                 return;
             }
         }
@@ -811,11 +803,13 @@ var utils = {
             return {
                 youtube: youtube,
             };
-        } else if (vimeo) {
+        }
+        else if (vimeo) {
             return {
                 vimeo: vimeo,
             };
-        } else if (wistia) {
+        }
+        else if (wistia) {
             return {
                 wistia: wistia,
             };
@@ -857,7 +851,9 @@ var LightGallery = /** @class */ (function () {
         this.generateSettings(options);
         this.buildModules();
         // When using dynamic mode, ensure dynamicEl is an array
-        if (this.settings.dynamic && this.settings.dynamicEl !== undefined && !Array.isArray(this.settings.dynamicEl)) {
+        if (this.settings.dynamic &&
+            this.settings.dynamicEl !== undefined &&
+            !Array.isArray(this.settings.dynamicEl)) {
             throw 'When using dynamic mode, you must also define dynamicEl as an Array.';
         }
         this.galleryItems = this.getItems();
@@ -870,7 +866,10 @@ var LightGallery = /** @class */ (function () {
     LightGallery.prototype.generateSettings = function (options) {
         // lightGallery settings
         this.settings = __assign(__assign({}, lightGalleryCoreSettings), options);
-        if (this.settings.isMobile && typeof this.settings.isMobile === 'function' ? this.settings.isMobile() : utils.isMobile()) {
+        if (this.settings.isMobile &&
+            typeof this.settings.isMobile === 'function'
+            ? this.settings.isMobile()
+            : utils.isMobile()) {
             var mobileSettings = __assign(__assign({}, this.settings.mobileSettings), this.settings.mobileSettings);
             this.settings = __assign(__assign({}, this.settings), mobileSettings);
         }
@@ -926,7 +925,9 @@ var LightGallery = /** @class */ (function () {
             // Using different namespace for click because click event should not unbind if selector is same object('this')
             // @todo manage all event listners - should have namespace that represent element
             var uuid = lgQuery.generateUUID();
-            $element.attr('data-lg-id', uuid).on('click.lgcustom-item-' + uuid, function (e) {
+            $element
+                .attr('data-lg-id', uuid)
+                .on("click.lgcustom-item-" + uuid, function (e) {
                 e.preventDefault();
                 var currentItemIndex = _this.settings.index || index;
                 _this.openGallery(currentItemIndex, element);
@@ -953,26 +954,28 @@ var LightGallery = /** @class */ (function () {
     LightGallery.prototype.validateLicense = function () {
         if (!this.settings.licenseKey) {
             console.error('Please provide a valid license key');
-        } else if (this.settings.licenseKey === '0000-0000-000-0000') {
-            console.warn('lightGallery: ' + this.settings.licenseKey + ' license key is not valid for production use');
+        }
+        else if (this.settings.licenseKey === '0000-0000-000-0000') {
+            console.warn("lightGallery: " + this.settings.licenseKey + " license key is not valid for production use");
         }
     };
     LightGallery.prototype.getSlideItem = function (index) {
         return $LG(this.getSlideItemId(index));
     };
     LightGallery.prototype.getSlideItemId = function (index) {
-        return '#lg-item-' + this.lgId + '-' + index;
+        return "#lg-item-" + this.lgId + "-" + index;
     };
     LightGallery.prototype.getIdName = function (id) {
-        return id + '-' + this.lgId;
+        return id + "-" + this.lgId;
     };
     LightGallery.prototype.getElementById = function (id) {
-        return $LG('#' + this.getIdName(id));
+        return $LG("#" + this.getIdName(id));
     };
     LightGallery.prototype.manageSingleSlideClassName = function () {
         if (this.galleryItems.length < 2) {
             this.outer.addClass('lg-single-item');
-        } else {
+        }
+        else {
             this.outer.removeClass('lg-single-item');
         }
     };
@@ -986,81 +989,35 @@ var LightGallery = /** @class */ (function () {
         var subHtmlCont = '';
         // Create controls
         if (this.settings.controls) {
-            controls =
-                '<button type="button" id="' +
-                this.getIdName('lg-prev') +
-                '" aria-label="' +
-                this.settings.strings['previousSlide'] +
-                '" class="lg-prev lg-icon"> ' +
-                this.settings.prevHtml +
-                ' </button>\n                <button type="button" id="' +
-                this.getIdName('lg-next') +
-                '" aria-label="' +
-                this.settings.strings['nextSlide'] +
-                '" class="lg-next lg-icon"> ' +
-                this.settings.nextHtml +
-                ' </button>';
+            controls = "<button type=\"button\" id=\"" + this.getIdName('lg-prev') + "\" aria-label=\"" + this.settings.strings['previousSlide'] + "\" class=\"lg-prev lg-icon\"> " + this.settings.prevHtml + " </button>\n                <button type=\"button\" id=\"" + this.getIdName('lg-next') + "\" aria-label=\"" + this.settings.strings['nextSlide'] + "\" class=\"lg-next lg-icon\"> " + this.settings.nextHtml + " </button>";
         }
         if (this.settings.appendSubHtmlTo !== '.lg-item') {
-            subHtmlCont = '<div class="lg-sub-html" role="status" aria-live="polite"></div>';
+            subHtmlCont =
+                '<div class="lg-sub-html" role="status" aria-live="polite"></div>';
         }
         var addClasses = '';
         if (this.settings.allowMediaOverlap) {
             // Do not remove space before last single quote
             addClasses += 'lg-media-overlap ';
         }
-        var ariaLabelledby = this.settings.ariaLabelledby ? 'aria-labelledby="' + this.settings.ariaLabelledby + '"' : '';
-        var ariaDescribedby = this.settings.ariaDescribedby ? 'aria-describedby="' + this.settings.ariaDescribedby + '"' : '';
-        var containerClassName = 'lg-container ' + this.settings.addClass + ' ' + (document.body !== this.settings.container ? 'lg-inline' : '');
-        var closeIcon =
-            this.settings.closable && this.settings.showCloseIcon
-                ? '<button type="button" aria-label="' +
-                  this.settings.strings['closeGallery'] +
-                  '" id="' +
-                  this.getIdName('lg-close') +
-                  '" class="lg-close lg-icon"></button>'
-                : '';
-        var maximizeIcon = this.settings.showMaximizeIcon
-            ? '<button type="button" aria-label="' +
-              this.settings.strings['toggleMaximize'] +
-              '" id="' +
-              this.getIdName('lg-maximize') +
-              '" class="lg-maximize lg-icon"></button>'
+        var ariaLabelledby = this.settings.ariaLabelledby
+            ? 'aria-labelledby="' + this.settings.ariaLabelledby + '"'
             : '';
-        var template =
-            '\n        <div class="' +
-            containerClassName +
-            '" id="' +
-            this.getIdName('lg-container') +
-            '" tabindex="-1" aria-modal="true" ' +
-            ariaLabelledby +
-            ' ' +
-            ariaDescribedby +
-            ' role="dialog"\n        >\n            <div id="' +
-            this.getIdName('lg-backdrop') +
-            '" class="lg-backdrop"></div>\n\n            <div id="' +
-            this.getIdName('lg-outer') +
-            '" class="lg-outer lg-use-css3 lg-css3 lg-hide-items ' +
-            addClasses +
-            ' ">\n\n              <div id="' +
-            this.getIdName('lg-content') +
-            '" class="lg-content">\n                <div id="' +
-            this.getIdName('lg-inner') +
-            '" class="lg-inner">\n                </div>\n                ' +
-            controls +
-            '\n              </div>\n                <div id="' +
-            this.getIdName('lg-toolbar') +
-            '" class="lg-toolbar lg-group">\n                    ' +
-            maximizeIcon +
-            '\n                    ' +
-            closeIcon +
-            '\n                    </div>\n                    ' +
-            (this.settings.appendSubHtmlTo === '.lg-outer' ? subHtmlCont : '') +
-            '\n                <div id="' +
-            this.getIdName('lg-components') +
-            '" class="lg-components">\n                    ' +
-            (this.settings.appendSubHtmlTo === '.lg-sub-html' ? subHtmlCont : '') +
-            '\n                </div>\n            </div>\n        </div>\n        ';
+        var ariaDescribedby = this.settings.ariaDescribedby
+            ? 'aria-describedby="' + this.settings.ariaDescribedby + '"'
+            : '';
+        var containerClassName = "lg-container " + this.settings.addClass + " " + (document.body !== this.settings.container ? 'lg-inline' : '');
+        var closeIcon = this.settings.closable && this.settings.showCloseIcon
+            ? "<button type=\"button\" aria-label=\"" + this.settings.strings['closeGallery'] + "\" id=\"" + this.getIdName('lg-close') + "\" class=\"lg-close lg-icon\"></button>"
+            : '';
+        var maximizeIcon = this.settings.showMaximizeIcon
+            ? "<button type=\"button\" aria-label=\"" + this.settings.strings['toggleMaximize'] + "\" id=\"" + this.getIdName('lg-maximize') + "\" class=\"lg-maximize lg-icon\"></button>"
+            : '';
+        var template = "\n        <div class=\"" + containerClassName + "\" id=\"" + this.getIdName('lg-container') + "\" tabindex=\"-1\" aria-modal=\"true\" " + ariaLabelledby + " " + ariaDescribedby + " role=\"dialog\"\n        >\n            <div id=\"" + this.getIdName('lg-backdrop') + "\" class=\"lg-backdrop\"></div>\n\n            <div id=\"" + this.getIdName('lg-outer') + "\" class=\"lg-outer lg-use-css3 lg-css3 lg-hide-items " + addClasses + " \">\n\n              <div id=\"" + this.getIdName('lg-content') + "\" class=\"lg-content\">\n                <div id=\"" + this.getIdName('lg-inner') + "\" class=\"lg-inner\">\n                </div>\n                " + controls + "\n              </div>\n                <div id=\"" + this.getIdName('lg-toolbar') + "\" class=\"lg-toolbar lg-group\">\n                    " + maximizeIcon + "\n                    " + closeIcon + "\n                    </div>\n                    " + (this.settings.appendSubHtmlTo === '.lg-outer'
+            ? subHtmlCont
+            : '') + "\n                <div id=\"" + this.getIdName('lg-components') + "\" class=\"lg-components\">\n                    " + (this.settings.appendSubHtmlTo === '.lg-sub-html'
+            ? subHtmlCont
+            : '') + "\n                </div>\n            </div>\n        </div>\n        ";
         $LG(this.settings.container).append(template);
         if (document.body !== this.settings.container) {
             $LG(this.settings.container).css('position', 'relative');
@@ -1073,7 +1030,7 @@ var LightGallery = /** @class */ (function () {
         this.$content = this.getElementById('lg-content');
         this.$toolbar = this.getElementById('lg-toolbar');
         this.$backdrop.css('transition-duration', this.settings.backdropDuration + 'ms');
-        var outerClassNames = this.settings.mode + ' ';
+        var outerClassNames = this.settings.mode + " ";
         this.manageSingleSlideClassName();
         if (this.settings.enableDrag) {
             outerClassNames += 'lg-grab ';
@@ -1082,16 +1039,10 @@ var LightGallery = /** @class */ (function () {
         this.$inner.css('transition-timing-function', this.settings.easing);
         this.$inner.css('transition-duration', this.settings.speed + 'ms');
         if (this.settings.download) {
-            this.$toolbar.append(
-                '<a id="' +
-                    this.getIdName('lg-download') +
-                    '" target="_blank" rel="noopener" aria-label="' +
-                    this.settings.strings['download'] +
-                    '" download class="lg-download lg-icon"></a>',
-            );
+            this.$toolbar.append("<a id=\"" + this.getIdName('lg-download') + "\" target=\"_blank\" rel=\"noopener\" aria-label=\"" + this.settings.strings['download'] + "\" download class=\"lg-download lg-icon\"></a>");
         }
         this.counter();
-        $LG(window).on('resize.lg.global' + this.lgId + ' orientationchange.lg.global' + this.lgId, function () {
+        $LG(window).on("resize.lg.global" + this.lgId + " orientationchange.lg.global" + this.lgId, function () {
             _this.refreshOnResize();
         });
         this.hideBars();
@@ -1104,16 +1055,17 @@ var LightGallery = /** @class */ (function () {
             var currentGalleryItem = this.galleryItems[this.index];
             var __slideVideoInfo = currentGalleryItem.__slideVideoInfo;
             this.mediaContainerPosition = this.getMediaContainerPosition();
-            var _a = this.mediaContainerPosition,
-                top_1 = _a.top,
-                bottom = _a.bottom;
+            var _a = this.mediaContainerPosition, top_1 = _a.top, bottom = _a.bottom;
             this.currentImageSize = utils.getSize(this.items[this.index], this.outer, top_1 + bottom, __slideVideoInfo && this.settings.videoMaxSize);
             if (__slideVideoInfo) {
                 this.resizeVideoSlide(this.index, this.currentImageSize);
             }
             if (this.zoomFromOrigin && !this.isDummyImageRemoved) {
                 var imgStyle = this.getDummyImgStyles(this.currentImageSize);
-                this.outer.find('.lg-current .lg-dummy-img').first().attr('style', imgStyle);
+                this.outer
+                    .find('.lg-current .lg-dummy-img')
+                    .first()
+                    .attr('style', imgStyle);
             }
             this.LGel.trigger(lGEvents.containerResize);
         }
@@ -1204,27 +1156,35 @@ var LightGallery = /** @class */ (function () {
         if (!this.settings.dynamic) {
             if (this.settings.selector === 'this') {
                 this.items.push(this.el);
-            } else if (this.settings.selector) {
+            }
+            else if (this.settings.selector) {
                 if (typeof this.settings.selector === 'string') {
                     if (this.settings.selectWithin) {
                         var selectWithin = $LG(this.settings.selectWithin);
-                        this.items = selectWithin.find(this.settings.selector).get();
-                    } else {
+                        this.items = selectWithin
+                            .find(this.settings.selector)
+                            .get();
+                    }
+                    else {
                         this.items = this.el.querySelectorAll(this.settings.selector);
                     }
-                } else {
+                }
+                else {
                     this.items = this.settings.selector;
                 }
-            } else {
+            }
+            else {
                 this.items = this.el.children;
             }
             return utils.getDynamicOptions(this.items, this.settings.extraProps, this.settings.getCaptionFromTitleOrAlt, this.settings.exThumbImage);
-        } else {
+        }
+        else {
             return this.settings.dynamicEl || [];
         }
     };
     LightGallery.prototype.shouldHideScrollbar = function () {
-        return this.settings.hideScrollbar && document.body === this.settings.container;
+        return (this.settings.hideScrollbar &&
+            document.body === this.settings.container);
     };
     LightGallery.prototype.hideScrollbar = function () {
         if (!this.shouldHideScrollbar()) {
@@ -1273,11 +1233,10 @@ var LightGallery = /** @class */ (function () {
      */
     LightGallery.prototype.openGallery = function (index, element) {
         var _this = this;
-        if (index === void 0) {
-            index = this.settings.index;
-        }
+        if (index === void 0) { index = this.settings.index; }
         // prevent accidental double execution
-        if (this.lgOpened) return;
+        if (this.lgOpened)
+            return;
         this.lgOpened = true;
         this.outer.removeClass('lg-hide-items');
         this.hideScrollbar();
@@ -1287,15 +1246,13 @@ var LightGallery = /** @class */ (function () {
         this.currentItemsInDom = itemsToBeInsertedToDom;
         var items = '';
         itemsToBeInsertedToDom.forEach(function (item) {
-            items = items + ('<div id="' + item + '" class="lg-item"></div>');
+            items = items + ("<div id=\"" + item + "\" class=\"lg-item\"></div>");
         });
         this.$inner.append(items);
         this.addHtml(index);
         var transform = '';
         this.mediaContainerPosition = this.getMediaContainerPosition();
-        var _a = this.mediaContainerPosition,
-            top = _a.top,
-            bottom = _a.bottom;
+        var _a = this.mediaContainerPosition, top = _a.top, bottom = _a.bottom;
         if (!this.settings.allowMediaOverlap) {
             this.setMediaContainerPosition(top, bottom);
         }
@@ -1308,7 +1265,9 @@ var LightGallery = /** @class */ (function () {
             this.outer.addClass(this.settings.startClass);
             this.getSlideItem(index).removeClass('lg-complete');
         }
-        var timeout = this.settings.zoomFromOrigin ? 100 : this.settings.backdropDuration;
+        var timeout = this.settings.zoomFromOrigin
+            ? 100
+            : this.settings.backdropDuration;
         setTimeout(function () {
             _this.outer.addClass('lg-components-open');
         }, timeout);
@@ -1340,7 +1299,8 @@ var LightGallery = /** @class */ (function () {
                 _this.$container.addClass('lg-show-in');
             }, 10);
             setTimeout(function () {
-                if (_this.settings.trapFocus && document.body === _this.settings.container) {
+                if (_this.settings.trapFocus &&
+                    document.body === _this.settings.container) {
                     _this.trapFocus();
                 }
             }, _this.settings.backdropDuration + 50);
@@ -1373,7 +1333,9 @@ var LightGallery = /** @class */ (function () {
         }
         var top = this.$toolbar.get().clientHeight || 0;
         var subHtml = this.outer.find('.lg-components .lg-sub-html').get();
-        var captionHeight = this.settings.defaultCaptionHeight || (subHtml && subHtml.clientHeight) || 0;
+        var captionHeight = this.settings.defaultCaptionHeight ||
+            (subHtml && subHtml.clientHeight) ||
+            0;
         var thumbContainer = this.outer.find('.lg-thumb-outer').get();
         var thumbHeight = thumbContainer ? thumbContainer.clientHeight : 0;
         var bottom = thumbHeight + captionHeight;
@@ -1383,12 +1345,8 @@ var LightGallery = /** @class */ (function () {
         };
     };
     LightGallery.prototype.setMediaContainerPosition = function (top, bottom) {
-        if (top === void 0) {
-            top = 0;
-        }
-        if (bottom === void 0) {
-            bottom = 0;
-        }
+        if (top === void 0) { top = 0; }
+        if (bottom === void 0) { bottom = 0; }
         this.$content.css('top', top + 'px').css('bottom', bottom + 'px');
     };
     LightGallery.prototype.hideBars = function () {
@@ -1415,10 +1373,9 @@ var LightGallery = /** @class */ (function () {
                 picturefill({
                     elements: [$img.get()],
                 });
-            } catch (e) {
-                console.warn(
-                    'lightGallery :- If you want srcset or picture tag to be supported for older browser please include picturefil javascript library in your document.',
-                );
+            }
+            catch (e) {
+                console.warn('lightGallery :- If you want srcset or picture tag to be supported for older browser please include picturefil javascript library in your document.');
             }
         }
     };
@@ -1428,16 +1385,7 @@ var LightGallery = /** @class */ (function () {
      */
     LightGallery.prototype.counter = function () {
         if (this.settings.counter) {
-            var counterHtml =
-                '<div class="lg-counter" role="status" aria-live="polite">\n                <span id="' +
-                this.getIdName('lg-counter-current') +
-                '" class="lg-counter-current">' +
-                (this.index + 1) +
-                ' </span> /\n                <span id="' +
-                this.getIdName('lg-counter-all') +
-                '" class="lg-counter-all">' +
-                this.galleryItems.length +
-                ' </span></div>';
+            var counterHtml = "<div class=\"lg-counter\" role=\"status\" aria-live=\"polite\">\n                <span id=\"" + this.getIdName('lg-counter-current') + "\" class=\"lg-counter-current\">" + (this.index + 1) + " </span> /\n                <span id=\"" + this.getIdName('lg-counter-all') + "\" class=\"lg-counter-all\">" + this.galleryItems.length + " </span></div>";
             this.outer.find(this.settings.appendCounterTo).append(counterHtml);
         }
     };
@@ -1450,7 +1398,8 @@ var LightGallery = /** @class */ (function () {
         var subHtmlUrl;
         if (this.galleryItems[index].subHtmlUrl) {
             subHtmlUrl = this.galleryItems[index].subHtmlUrl;
-        } else {
+        }
+        else {
             subHtml = this.galleryItems[index].subHtml;
         }
         if (!subHtmlUrl) {
@@ -1459,36 +1408,51 @@ var LightGallery = /** @class */ (function () {
                 // if first letter starts with . or # get the html form the jQuery object
                 var fL = subHtml.substring(0, 1);
                 if (fL === '.' || fL === '#') {
-                    if (this.settings.subHtmlSelectorRelative && !this.settings.dynamic) {
-                        subHtml = $LG(this.items).eq(index).find(subHtml).first().html();
-                    } else {
+                    if (this.settings.subHtmlSelectorRelative &&
+                        !this.settings.dynamic) {
+                        subHtml = $LG(this.items)
+                            .eq(index)
+                            .find(subHtml)
+                            .first()
+                            .html();
+                    }
+                    else {
                         subHtml = $LG(subHtml).first().html();
                     }
                 }
-            } else {
+            }
+            else {
                 subHtml = '';
             }
         }
         if (this.settings.appendSubHtmlTo !== '.lg-item') {
             if (subHtmlUrl) {
                 this.outer.find('.lg-sub-html').load(subHtmlUrl);
-            } else {
+            }
+            else {
                 this.outer.find('.lg-sub-html').html(subHtml);
             }
-        } else {
+        }
+        else {
             var currentSlide = $LG(this.getSlideItemId(index));
             if (subHtmlUrl) {
                 currentSlide.load(subHtmlUrl);
-            } else {
-                currentSlide.append('<div class="lg-sub-html">' + subHtml + '</div>');
+            }
+            else {
+                currentSlide.append("<div class=\"lg-sub-html\">" + subHtml + "</div>");
             }
         }
         // Add lg-empty-html class if title doesn't exist
         if (typeof subHtml !== 'undefined' && subHtml !== null) {
             if (subHtml === '') {
-                this.outer.find(this.settings.appendSubHtmlTo).addClass('lg-empty-html');
-            } else {
-                this.outer.find(this.settings.appendSubHtmlTo).removeClass('lg-empty-html');
+                this.outer
+                    .find(this.settings.appendSubHtmlTo)
+                    .addClass('lg-empty-html');
+            }
+            else {
+                this.outer
+                    .find(this.settings.appendSubHtmlTo)
+                    .removeClass('lg-empty-html');
             }
         }
         this.LGel.trigger(lGEvents.afterAppendSubHtml, {
@@ -1515,22 +1479,14 @@ var LightGallery = /** @class */ (function () {
         }
     };
     LightGallery.prototype.getDummyImgStyles = function (imageSize) {
-        if (!imageSize) return '';
-        return (
-            'width:' +
-            imageSize.width +
-            'px;\n                margin-left: -' +
-            imageSize.width / 2 +
-            'px;\n                margin-top: -' +
-            imageSize.height / 2 +
-            'px;\n                height:' +
-            imageSize.height +
-            'px'
-        );
+        if (!imageSize)
+            return '';
+        return "width:" + imageSize.width + "px;\n                margin-left: -" + imageSize.width / 2 + "px;\n                margin-top: -" + imageSize.height / 2 + "px;\n                height:" + imageSize.height + "px";
     };
     LightGallery.prototype.getVideoContStyle = function (imageSize) {
-        if (!imageSize) return '';
-        return 'width:' + imageSize.width + 'px;\n                height:' + imageSize.height + 'px';
+        if (!imageSize)
+            return '';
+        return "width:" + imageSize.width + "px;\n                height:" + imageSize.height + "px";
     };
     LightGallery.prototype.getDummyImageContent = function ($currentSlide, index, alt) {
         var $currentItem;
@@ -1541,12 +1497,14 @@ var LightGallery = /** @class */ (function () {
             var _dummyImgSrc = void 0;
             if (!this.settings.exThumbImage) {
                 _dummyImgSrc = $currentItem.find('img').first().attr('src');
-            } else {
+            }
+            else {
                 _dummyImgSrc = $currentItem.attr(this.settings.exThumbImage);
             }
-            if (!_dummyImgSrc) return '';
+            if (!_dummyImgSrc)
+                return '';
             var imgStyle = this.getDummyImgStyles(this.currentImageSize);
-            var dummyImgContent = '<img ' + alt + ' style="' + imgStyle + '" class="lg-dummy-img" src="' + _dummyImgSrc + '" />';
+            var dummyImgContent = "<img " + alt + " style=\"" + imgStyle + "\" class=\"lg-dummy-img\" src=\"" + _dummyImgSrc + "\" />";
             $currentSlide.addClass('lg-first-slide');
             this.outer.addClass('lg-first-slide-loading');
             return dummyImgContent;
@@ -1555,27 +1513,27 @@ var LightGallery = /** @class */ (function () {
     };
     LightGallery.prototype.setImgMarkup = function (src, $currentSlide, index) {
         var currentGalleryItem = this.galleryItems[index];
-        var alt = currentGalleryItem.alt,
-            srcset = currentGalleryItem.srcset,
-            sizes = currentGalleryItem.sizes,
-            sources = currentGalleryItem.sources;
+        var alt = currentGalleryItem.alt, srcset = currentGalleryItem.srcset, sizes = currentGalleryItem.sizes, sources = currentGalleryItem.sources;
         // Use the thumbnail as dummy image which will be resized to actual image size and
         // displayed on top of actual image
         var imgContent = '';
         var altAttr = alt ? 'alt="' + alt + '"' : '';
         if (this.isFirstSlideWithZoomAnimation()) {
             imgContent = this.getDummyImageContent($currentSlide, index, altAttr);
-        } else {
+        }
+        else {
             imgContent = utils.getImgMarkup(index, src, altAttr, srcset, sizes, sources);
         }
-        var imgMarkup = '<picture class="lg-img-wrap"> ' + imgContent + '</picture>';
+        var imgMarkup = "<picture class=\"lg-img-wrap\"> " + imgContent + "</picture>";
         $currentSlide.prepend(imgMarkup);
     };
     LightGallery.prototype.onSlideObjectLoad = function ($slide, isHTML5VideoWithoutPoster, onLoad, onError) {
         var mediaObject = $slide.find('.lg-object').first();
-        if (utils.isImageLoaded(mediaObject.get()) || isHTML5VideoWithoutPoster) {
+        if (utils.isImageLoaded(mediaObject.get()) ||
+            isHTML5VideoWithoutPoster) {
             onLoad();
-        } else {
+        }
+        else {
             mediaObject.on('load.lg error.lg', function () {
                 onLoad && onLoad();
             });
@@ -1594,24 +1552,23 @@ var LightGallery = /** @class */ (function () {
      */
     LightGallery.prototype.onLgObjectLoad = function (currentSlide, index, delay, speed, isFirstSlide, isHTML5VideoWithoutPoster) {
         var _this = this;
-        this.onSlideObjectLoad(
-            currentSlide,
-            isHTML5VideoWithoutPoster,
-            function () {
-                _this.triggerSlideItemLoad(currentSlide, index, delay, speed, isFirstSlide);
-            },
-            function () {
-                currentSlide.addClass('lg-complete lg-complete_');
-                currentSlide.html('<span class="lg-error-msg">Oops... Failed to load content...</span>');
-            },
-        );
+        this.onSlideObjectLoad(currentSlide, isHTML5VideoWithoutPoster, function () {
+            _this.triggerSlideItemLoad(currentSlide, index, delay, speed, isFirstSlide);
+        }, function () {
+            currentSlide.addClass('lg-complete lg-complete_');
+            currentSlide.html('<span class="lg-error-msg">Oops... Failed to load content...</span>');
+        });
     };
     LightGallery.prototype.triggerSlideItemLoad = function ($currentSlide, index, delay, speed, isFirstSlide) {
         var _this = this;
         var currentGalleryItem = this.galleryItems[index];
         // Adding delay for video slides without poster for better performance and user experience
         // Videos should start playing once once the gallery is completely loaded
-        var _speed = isFirstSlide && this.getSlideType(currentGalleryItem) === 'video' && !currentGalleryItem.poster ? speed : 0;
+        var _speed = isFirstSlide &&
+            this.getSlideType(currentGalleryItem) === 'video' &&
+            !currentGalleryItem.poster
+            ? speed
+            : 0;
         setTimeout(function () {
             $currentSlide.addClass('lg-complete lg-complete_');
             _this.LGel.trigger(lGEvents.slideItemLoad, {
@@ -1622,15 +1579,20 @@ var LightGallery = /** @class */ (function () {
         }, _speed);
     };
     LightGallery.prototype.isFirstSlideWithZoomAnimation = function () {
-        return !!(!this.lGalleryOn && this.zoomFromOrigin && this.currentImageSize);
+        return !!(!this.lGalleryOn &&
+            this.zoomFromOrigin &&
+            this.currentImageSize);
     };
     // Add video slideInfo
     LightGallery.prototype.addSlideVideoInfo = function (items) {
         var _this = this;
         items.forEach(function (element, index) {
             element.__slideVideoInfo = utils.isVideo(element.src, !!element.video, index);
-            if (element.__slideVideoInfo && _this.settings.loadYouTubePoster && !element.poster && element.__slideVideoInfo.youtube) {
-                element.poster = '//img.youtube.com/vi/' + element.__slideVideoInfo.youtube[1] + '/maxresdefault.jpg';
+            if (element.__slideVideoInfo &&
+                _this.settings.loadYouTubePoster &&
+                !element.poster &&
+                element.__slideVideoInfo.youtube) {
+                element.poster = "//img.youtube.com/vi/" + element.__slideVideoInfo.youtube[1] + "/maxresdefault.jpg";
             }
         });
     };
@@ -1644,10 +1606,7 @@ var LightGallery = /** @class */ (function () {
         var _this = this;
         var currentGalleryItem = this.galleryItems[index];
         var $currentSlide = $LG(this.getSlideItemId(index));
-        var poster = currentGalleryItem.poster,
-            srcset = currentGalleryItem.srcset,
-            sizes = currentGalleryItem.sizes,
-            sources = currentGalleryItem.sources;
+        var poster = currentGalleryItem.poster, srcset = currentGalleryItem.srcset, sizes = currentGalleryItem.sizes, sources = currentGalleryItem.sources;
         var src = currentGalleryItem.src;
         var video = currentGalleryItem.video;
         var _html5Video = video && typeof video === 'string' ? JSON.parse(video) : video;
@@ -1664,40 +1623,37 @@ var LightGallery = /** @class */ (function () {
         if (isFirstSlide) {
             if (this.zoomFromOrigin && this.currentImageSize) {
                 delay = this.settings.startAnimationDuration + 10;
-            } else {
+            }
+            else {
                 delay = this.settings.backdropDuration + 10;
             }
         }
         if (!$currentSlide.hasClass('lg-loaded')) {
             if (videoInfo) {
-                var _a = this.mediaContainerPosition,
-                    top_2 = _a.top,
-                    bottom = _a.bottom;
+                var _a = this.mediaContainerPosition, top_2 = _a.top, bottom = _a.bottom;
                 var videoSize = utils.getSize(this.items[index], this.outer, top_2 + bottom, videoInfo && this.settings.videoMaxSize);
                 lgVideoStyle = this.getVideoContStyle(videoSize);
             }
             if (iframe) {
-                var markup = utils.getIframeMarkup(
-                    this.settings.iframeWidth,
-                    this.settings.iframeHeight,
-                    this.settings.iframeMaxWidth,
-                    this.settings.iframeMaxHeight,
-                    src,
-                    currentGalleryItem.iframeTitle,
-                );
+                var markup = utils.getIframeMarkup(this.settings.iframeWidth, this.settings.iframeHeight, this.settings.iframeMaxWidth, this.settings.iframeMaxHeight, src, currentGalleryItem.iframeTitle);
                 $currentSlide.prepend(markup);
-            } else if (poster) {
+            }
+            else if (poster) {
                 var dummyImg = '';
-                var hasStartAnimation = isFirstSlide && this.zoomFromOrigin && this.currentImageSize;
+                var hasStartAnimation = isFirstSlide &&
+                    this.zoomFromOrigin &&
+                    this.currentImageSize;
                 if (hasStartAnimation) {
                     dummyImg = this.getDummyImageContent($currentSlide, index, '');
                 }
                 var markup = utils.getVideoPosterMarkup(poster, dummyImg || '', lgVideoStyle, this.settings.strings['playVideo'], videoInfo);
                 $currentSlide.prepend(markup);
-            } else if (videoInfo) {
-                var markup = '<div class="lg-video-cont " style="' + lgVideoStyle + '"></div>';
+            }
+            else if (videoInfo) {
+                var markup = "<div class=\"lg-video-cont \" style=\"" + lgVideoStyle + "\"></div>";
                 $currentSlide.prepend(markup);
-            } else {
+            }
+            else {
                 this.setImgMarkup(src, $currentSlide, index);
                 if (srcset || sources) {
                     var $img = $currentSlide.find('.lg-object');
@@ -1713,7 +1669,8 @@ var LightGallery = /** @class */ (function () {
                 });
             }
             this.LGel.trigger(lGEvents.afterAppendSlide, { index: index });
-            if (this.lGalleryOn && this.settings.appendSubHtmlTo === '.lg-item') {
+            if (this.lGalleryOn &&
+                this.settings.appendSubHtmlTo === '.lg-item') {
                 this.addHtml(index);
             }
         }
@@ -1727,43 +1684,47 @@ var LightGallery = /** @class */ (function () {
         // Only for first slide and zoomFromOrigin is enabled
         if (this.isFirstSlideWithZoomAnimation()) {
             setTimeout(function () {
-                $currentSlide.removeClass('lg-start-end-progress lg-start-progress').removeAttr('style');
+                $currentSlide
+                    .removeClass('lg-start-end-progress lg-start-progress')
+                    .removeAttr('style');
             }, this.settings.startAnimationDuration + 100);
             if (!$currentSlide.hasClass('lg-loaded')) {
                 setTimeout(function () {
                     if (_this.getSlideType(currentGalleryItem) === 'image') {
                         var alt = currentGalleryItem.alt;
                         var altAttr = alt ? 'alt="' + alt + '"' : '';
-                        $currentSlide.find('.lg-img-wrap').append(utils.getImgMarkup(index, src, altAttr, srcset, sizes, currentGalleryItem.sources));
+                        $currentSlide
+                            .find('.lg-img-wrap')
+                            .append(utils.getImgMarkup(index, src, altAttr, srcset, sizes, currentGalleryItem.sources));
                         if (srcset || sources) {
                             var $img = $currentSlide.find('.lg-object');
                             _this.initPictureFill($img);
                         }
                     }
-                    if (_this.getSlideType(currentGalleryItem) === 'image' || (_this.getSlideType(currentGalleryItem) === 'video' && poster)) {
+                    if (_this.getSlideType(currentGalleryItem) === 'image' ||
+                        (_this.getSlideType(currentGalleryItem) === 'video' &&
+                            poster)) {
                         _this.onLgObjectLoad($currentSlide, index, delay, _speed, true, false);
                         // load remaining slides once the slide is completely loaded
-                        _this.onSlideObjectLoad(
-                            $currentSlide,
-                            !!(videoInfo && videoInfo.html5 && !poster),
-                            function () {
-                                _this.loadContentOnFirstSlideLoad(index, $currentSlide, _speed);
-                            },
-                            function () {
-                                _this.loadContentOnFirstSlideLoad(index, $currentSlide, _speed);
-                            },
-                        );
+                        _this.onSlideObjectLoad($currentSlide, !!(videoInfo && videoInfo.html5 && !poster), function () {
+                            _this.loadContentOnFirstSlideLoad(index, $currentSlide, _speed);
+                        }, function () {
+                            _this.loadContentOnFirstSlideLoad(index, $currentSlide, _speed);
+                        });
                     }
                 }, this.settings.startAnimationDuration + 100);
             }
         }
         // SLide content has been added to dom
         $currentSlide.addClass('lg-loaded');
-        if (!this.isFirstSlideWithZoomAnimation() || (this.getSlideType(currentGalleryItem) === 'video' && !poster)) {
+        if (!this.isFirstSlideWithZoomAnimation() ||
+            (this.getSlideType(currentGalleryItem) === 'video' && !poster)) {
             this.onLgObjectLoad($currentSlide, index, delay, _speed, isFirstSlide, !!(videoInfo && videoInfo.html5 && !poster));
         }
         // When gallery is opened once content is loaded (second time) need to add lg-complete class for css styling
-        if ((!this.zoomFromOrigin || !this.currentImageSize) && $currentSlide.hasClass('lg-complete_') && !this.lGalleryOn) {
+        if ((!this.zoomFromOrigin || !this.currentImageSize) &&
+            $currentSlide.hasClass('lg-complete_') &&
+            !this.lGalleryOn) {
             setTimeout(function () {
                 $currentSlide.addClass('lg-complete');
             }, this.settings.backdropDuration);
@@ -1777,9 +1738,10 @@ var LightGallery = /** @class */ (function () {
                     .find('.lg-object')
                     .first()
                     .on('load.lg error.lg', function () {
-                        _this.preload(index);
-                    });
-            } else {
+                    _this.preload(index);
+                });
+            }
+            else {
                 this.preload(index);
             }
         }
@@ -1803,46 +1765,47 @@ var LightGallery = /** @class */ (function () {
     };
     LightGallery.prototype.getItemsToBeInsertedToDom = function (index, prevIndex, numberOfItems) {
         var _this = this;
-        if (numberOfItems === void 0) {
-            numberOfItems = 0;
-        }
+        if (numberOfItems === void 0) { numberOfItems = 0; }
         var itemsToBeInsertedToDom = [];
         // Minimum 2 items should be there
         var possibleNumberOfItems = Math.max(numberOfItems, 3);
         possibleNumberOfItems = Math.min(possibleNumberOfItems, this.galleryItems.length);
-        var prevIndexItem = 'lg-item-' + this.lgId + '-' + prevIndex;
+        var prevIndexItem = "lg-item-" + this.lgId + "-" + prevIndex;
         if (this.galleryItems.length <= 3) {
             this.galleryItems.forEach(function (_element, index) {
-                itemsToBeInsertedToDom.push('lg-item-' + _this.lgId + '-' + index);
+                itemsToBeInsertedToDom.push("lg-item-" + _this.lgId + "-" + index);
             });
             return itemsToBeInsertedToDom;
         }
         if (index < (this.galleryItems.length - 1) / 2) {
             for (var idx = index; idx > index - possibleNumberOfItems / 2 && idx >= 0; idx--) {
-                itemsToBeInsertedToDom.push('lg-item-' + this.lgId + '-' + idx);
+                itemsToBeInsertedToDom.push("lg-item-" + this.lgId + "-" + idx);
             }
             var numberOfExistingItems = itemsToBeInsertedToDom.length;
             for (var idx = 0; idx < possibleNumberOfItems - numberOfExistingItems; idx++) {
-                itemsToBeInsertedToDom.push('lg-item-' + this.lgId + '-' + (index + idx + 1));
+                itemsToBeInsertedToDom.push("lg-item-" + this.lgId + "-" + (index + idx + 1));
             }
-        } else {
-            for (var idx = index; idx <= this.galleryItems.length - 1 && idx < index + possibleNumberOfItems / 2; idx++) {
-                itemsToBeInsertedToDom.push('lg-item-' + this.lgId + '-' + idx);
+        }
+        else {
+            for (var idx = index; idx <= this.galleryItems.length - 1 &&
+                idx < index + possibleNumberOfItems / 2; idx++) {
+                itemsToBeInsertedToDom.push("lg-item-" + this.lgId + "-" + idx);
             }
             var numberOfExistingItems = itemsToBeInsertedToDom.length;
             for (var idx = 0; idx < possibleNumberOfItems - numberOfExistingItems; idx++) {
-                itemsToBeInsertedToDom.push('lg-item-' + this.lgId + '-' + (index - idx - 1));
+                itemsToBeInsertedToDom.push("lg-item-" + this.lgId + "-" + (index - idx - 1));
             }
         }
         if (this.settings.loop) {
             if (index === this.galleryItems.length - 1) {
-                itemsToBeInsertedToDom.push('lg-item-' + this.lgId + '-' + 0);
-            } else if (index === 0) {
-                itemsToBeInsertedToDom.push('lg-item-' + this.lgId + '-' + (this.galleryItems.length - 1));
+                itemsToBeInsertedToDom.push("lg-item-" + this.lgId + "-" + 0);
+            }
+            else if (index === 0) {
+                itemsToBeInsertedToDom.push("lg-item-" + this.lgId + "-" + (this.galleryItems.length - 1));
             }
         }
         if (itemsToBeInsertedToDom.indexOf(prevIndexItem) === -1) {
-            itemsToBeInsertedToDom.push('lg-item-' + this.lgId + '-' + prevIndex);
+            itemsToBeInsertedToDom.push("lg-item-" + this.lgId + "-" + prevIndex);
         }
         return itemsToBeInsertedToDom;
     };
@@ -1851,12 +1814,12 @@ var LightGallery = /** @class */ (function () {
         var itemsToBeInsertedToDom = this.getItemsToBeInsertedToDom(index, prevIndex, this.settings.numberOfSlideItemsInDom);
         itemsToBeInsertedToDom.forEach(function (item) {
             if (_this.currentItemsInDom.indexOf(item) === -1) {
-                _this.$inner.append('<div id="' + item + '" class="lg-item"></div>');
+                _this.$inner.append("<div id=\"" + item + "\" class=\"lg-item\"></div>");
             }
         });
         this.currentItemsInDom.forEach(function (item) {
             if (itemsToBeInsertedToDom.indexOf(item) === -1) {
-                $LG('#' + item).remove();
+                $LG("#" + item).remove();
             }
         });
         return itemsToBeInsertedToDom;
@@ -1867,9 +1830,13 @@ var LightGallery = /** @class */ (function () {
     LightGallery.prototype.getPreviousSlideIndex = function () {
         var prevIndex = 0;
         try {
-            var currentItemId = this.outer.find('.lg-current').first().attr('id');
+            var currentItemId = this.outer
+                .find('.lg-current')
+                .first()
+                .attr('id');
             prevIndex = parseInt(currentItemId.split('-')[3]) || 0;
-        } catch (error) {
+        }
+        catch (error) {
             prevIndex = 0;
         }
         return prevIndex;
@@ -1877,13 +1844,16 @@ var LightGallery = /** @class */ (function () {
     LightGallery.prototype.setDownloadValue = function (index) {
         if (this.settings.download) {
             var currentGalleryItem = this.galleryItems[index];
-            var hideDownloadBtn = currentGalleryItem.downloadUrl === false || currentGalleryItem.downloadUrl === 'false';
+            var hideDownloadBtn = currentGalleryItem.downloadUrl === false ||
+                currentGalleryItem.downloadUrl === 'false';
             if (hideDownloadBtn) {
                 this.outer.addClass('lg-hide-download');
-            } else {
+            }
+            else {
                 var $download = this.getElementById('lg-download');
                 this.outer.removeClass('lg-hide-download');
-                $download.attr('href', currentGalleryItem.downloadUrl || currentGalleryItem.src);
+                $download.attr('href', currentGalleryItem.downloadUrl ||
+                    currentGalleryItem.src);
                 if (currentGalleryItem.download) {
                     $download.attr('download', currentGalleryItem.download);
                 }
@@ -1895,30 +1865,30 @@ var LightGallery = /** @class */ (function () {
         if (this.lGalleryOn) {
             previousSlideItem.addClass('lg-slide-progress');
         }
-        setTimeout(
-            function () {
-                // remove all transitions
-                _this.outer.addClass('lg-no-trans');
-                _this.outer.find('.lg-item').removeClass('lg-prev-slide lg-next-slide');
-                if (direction === 'prev') {
-                    //prevslide
-                    currentSlideItem.addClass('lg-prev-slide');
-                    previousSlideItem.addClass('lg-next-slide');
-                } else {
-                    // next slide
-                    currentSlideItem.addClass('lg-next-slide');
-                    previousSlideItem.addClass('lg-prev-slide');
-                }
-                // give 50 ms for browser to add/remove class
-                setTimeout(function () {
-                    _this.outer.find('.lg-item').removeClass('lg-current');
-                    currentSlideItem.addClass('lg-current');
-                    // reset all transitions
-                    _this.outer.removeClass('lg-no-trans');
-                }, 50);
-            },
-            this.lGalleryOn ? this.settings.slideDelay : 0,
-        );
+        setTimeout(function () {
+            // remove all transitions
+            _this.outer.addClass('lg-no-trans');
+            _this.outer
+                .find('.lg-item')
+                .removeClass('lg-prev-slide lg-next-slide');
+            if (direction === 'prev') {
+                //prevslide
+                currentSlideItem.addClass('lg-prev-slide');
+                previousSlideItem.addClass('lg-next-slide');
+            }
+            else {
+                // next slide
+                currentSlideItem.addClass('lg-next-slide');
+                previousSlideItem.addClass('lg-prev-slide');
+            }
+            // give 50 ms for browser to add/remove class
+            setTimeout(function () {
+                _this.outer.find('.lg-item').removeClass('lg-current');
+                currentSlideItem.addClass('lg-current');
+                // reset all transitions
+                _this.outer.removeClass('lg-no-trans');
+            }, 50);
+        }, this.lGalleryOn ? this.settings.slideDelay : 0);
     };
     /**
      * Goto a specific slide.
@@ -1953,9 +1923,7 @@ var LightGallery = /** @class */ (function () {
             this.outer.attr('data-lg-slide-type', this.getSlideType(currentGalleryItem));
             this.setDownloadValue(index);
             if (videoInfo) {
-                var _a = this.mediaContainerPosition,
-                    top_3 = _a.top,
-                    bottom = _a.bottom;
+                var _a = this.mediaContainerPosition, top_3 = _a.top, bottom = _a.bottom;
                 var videoSize = utils.getSize(this.items[index], this.outer, top_3 + bottom, videoInfo && this.settings.videoMaxSize);
                 this.resizeVideoSlide(index, videoSize);
             }
@@ -1971,14 +1939,18 @@ var LightGallery = /** @class */ (function () {
             if (!direction) {
                 if (index < prevIndex) {
                     direction = 'prev';
-                } else if (index > prevIndex) {
+                }
+                else if (index > prevIndex) {
                     direction = 'next';
                 }
             }
             if (!fromTouch) {
                 this.makeSlideAnimation(direction, currentSlideItem, previousSlideItem_1);
-            } else {
-                this.outer.find('.lg-item').removeClass('lg-prev-slide lg-current lg-next-slide');
+            }
+            else {
+                this.outer
+                    .find('.lg-item')
+                    .removeClass('lg-prev-slide lg-current lg-next-slide');
                 var touchPrev = void 0;
                 var touchNext = void 0;
                 if (numberOfGalleryItems > 2) {
@@ -1988,18 +1960,22 @@ var LightGallery = /** @class */ (function () {
                         // next slide
                         touchNext = 0;
                         touchPrev = numberOfGalleryItems - 1;
-                    } else if (index === numberOfGalleryItems - 1 && prevIndex === 0) {
+                    }
+                    else if (index === numberOfGalleryItems - 1 &&
+                        prevIndex === 0) {
                         // prev slide
                         touchNext = 0;
                         touchPrev = numberOfGalleryItems - 1;
                     }
-                } else {
+                }
+                else {
                     touchPrev = 0;
                     touchNext = 1;
                 }
                 if (direction === 'prev') {
                     this.getSlideItem(touchNext).addClass('lg-next-slide');
-                } else {
+                }
+                else {
                     this.getSlideItem(touchPrev).addClass('lg-prev-slide');
                 }
                 currentSlideItem.addClass('lg-current');
@@ -2007,31 +1983,26 @@ var LightGallery = /** @class */ (function () {
             // Do not put load content in set timeout as it needs to load immediately when the gallery is opened
             if (!this.lGalleryOn) {
                 this.loadContent(index, true);
-            } else {
-                setTimeout(
-                    function () {
-                        _this.loadContent(index, true);
-                        // Add title if this.settings.appendSubHtmlTo === lg-sub-html
-                        if (_this.settings.appendSubHtmlTo !== '.lg-item') {
-                            _this.addHtml(index);
-                        }
-                    },
-                    this.settings.speed + 50 + (fromTouch ? 0 : this.settings.slideDelay),
-                );
             }
-            setTimeout(
-                function () {
-                    _this.lgBusy = false;
-                    previousSlideItem_1.removeClass('lg-slide-progress');
-                    _this.LGel.trigger(lGEvents.afterSlide, {
-                        prevIndex: prevIndex,
-                        index: index,
-                        fromTouch: fromTouch,
-                        fromThumb: fromThumb,
-                    });
-                },
-                (this.lGalleryOn ? this.settings.speed + 100 : 100) + (fromTouch ? 0 : this.settings.slideDelay),
-            );
+            else {
+                setTimeout(function () {
+                    _this.loadContent(index, true);
+                    // Add title if this.settings.appendSubHtmlTo === lg-sub-html
+                    if (_this.settings.appendSubHtmlTo !== '.lg-item') {
+                        _this.addHtml(index);
+                    }
+                }, this.settings.speed + 50 + (fromTouch ? 0 : this.settings.slideDelay));
+            }
+            setTimeout(function () {
+                _this.lgBusy = false;
+                previousSlideItem_1.removeClass('lg-slide-progress');
+                _this.LGel.trigger(lGEvents.afterSlide, {
+                    prevIndex: prevIndex,
+                    index: index,
+                    fromTouch: fromTouch,
+                    fromThumb: fromThumb,
+                });
+            }, (this.lGalleryOn ? this.settings.speed + 100 : 100) + (fromTouch ? 0 : this.settings.slideDelay));
         }
         this.index = index;
     };
@@ -2044,9 +2015,11 @@ var LightGallery = /** @class */ (function () {
     LightGallery.prototype.getSlideType = function (item) {
         if (item.__slideVideoInfo) {
             return 'video';
-        } else if (item.iframe) {
+        }
+        else if (item.iframe) {
             return 'iframe';
-        } else {
+        }
+        else {
             return 'image';
         }
     };
@@ -2056,11 +2029,13 @@ var LightGallery = /** @class */ (function () {
         var allowSwipe = false;
         if (this.swipeDirection) {
             allowSwipe = true;
-        } else {
+        }
+        else {
             if (Math.abs(distanceX) > 15) {
                 this.swipeDirection = 'horizontal';
                 allowSwipe = true;
-            } else if (Math.abs(distanceY) > 15) {
+            }
+            else if (Math.abs(distanceY) > 15) {
                 this.swipeDirection = 'vertical';
                 allowSwipe = true;
             }
@@ -2081,7 +2056,8 @@ var LightGallery = /** @class */ (function () {
             var gutter = slideWidthAmount - Math.abs((distanceX * 10) / 100);
             this.setTranslate(this.outer.find('.lg-prev-slide').first(), -width + distanceX - gutter, 0);
             this.setTranslate(this.outer.find('.lg-next-slide').first(), width + distanceX + gutter, 0);
-        } else if (this.swipeDirection === 'vertical') {
+        }
+        else if (this.swipeDirection === 'vertical') {
             if (this.settings.swipeToClose) {
                 e === null || e === void 0 ? void 0 : e.preventDefault();
                 this.$container.addClass('lg-dragging-vertical');
@@ -2090,7 +2066,9 @@ var LightGallery = /** @class */ (function () {
                 var scale = 1 - Math.abs(distanceY) / (window.innerWidth * 2);
                 this.setTranslate($currentSlide, 0, distanceY, scale, scale);
                 if (Math.abs(distanceY) > 100) {
-                    this.outer.addClass('lg-hide-items').removeClass('lg-components-open');
+                    this.outer
+                        .addClass('lg-hide-items')
+                        .removeClass('lg-components-open');
                 }
             }
         }
@@ -2105,29 +2083,39 @@ var LightGallery = /** @class */ (function () {
         // set transition duration
         setTimeout(function () {
             _this.$container.removeClass('lg-dragging-vertical');
-            _this.outer.removeClass('lg-dragging lg-hide-items').addClass('lg-components-open');
+            _this.outer
+                .removeClass('lg-dragging lg-hide-items')
+                .addClass('lg-components-open');
             var triggerClick = true;
             if (_this.swipeDirection === 'horizontal') {
                 distance = endCoords.pageX - startCoords.pageX;
                 var distanceAbs = Math.abs(endCoords.pageX - startCoords.pageX);
-                if (distance < 0 && distanceAbs > _this.settings.swipeThreshold) {
+                if (distance < 0 &&
+                    distanceAbs > _this.settings.swipeThreshold) {
                     _this.goToNextSlide(true);
                     triggerClick = false;
-                } else if (distance > 0 && distanceAbs > _this.settings.swipeThreshold) {
+                }
+                else if (distance > 0 &&
+                    distanceAbs > _this.settings.swipeThreshold) {
                     _this.goToPrevSlide(true);
                     triggerClick = false;
                 }
-            } else if (_this.swipeDirection === 'vertical') {
+            }
+            else if (_this.swipeDirection === 'vertical') {
                 distance = Math.abs(endCoords.pageY - startCoords.pageY);
-                if (_this.settings.closable && _this.settings.swipeToClose && distance > 100) {
+                if (_this.settings.closable &&
+                    _this.settings.swipeToClose &&
+                    distance > 100) {
                     _this.closeGallery();
                     return;
-                } else {
+                }
+                else {
                     _this.$backdrop.css('opacity', 1);
                 }
             }
             _this.outer.find('.lg-item').removeAttr('style');
-            if (triggerClick && Math.abs(endCoords.pageX - startCoords.pageX) < 5) {
+            if (triggerClick &&
+                Math.abs(endCoords.pageX - startCoords.pageX) < 5) {
                 // Trigger click if distance is less than 5 pix
                 var target = $LG(event.target);
                 if (_this.isPosterElement(target)) {
@@ -2138,7 +2126,8 @@ var LightGallery = /** @class */ (function () {
         });
         // remove slide class once drag/swipe is completed if mode is not slide
         setTimeout(function () {
-            if (!_this.outer.hasClass('lg-dragging') && _this.settings.mode !== 'lg-slide') {
+            if (!_this.outer.hasClass('lg-dragging') &&
+                _this.settings.mode !== 'lg-slide') {
                 _this.outer.removeClass('lg-slide');
             }
         }, this.settings.speed + 100);
@@ -2153,12 +2142,11 @@ var LightGallery = /** @class */ (function () {
             this.$inner.on('touchstart.lg', function (e) {
                 _this.dragOrSwipeEnabled = true;
                 var $item = _this.getSlideItem(_this.index);
-                if (
-                    ($LG(e.target).hasClass('lg-item') || $item.get().contains(e.target)) &&
+                if (($LG(e.target).hasClass('lg-item') ||
+                    $item.get().contains(e.target)) &&
                     !_this.outer.hasClass('lg-zoomed') &&
                     !_this.lgBusy &&
-                    e.targetTouches.length === 1
-                ) {
+                    e.targetTouches.length === 1) {
                     isSwiping = true;
                     _this.touchAction = 'swipe';
                     _this.manageSwipeClass();
@@ -2169,7 +2157,9 @@ var LightGallery = /** @class */ (function () {
                 }
             });
             this.$inner.on('touchmove.lg', function (e) {
-                if (isSwiping && _this.touchAction === 'swipe' && e.targetTouches.length === 1) {
+                if (isSwiping &&
+                    _this.touchAction === 'swipe' &&
+                    e.targetTouches.length === 1) {
                     endCoords = {
                         pageX: e.targetTouches[0].pageX,
                         pageY: e.targetTouches[0].pageY,
@@ -2183,7 +2173,8 @@ var LightGallery = /** @class */ (function () {
                     if (isMoved) {
                         isMoved = false;
                         _this.touchEnd(endCoords, startCoords, event);
-                    } else if (isSwiping) {
+                    }
+                    else if (isSwiping) {
                         var target = $LG(event.target);
                         if (_this.isPosterElement(target)) {
                             _this.LGel.trigger(lGEvents.posterClick);
@@ -2205,7 +2196,8 @@ var LightGallery = /** @class */ (function () {
             this.outer.on('mousedown.lg', function (e) {
                 _this.dragOrSwipeEnabled = true;
                 var $item = _this.getSlideItem(_this.index);
-                if ($LG(e.target).hasClass('lg-item') || $item.get().contains(e.target)) {
+                if ($LG(e.target).hasClass('lg-item') ||
+                    $item.get().contains(e.target)) {
                     if (!_this.outer.hasClass('lg-zoomed') && !_this.lgBusy) {
                         e.preventDefault();
                         if (!_this.lgBusy) {
@@ -2219,13 +2211,15 @@ var LightGallery = /** @class */ (function () {
                             _this.outer.get().scrollLeft += 1;
                             _this.outer.get().scrollLeft -= 1;
                             // *
-                            _this.outer.removeClass('lg-grab').addClass('lg-grabbing');
+                            _this.outer
+                                .removeClass('lg-grab')
+                                .addClass('lg-grabbing');
                             _this.LGel.trigger(lGEvents.dragStart);
                         }
                     }
                 }
             });
-            $LG(window).on('mousemove.lg.global' + this.lgId, function (e) {
+            $LG(window).on("mousemove.lg.global" + this.lgId, function (e) {
                 if (isDraging && _this.lgOpened) {
                     isMoved = true;
                     endCoords = {
@@ -2236,7 +2230,7 @@ var LightGallery = /** @class */ (function () {
                     _this.LGel.trigger(lGEvents.dragMove);
                 }
             });
-            $LG(window).on('mouseup.lg.global' + this.lgId, function (event) {
+            $LG(window).on("mouseup.lg.global" + this.lgId, function (event) {
                 if (!_this.lgOpened) {
                     return;
                 }
@@ -2245,7 +2239,8 @@ var LightGallery = /** @class */ (function () {
                     isMoved = false;
                     _this.touchEnd(endCoords, startCoords, event);
                     _this.LGel.trigger(lGEvents.dragEnd);
-                } else if (_this.isPosterElement(target)) {
+                }
+                else if (_this.isPosterElement(target)) {
                     _this.LGel.trigger(lGEvents.posterClick);
                 }
                 // Prevent execution on click
@@ -2259,7 +2254,8 @@ var LightGallery = /** @class */ (function () {
     LightGallery.prototype.triggerPosterClick = function () {
         var _this = this;
         this.$inner.on('click.lg', function (event) {
-            if (!_this.dragOrSwipeEnabled && _this.isPosterElement($LG(event.target))) {
+            if (!_this.dragOrSwipeEnabled &&
+                _this.isPosterElement($LG(event.target))) {
                 _this.LGel.trigger(lGEvents.posterClick);
             }
         });
@@ -2270,7 +2266,8 @@ var LightGallery = /** @class */ (function () {
         if (this.settings.loop && this.galleryItems.length > 2) {
             if (this.index === 0) {
                 _touchPrev = this.galleryItems.length - 1;
-            } else if (this.index === this.galleryItems.length - 1) {
+            }
+            else if (this.index === this.galleryItems.length - 1) {
                 _touchNext = 0;
             }
         }
@@ -2302,14 +2299,16 @@ var LightGallery = /** @class */ (function () {
                     index: this.index,
                 });
                 this.slide(this.index, !!fromTouch, false, 'next');
-            } else {
+            }
+            else {
                 if (_loop) {
                     this.index = 0;
                     this.LGel.trigger(lGEvents.beforeNextSlide, {
                         index: this.index,
                     });
                     this.slide(this.index, !!fromTouch, false, 'next');
-                } else if (this.settings.slideEndAnimation && !fromTouch) {
+                }
+                else if (this.settings.slideEndAnimation && !fromTouch) {
                     this.outer.addClass('lg-right-end');
                     setTimeout(function () {
                         _this.outer.removeClass('lg-right-end');
@@ -2342,7 +2341,8 @@ var LightGallery = /** @class */ (function () {
                     fromTouch: fromTouch,
                 });
                 this.slide(this.index, !!fromTouch, false, 'prev');
-            } else {
+            }
+            else {
                 if (_loop) {
                     this.index = this.galleryItems.length - 1;
                     this.LGel.trigger(lGEvents.beforePrevSlide, {
@@ -2350,7 +2350,8 @@ var LightGallery = /** @class */ (function () {
                         fromTouch: fromTouch,
                     });
                     this.slide(this.index, !!fromTouch, false, 'prev');
-                } else if (this.settings.slideEndAnimation && !fromTouch) {
+                }
+                else if (this.settings.slideEndAnimation && !fromTouch) {
                     this.outer.addClass('lg-left-end');
                     setTimeout(function () {
                         _this.outer.removeClass('lg-left-end');
@@ -2361,12 +2362,17 @@ var LightGallery = /** @class */ (function () {
     };
     LightGallery.prototype.keyPress = function () {
         var _this = this;
-        $LG(window).on('keydown.lg.global' + this.lgId, function (e) {
-            if (_this.lgOpened && _this.settings.escKey === true && e.keyCode === 27) {
+        $LG(window).on("keydown.lg.global" + this.lgId, function (e) {
+            if (_this.lgOpened &&
+                _this.settings.escKey === true &&
+                e.keyCode === 27) {
                 e.preventDefault();
-                if (_this.settings.allowMediaOverlap && _this.outer.hasClass('lg-can-toggle') && _this.outer.hasClass('lg-components-open')) {
+                if (_this.settings.allowMediaOverlap &&
+                    _this.outer.hasClass('lg-can-toggle') &&
+                    _this.outer.hasClass('lg-components-open')) {
                     _this.outer.removeClass('lg-components-open');
-                } else {
+                }
+                else {
                     _this.closeGallery();
                 }
             }
@@ -2398,24 +2404,30 @@ var LightGallery = /** @class */ (function () {
             var $next = this.getElementById('lg-next');
             if (index + 1 === this.galleryItems.length) {
                 $next.attr('disabled', 'disabled').addClass('disabled');
-            } else {
+            }
+            else {
                 $next.removeAttr('disabled').removeClass('disabled');
             }
             if (index === 0) {
                 $prev.attr('disabled', 'disabled').addClass('disabled');
-            } else {
+            }
+            else {
                 $prev.removeAttr('disabled').removeClass('disabled');
             }
         }
     };
     LightGallery.prototype.setTranslate = function ($el, xValue, yValue, scaleX, scaleY) {
-        if (scaleX === void 0) {
-            scaleX = 1;
-        }
-        if (scaleY === void 0) {
-            scaleY = 1;
-        }
-        $el.css('transform', 'translate3d(' + xValue + 'px, ' + yValue + 'px, 0px) scale3d(' + scaleX + ', ' + scaleY + ', 1)');
+        if (scaleX === void 0) { scaleX = 1; }
+        if (scaleY === void 0) { scaleY = 1; }
+        $el.css('transform', 'translate3d(' +
+            xValue +
+            'px, ' +
+            yValue +
+            'px, 0px) scale3d(' +
+            scaleX +
+            ', ' +
+            scaleY +
+            ', 1)');
     };
     LightGallery.prototype.mousewheel = function () {
         var _this = this;
@@ -2432,17 +2444,24 @@ var LightGallery = /** @class */ (function () {
             lastCall = now;
             if (e.deltaY > 0) {
                 _this.goToNextSlide();
-            } else if (e.deltaY < 0) {
+            }
+            else if (e.deltaY < 0) {
                 _this.goToPrevSlide();
             }
         });
     };
     LightGallery.prototype.isSlideElement = function (target) {
-        return target.hasClass('lg-outer') || target.hasClass('lg-item') || target.hasClass('lg-img-wrap');
+        return (target.hasClass('lg-outer') ||
+            target.hasClass('lg-item') ||
+            target.hasClass('lg-img-wrap'));
     };
     LightGallery.prototype.isPosterElement = function (target) {
-        var playButton = this.getSlideItem(this.index).find('.lg-video-play-button').get();
-        return target.hasClass('lg-video-poster') || target.hasClass('lg-video-play-button') || (playButton && playButton.contains(target.get()));
+        var playButton = this.getSlideItem(this.index)
+            .find('.lg-video-play-button')
+            .get();
+        return (target.hasClass('lg-video-poster') ||
+            target.hasClass('lg-video-play-button') ||
+            (playButton && playButton.contains(target.get())));
     };
     /**
      * Maximize minimize inline gallery.
@@ -2459,7 +2478,7 @@ var LightGallery = /** @class */ (function () {
         for (var index = 0; index < this.items.length; index++) {
             var element = this.items[index];
             var $element = $LG(element);
-            $element.off('click.lgcustom-item-' + $element.attr('data-lg-id'));
+            $element.off("click.lgcustom-item-" + $element.attr('data-lg-id'));
         }
     };
     LightGallery.prototype.trapFocus = function () {
@@ -2467,7 +2486,7 @@ var LightGallery = /** @class */ (function () {
         this.$container.get().focus({
             preventScroll: true,
         });
-        $LG(window).on('keydown.lg.global' + this.lgId, function (e) {
+        $LG(window).on("keydown.lg.global" + this.lgId, function (e) {
             if (!_this.lgOpened) {
                 return;
             }
@@ -2483,7 +2502,8 @@ var LightGallery = /** @class */ (function () {
                     lastFocusableEl.focus();
                     e.preventDefault();
                 }
-            } else {
+            }
+            else {
                 if (document.activeElement === lastFocusableEl) {
                     firstFocusableEl.focus();
                     e.preventDefault();
@@ -2493,7 +2513,8 @@ var LightGallery = /** @class */ (function () {
     };
     LightGallery.prototype.manageCloseGallery = function () {
         var _this = this;
-        if (!this.settings.closable) return;
+        if (!this.settings.closable)
+            return;
         var mousedown = false;
         this.getElementById('lg-close').on('click.lg', function () {
             _this.closeGallery();
@@ -2505,7 +2526,8 @@ var LightGallery = /** @class */ (function () {
                 var target = $LG(e.target);
                 if (_this.isSlideElement(target)) {
                     mousedown = true;
-                } else {
+                }
+                else {
                     mousedown = false;
                 }
             });
@@ -2545,12 +2567,8 @@ var LightGallery = /** @class */ (function () {
         var currentItem = this.items[this.index];
         var transform;
         if (this.zoomFromOrigin && currentItem) {
-            var _a = this.mediaContainerPosition,
-                top_4 = _a.top,
-                bottom = _a.bottom;
-            var _b = this.galleryItems[this.index],
-                __slideVideoInfo = _b.__slideVideoInfo,
-                poster = _b.poster;
+            var _a = this.mediaContainerPosition, top_4 = _a.top, bottom = _a.bottom;
+            var _b = this.galleryItems[this.index], __slideVideoInfo = _b.__slideVideoInfo, poster = _b.poster;
             var imageSize = utils.getSize(currentItem, this.outer, top_4 + bottom, __slideVideoInfo && poster && this.settings.videoMaxSize);
             transform = utils.getTransform(currentItem, this.outer, top_4, bottom, imageSize);
         }
@@ -2560,7 +2578,8 @@ var LightGallery = /** @class */ (function () {
                 .addClass('lg-start-end-progress')
                 .css('transition-duration', this.settings.startAnimationDuration + 'ms')
                 .css('transform', transform);
-        } else {
+        }
+        else {
             this.outer.addClass('lg-hide-items');
             // lg-zoom-from-image is used for setting the opacity to 1 if zoomFromOrigin is true
             // If the closing item doesn't have the lg-size attribute, remove this class to avoid the closing css conflicts
@@ -2579,10 +2598,9 @@ var LightGallery = /** @class */ (function () {
         this.outer.removeClass('lg-visible lg-components-open');
         // Resetting opacity to 0 isd required as  vertical swipe to close function adds inline opacity.
         this.$backdrop.removeClass('in').css('opacity', 0);
-        var removeTimeout =
-            this.zoomFromOrigin && transform
-                ? Math.max(this.settings.startAnimationDuration, this.settings.backdropDuration)
-                : this.settings.backdropDuration;
+        var removeTimeout = this.zoomFromOrigin && transform
+            ? Math.max(this.settings.startAnimationDuration, this.settings.backdropDuration)
+            : this.settings.backdropDuration;
         this.$container.removeClass('lg-show-in');
         // Once the closign animation is completed and gallery is invisible
         setTimeout(function () {
@@ -2593,8 +2611,10 @@ var LightGallery = /** @class */ (function () {
             // Reset scrollbar
             _this.resetScrollBar();
             // Need to remove inline opacity as it is used in the stylesheet as well
-            _this.$backdrop.removeAttr('style').css('transition-duration', _this.settings.backdropDuration + 'ms');
-            _this.outer.removeClass('lg-closing ' + _this.settings.startClass);
+            _this.$backdrop
+                .removeAttr('style')
+                .css('transition-duration', _this.settings.backdropDuration + 'ms');
+            _this.outer.removeClass("lg-closing " + _this.settings.startClass);
             _this.getSlideItem(_this.index).removeClass('lg-start-end-progress');
             _this.$inner.empty();
             if (_this.lgOpened) {
@@ -2613,8 +2633,9 @@ var LightGallery = /** @class */ (function () {
         this.plugins.forEach(function (module) {
             try {
                 module.init();
-            } catch (err) {
-                console.warn('lightGallery:- make sure lightGallery module is properly initiated');
+            }
+            catch (err) {
+                console.warn("lightGallery:- make sure lightGallery module is properly initiated");
             }
         });
     };
@@ -2623,11 +2644,13 @@ var LightGallery = /** @class */ (function () {
             try {
                 if (destroy) {
                     module.destroy();
-                } else {
+                }
+                else {
                     module.closeGallery && module.closeGallery();
                 }
-            } catch (err) {
-                console.warn('lightGallery:- make sure lightGallery module is properly destroyed');
+            }
+            catch (err) {
+                console.warn("lightGallery:- make sure lightGallery module is properly destroyed");
             }
         });
     };
@@ -2651,7 +2674,8 @@ var LightGallery = /** @class */ (function () {
         }
         if (galleryItems) {
             this.galleryItems = galleryItems;
-        } else {
+        }
+        else {
             this.galleryItems = this.getItems();
         }
         this.updateControls();
@@ -2684,14 +2708,14 @@ var LightGallery = /** @class */ (function () {
             if (!_this.settings.dynamic) {
                 _this.invalidateItems();
             }
-            $LG(window).off('.lg.global' + _this.lgId);
+            $LG(window).off(".lg.global" + _this.lgId);
             _this.LGel.off('.lg');
             _this.$container.remove();
         }, closeTimeout);
         return closeTimeout;
     };
     return LightGallery;
-})();
+}());
 
 function lightGallery(el, options) {
     return new LightGallery(el, options);

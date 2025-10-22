@@ -84,22 +84,22 @@
 ========================= */
 
 /*==== 1. Abstracts ====*/
-@import './abstracts/abstracts';
+@import "./abstracts/abstracts";
 
 /*==== 3. Bootstrap ====*/
-@import '../vendor/bootstrap/scss/bootstrap';
+@import "../vendor/bootstrap/scss/bootstrap";
 
 /*==== 4. Global/Base ====*/
-@import './base/base';
+@import "./base/base";
 
 /*==== 5. Layout ====*/
-@import './layout/layout';
+@import "./layout/layout";
 
 /*==== 6. Components ====*/
-@import './components/components';
+@import "./components/components";
 
 /*==== 7. Pages ====*/
-@import './pages/pages';
+@import "./pages/pages";
 
 /*==== 8. PreLoader ====*/
-@import './preloader';
+@import "./preloader";

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import Logo from '@/components/template/Logo.vue';
 import MenuBar from '@/components/template/MenuBar.vue';
+import { Head } from '@inertiajs/vue3';
+
 
 interface Props {
     title: string;

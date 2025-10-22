@@ -6,13 +6,10 @@
  */
 
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined'
-        ? (module.exports = factory())
-        : typeof define === 'function' && define.amd
-          ? define(factory)
-          : ((global = typeof globalThis !== 'undefined' ? globalThis : global || self), (global.lgMediumZoom = factory()));
-})(this, function () {
-    'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.lgMediumZoom = factory());
+}(this, (function () { 'use strict';
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation.
@@ -29,16 +26,14 @@
     PERFORMANCE OF THIS SOFTWARE.
     ***************************************************************************** */
 
-    var __assign = function () {
-        __assign =
-            Object.assign ||
-            function __assign(t) {
-                for (var s, i = 1, n = arguments.length; i < n; i++) {
-                    s = arguments[i];
-                    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-                }
-                return t;
-            };
+    var __assign = function() {
+        __assign = Object.assign || function __assign(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+            }
+            return t;
+        };
         return __assign.apply(this, arguments);
     };
 
@@ -124,11 +119,9 @@
             if (!this.settings.mediumZoom) {
                 return;
             }
-            this.core.LGel.on(lGEvents.beforeOpen + '.medium', function () {
-                _this.core.$backdrop.css(
-                    'background-color',
-                    _this.core.galleryItems[_this.core.index].lgBackgroundColor || _this.settings.backgroundColor,
-                );
+            this.core.LGel.on(lGEvents.beforeOpen + ".medium", function () {
+                _this.core.$backdrop.css('background-color', _this.core.galleryItems[_this.core.index].lgBackgroundColor ||
+                    _this.settings.backgroundColor);
             });
             this.toggleItemClass();
             this.core.outer.on('click.lg.medium', function () {
@@ -139,8 +132,9 @@
             this.toggleItemClass();
         };
         return MediumZoom;
-    })();
+    }());
 
     return MediumZoom;
-});
+
+})));
 //# sourceMappingURL=lg-medium-zoom.umd.js.map

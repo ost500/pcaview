@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import BusinessInfo from '@/components/BusinessInfo.vue';
 import Header from '@/components/template/Header.vue';
+import BusinessInfo from '@/components/BusinessInfo.vue';
 import { Contents } from '@/types/contents';
 import { Head } from '@inertiajs/vue3';
-import { onMounted, ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import VueEasyLightbox from 'vue-easy-lightbox';
+import { route } from 'ziggy-js';
 
 const props = defineProps<{ contents: Contents }>();
 
@@ -50,30 +51,30 @@ onMounted(() => {
     script.text = JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'Article',
-        mainEntityOfPage: {
+        'mainEntityOfPage': {
             '@type': 'WebPage',
-            '@id': window.location.href,
+            '@id': window.location.href
         },
-        headline: props.contents.title,
-        image: props.contents.thumbnail_url,
-        datePublished: props.contents.published_at,
-        dateModified: props.contents.updated_at || props.contents.published_at,
-        author: {
+        'headline': props.contents.title,
+        'image': props.contents.thumbnail_url,
+        'datePublished': props.contents.published_at,
+        'dateModified': props.contents.updated_at || props.contents.published_at,
+        'author': {
             '@type': 'Organization',
-            name: props.contents.department?.name || '명성교회 주보고',
+            'name': props.contents.department?.name || '명성교회 주보고'
         },
-        publisher: {
+        'publisher': {
             '@type': 'Organization',
-            name: '명성교회 주보고',
-            logo: {
+            'name': '명성교회 주보고',
+            'logo': {
                 '@type': 'ImageObject',
-                url: window.location.origin + '/og_image.png',
-            },
+                'url': window.location.origin + '/og_image.png'
+            }
         },
-        description: props.contents.title + ' - ' + (props.contents.department?.name || '교회 소식'),
-        inLanguage: 'ko-KR',
-        articleSection: props.contents.department?.name || '교회 소식',
-        keywords: '교회, 주보, ' + (props.contents.department?.name || '') + ', ' + props.contents.title,
+        'description': props.contents.title + ' - ' + (props.contents.department?.name || '교회 소식'),
+        'inLanguage': 'ko-KR',
+        'articleSection': props.contents.department?.name || '교회 소식',
+        'keywords': '교회, 주보, ' + (props.contents.department?.name || '') + ', ' + props.contents.title
     });
     document.head.appendChild(script);
 });
@@ -126,7 +127,13 @@ onMounted(() => {
             ></iframe>
 
             <div class="container p-0">
-                <ins class="kakao_ad_area" style="display: block" data-ad-unit="DAN-bE302RQ73kwLuzKI" data-ad-width="320" data-ad-height="50"></ins>
+                <ins
+                    class="kakao_ad_area"
+                    style="display: block"
+                    data-ad-unit="DAN-bE302RQ73kwLuzKI"
+                    data-ad-width="320"
+                    data-ad-height="50"
+                ></ins>
                 <div class="row" id="contentArea">
                     <div class="col-12">
                         <div class="card">

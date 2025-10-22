@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import BusinessInfo from '@/components/BusinessInfo.vue';
 import Header from '@/components/template/Header.vue';
-import type { Department } from '@/types/department';
-import { router, useForm, usePage } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { router, usePage, useForm } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
+import { computed, ref } from 'vue';
+import type { Department } from '@/types/department';
+import BusinessInfo from '@/components/BusinessInfo.vue';
 
 interface Props {
     allDepartments?: Department[];
@@ -37,15 +37,11 @@ const subscribed = ref<Set<number>>(new Set(props.subscribedDepartmentIds || [])
 
 const handleLogout = () => {
     if (confirm('로그아웃 하시겠습니까?')) {
-        router.post(
-            route('logout'),
-            {},
-            {
-                onSuccess: () => {
-                    window.location.href = route('home');
-                },
-            },
-        );
+        router.post(route('logout'), {}, {
+            onSuccess: () => {
+                window.location.href = route('home');
+            }
+        });
     }
 };
 
@@ -55,23 +51,19 @@ const goToSettings = () => {
 
 // 부서 구독 토글
 const toggleSubscription = (departmentId: number) => {
-    router.post(
-        route('profile.subscribe'),
-        {
-            department_id: departmentId,
-        },
-        {
-            preserveScroll: true,
-            onSuccess: () => {
-                // 구독 상태 토글
-                if (subscribed.value.has(departmentId)) {
-                    subscribed.value.delete(departmentId);
-                } else {
-                    subscribed.value.add(departmentId);
-                }
-            },
-        },
-    );
+    router.post(route('profile.subscribe'), {
+        department_id: departmentId
+    }, {
+        preserveScroll: true,
+        onSuccess: () => {
+            // 구독 상태 토글
+            if (subscribed.value.has(departmentId)) {
+                subscribed.value.delete(departmentId);
+            } else {
+                subscribed.value.add(departmentId);
+            }
+        }
+    });
 };
 </script>
 
@@ -83,10 +75,10 @@ const toggleSubscription = (departmentId: number) => {
             <!-- 로그인 안 된 경우 - 인라인 로그인 폼 -->
             <div v-if="!user" class="card">
                 <div class="card-body py-4">
-                    <div class="mb-4 text-center">
-                        <i class="fa-solid fa-user-circle" style="font-size: 60px; color: #007bff"></i>
+                    <div class="text-center mb-4">
+                        <i class="fa-solid fa-user-circle" style="font-size: 60px; color: #007bff;"></i>
                         <h5 class="mt-3 mb-1">로그인</h5>
-                        <p class="small text-muted">프로필을 보려면 로그인해주세요</p>
+                        <p class="text-muted small">프로필을 보려면 로그인해주세요</p>
                     </div>
 
                     <form @submit.prevent="handleLogin">
@@ -112,7 +104,9 @@ const toggleSubscription = (departmentId: number) => {
                         <div class="mb-3">
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <label for="password" class="form-label mb-0">비밀번호</label>
-                                <a v-if="canResetPassword" :href="route('password.request')" class="small text-muted"> 비밀번호 찾기 </a>
+                                <a v-if="canResetPassword" :href="route('password.request')" class="text-muted small">
+                                    비밀번호 찾기
+                                </a>
                             </div>
                             <input
                                 id="password"
@@ -129,9 +123,16 @@ const toggleSubscription = (departmentId: number) => {
                         </div>
 
                         <!-- 자동 로그인 -->
-                        <div class="form-check mb-3">
-                            <input type="checkbox" class="form-check-input" id="remember" v-model="loginForm.remember" />
-                            <label class="form-check-label" for="remember"> 로그인 상태 유지 </label>
+                        <div class="mb-3 form-check">
+                            <input
+                                type="checkbox"
+                                class="form-check-input"
+                                id="remember"
+                                v-model="loginForm.remember"
+                            />
+                            <label class="form-check-label" for="remember">
+                                로그인 상태 유지
+                            </label>
                         </div>
 
                         <!-- 로그인 버튼 -->
@@ -141,7 +142,9 @@ const toggleSubscription = (departmentId: number) => {
                         </button>
 
                         <!-- 회원가입 버튼 -->
-                        <a :href="route('register')" class="btn btn-outline-secondary btn-block mt-2 w-100"> 회원가입 </a>
+                        <a :href="route('register')" class="btn btn-outline-secondary btn-block w-100 mt-2">
+                            회원가입
+                        </a>
                     </form>
                 </div>
             </div>
@@ -152,14 +155,16 @@ const toggleSubscription = (departmentId: number) => {
                 <div class="card mb-3">
                     <div class="card-body text-center">
                         <div class="mb-3">
-                            <i class="fa-solid fa-user-circle" style="font-size: 80px; color: #007bff"></i>
+                            <i class="fa-solid fa-user-circle" style="font-size: 80px; color: #007bff;"></i>
                         </div>
                         <h5 class="mb-1">{{ user.name }}</h5>
-                        <p class="mb-0 text-muted">{{ user.email }}</p>
+                        <p class="text-muted mb-0">{{ user.email }}</p>
                         <span v-if="user.email_verified_at" class="badge badge-success mt-2">
                             <i class="fa-solid fa-check-circle"></i> 이메일 인증됨
                         </span>
-                        <span v-else class="badge badge-warning mt-2"> <i class="fa-solid fa-exclamation-circle"></i> 이메일 미인증 </span>
+                        <span v-else class="badge badge-warning mt-2">
+                            <i class="fa-solid fa-exclamation-circle"></i> 이메일 미인증
+                        </span>
                     </div>
                     <iframe
                         src="https://ads-partners.coupang.com/widgets.html?id=927016&template=carousel&trackingCode=AF7527668&subId=&width=680&height=140&tsource="
@@ -179,18 +184,18 @@ const toggleSubscription = (departmentId: number) => {
                             <i class="fa-solid fa-star me-2"></i>
                             구독 부서 관리
                         </h6>
-                        <p class="small mb-3 text-muted">관심있는 부서를 체크하세요. 해당 부서의 소식을 받아볼 수 있습니다.</p>
+                        <p class="text-muted small mb-3">관심있는 부서를 체크하세요. 해당 부서의 소식을 받아볼 수 있습니다.</p>
 
                         <div v-if="allDepartments && allDepartments.length > 0" class="list-group list-group-flush">
                             <div
                                 v-for="department in allDepartments"
                                 :key="department.id"
                                 class="list-group-item d-flex align-items-center"
-                                style="cursor: pointer; border-left: none; border-right: none"
+                                style="cursor: pointer; border-left: none; border-right: none;"
                                 @click="toggleSubscription(department.id)"
                             >
                                 <div class="media media-40 rounded-circle me-3">
-                                    <img :src="department.icon_image" :alt="department.name" style="width: 40px; height: 40px; object-fit: cover" />
+                                    <img :src="department.icon_image" :alt="department.name" style="width: 40px; height: 40px; object-fit: cover;" />
                                 </div>
                                 <div class="flex-grow-1">
                                     <h6 class="mb-0">{{ department.name }}</h6>
@@ -201,12 +206,12 @@ const toggleSubscription = (departmentId: number) => {
                                         type="checkbox"
                                         :checked="subscribed.has(department.id)"
                                         @click.stop="toggleSubscription(department.id)"
-                                        style="width: 24px; height: 24px; cursor: pointer"
+                                        style="width: 24px; height: 24px; cursor: pointer;"
                                     />
                                 </div>
                             </div>
                         </div>
-                        <div v-else class="py-3 text-center text-muted">
+                        <div v-else class="text-center text-muted py-3">
                             <small>등록된 부서가 없습니다.</small>
                         </div>
                     </div>
@@ -216,7 +221,7 @@ const toggleSubscription = (departmentId: number) => {
                 <div class="card">
                     <div class="card-body p-0">
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item" @click="goToSettings" style="cursor: pointer">
+                            <li class="list-group-item" @click="goToSettings" style="cursor: pointer;">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                         <i class="fa-solid fa-user-edit me-3"></i>
@@ -225,10 +230,10 @@ const toggleSubscription = (departmentId: number) => {
                                     <i class="fa-solid fa-chevron-right text-muted"></i>
                                 </div>
                             </li>
-                            <li class="list-group-item" @click="handleLogout" style="cursor: pointer">
+                            <li class="list-group-item" @click="handleLogout" style="cursor: pointer;">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <i class="fa-solid fa-sign -out-alt text-danger me-3"></i>
+                                        <i class="fa-solid fa-sign -out-alt me-3 text-danger"></i>
                                         <span class="text-danger">로그아웃</span>
                                     </div>
                                     <i class="fa-solid fa-chevron-right text-muted"></i>
@@ -242,13 +247,15 @@ const toggleSubscription = (departmentId: number) => {
                 <div class="card mt-3">
                     <div class="card-body">
                         <h6 class="card-title mb-3">앱 정보</h6>
-                        <p class="small mb-1 text-muted">버전: 1.0.0</p>
-                        <p class="small mb-0 text-muted">© 2025 Jubogo App</p>
+                        <p class="mb-1 text-muted small">버전: 1.0.0</p>
+                        <p class="mb-0 text-muted small">© 2025 Jubogo App</p>
                     </div>
                 </div>
             </div>
             <BusinessInfo></BusinessInfo>
+
         </div>
+
     </div>
 </template>
 

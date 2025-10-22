@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import BusinessInfo from '@/components/BusinessInfo.vue';
 import Header from '@/components/template/Header.vue';
+import BusinessInfo from '@/components/BusinessInfo.vue';
+import { route } from 'ziggy-js';
 import { Department } from '@/types/department';
 import { Head } from '@inertiajs/vue3';
 import { onMounted } from 'vue';
-import { route } from 'ziggy-js';
 
 const props = defineProps<{ departments: Department[] }>();
 
@@ -37,19 +37,19 @@ onMounted(() => {
     structuredData.text = JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'ItemList',
-        name: '부서 목록',
-        description: '명성교회 주보고에 등록된 교회 부서 목록',
-        numberOfItems: props.departments.length,
-        itemListElement: props.departments.map((department, index) => ({
+        'name': '부서 목록',
+        'description': '명성교회 주보고에 등록된 교회 부서 목록',
+        'numberOfItems': props.departments.length,
+        'itemListElement': props.departments.map((department, index) => ({
             '@type': 'ListItem',
-            position: index + 1,
-            item: {
+            'position': index + 1,
+            'item': {
                 '@type': 'Organization',
                 '@id': route('department.show', { id: department.id }),
-                name: department.name,
-                image: department.icon_image,
-            },
-        })),
+                'name': department.name,
+                'image': department.icon_image
+            }
+        }))
     });
     document.head.appendChild(structuredData);
 });
@@ -80,7 +80,13 @@ onMounted(() => {
 
         <div class="page-content space-top p-b60">
             <div class="container">
-                <ins class="kakao_ad_area" style="display: block" data-ad-unit="DAN-bE302RQ73kwLuzKI" data-ad-width="320" data-ad-height="50"></ins>
+                <ins
+                    class="kakao_ad_area"
+                    style="display: block"
+                    data-ad-unit="DAN-bE302RQ73kwLuzKI"
+                    data-ad-width="320"
+                    data-ad-height="50"
+                ></ins>
                 <div class="row g-3">
                     <div v-for="department in departments" class="col-6" v-bind:key="department.id">
                         <div class="card" @click="goToContent(department.id)">

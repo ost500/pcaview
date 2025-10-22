@@ -6,13 +6,10 @@
  */
 
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined'
-        ? (module.exports = factory())
-        : typeof define === 'function' && define.amd
-          ? define(factory)
-          : ((global = typeof globalThis !== 'undefined' ? globalThis : global || self), (global.lgThumbnail = factory()));
-})(this, function () {
-    'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.lgThumbnail = factory());
+}(this, (function () { 'use strict';
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation.
@@ -29,16 +26,14 @@
     PERFORMANCE OF THIS SOFTWARE.
     ***************************************************************************** */
 
-    var __assign = function () {
-        __assign =
-            Object.assign ||
-            function __assign(t) {
-                for (var s, i = 1, n = arguments.length; i < n; i++) {
-                    s = arguments[i];
-                    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-                }
-                return t;
-            };
+    var __assign = function() {
+        __assign = Object.assign || function __assign(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+            }
+            return t;
+        };
         return __assign.apply(this, arguments);
     };
 
@@ -111,7 +106,9 @@
             // extend module default settings with lightGallery core settings
             this.settings = __assign(__assign({}, thumbnailsSettings), this.core.settings);
             this.thumbOuterWidth = 0;
-            this.thumbTotalWidth = this.core.galleryItems.length * (this.settings.thumbWidth + this.settings.thumbMargin);
+            this.thumbTotalWidth =
+                this.core.galleryItems.length *
+                    (this.settings.thumbWidth + this.settings.thumbMargin);
             // Thumbnail animation value
             this.translateX = 0;
             this.setAnimateThumbStyles();
@@ -128,7 +125,8 @@
                         this.enableThumbSwipe();
                     }
                     this.thumbClickable = false;
-                } else {
+                }
+                else {
                     this.thumbClickable = true;
                 }
                 this.toggleThumbBar();
@@ -153,18 +151,19 @@
                     }
                 }, 50);
             });
-            this.core.LGel.on(lGEvents.beforeSlide + '.thumb', function (event) {
+            this.core.LGel.on(lGEvents.beforeSlide + ".thumb", function (event) {
                 var index = event.detail.index;
                 _this.animateThumb(index);
             });
-            this.core.LGel.on(lGEvents.beforeOpen + '.thumb', function () {
+            this.core.LGel.on(lGEvents.beforeOpen + ".thumb", function () {
                 _this.thumbOuterWidth = _this.core.outer.get().offsetWidth;
             });
-            this.core.LGel.on(lGEvents.updateSlides + '.thumb', function () {
+            this.core.LGel.on(lGEvents.updateSlides + ".thumb", function () {
                 _this.rebuildThumbnails();
             });
-            this.core.LGel.on(lGEvents.containerResize + '.thumb', function () {
-                if (!_this.core.lgOpened) return;
+            this.core.LGel.on(lGEvents.containerResize + ".thumb", function () {
+                if (!_this.core.lgOpened)
+                    return;
                 setTimeout(function () {
                     _this.thumbOuterWidth = _this.core.outer.get().offsetWidth;
                     _this.animateThumb(_this.core.index);
@@ -175,13 +174,14 @@
         Thumbnail.prototype.setThumbMarkup = function () {
             var thumbOuterClassNames = 'lg-thumb-outer ';
             if (this.settings.alignThumbnails) {
-                thumbOuterClassNames += 'lg-thumb-align-' + this.settings.alignThumbnails;
+                thumbOuterClassNames += "lg-thumb-align-" + this.settings.alignThumbnails;
             }
-            var html = '<div class="' + thumbOuterClassNames + '">\n        <div class="lg-thumb lg-group">\n        </div>\n        </div>';
+            var html = "<div class=\"" + thumbOuterClassNames + "\">\n        <div class=\"lg-thumb lg-group\">\n        </div>\n        </div>";
             this.core.outer.addClass('lg-has-thumb');
             if (this.settings.appendThumbnailsTo === '.lg-components') {
                 this.core.$lgComponents.append(html);
-            } else {
+            }
+            else {
                 this.core.outer.append(html);
             }
             this.$thumbOuter = this.core.outer.find('.lg-thumb-outer').first();
@@ -214,32 +214,37 @@
                 .find('.lg-thumb')
                 .first()
                 .on('mousedown.lg.thumb', function (e) {
-                    if (_this.thumbTotalWidth > _this.thumbOuterWidth) {
-                        // execute only on .lg-object
-                        e.preventDefault();
-                        thumbDragUtils.cords.startX = e.pageX;
-                        thumbDragUtils.startTime = new Date();
-                        _this.thumbClickable = false;
-                        isDragging = true;
-                        // ** Fix for webkit cursor issue https://code.google.com/p/chromium/issues/detail?id=26723
-                        _this.core.outer.get().scrollLeft += 1;
-                        _this.core.outer.get().scrollLeft -= 1;
-                        // *
-                        _this.$thumbOuter.removeClass('lg-grab').addClass('lg-grabbing');
-                    }
-                });
-            this.$LG(window).on('mousemove.lg.thumb.global' + this.core.lgId, function (e) {
-                if (!_this.core.lgOpened) return;
+                if (_this.thumbTotalWidth > _this.thumbOuterWidth) {
+                    // execute only on .lg-object
+                    e.preventDefault();
+                    thumbDragUtils.cords.startX = e.pageX;
+                    thumbDragUtils.startTime = new Date();
+                    _this.thumbClickable = false;
+                    isDragging = true;
+                    // ** Fix for webkit cursor issue https://code.google.com/p/chromium/issues/detail?id=26723
+                    _this.core.outer.get().scrollLeft += 1;
+                    _this.core.outer.get().scrollLeft -= 1;
+                    // *
+                    _this.$thumbOuter
+                        .removeClass('lg-grab')
+                        .addClass('lg-grabbing');
+                }
+            });
+            this.$LG(window).on("mousemove.lg.thumb.global" + this.core.lgId, function (e) {
+                if (!_this.core.lgOpened)
+                    return;
                 if (isDragging) {
                     thumbDragUtils.cords.endX = e.pageX;
                     thumbDragUtils = _this.onThumbTouchMove(thumbDragUtils);
                 }
             });
-            this.$LG(window).on('mouseup.lg.thumb.global' + this.core.lgId, function () {
-                if (!_this.core.lgOpened) return;
+            this.$LG(window).on("mouseup.lg.thumb.global" + this.core.lgId, function () {
+                if (!_this.core.lgOpened)
+                    return;
                 if (thumbDragUtils.isMoved) {
                     thumbDragUtils = _this.onThumbTouchEnd(thumbDragUtils);
-                } else {
+                }
+                else {
                     _this.thumbClickable = true;
                 }
                 if (isDragging) {
@@ -279,7 +284,8 @@
             this.$lgThumb.on('touchend.lg', function () {
                 if (thumbDragUtils.isMoved) {
                     thumbDragUtils = _this.onThumbTouchEnd(thumbDragUtils);
-                } else {
+                }
+                else {
                     _this.thumbClickable = true;
                 }
             });
@@ -290,7 +296,9 @@
             // Remove transitions
             this.$thumbOuter.addClass('lg-rebuilding-thumbnails');
             setTimeout(function () {
-                _this.thumbTotalWidth = _this.core.galleryItems.length * (_this.settings.thumbWidth + _this.settings.thumbMargin);
+                _this.thumbTotalWidth =
+                    _this.core.galleryItems.length *
+                        (_this.settings.thumbWidth + _this.settings.thumbMargin);
                 _this.$lgThumb.css('width', _this.thumbTotalWidth + 'px');
                 _this.$lgThumb.empty();
                 _this.setThumbItemHtml(_this.core.galleryItems);
@@ -322,12 +330,16 @@
                         position = 0;
                         break;
                     case 'middle':
-                        position = this.thumbOuterWidth / 2 - this.settings.thumbWidth / 2;
+                        position =
+                            this.thumbOuterWidth / 2 - this.settings.thumbWidth / 2;
                         break;
                     case 'right':
                         position = this.thumbOuterWidth - this.settings.thumbWidth;
                 }
-                this.translateX = (this.settings.thumbWidth + this.settings.thumbMargin) * index - 1 - position;
+                this.translateX =
+                    (this.settings.thumbWidth + this.settings.thumbMargin) * index -
+                        1 -
+                        position;
                 if (this.translateX > this.thumbTotalWidth - this.thumbOuterWidth) {
                     this.translateX = this.thumbTotalWidth - this.thumbOuterWidth;
                 }
@@ -341,7 +353,8 @@
             thumbDragUtils.newTranslateX = this.translateX;
             thumbDragUtils.isMoved = true;
             thumbDragUtils.touchMoveTime = new Date().valueOf();
-            thumbDragUtils.newTranslateX -= thumbDragUtils.cords.endX - thumbDragUtils.cords.startX;
+            thumbDragUtils.newTranslateX -=
+                thumbDragUtils.cords.endX - thumbDragUtils.cords.startX;
             thumbDragUtils.newTranslateX = this.getPossibleTransformX(thumbDragUtils.newTranslateX);
             // move current slide
             this.setTranslate(thumbDragUtils.newTranslateX);
@@ -352,25 +365,31 @@
             thumbDragUtils.isMoved = false;
             thumbDragUtils.endTime = new Date();
             this.$thumbOuter.removeClass('lg-dragging');
-            var touchDuration = thumbDragUtils.endTime.valueOf() - thumbDragUtils.startTime.valueOf();
+            var touchDuration = thumbDragUtils.endTime.valueOf() -
+                thumbDragUtils.startTime.valueOf();
             var distanceXnew = thumbDragUtils.cords.endX - thumbDragUtils.cords.startX;
             var speedX = Math.abs(distanceXnew) / touchDuration;
             // Some magical numbers
             // Can be improved
-            if (speedX > 0.15 && thumbDragUtils.endTime.valueOf() - thumbDragUtils.touchMoveTime < 30) {
+            if (speedX > 0.15 &&
+                thumbDragUtils.endTime.valueOf() - thumbDragUtils.touchMoveTime < 30) {
                 speedX += 1;
                 if (speedX > 2) {
                     speedX += 1;
                 }
-                speedX = speedX + speedX * (Math.abs(distanceXnew) / this.thumbOuterWidth);
+                speedX =
+                    speedX +
+                        speedX * (Math.abs(distanceXnew) / this.thumbOuterWidth);
                 this.$lgThumb.css('transition-duration', Math.min(speedX - 1, 2) + 'settings');
                 distanceXnew = distanceXnew * speedX;
                 this.translateX = this.getPossibleTransformX(this.translateX - distanceXnew);
                 this.setTranslate(this.translateX);
-            } else {
+            }
+            else {
                 this.translateX = thumbDragUtils.newTranslateX;
             }
-            if (Math.abs(thumbDragUtils.cords.endX - thumbDragUtils.cords.startX) < this.settings.thumbnailSwipeThreshold) {
+            if (Math.abs(thumbDragUtils.cords.endX - thumbDragUtils.cords.startX) <
+                this.settings.thumbnailSwipeThreshold) {
                 this.thumbClickable = true;
             }
             return thumbDragUtils;
@@ -380,30 +399,21 @@
             var thumbImg;
             if (slideVideoInfo.youtube) {
                 if (this.settings.loadYouTubeThumbnail) {
-                    thumbImg = '//img.youtube.com/vi/' + slideVideoInfo.youtube[1] + '/' + this.settings.youTubeThumbSize + '.jpg';
-                } else {
+                    thumbImg =
+                        '//img.youtube.com/vi/' +
+                            slideVideoInfo.youtube[1] +
+                            '/' +
+                            this.settings.youTubeThumbSize +
+                            '.jpg';
+                }
+                else {
                     thumbImg = thumb;
                 }
-            } else {
+            }
+            else {
                 thumbImg = thumb;
             }
-            return (
-                '<div data-lg-item-id="' +
-                index +
-                '" class="lg-thumb-item ' +
-                (index === this.core.index ? ' active' : '') +
-                '" \n        style="width:' +
-                this.settings.thumbWidth +
-                'px; height: ' +
-                this.settings.thumbHeight +
-                ';\n            margin-right: ' +
-                this.settings.thumbMargin +
-                'px;">\n            <img data-lg-item-id="' +
-                index +
-                '" src="' +
-                thumbImg +
-                '" />\n        </div>'
-            );
+            return "<div data-lg-item-id=\"" + index + "\" class=\"lg-thumb-item " + (index === this.core.index ? ' active' : '') + "\" \n        style=\"width:" + this.settings.thumbWidth + "px; height: " + this.settings.thumbHeight + ";\n            margin-right: " + this.settings.thumbMargin + "px;\">\n            <img data-lg-item-id=\"" + index + "\" src=\"" + thumbImg + "\" />\n        </div>";
         };
         Thumbnail.prototype.getThumbItemHtml = function (items) {
             var thumbList = '';
@@ -425,7 +435,7 @@
         Thumbnail.prototype.manageActiveClassOnSlideChange = function () {
             var _this = this;
             // manage active class for thumbnail
-            this.core.LGel.on(lGEvents.beforeSlide + '.thumb', function (event) {
+            this.core.LGel.on(lGEvents.beforeSlide + ".thumb", function (event) {
                 var $thumb = _this.core.outer.find('.lg-thumb-item');
                 var index = event.detail.index;
                 $thumb.removeClass('active');
@@ -437,27 +447,27 @@
             var _this = this;
             if (this.settings.toggleThumb) {
                 this.core.outer.addClass('lg-can-toggle');
-                this.core.$toolbar.append(
-                    '<button type="button" aria-label="' +
-                        this.settings.thumbnailPluginStrings['toggleThumbnails'] +
-                        '" class="lg-toggle-thumb lg-icon"></button>',
-                );
+                this.core.$toolbar.append('<button type="button" aria-label="' +
+                    this.settings.thumbnailPluginStrings['toggleThumbnails'] +
+                    '" class="lg-toggle-thumb lg-icon"></button>');
                 this.core.outer
                     .find('.lg-toggle-thumb')
                     .first()
                     .on('click.lg', function () {
-                        _this.core.outer.toggleClass('lg-components-open');
-                    });
+                    _this.core.outer.toggleClass('lg-components-open');
+                });
             }
         };
         Thumbnail.prototype.thumbKeyPress = function () {
             var _this = this;
-            this.$LG(window).on('keydown.lg.thumb.global' + this.core.lgId, function (e) {
-                if (!_this.core.lgOpened || !_this.settings.toggleThumb) return;
+            this.$LG(window).on("keydown.lg.thumb.global" + this.core.lgId, function (e) {
+                if (!_this.core.lgOpened || !_this.settings.toggleThumb)
+                    return;
                 if (e.keyCode === 38) {
                     e.preventDefault();
                     _this.core.outer.addClass('lg-components-open');
-                } else if (e.keyCode === 40) {
+                }
+                else if (e.keyCode === 40) {
                     e.preventDefault();
                     _this.core.outer.removeClass('lg-components-open');
                 }
@@ -465,7 +475,7 @@
         };
         Thumbnail.prototype.destroy = function () {
             if (this.settings.thumbnail) {
-                this.$LG(window).off('.lg.thumb.global' + this.core.lgId);
+                this.$LG(window).off(".lg.thumb.global" + this.core.lgId);
                 this.core.LGel.off('.lg.thumb');
                 this.core.LGel.off('.thumb');
                 this.$thumbOuter.remove();
@@ -473,8 +483,9 @@
             }
         };
         return Thumbnail;
-    })();
+    }());
 
     return Thumbnail;
-});
+
+})));
 //# sourceMappingURL=lg-thumbnail.umd.js.map

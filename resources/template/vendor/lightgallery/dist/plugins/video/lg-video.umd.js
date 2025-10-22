@@ -6,13 +6,10 @@
  */
 
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined'
-        ? (module.exports = factory())
-        : typeof define === 'function' && define.amd
-          ? define(factory)
-          : ((global = typeof globalThis !== 'undefined' ? globalThis : global || self), (global.lgVideo = factory()));
-})(this, function () {
-    'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.lgVideo = factory());
+}(this, (function () { 'use strict';
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation.
@@ -29,16 +26,14 @@
     PERFORMANCE OF THIS SOFTWARE.
     ***************************************************************************** */
 
-    var __assign = function () {
-        __assign =
-            Object.assign ||
-            function __assign(t) {
-                for (var s, i = 1, n = arguments.length; i < n; i++) {
-                    s = arguments[i];
-                    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-                }
-                return t;
-            };
+    var __assign = function() {
+        __assign = Object.assign || function __assign(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+            }
+            return t;
+        };
         return __assign.apply(this, arguments);
     };
 
@@ -91,25 +86,29 @@
     var param = function (obj) {
         return Object.keys(obj)
             .map(function (k) {
-                return encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]);
-            })
+            return encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]);
+        })
             .join('&');
     };
     var getVimeoURLParams = function (defaultParams, videoInfo) {
-        if (!videoInfo || !videoInfo.vimeo) return '';
+        if (!videoInfo || !videoInfo.vimeo)
+            return '';
         var urlParams = videoInfo.vimeo[2] || '';
-        var defaultPlayerParams = defaultParams && Object.keys(defaultParams).length !== 0 ? '&' + param(defaultParams) : '';
+        var defaultPlayerParams = defaultParams && Object.keys(defaultParams).length !== 0
+            ? '&' + param(defaultParams)
+            : '';
         // Support private video
         var urlWithHash = videoInfo.vimeo[0].split('/').pop() || '';
         var urlWithHashWithParams = urlWithHash.split('?')[0] || '';
         var hash = urlWithHashWithParams.split('#')[0];
         var isPrivate = videoInfo.vimeo[1] !== hash;
         if (isPrivate) {
-            urlParams = urlParams.replace('/' + hash, '');
+            urlParams = urlParams.replace("/" + hash, '');
         }
-        urlParams = urlParams[0] == '?' ? '&' + urlParams.slice(1) : urlParams || '';
+        urlParams =
+            urlParams[0] == '?' ? '&' + urlParams.slice(1) : urlParams || '';
         // For vimeo last params gets priority if duplicates found
-        var vimeoPlayerParams = '?autoplay=0&muted=1' + (isPrivate ? '&h=' + hash : '') + defaultPlayerParams + urlParams;
+        var vimeoPlayerParams = "?autoplay=0&muted=1" + (isPrivate ? "&h=" + hash : '') + defaultPlayerParams + urlParams;
         return vimeoPlayerParams;
     };
 
@@ -152,16 +151,16 @@
              * Append video HTML
              * Play if autoplayFirstVideo is true
              */
-            this.core.LGel.on(lGEvents.hasVideo + '.video', this.onHasVideo.bind(this));
-            this.core.LGel.on(lGEvents.posterClick + '.video', function () {
+            this.core.LGel.on(lGEvents.hasVideo + ".video", this.onHasVideo.bind(this));
+            this.core.LGel.on(lGEvents.posterClick + ".video", function () {
                 var $el = _this.core.getSlideItem(_this.core.index);
                 _this.loadVideoOnPosterClick($el);
             });
-            this.core.LGel.on(lGEvents.slideItemLoad + '.video', this.onSlideItemLoad.bind(this));
+            this.core.LGel.on(lGEvents.slideItemLoad + ".video", this.onSlideItemLoad.bind(this));
             // @desc fired immediately before each slide transition.
-            this.core.LGel.on(lGEvents.beforeSlide + '.video', this.onBeforeSlide.bind(this));
+            this.core.LGel.on(lGEvents.beforeSlide + ".video", this.onBeforeSlide.bind(this));
             // @desc fired immediately after each slide transition.
-            this.core.LGel.on(lGEvents.afterSlide + '.video', this.onAfterSlide.bind(this));
+            this.core.LGel.on(lGEvents.afterSlide + ".video", this.onAfterSlide.bind(this));
         };
         /**
          * @desc Event triggered when a slide is completely loaded
@@ -170,18 +169,20 @@
          */
         Video.prototype.onSlideItemLoad = function (event) {
             var _this = this;
-            var _a = event.detail,
-                isFirstSlide = _a.isFirstSlide,
-                index = _a.index;
+            var _a = event.detail, isFirstSlide = _a.isFirstSlide, index = _a.index;
             // Should check the active slide as well as user may have moved to different slide before the first slide is loaded
-            if (this.settings.autoplayFirstVideo && isFirstSlide && index === this.core.index) {
+            if (this.settings.autoplayFirstVideo &&
+                isFirstSlide &&
+                index === this.core.index) {
                 // Delay is just for the transition effect on video load
                 setTimeout(function () {
                     _this.loadAndPlayVideo(index);
                 }, 200);
             }
             // Should not call on first slide. should check only if the slide is active
-            if (!isFirstSlide && this.settings.autoplayVideoOnSlide && index === this.core.index) {
+            if (!isFirstSlide &&
+                this.settings.autoplayVideoOnSlide &&
+                index === this.core.index) {
                 this.loadAndPlayVideo(index);
             }
         };
@@ -193,11 +194,7 @@
          * @param {Event} event - Javascript Event object.
          */
         Video.prototype.onHasVideo = function (event) {
-            var _a = event.detail,
-                index = _a.index,
-                src = _a.src,
-                html5Video = _a.html5Video,
-                hasPoster = _a.hasPoster;
+            var _a = event.detail, index = _a.index, src = _a.src, html5Video = _a.html5Video, hasPoster = _a.hasPoster;
             if (!hasPoster) {
                 // All functions are called separately if poster exist in loadVideoOnPosterClick function
                 this.appendVideos(this.core.getSlideItem(index), {
@@ -236,9 +233,7 @@
          */
         Video.prototype.onAfterSlide = function (event) {
             var _this = this;
-            var _a = event.detail,
-                index = _a.index,
-                prevIndex = _a.prevIndex;
+            var _a = event.detail, index = _a.index, prevIndex = _a.prevIndex;
             // Do not call on first slide
             var $slide = this.core.getSlideItem(index);
             if (this.settings.autoplayVideoOnSlide && index !== prevIndex) {
@@ -254,7 +249,8 @@
             var currentGalleryItem = this.core.galleryItems[index];
             if (currentGalleryItem.poster) {
                 this.loadVideoOnPosterClick($slide, true);
-            } else {
+            }
+            else {
                 this.playVideo(index);
             }
         };
@@ -274,74 +270,49 @@
         };
         Video.prototype.getVideoHtml = function (src, addClass, index, html5Video) {
             var video = '';
-            var videoInfo = this.core.galleryItems[index].__slideVideoInfo || {};
+            var videoInfo = this.core.galleryItems[index]
+                .__slideVideoInfo || {};
             var currentGalleryItem = this.core.galleryItems[index];
             var videoTitle = currentGalleryItem.title || currentGalleryItem.alt;
             videoTitle = videoTitle ? 'title="' + videoTitle + '"' : '';
-            var commonIframeProps =
-                'allowtransparency="true"\n            frameborder="0"\n            scrolling="no"\n            allowfullscreen\n            mozallowfullscreen\n            webkitallowfullscreen\n            oallowfullscreen\n            msallowfullscreen';
+            var commonIframeProps = "allowtransparency=\"true\"\n            frameborder=\"0\"\n            scrolling=\"no\"\n            allowfullscreen\n            mozallowfullscreen\n            webkitallowfullscreen\n            oallowfullscreen\n            msallowfullscreen";
             if (videoInfo.youtube) {
                 var videoId = 'lg-youtube' + index;
-                var slideUrlParams = videoInfo.youtube[2] ? videoInfo.youtube[2] + '&' : '';
+                var slideUrlParams = videoInfo.youtube[2]
+                    ? videoInfo.youtube[2] + '&'
+                    : '';
                 // For youtube first parms gets priority if duplicates found
-                var youTubePlayerParams = '?' + slideUrlParams + 'wmode=opaque&autoplay=0&mute=1&enablejsapi=1';
-                var playerParams = youTubePlayerParams + (this.settings.youTubePlayerParams ? '&' + param(this.settings.youTubePlayerParams) : '');
-                video =
-                    '<iframe allow="autoplay" id=' +
-                    videoId +
-                    ' class="lg-video-object lg-youtube ' +
-                    addClass +
-                    '" ' +
-                    videoTitle +
-                    ' src="//www.youtube.com/embed/' +
-                    (videoInfo.youtube[1] + playerParams) +
-                    '" ' +
-                    commonIframeProps +
-                    '></iframe>';
-            } else if (videoInfo.vimeo) {
+                var youTubePlayerParams = "?" + slideUrlParams + "wmode=opaque&autoplay=0&mute=1&enablejsapi=1";
+                var playerParams = youTubePlayerParams +
+                    (this.settings.youTubePlayerParams
+                        ? '&' + param(this.settings.youTubePlayerParams)
+                        : '');
+                video = "<iframe allow=\"autoplay\" id=" + videoId + " class=\"lg-video-object lg-youtube " + addClass + "\" " + videoTitle + " src=\"//www.youtube.com/embed/" + (videoInfo.youtube[1] + playerParams) + "\" " + commonIframeProps + "></iframe>";
+            }
+            else if (videoInfo.vimeo) {
                 var videoId = 'lg-vimeo' + index;
                 var playerParams = getVimeoURLParams(this.settings.vimeoPlayerParams, videoInfo);
-                video =
-                    '<iframe allow="autoplay" id=' +
-                    videoId +
-                    ' class="lg-video-object lg-vimeo ' +
-                    addClass +
-                    '" ' +
-                    videoTitle +
-                    ' src="//player.vimeo.com/video/' +
-                    (videoInfo.vimeo[1] + playerParams) +
-                    '" ' +
-                    commonIframeProps +
-                    '></iframe>';
-            } else if (videoInfo.wistia) {
+                video = "<iframe allow=\"autoplay\" id=" + videoId + " class=\"lg-video-object lg-vimeo " + addClass + "\" " + videoTitle + " src=\"//player.vimeo.com/video/" + (videoInfo.vimeo[1] + playerParams) + "\" " + commonIframeProps + "></iframe>";
+            }
+            else if (videoInfo.wistia) {
                 var wistiaId = 'lg-wistia' + index;
                 var playerParams = param(this.settings.wistiaPlayerParams);
                 playerParams = playerParams ? '?' + playerParams : '';
-                video =
-                    '<iframe allow="autoplay" id="' +
-                    wistiaId +
-                    '" src="//fast.wistia.net/embed/iframe/' +
-                    (videoInfo.wistia[4] + playerParams) +
-                    '" ' +
-                    videoTitle +
-                    ' class="wistia_embed lg-video-object lg-wistia ' +
-                    addClass +
-                    '" name="wistia_embed" ' +
-                    commonIframeProps +
-                    '></iframe>';
-            } else if (videoInfo.html5) {
+                video = "<iframe allow=\"autoplay\" id=\"" + wistiaId + "\" src=\"//fast.wistia.net/embed/iframe/" + (videoInfo.wistia[4] + playerParams) + "\" " + videoTitle + " class=\"wistia_embed lg-video-object lg-wistia " + addClass + "\" name=\"wistia_embed\" " + commonIframeProps + "></iframe>";
+            }
+            else if (videoInfo.html5) {
                 var html5VideoMarkup = '';
                 for (var i = 0; i < html5Video.source.length; i++) {
-                    html5VideoMarkup += '<source src="' + html5Video.source[i].src + '" type="' + html5Video.source[i].type + '">';
+                    html5VideoMarkup += "<source src=\"" + html5Video.source[i].src + "\" type=\"" + html5Video.source[i].type + "\">";
                 }
                 if (html5Video.tracks) {
                     var _loop_1 = function (i) {
                         var trackAttributes = '';
                         var track = html5Video.tracks[i];
                         Object.keys(track || {}).forEach(function (key) {
-                            trackAttributes += key + '="' + track[key] + '" ';
+                            trackAttributes += key + "=\"" + track[key] + "\" ";
                         });
-                        html5VideoMarkup += '<track ' + trackAttributes + '>';
+                        html5VideoMarkup += "<track " + trackAttributes + ">";
                     };
                     for (var i = 0; i < html5Video.tracks.length; i++) {
                         _loop_1(i);
@@ -350,18 +321,11 @@
                 var html5VideoAttrs_1 = '';
                 var videoAttributes_1 = html5Video.attributes || {};
                 Object.keys(videoAttributes_1 || {}).forEach(function (key) {
-                    html5VideoAttrs_1 += key + '="' + videoAttributes_1[key] + '" ';
+                    html5VideoAttrs_1 += key + "=\"" + videoAttributes_1[key] + "\" ";
                 });
-                video =
-                    '<video class="lg-video-object lg-html5 ' +
-                    (this.settings.videojs && this.settings.videojsTheme ? this.settings.videojsTheme + ' ' : '') +
-                    ' ' +
-                    (this.settings.videojs ? ' video-js' : '') +
-                    '" ' +
-                    html5VideoAttrs_1 +
-                    '>\n                ' +
-                    html5VideoMarkup +
-                    '\n                Your browser does not support HTML5 video.\n            </video>';
+                video = "<video class=\"lg-video-object lg-html5 " + (this.settings.videojs && this.settings.videojsTheme
+                    ? this.settings.videojsTheme + ' '
+                    : '') + " " + (this.settings.videojs ? ' video-js' : '') + "\" " + html5VideoAttrs_1 + ">\n                " + html5VideoMarkup + "\n                Your browser does not support HTML5 video.\n            </video>";
             }
             return video;
         };
@@ -381,36 +345,40 @@
                     e.stopPropagation();
                 });
             }
-            if (
-                this.settings.videojs &&
-                ((_a = this.core.galleryItems[videoParams.index].__slideVideoInfo) === null || _a === void 0 ? void 0 : _a.html5)
-            ) {
+            if (this.settings.videojs && ((_a = this.core.galleryItems[videoParams.index].__slideVideoInfo) === null || _a === void 0 ? void 0 : _a.html5)) {
                 try {
                     return videojs($videoElement.get(), this.settings.videojsOptions);
-                } catch (e) {
+                }
+                catch (e) {
                     console.error('lightGallery:- Make sure you have included videojs');
                 }
             }
         };
         Video.prototype.gotoNextSlideOnVideoEnd = function (src, index) {
             var _this = this;
-            var $videoElement = this.core.getSlideItem(index).find('.lg-video-object').first();
+            var $videoElement = this.core
+                .getSlideItem(index)
+                .find('.lg-video-object')
+                .first();
             var videoInfo = this.core.galleryItems[index].__slideVideoInfo || {};
             if (this.settings.gotoNextSlideOnVideoEnd) {
                 if (videoInfo.html5) {
                     $videoElement.on('ended', function () {
                         _this.core.goToNextSlide();
                     });
-                } else if (videoInfo.vimeo) {
+                }
+                else if (videoInfo.vimeo) {
                     try {
                         // https://github.com/vimeo/player.js/#ended
                         new Vimeo.Player($videoElement.get()).on('ended', function () {
                             _this.core.goToNextSlide();
                         });
-                    } catch (e) {
+                    }
+                    catch (e) {
                         console.error('lightGallery:- Make sure you have included //github.com/vimeo/player.js');
                     }
-                } else if (videoInfo.wistia) {
+                }
+                else if (videoInfo.wistia) {
                     try {
                         window._wq = window._wq || [];
                         // @todo Event is gettign triggered multiple times
@@ -422,39 +390,51 @@
                                 });
                             },
                         });
-                    } catch (e) {
+                    }
+                    catch (e) {
                         console.error('lightGallery:- Make sure you have included //fast.wistia.com/assets/external/E-v1.js');
                     }
                 }
             }
         };
         Video.prototype.controlVideo = function (index, action) {
-            var $videoElement = this.core.getSlideItem(index).find('.lg-video-object').first();
+            var $videoElement = this.core
+                .getSlideItem(index)
+                .find('.lg-video-object')
+                .first();
             var videoInfo = this.core.galleryItems[index].__slideVideoInfo || {};
-            if (!$videoElement.get()) return;
+            if (!$videoElement.get())
+                return;
             if (videoInfo.youtube) {
                 try {
-                    $videoElement.get().contentWindow.postMessage('{"event":"command","func":"' + action + 'Video","args":""}', '*');
-                } catch (e) {
-                    console.error('lightGallery:- ' + e);
+                    $videoElement.get().contentWindow.postMessage("{\"event\":\"command\",\"func\":\"" + action + "Video\",\"args\":\"\"}", '*');
                 }
-            } else if (videoInfo.vimeo) {
+                catch (e) {
+                    console.error("lightGallery:- " + e);
+                }
+            }
+            else if (videoInfo.vimeo) {
                 try {
                     new Vimeo.Player($videoElement.get())[action]();
-                } catch (e) {
+                }
+                catch (e) {
                     console.error('lightGallery:- Make sure you have included //github.com/vimeo/player.js');
                 }
-            } else if (videoInfo.html5) {
+            }
+            else if (videoInfo.html5) {
                 if (this.settings.videojs) {
                     try {
                         videojs($videoElement.get())[action]();
-                    } catch (e) {
+                    }
+                    catch (e) {
                         console.error('lightGallery:- Make sure you have included videojs');
                     }
-                } else {
+                }
+                else {
                     $videoElement.get()[action]();
                 }
-            } else if (videoInfo.wistia) {
+            }
+            else if (videoInfo.wistia) {
                 try {
                     window._wq = window._wq || [];
                     // @todo Find a way to destroy wistia player instance
@@ -464,7 +444,8 @@
                             video[action]();
                         },
                     });
-                } catch (e) {
+                }
+                catch (e) {
                     console.error('lightGallery:- Make sure you have included //fast.wistia.com/assets/external/E-v1.js');
                 }
             }
@@ -480,7 +461,8 @@
                     var _src = this.core.galleryItems[this.core.index].src;
                     var video = this.core.galleryItems[this.core.index].video;
                     if (video) {
-                        _html = typeof video === 'string' ? JSON.parse(video) : video;
+                        _html =
+                            typeof video === 'string' ? JSON.parse(video) : video;
                     }
                     var videoJsPlayer_1 = this.appendVideos($el, {
                         src: _src,
@@ -502,14 +484,16 @@
                     $el.find('.lg-video-object')
                         .first()
                         .on('load.lg error.lg loadedmetadata.lg', function () {
-                            setTimeout(function () {
-                                _this.onVideoLoadAfterPosterClick($el, _this.core.index);
-                            }, 50);
-                        });
-                } else {
+                        setTimeout(function () {
+                            _this.onVideoLoadAfterPosterClick($el, _this.core.index);
+                        }, 50);
+                    });
+                }
+                else {
                     this.playVideo(this.core.index);
                 }
-            } else if (forcePlay) {
+            }
+            else if (forcePlay) {
                 this.playVideo(this.core.index);
             }
         };
@@ -522,8 +506,9 @@
             this.core.LGel.off('.video');
         };
         return Video;
-    })();
+    }());
 
     return Video;
-});
+
+})));
 //# sourceMappingURL=lg-video.umd.js.map
