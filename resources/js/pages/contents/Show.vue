@@ -89,7 +89,7 @@ onMounted(() => {
 
             <!-- Open Graph / Facebook -->
             <meta property="og:type" content="article" />
-            <meta property="og:url" :content="route('contents.show', { id: contents.id })" />
+            <meta property="og:url" :content="`https://jubogo.com/contents/${contents.id}`" />
             <meta property="og:title" :content="contents.title" />
             <meta property="og:description" :content="contents.title + ' - ' + (contents.department?.name || '교회 소식')" />
             <meta property="og:image" :content="contents.thumbnail_url" />
@@ -100,13 +100,13 @@ onMounted(() => {
 
             <!-- Twitter Card -->
             <meta name="twitter:card" content="summary_large_image" />
-            <meta name="twitter:url" :content="route('contents.show', { id: contents.id })" />
+            <meta name="twitter:url" :content="`https://jubogo.com/contents/${contents.id}`" />
             <meta name="twitter:title" :content="contents.title" />
             <meta name="twitter:description" :content="contents.title + ' - ' + (contents.department?.name || '교회 소식')" />
             <meta name="twitter:image" :content="contents.thumbnail_url" />
 
             <!-- Canonical URL -->
-            <link rel="canonical" :href="route('contents.show', { id: contents.id })" />
+            <link rel="canonical" :href="`https://jubogo.com/contents/${contents.id}`" />
         </Head>
         <Header title="주보" :backbutton="true"></Header>
 

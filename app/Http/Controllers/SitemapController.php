@@ -53,15 +53,21 @@ class SitemapController extends Controller
         // Contents
         foreach ($contents as $content) {
             $lastmod = null;
-            if ($content->published_at) {
-                if (is_string($content->published_at)) {
+
+            // Use updated_at if available, otherwise use published_at
+            $dateToUse = $content->updated_at ?? $content->published_at;
+
+            if ($dateToUse) {
+                if (is_string($dateToUse)) {
                     // Convert string datetime to Y-m-d format
-                    $lastmod = date('Y-m-d', strtotime($content->published_at));
+                    $lastmod = date('Y-m-d', strtotime($dateToUse));
                 } else {
-                    $lastmod = $content->published_at->format('Y-m-d');
+                    $lastmod = $dateToUse->format('Y-m-d');
                 }
             }
-            $this->addUrl($xml, $urlset, route('contents.show', $content->id), 'weekly', '0.6', $lastmod);
+
+            // Higher priority (0.8) and daily crawl frequency for better indexing
+            $this->addUrl($xml, $urlset, route('contents.show', $content->id), 'daily', '0.8', $lastmod);
         }
 
         return response($xml->saveXML(), 200)

@@ -124,19 +124,19 @@ onMounted(() => {
 
         <!-- Open Graph -->
         <meta property="og:type" content="website" />
-        <meta property="og:url" :content="route('home')" />
+        <meta property="og:url" content="https://jubogo.com" />
         <meta property="og:title" content="명성교회 주보고 - 교회 주보와 소식" />
         <meta property="og:description" content="교회의 모든 부서 주보와 소식을 한곳에 모았습니다." />
         <meta property="og:site_name" content="명성교회 주보고" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" :content="route('home')" />
+        <meta name="twitter:url" content="https://jubogo.com" />
         <meta name="twitter:title" content="명성교회 주보고 - 교회 주보와 소식" />
         <meta name="twitter:description" content="교회의 모든 부서 주보와 소식을 한곳에 모았습니다." />
 
         <!-- Canonical URL -->
-        <link rel="canonical" :href="route('home')" />
+        <link rel="canonical" href="https://jubogo.com" />
     </Head>
 
     <!-- PWA 설치 프롬프트 -->
