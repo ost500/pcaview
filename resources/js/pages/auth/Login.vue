@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import AuthenticatedSessionController from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
+import BusinessInfo from '@/components/BusinessInfo.vue';
 import InputError from '@/components/InputError.vue';
 import Header from '@/components/template/Header.vue';
-import BusinessInfo from '@/components/BusinessInfo.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';

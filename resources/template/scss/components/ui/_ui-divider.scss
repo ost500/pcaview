@@ -1,4 +1,4 @@
-.divider{
+.divider {
     position: relative;
     width: 100%;
     clear: both;
@@ -7,32 +7,32 @@
     margin: 15px 0;
     border-style: solid;
     z-index: 1;
-    &.style-2{
+    &.style-2 {
         display: block;
         border-color: var(--border-color);
         border-width: 1px 0 0 0;
     }
-	&.style-3{
-		width: auto;
+    &.style-3 {
+        width: auto;
         display: block;
         border-color: var(--border-color);
         border-width: 1px 0 0 0;
-		margin: 15px -15px;
-		padding: 0 15px;
+        margin: 15px -15px;
+        padding: 0 15px;
     }
-    &.divider-dotted{        
+    &.divider-dotted {
         border-style: dotted;
     }
-    &.divider-dashed{        
+    &.divider-dashed {
         border-style: dashed;
     }
-    &.border-light{
+    &.border-light {
         border-color: #efefef !important;
     }
     &.inner-divider {
         padding: 10px 0;
-        & > i ,
-        & > span{
+        & > i,
+        & > span {
             color: #fff;
             position: absolute;
             text-align: center;
@@ -47,7 +47,7 @@
             border-radius: 50%;
             top: -18px;
         }
-        & > span{
+        & > span {
             padding: 8px 12px;
             font-size: 13px;
             font-weight: 500;
@@ -55,108 +55,108 @@
             top: -15px;
             border-radius: 2px;
         }
-        &.left{
+        &.left {
             i,
-            span{
+            span {
                 left: 0;
                 transform: unset;
             }
         }
-        &.right{
+        &.right {
             i,
-            span{
+            span {
                 left: auto;
                 right: 0;
                 transform: unset;
             }
         }
-        &.border-primary{
-            i ,
+        &.border-primary {
+            i,
             span {
                 background-color: var(--primary);
             }
-            &.transparent{
-                span{
+            &.transparent {
+                span {
                     color: var(--primary);
-                }    
+                }
             }
         }
-        &.border-secondary{
-            i ,
+        &.border-secondary {
+            i,
             span {
                 background-color: var(--secondary);
             }
-            &.transparent{
-                span{
+            &.transparent {
+                span {
                     color: var(--secondary);
-                }    
+                }
             }
         }
-        &.border-success{
-            i ,
+        &.border-success {
+            i,
             span {
                 background-color: $success;
-            }    
-            &.transparent{
-                span{
+            }
+            &.transparent {
+                span {
                     color: $success;
-                }    
+                }
             }
         }
-        &.border-danger{
-            i ,
+        &.border-danger {
+            i,
             span {
                 background-color: $danger;
-            }  
-            &.transparent{
-                span{
+            }
+            &.transparent {
+                span {
                     color: $danger;
-                }    
+                }
             }
         }
-        &.border-info{
-            i ,
+        &.border-info {
+            i,
             span {
                 background-color: $info;
             }
-            &.transparent{
-                span{
+            &.transparent {
+                span {
                     color: $info;
-                }    
+                }
             }
         }
-        &.border-warning{
-            i ,
+        &.border-warning {
+            i,
             span {
                 background-color: $warning;
             }
-            &.transparent{
-                span{
+            &.transparent {
+                span {
                     color: $warning;
-                }    
+                }
             }
         }
-        &.border-light{
-            i ,
+        &.border-light {
+            i,
             span {
                 background-color: #efefef;
                 color: #000;
-            }    
+            }
         }
-        &.border-dark{
-            i ,
+        &.border-dark {
+            i,
             span {
                 background-color: $dark;
             }
-            &.transparent{
-                span{
+            &.transparent {
+                span {
                     color: $dark;
-                }    
+                }
             }
         }
-        &.transparent{
+        &.transparent {
             border-width: 1px 0 0 0;
-            span{
+            span {
                 background-color: var(--bg-white);
                 color: $body-color;
             }

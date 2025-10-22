@@ -20,14 +20,16 @@ OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 
-var __assign = function() {
-    __assign = Object.assign || function __assign(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-        }
-        return t;
-    };
+var __assign = function () {
+    __assign =
+        Object.assign ||
+        function __assign(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+            }
+            return t;
+        };
     return __assign.apply(this, arguments);
 };
 
@@ -90,15 +92,17 @@ var RelativeCaption = /** @class */ (function () {
         if (!this.settings.relativeCaption) {
             return;
         }
-        this.core.LGel.on(lGEvents.slideItemLoad + ".caption", function (event) {
-            var _a = event.detail, index = _a.index, delay = _a.delay;
+        this.core.LGel.on(lGEvents.slideItemLoad + '.caption', function (event) {
+            var _a = event.detail,
+                index = _a.index,
+                delay = _a.delay;
             setTimeout(function () {
                 if (index === _this.core.index) {
                     _this.setRelativeCaption(index);
                 }
             }, delay);
         });
-        this.core.LGel.on(lGEvents.afterSlide + ".caption", function (event) {
+        this.core.LGel.on(lGEvents.afterSlide + '.caption', function (event) {
             var index = event.detail.index;
             setTimeout(function () {
                 var slide = _this.core.getSlideItem(index);
@@ -107,39 +111,30 @@ var RelativeCaption = /** @class */ (function () {
                 }
             });
         });
-        this.core.LGel.on(lGEvents.beforeSlide + ".caption", function (event) {
+        this.core.LGel.on(lGEvents.beforeSlide + '.caption', function (event) {
             var index = event.detail.index;
             setTimeout(function () {
                 var slide = _this.core.getSlideItem(index);
                 slide.removeClass('lg-show-caption');
             });
         });
-        this.core.LGel.on(lGEvents.containerResize + ".caption", function (event) {
+        this.core.LGel.on(lGEvents.containerResize + '.caption', function (event) {
             _this.setRelativeCaption(_this.core.index);
         });
     };
     RelativeCaption.prototype.setCaptionStyle = function (index, rect, slideWrapRect) {
-        var $subHtmlInner = this.core
-            .getSlideItem(index)
-            .find('.lg-relative-caption-item');
+        var $subHtmlInner = this.core.getSlideItem(index).find('.lg-relative-caption-item');
         var $subHtml = this.core.getSlideItem(index).find('.lg-sub-html');
-        $subHtml.css('width', rect.width + "px").css('left', rect.left + "px");
+        $subHtml.css('width', rect.width + 'px').css('left', rect.left + 'px');
         var subHtmlRect = $subHtmlInner.get().getBoundingClientRect();
         var bottom = slideWrapRect.bottom - rect.bottom - subHtmlRect.height;
-        $subHtml.css('top', "auto").css('bottom', Math.max(bottom, 0) + "px");
+        $subHtml.css('top', 'auto').css('bottom', Math.max(bottom, 0) + 'px');
     };
     RelativeCaption.prototype.setRelativeCaption = function (index) {
         var slide = this.core.getSlideItem(index);
         if (slide.hasClass('lg-current')) {
-            var rect = this.core
-                .getSlideItem(index)
-                .find('.lg-object')
-                .get()
-                .getBoundingClientRect();
-            var slideWrapRect = this.core
-                .getSlideItem(index)
-                .get()
-                .getBoundingClientRect();
+            var rect = this.core.getSlideItem(index).find('.lg-object').get().getBoundingClientRect();
+            var slideWrapRect = this.core.getSlideItem(index).get().getBoundingClientRect();
             this.setCaptionStyle(index, rect, slideWrapRect);
             slide.addClass('lg-show-caption');
         }
@@ -148,7 +143,7 @@ var RelativeCaption = /** @class */ (function () {
         this.core.LGel.off('.caption');
     };
     return RelativeCaption;
-}());
+})();
 
 export default RelativeCaption;
 //# sourceMappingURL=lg-relative-caption.es5.js.map

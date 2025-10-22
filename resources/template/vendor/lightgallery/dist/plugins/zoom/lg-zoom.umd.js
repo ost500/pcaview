@@ -6,10 +6,13 @@
  */
 
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-    typeof define === 'function' && define.amd ? define(factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.lgZoom = factory());
-}(this, (function () { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined'
+        ? (module.exports = factory())
+        : typeof define === 'function' && define.amd
+          ? define(factory)
+          : ((global = typeof globalThis !== 'undefined' ? globalThis : global || self), (global.lgZoom = factory()));
+})(this, function () {
+    'use strict';
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation.
@@ -26,14 +29,16 @@
     PERFORMANCE OF THIS SOFTWARE.
     ***************************************************************************** */
 
-    var __assign = function() {
-        __assign = Object.assign || function __assign(t) {
-            for (var s, i = 1, n = arguments.length; i < n; i++) {
-                s = arguments[i];
-                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-            }
-            return t;
-        };
+    var __assign = function () {
+        __assign =
+            Object.assign ||
+            function __assign(t) {
+                for (var s, i = 1, n = arguments.length; i < n; i++) {
+                    s = arguments[i];
+                    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+                }
+                return t;
+            };
         return __assign.apply(this, arguments);
     };
 
@@ -99,10 +104,25 @@
         // Append Zoom controls. Actual size, Zoom-in, Zoom-out
         Zoom.prototype.buildTemplates = function () {
             var zoomIcons = this.settings.showZoomInOutIcons
-                ? "<button id=\"" + this.core.getIdName('lg-zoom-in') + "\" type=\"button\" aria-label=\"" + this.settings.zoomPluginStrings['zoomIn'] + "\" class=\"lg-zoom-in lg-icon\"></button><button id=\"" + this.core.getIdName('lg-zoom-out') + "\" type=\"button\" aria-label=\"" + this.settings.zoomPluginStrings['zoomIn'] + "\" class=\"lg-zoom-out lg-icon\"></button>"
+                ? '<button id="' +
+                  this.core.getIdName('lg-zoom-in') +
+                  '" type="button" aria-label="' +
+                  this.settings.zoomPluginStrings['zoomIn'] +
+                  '" class="lg-zoom-in lg-icon"></button><button id="' +
+                  this.core.getIdName('lg-zoom-out') +
+                  '" type="button" aria-label="' +
+                  this.settings.zoomPluginStrings['zoomIn'] +
+                  '" class="lg-zoom-out lg-icon"></button>'
                 : '';
             if (this.settings.actualSize) {
-                zoomIcons += "<button id=\"" + this.core.getIdName('lg-actual-size') + "\" type=\"button\" aria-label=\"" + this.settings.zoomPluginStrings['viewActualSize'] + "\" class=\"" + this.settings.actualSizeIcons.zoomIn + " lg-icon\"></button>";
+                zoomIcons +=
+                    '<button id="' +
+                    this.core.getIdName('lg-actual-size') +
+                    '" type="button" aria-label="' +
+                    this.settings.zoomPluginStrings['viewActualSize'] +
+                    '" class="' +
+                    this.settings.actualSizeIcons.zoomIn +
+                    ' lg-icon"></button>';
             }
             this.core.outer.addClass('lg-use-transition-for-zoom');
             this.core.$toolbar.first().append(zoomIcons);
@@ -118,12 +138,10 @@
             // delay will be 0 except first time
             var _speed = this.settings.enableZoomAfter + event.detail.delay;
             // set _speed value 0 if gallery opened from direct url and if it is first slide
-            if (this.$LG('body').first().hasClass('lg-from-hash') &&
-                event.detail.delay) {
+            if (this.$LG('body').first().hasClass('lg-from-hash') && event.detail.delay) {
                 // will execute only once
                 _speed = 0;
-            }
-            else {
+            } else {
                 // Remove lg-from-hash to enable starting animation.
                 this.$LG('body').first().removeClass('lg-from-hash');
             }
@@ -139,7 +157,7 @@
         };
         Zoom.prototype.enableZoomOnSlideItemLoad = function () {
             // Add zoomable class
-            this.core.LGel.on(lGEvents.slideItemLoad + ".zoom", this.enableZoom.bind(this));
+            this.core.LGel.on(lGEvents.slideItemLoad + '.zoom', this.enableZoom.bind(this));
         };
         Zoom.prototype.getModifier = function (rotateValue, axis, el) {
             var originalRotate = rotateValue;
@@ -153,24 +171,19 @@
                 var flipHorizontalValue = Math.sign(parseFloat(transformValues[0]));
                 if (rotateValue === 0 || rotateValue === 180) {
                     modifier = 1;
-                }
-                else if (rotateValue === 90) {
-                    if ((originalRotate === -90 && flipHorizontalValue === 1) ||
-                        (originalRotate === 90 && flipHorizontalValue === -1)) {
+                } else if (rotateValue === 90) {
+                    if ((originalRotate === -90 && flipHorizontalValue === 1) || (originalRotate === 90 && flipHorizontalValue === -1)) {
                         modifier = -1;
-                    }
-                    else {
+                    } else {
                         modifier = 1;
                     }
                 }
                 modifier = modifier * flipHorizontalValue;
-            }
-            else {
+            } else {
                 var flipVerticalValue = Math.sign(parseFloat(transformValues[3]));
                 if (rotateValue === 0 || rotateValue === 180) {
                     modifier = 1;
-                }
-                else if (rotateValue === 90) {
+                } else if (rotateValue === 90) {
                     var sinX = parseFloat(transformValues[1]);
                     var sinMinusX = parseFloat(transformValues[2]);
                     modifier = Math.sign(sinX * sinMinusX * originalRotate * flipVerticalValue);
@@ -188,8 +201,7 @@
                 // Swap axis
                 if (axis === 'x') {
                     axis = 'y';
-                }
-                else {
+                } else {
                     axis = 'x';
                 }
             }
@@ -201,8 +213,7 @@
                     x: e.pageY,
                     y: e.pageX,
                 };
-            }
-            else {
+            } else {
                 return {
                     x: e.pageX,
                     y: e.pageY,
@@ -217,8 +228,7 @@
                     x: y,
                     y: x,
                 };
-            }
-            else {
+            } else {
                 return {
                     x: x,
                     y: y,
@@ -234,8 +244,7 @@
                     allowX: allowY,
                     allowY: allowX,
                 };
-            }
-            else {
+            } else {
                 return {
                     allowX: allowX,
                     allowY: allowY,
@@ -253,7 +262,8 @@
                 return;
             }
             var st = window.getComputedStyle(el, null);
-            var tm = st.getPropertyValue('-webkit-transform') ||
+            var tm =
+                st.getPropertyValue('-webkit-transform') ||
                 st.getPropertyValue('-moz-transform') ||
                 st.getPropertyValue('-ms-transform') ||
                 st.getPropertyValue('-o-transform') ||
@@ -270,23 +280,15 @@
             }
             var values = this.getCurrentTransform(el);
             if (values) {
-                return Math.round(Math.atan2(parseFloat(values[1]), parseFloat(values[0])) *
-                    (180 / Math.PI));
+                return Math.round(Math.atan2(parseFloat(values[1]), parseFloat(values[0])) * (180 / Math.PI));
                 // If you want rotate in 360
                 //return (angle < 0 ? angle + 360 : angle);
             }
             return 0;
         };
         Zoom.prototype.setZoomEssentials = function () {
-            var $image = this.core
-                .getSlideItem(this.core.index)
-                .find('.lg-image')
-                .first();
-            var rotateEl = this.core
-                .getSlideItem(this.core.index)
-                .find('.lg-img-rotate')
-                .first()
-                .get();
+            var $image = this.core.getSlideItem(this.core.index).find('.lg-image').first();
+            var rotateEl = this.core.getSlideItem(this.core.index).find('.lg-img-rotate').first().get();
             this.rotateValue = this.getCurrentRotation(rotateEl);
             this.imageYSize = this.getImageSize($image.get(), this.rotateValue, 'y');
             this.imageXSize = this.getImageSize($image.get(), this.rotateValue, 'x');
@@ -302,23 +304,21 @@
          */
         Zoom.prototype.zoomImage = function (scale) {
             // Find offset manually to avoid issue after zoom
-            var offsetX = (this.containerRect.width - this.imageXSize) / 2 +
-                this.containerRect.left;
-            var _a = this.core.mediaContainerPosition, top = _a.top, bottom = _a.bottom;
+            var offsetX = (this.containerRect.width - this.imageXSize) / 2 + this.containerRect.left;
+            var _a = this.core.mediaContainerPosition,
+                top = _a.top,
+                bottom = _a.bottom;
             var topBottomSpacing = Math.abs(top - bottom) / 2;
-            var offsetY = (this.containerRect.height -
-                this.imageYSize -
-                topBottomSpacing * this.modifierX) /
-                2 +
-                this.scrollTop +
-                this.containerRect.top;
+            var offsetY =
+                (this.containerRect.height - this.imageYSize - topBottomSpacing * this.modifierX) / 2 + this.scrollTop + this.containerRect.top;
             var originalX;
             var originalY;
             if (scale === 1) {
                 this.positionChanged = false;
             }
             var dragAllowedAxises = this.getDragAllowedAxises(Math.abs(this.rotateValue), scale);
-            var allowY = dragAllowedAxises.allowY, allowX = dragAllowedAxises.allowX;
+            var allowY = dragAllowedAxises.allowY,
+                allowX = dragAllowedAxises.allowX;
             if (this.positionChanged) {
                 originalX = this.left / (this.scale - 1);
                 originalY = this.top / (this.scale - 1);
@@ -334,17 +334,14 @@
             if (allowX) {
                 if (this.isBeyondPossibleLeft(x, possibleSwipeCords.minX)) {
                     x = possibleSwipeCords.minX;
-                }
-                else if (this.isBeyondPossibleRight(x, possibleSwipeCords.maxX)) {
+                } else if (this.isBeyondPossibleRight(x, possibleSwipeCords.maxX)) {
                     x = possibleSwipeCords.maxX;
                 }
-            }
-            else {
+            } else {
                 if (scale > 1) {
                     if (x < possibleSwipeCords.minX) {
                         x = possibleSwipeCords.minX;
-                    }
-                    else if (x > possibleSwipeCords.maxX) {
+                    } else if (x > possibleSwipeCords.maxX) {
                         x = possibleSwipeCords.maxX;
                     }
                 }
@@ -352,19 +349,16 @@
             if (allowY) {
                 if (this.isBeyondPossibleTop(y, possibleSwipeCords.minY)) {
                     y = possibleSwipeCords.minY;
-                }
-                else if (this.isBeyondPossibleBottom(y, possibleSwipeCords.maxY)) {
+                } else if (this.isBeyondPossibleBottom(y, possibleSwipeCords.maxY)) {
                     y = possibleSwipeCords.maxY;
                 }
-            }
-            else {
+            } else {
                 // If the translate value based on index of beyond the viewport, utilize the available space to prevent image being cut out
                 if (scale > 1) {
                     //If image goes beyond viewport top, use the minim possible translate value
                     if (y < possibleSwipeCords.minY) {
                         y = possibleSwipeCords.minY;
-                    }
-                    else if (y > possibleSwipeCords.maxY) {
+                    } else if (y > possibleSwipeCords.maxY) {
                         y = possibleSwipeCords.maxY;
                     }
                 }
@@ -380,13 +374,8 @@
          * @param {style} X,Y and scale
          */
         Zoom.prototype.setZoomStyles = function (style) {
-            var $image = this.core
-                .getSlideItem(this.core.index)
-                .find('.lg-image')
-                .first();
-            var $dummyImage = this.core.outer
-                .find('.lg-current .lg-dummy-img')
-                .first();
+            var $image = this.core.getSlideItem(this.core.index).find('.lg-image').first();
+            var $dummyImage = this.core.outer.find('.lg-current .lg-dummy-img').first();
             var $imageWrap = $image.parent();
             this.scale = style.scale;
             $image.css('transform', 'scale3d(' + style.scale + ', ' + style.scale + ', 1)');
@@ -403,15 +392,13 @@
         Zoom.prototype.setActualSize = function (index, event) {
             var _this = this;
             // Allow zoom only on image
-            if (!this.isImageSlide() ||
-                this.core.outer.hasClass('lg-first-slide-loading')) {
+            if (!this.isImageSlide() || this.core.outer.hasClass('lg-first-slide-loading')) {
                 return;
             }
             var scale = this.getCurrentImageActualSizeScale();
             if (this.core.outer.hasClass('lg-zoomed')) {
                 this.scale = 1;
-            }
-            else {
+            } else {
                 this.scale = this.getScale(scale);
             }
             this.setPageCords(event);
@@ -424,9 +411,7 @@
         Zoom.prototype.getNaturalWidth = function (index) {
             var $image = this.core.getSlideItem(index).find('.lg-image').first();
             var naturalWidth = this.core.galleryItems[index].width;
-            return naturalWidth
-                ? parseFloat(naturalWidth)
-                : $image.get().naturalWidth;
+            return naturalWidth ? parseFloat(naturalWidth) : $image.get().naturalWidth;
         };
         Zoom.prototype.getActualSizeScale = function (naturalWidth, width) {
             var _scale;
@@ -434,17 +419,13 @@
             if (naturalWidth > width) {
                 _scale = naturalWidth / width;
                 scale = _scale || 2;
-            }
-            else {
+            } else {
                 scale = 1;
             }
             return scale;
         };
         Zoom.prototype.getCurrentImageActualSizeScale = function () {
-            var $image = this.core
-                .getSlideItem(this.core.index)
-                .find('.lg-image')
-                .first();
+            var $image = this.core.getSlideItem(this.core.index).find('.lg-image').first();
             var width = $image.get().offsetWidth;
             var naturalWidth = this.getNaturalWidth(this.core.index) || width;
             return this.getActualSizeScale(naturalWidth, width);
@@ -454,12 +435,10 @@
             if (event) {
                 cords.x = event.pageX || event.targetTouches[0].pageX;
                 cords.y = event.pageY || event.targetTouches[0].pageY;
-            }
-            else {
+            } else {
                 var containerRect = this.core.outer.get().getBoundingClientRect();
                 cords.x = containerRect.width / 2 + containerRect.left;
-                cords.y =
-                    containerRect.height / 2 + this.scrollTop + containerRect.top;
+                cords.y = containerRect.height / 2 + this.scrollTop + containerRect.top;
             }
             return cords;
         };
@@ -474,11 +453,8 @@
             if (scale > 1) {
                 this.core.outer.addClass('lg-zoomed');
                 var $actualSize = this.core.getElementById('lg-actual-size');
-                $actualSize
-                    .removeClass(this.settings.actualSizeIcons.zoomIn)
-                    .addClass(this.settings.actualSizeIcons.zoomOut);
-            }
-            else {
+                $actualSize.removeClass(this.settings.actualSizeIcons.zoomIn).addClass(this.settings.actualSizeIcons.zoomOut);
+            } else {
                 this.resetZoom();
             }
             return scale > 1;
@@ -487,8 +463,7 @@
             var actualSizeScale = this.getCurrentImageActualSizeScale();
             if (scale < 1) {
                 scale = 1;
-            }
-            else if (scale > actualSizeScale) {
+            } else if (scale > actualSizeScale) {
                 scale = actualSizeScale;
             }
             return scale;
@@ -509,14 +484,12 @@
             });
             this.core.outer.on('touchstart.lg', function (event) {
                 var $target = _this.$LG(event.target);
-                if (event.targetTouches.length === 1 &&
-                    $target.hasClass('lg-image')) {
+                if (event.targetTouches.length === 1 && $target.hasClass('lg-image')) {
                     if (!tapped) {
                         tapped = setTimeout(function () {
                             tapped = null;
                         }, 300);
-                    }
-                    else {
+                    } else {
                         clearTimeout(tapped);
                         tapped = null;
                         event.preventDefault();
@@ -525,17 +498,27 @@
                 }
             });
             // Update zoom on resize and orientationchange
-            this.core.LGel.on(lGEvents.containerResize + ".zoom " + lGEvents.rotateRight + ".zoom " + lGEvents.rotateLeft + ".zoom " + lGEvents.flipHorizontal + ".zoom " + lGEvents.flipVertical + ".zoom", function () {
-                if (!_this.core.lgOpened || !_this.isImageSlide())
-                    return;
-                _this.setPageCords();
-                _this.setZoomEssentials();
-                _this.zoomImage(_this.scale);
-            });
+            this.core.LGel.on(
+                lGEvents.containerResize +
+                    '.zoom ' +
+                    lGEvents.rotateRight +
+                    '.zoom ' +
+                    lGEvents.rotateLeft +
+                    '.zoom ' +
+                    lGEvents.flipHorizontal +
+                    '.zoom ' +
+                    lGEvents.flipVertical +
+                    '.zoom',
+                function () {
+                    if (!_this.core.lgOpened || !_this.isImageSlide()) return;
+                    _this.setPageCords();
+                    _this.setZoomEssentials();
+                    _this.zoomImage(_this.scale);
+                },
+            );
             // Update zoom on resize and orientationchange
-            this.$LG(window).on("scroll.lg.zoom.global" + this.core.lgId, function () {
-                if (!_this.core.lgOpened)
-                    return;
+            this.$LG(window).on('scroll.lg.zoom.global' + this.core.lgId, function () {
+                if (!_this.core.lgOpened) return;
                 _this.scrollTop = _this.$LG(window).scrollTop();
             });
             this.core.getElementById('lg-zoom-out').on('click.lg', function () {
@@ -552,10 +535,10 @@
             this.core.getElementById('lg-actual-size').on('click.lg', function () {
                 _this.setActualSize(_this.core.index);
             });
-            this.core.LGel.on(lGEvents.beforeOpen + ".zoom", function () {
+            this.core.LGel.on(lGEvents.beforeOpen + '.zoom', function () {
                 _this.core.outer.find('.lg-item').removeClass('lg-zoomable');
             });
-            this.core.LGel.on(lGEvents.afterOpen + ".zoom", function () {
+            this.core.LGel.on(lGEvents.afterOpen + '.zoom', function () {
                 _this.scrollTop = _this.$LG(window).scrollTop();
                 // Set the initial value center
                 _this.pageX = _this.core.outer.width() / 2;
@@ -563,7 +546,7 @@
                 _this.scale = 1;
             });
             // Reset zoom on slide change
-            this.core.LGel.on(lGEvents.afterSlide + ".zoom", function (event) {
+            this.core.LGel.on(lGEvents.afterSlide + '.zoom', function (event) {
                 var prevIndex = event.detail.prevIndex;
                 _this.scale = 1;
                 _this.positionChanged = false;
@@ -587,8 +570,7 @@
             }
             if (scale) {
                 this.scale = scale;
-            }
-            else {
+            } else {
                 this.scale += this.settings.scale;
             }
             this.scale = this.getScale(this.scale);
@@ -600,9 +582,7 @@
             this.core.outer.removeClass('lg-zoomed lg-zoom-drag-transition');
             var $actualSize = this.core.getElementById('lg-actual-size');
             var $item = this.core.getSlideItem(index !== undefined ? index : this.core.index);
-            $actualSize
-                .removeClass(this.settings.actualSizeIcons.zoomOut)
-                .addClass(this.settings.actualSizeIcons.zoomIn);
+            $actualSize.removeClass(this.settings.actualSizeIcons.zoomOut).addClass(this.settings.actualSizeIcons.zoomIn);
             $item.find('.lg-img-wrap').first().removeAttr('style');
             $item.find('.lg-image').first().removeAttr('style');
             this.scale = 1;
@@ -612,10 +592,10 @@
             this.setPageCords();
         };
         Zoom.prototype.getTouchDistance = function (e) {
-            return Math.sqrt((e.targetTouches[0].pageX - e.targetTouches[1].pageX) *
-                (e.targetTouches[0].pageX - e.targetTouches[1].pageX) +
-                (e.targetTouches[0].pageY - e.targetTouches[1].pageY) *
-                    (e.targetTouches[0].pageY - e.targetTouches[1].pageY));
+            return Math.sqrt(
+                (e.targetTouches[0].pageX - e.targetTouches[1].pageX) * (e.targetTouches[0].pageX - e.targetTouches[1].pageX) +
+                    (e.targetTouches[0].pageY - e.targetTouches[1].pageY) * (e.targetTouches[0].pageY - e.targetTouches[1].pageY),
+            );
         };
         Zoom.prototype.pinchZoom = function () {
             var _this = this;
@@ -628,10 +608,11 @@
                 if (!_this.isImageSlide()) {
                     return;
                 }
-                if (e.targetTouches.length === 2 &&
+                if (
+                    e.targetTouches.length === 2 &&
                     !_this.core.outer.hasClass('lg-first-slide-loading') &&
-                    (_this.$LG(e.target).hasClass('lg-item') ||
-                        $item.get().contains(e.target))) {
+                    (_this.$LG(e.target).hasClass('lg-item') || $item.get().contains(e.target))
+                ) {
                     initScale = _this.scale || 1;
                     _this.core.outer.removeClass('lg-zoom-drag-transition lg-zoom-dragging');
                     _this.core.touchAction = 'pinch';
@@ -639,10 +620,11 @@
                 }
             });
             this.core.$inner.on('touchmove.lg', function (e) {
-                if (e.targetTouches.length === 2 &&
+                if (
+                    e.targetTouches.length === 2 &&
                     _this.core.touchAction === 'pinch' &&
-                    (_this.$LG(e.target).hasClass('lg-item') ||
-                        $item.get().contains(e.target))) {
+                    (_this.$LG(e.target).hasClass('lg-item') || $item.get().contains(e.target))
+                ) {
                     e.preventDefault();
                     var endDist = _this.getTouchDistance(e);
                     var distance = startDist - endDist;
@@ -656,15 +638,12 @@
                 }
             });
             this.core.$inner.on('touchend.lg', function (e) {
-                if (_this.core.touchAction === 'pinch' &&
-                    (_this.$LG(e.target).hasClass('lg-item') ||
-                        $item.get().contains(e.target))) {
+                if (_this.core.touchAction === 'pinch' && (_this.$LG(e.target).hasClass('lg-item') || $item.get().contains(e.target))) {
                     pinchStarted = false;
                     startDist = 0;
                     if (_this.scale <= 1) {
                         _this.resetZoom();
-                    }
-                    else {
+                    } else {
                         _this.scale = _this.getScale(_this.scale);
                         _this.zoomImage(_this.scale);
                         _this.core.outer.addClass('lg-zoomed');
@@ -686,10 +665,7 @@
             }
             distanceXnew = distanceXnew * speedX;
             distanceYnew = distanceYnew * speedY;
-            var _LGel = this.core
-                .getSlideItem(this.core.index)
-                .find('.lg-img-wrap')
-                .first();
+            var _LGel = this.core.getSlideItem(this.core.index).find('.lg-img-wrap').first();
             var distance = {};
             distance.x = this.left + distanceXnew * this.modifierX;
             distance.y = this.top + distanceYnew * this.modifierY;
@@ -698,29 +674,25 @@
                 if (allowY) {
                     if (this.isBeyondPossibleTop(distance.y, possibleSwipeCords.minY)) {
                         distance.y = possibleSwipeCords.minY;
-                    }
-                    else if (this.isBeyondPossibleBottom(distance.y, possibleSwipeCords.maxY)) {
+                    } else if (this.isBeyondPossibleBottom(distance.y, possibleSwipeCords.maxY)) {
                         distance.y = possibleSwipeCords.maxY;
                     }
                 }
                 if (allowX) {
                     if (this.isBeyondPossibleLeft(distance.x, possibleSwipeCords.minX)) {
                         distance.x = possibleSwipeCords.minX;
-                    }
-                    else if (this.isBeyondPossibleRight(distance.x, possibleSwipeCords.maxX)) {
+                    } else if (this.isBeyondPossibleRight(distance.x, possibleSwipeCords.maxX)) {
                         distance.x = possibleSwipeCords.maxX;
                     }
                 }
                 if (allowY) {
                     this.top = distance.y;
-                }
-                else {
+                } else {
                     distance.y = this.top;
                 }
                 if (allowX) {
                     this.left = distance.x;
-                }
-                else {
+                } else {
                     distance.x = this.left;
                 }
                 this.setZoomSwipeStyles(_LGel, distance);
@@ -730,33 +702,27 @@
         Zoom.prototype.getZoomSwipeCords = function (startCoords, endCoords, allowX, allowY, possibleSwipeCords) {
             var distance = {};
             if (allowY) {
-                distance.y =
-                    this.top + (endCoords.y - startCoords.y) * this.modifierY;
+                distance.y = this.top + (endCoords.y - startCoords.y) * this.modifierY;
                 if (this.isBeyondPossibleTop(distance.y, possibleSwipeCords.minY)) {
                     var diffMinY = possibleSwipeCords.minY - distance.y;
                     distance.y = possibleSwipeCords.minY - diffMinY / 6;
-                }
-                else if (this.isBeyondPossibleBottom(distance.y, possibleSwipeCords.maxY)) {
+                } else if (this.isBeyondPossibleBottom(distance.y, possibleSwipeCords.maxY)) {
                     var diffMaxY = distance.y - possibleSwipeCords.maxY;
                     distance.y = possibleSwipeCords.maxY + diffMaxY / 6;
                 }
-            }
-            else {
+            } else {
                 distance.y = this.top;
             }
             if (allowX) {
-                distance.x =
-                    this.left + (endCoords.x - startCoords.x) * this.modifierX;
+                distance.x = this.left + (endCoords.x - startCoords.x) * this.modifierX;
                 if (this.isBeyondPossibleLeft(distance.x, possibleSwipeCords.minX)) {
                     var diffMinX = possibleSwipeCords.minX - distance.x;
                     distance.x = possibleSwipeCords.minX - diffMinX / 6;
-                }
-                else if (this.isBeyondPossibleRight(distance.x, possibleSwipeCords.maxX)) {
+                } else if (this.isBeyondPossibleRight(distance.x, possibleSwipeCords.maxX)) {
                     var difMaxX = distance.x - possibleSwipeCords.maxX;
                     distance.x = possibleSwipeCords.maxX + difMaxX / 6;
                 }
-            }
-            else {
+            } else {
                 distance.x = this.left;
             }
             return distance;
@@ -780,10 +746,11 @@
         Zoom.prototype.getPossibleSwipeDragCords = function (rotateValue, scale) {
             var dataScale = scale || this.scale || 1;
             var elDataScale = Math.abs(dataScale);
-            var _a = this.core.mediaContainerPosition, top = _a.top, bottom = _a.bottom;
+            var _a = this.core.mediaContainerPosition,
+                top = _a.top,
+                bottom = _a.bottom;
             var topBottomSpacing = Math.abs(top - bottom) / 2;
-            var minY = (this.imageYSize - this.containerRect.height) / 2 +
-                topBottomSpacing * this.modifierX;
+            var minY = (this.imageYSize - this.containerRect.height) / 2 + topBottomSpacing * this.modifierX;
             var maxY = this.containerRect.height - this.imageYSize * elDataScale + minY;
             var minX = (this.imageXSize - this.containerRect.width) / 2;
             var maxX = this.containerRect.width - this.imageXSize * elDataScale + minX;
@@ -826,17 +793,15 @@
                     return;
                 }
                 $item = _this.core.getSlideItem(_this.core.index);
-                if ((_this.$LG(e.target).hasClass('lg-item') ||
-                    $item.get().contains(e.target)) &&
+                if (
+                    (_this.$LG(e.target).hasClass('lg-item') || $item.get().contains(e.target)) &&
                     e.targetTouches.length === 1 &&
-                    _this.core.outer.hasClass('lg-zoomed')) {
+                    _this.core.outer.hasClass('lg-zoomed')
+                ) {
                     e.preventDefault();
                     startTime = new Date();
                     _this.core.touchAction = 'zoomSwipe';
-                    _LGel = _this.core
-                        .getSlideItem(_this.core.index)
-                        .find('.lg-img-wrap')
-                        .first();
+                    _LGel = _this.core.getSlideItem(_this.core.index).find('.lg-img-wrap').first();
                     var dragAllowedAxises = _this.getDragAllowedAxises(Math.abs(_this.rotateValue));
                     allowY = dragAllowedAxises.allowY;
                     allowX = dragAllowedAxises.allowX;
@@ -849,25 +814,23 @@
                 }
             });
             this.core.$inner.on('touchmove.lg', function (e) {
-                if (e.targetTouches.length === 1 &&
+                if (
+                    e.targetTouches.length === 1 &&
                     _this.core.touchAction === 'zoomSwipe' &&
-                    (_this.$LG(e.target).hasClass('lg-item') ||
-                        $item.get().contains(e.target))) {
+                    (_this.$LG(e.target).hasClass('lg-item') || $item.get().contains(e.target))
+                ) {
                     e.preventDefault();
                     _this.core.touchAction = 'zoomSwipe';
                     endCoords = _this.getSwipeCords(e, Math.abs(_this.rotateValue));
                     var distance = _this.getZoomSwipeCords(startCoords, endCoords, allowX, allowY, possibleSwipeCords);
-                    if (Math.abs(endCoords.x - startCoords.x) > 15 ||
-                        Math.abs(endCoords.y - startCoords.y) > 15) {
+                    if (Math.abs(endCoords.x - startCoords.x) > 15 || Math.abs(endCoords.y - startCoords.y) > 15) {
                         isMoved = true;
                         _this.setZoomSwipeStyles(_LGel, distance);
                     }
                 }
             });
             this.core.$inner.on('touchend.lg', function (e) {
-                if (_this.core.touchAction === 'zoomSwipe' &&
-                    (_this.$LG(e.target).hasClass('lg-item') ||
-                        $item.get().contains(e.target))) {
+                if (_this.core.touchAction === 'zoomSwipe' && (_this.$LG(e.target).hasClass('lg-item') || $item.get().contains(e.target))) {
                     _this.core.touchAction = undefined;
                     _this.core.outer.removeClass('lg-zoom-dragging');
                     if (!isMoved) {
@@ -900,19 +863,14 @@
                     return;
                 }
                 var $item = _this.core.getSlideItem(_this.core.index);
-                if (_this.$LG(e.target).hasClass('lg-item') ||
-                    $item.get().contains(e.target)) {
+                if (_this.$LG(e.target).hasClass('lg-item') || $item.get().contains(e.target)) {
                     startTime = new Date();
-                    _LGel = _this.core
-                        .getSlideItem(_this.core.index)
-                        .find('.lg-img-wrap')
-                        .first();
+                    _LGel = _this.core.getSlideItem(_this.core.index).find('.lg-img-wrap').first();
                     var dragAllowedAxises = _this.getDragAllowedAxises(Math.abs(_this.rotateValue));
                     allowY = dragAllowedAxises.allowY;
                     allowX = dragAllowedAxises.allowX;
                     if (_this.core.outer.hasClass('lg-zoomed')) {
-                        if (_this.$LG(e.target).hasClass('lg-object') &&
-                            (allowX || allowY)) {
+                        if (_this.$LG(e.target).hasClass('lg-object') && (allowX || allowY)) {
                             e.preventDefault();
                             startCoords = _this.getDragCords(e, Math.abs(_this.rotateValue));
                             possibleSwipeCords = _this.getPossibleSwipeDragCords(_this.rotateValue);
@@ -920,15 +878,13 @@
                             // ** Fix for webkit cursor issue https://code.google.com/p/chromium/issues/detail?id=26723
                             _this.core.outer.get().scrollLeft += 1;
                             _this.core.outer.get().scrollLeft -= 1;
-                            _this.core.outer
-                                .removeClass('lg-grab')
-                                .addClass('lg-grabbing lg-zoom-drag-transition lg-zoom-dragging');
+                            _this.core.outer.removeClass('lg-grab').addClass('lg-grabbing lg-zoom-drag-transition lg-zoom-dragging');
                             // reset opacity and transition duration
                         }
                     }
                 }
             });
-            this.$LG(window).on("mousemove.lg.zoom.global" + this.core.lgId, function (e) {
+            this.$LG(window).on('mousemove.lg.zoom.global' + this.core.lgId, function (e) {
                 if (isDragging) {
                     isMoved = true;
                     endCoords = _this.getDragCords(e, Math.abs(_this.rotateValue));
@@ -936,15 +892,13 @@
                     _this.setZoomSwipeStyles(_LGel, distance);
                 }
             });
-            this.$LG(window).on("mouseup.lg.zoom.global" + this.core.lgId, function (e) {
+            this.$LG(window).on('mouseup.lg.zoom.global' + this.core.lgId, function (e) {
                 if (isDragging) {
                     endTime = new Date();
                     isDragging = false;
                     _this.core.outer.removeClass('lg-zoom-dragging');
                     // Fix for chrome mouse move on click
-                    if (isMoved &&
-                        (startCoords.x !== endCoords.x ||
-                            startCoords.y !== endCoords.y)) {
+                    if (isMoved && (startCoords.x !== endCoords.x || startCoords.y !== endCoords.y)) {
                         endCoords = _this.getDragCords(e, Math.abs(_this.rotateValue));
                         var touchDuration = endTime.valueOf() - startTime.valueOf();
                         _this.touchendZoom(startCoords, endCoords, allowX, allowY, touchDuration, _this.rotateValue);
@@ -959,16 +913,15 @@
         };
         Zoom.prototype.destroy = function () {
             // Unbind all events added by lightGallery zoom plugin
-            this.$LG(window).off(".lg.zoom.global" + this.core.lgId);
+            this.$LG(window).off('.lg.zoom.global' + this.core.lgId);
             this.core.LGel.off('.lg.zoom');
             this.core.LGel.off('.zoom');
             clearTimeout(this.zoomableTimeout);
             this.zoomableTimeout = false;
         };
         return Zoom;
-    }());
+    })();
 
     return Zoom;
-
-})));
+});
 //# sourceMappingURL=lg-zoom.umd.js.map

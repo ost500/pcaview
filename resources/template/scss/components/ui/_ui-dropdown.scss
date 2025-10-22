@@ -1,9 +1,9 @@
-.dropdown-toggle{
-	gap: 5px;
+.dropdown-toggle {
+    gap: 5px;
 }
 
-.dropdown{
-    .dropdown-menu{
+.dropdown {
+    .dropdown-menu {
         min-width: 10rem;
         padding: 0.5rem 0;
         font-size: 0.875rem;
@@ -18,126 +18,126 @@
 }
 
 .dropdown-toggle:focus {
-    box-shadow: none!important;
-  }
+    box-shadow: none !important;
+}
 
-  .dropdown-outline{
-      border: .1rem solid var(--primary);
-  }
+.dropdown-outline {
+    border: 0.1rem solid var(--primary);
+}
 
-.dropdown-menu{
-	font-size: inherit;
-	border: 0;
-	z-index: 2;
-	overflow:hidden;
+.dropdown-menu {
+    font-size: inherit;
+    border: 0;
+    z-index: 2;
+    overflow: hidden;
     background-color: var(--bg-white);
-	border-radius:var(--border-radius)-sm;
-	box-shadow: 0 0 3.125rem 0 rgba(82, 63, 105, 0.15);
-	margin-top:0;
-	
-	.dropdown-item{
-		font-size: 1rem;
-		color:$body-color;
-		padding: 0.5rem 1.75rem;
-		@include transitionMedium;
-		
-		@include respond('laptop') {
-			padding: 0.375rem 1rem;
-			font-size: 0.875rem;
-		}
-		&:hover,
-		&:focus,
-		&:active,
-		&.active{
-			color: #514e5f;
-		}
-		&.active, 
-		&:active{
-			color: var(--primary);
-			background:var(--rgba-primary-1);
-		}
-	}
-	&.show{
-		right: 0;
-	}
+    border-radius: var(--border-radius)-sm;
+    box-shadow: 0 0 3.125rem 0 rgba(82, 63, 105, 0.15);
+    margin-top: 0;
+
+    .dropdown-item {
+        font-size: 1rem;
+        color: $body-color;
+        padding: 0.5rem 1.75rem;
+        @include transitionMedium;
+
+        @include respond('laptop') {
+            padding: 0.375rem 1rem;
+            font-size: 0.875rem;
+        }
+        &:hover,
+        &:focus,
+        &:active,
+        &.active {
+            color: #514e5f;
+        }
+        &.active,
+        &:active {
+            color: var(--primary);
+            background: var(--rgba-primary-1);
+        }
+    }
+    &.show {
+        right: 0;
+    }
 }
 
 ////////////////////
 // Custom Dropdown
 ///////////////////
-.dropdown-toggle-split{
+.dropdown-toggle-split {
     padding: 0 0.625rem;
     opacity: 0.85;
-	&:after{
-		margin-left:0 !important;
-	}
-	&:active,
-	&:focus,
-	&:hover{
-		opacity:1;
-	}
+    &:after {
+        margin-left: 0 !important;
+    }
+    &:active,
+    &:focus,
+    &:hover {
+        opacity: 1;
+    }
 }
 
-.dropright .dropdown-toggle::after{
-	content:none;
+.dropright .dropdown-toggle::after {
+    content: none;
 }
-.custom-dropdown{
+.custom-dropdown {
     display: inline-block;
     margin-bottom: 1rem;
-	
-    .dropdown-menu{
+
+    .dropdown-menu {
         border: 0rem;
         min-width: 10rem;
     }
 }
-.card-action{
-    .custom-dropdown{
+.card-action {
+    .custom-dropdown {
         margin: 0rem;
         background: var(--rgba-primary-1);
-        
-		&.show,
-		&:focus,
-		&:hover{
+
+        &.show,
+        &:focus,
+        &:hover {
             background: var(--primary);
             color: $white;
         }
-        i{
+        i {
             display: inline-block;
             padding-top: 0.5625rem;
         }
     }
 }
 
-.dropdown{
-	.dropdown-dots{
-		position: relative;
-		height: 0.3125rem;
-		width: 0.3125rem;
-		background: rgba($dark, 0.4);
-		border-radius: 0.3125rem;
-		display: block;	
-		&:after,
-		&:before{
-			content: "";
-			height: 0.3125rem;
-			width: 0.3125rem;
-			background: rgba($dark, 0.4);
-			position: absolute;
-			border-radius: 0.3125rem;
-		}
-		&:after{
-			right: -0.5rem;
-		}
-		&:before{
-			left: -0.5rem;			
-		}
-		
-		&.text-white{
-			background: rgba($white, 0.7);
-			&:after,
-			&:before{
-				background: rgba($white, 0.7);				
-			}
-		}
-	}
+.dropdown {
+    .dropdown-dots {
+        position: relative;
+        height: 0.3125rem;
+        width: 0.3125rem;
+        background: rgba($dark, 0.4);
+        border-radius: 0.3125rem;
+        display: block;
+        &:after,
+        &:before {
+            content: '';
+            height: 0.3125rem;
+            width: 0.3125rem;
+            background: rgba($dark, 0.4);
+            position: absolute;
+            border-radius: 0.3125rem;
+        }
+        &:after {
+            right: -0.5rem;
+        }
+        &:before {
+            left: -0.5rem;
+        }
+
+        &.text-white {
+            background: rgba($white, 0.7);
+            &:after,
+            &:before {
+                background: rgba($white, 0.7);
+            }
+        }
+    }
 }

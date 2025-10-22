@@ -20,14 +20,16 @@ OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 
-var __assign = function() {
-    __assign = Object.assign || function __assign(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-        }
-        return t;
-    };
+var __assign = function () {
+    __assign =
+        Object.assign ||
+        function __assign(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+            }
+            return t;
+        };
     return __assign.apply(this, arguments);
 };
 
@@ -92,16 +94,28 @@ var Rotate = /** @class */ (function () {
     Rotate.prototype.buildTemplates = function () {
         var rotateIcons = '';
         if (this.settings.flipVertical) {
-            rotateIcons += "<button type=\"button\" id=\"lg-flip-ver\" aria-label=\"" + this.settings.rotatePluginStrings['flipVertical'] + "\" class=\"lg-flip-ver lg-icon\"></button>";
+            rotateIcons +=
+                '<button type="button" id="lg-flip-ver" aria-label="' +
+                this.settings.rotatePluginStrings['flipVertical'] +
+                '" class="lg-flip-ver lg-icon"></button>';
         }
         if (this.settings.flipHorizontal) {
-            rotateIcons += "<button type=\"button\" id=\"lg-flip-hor\" aria-label=\"" + this.settings.rotatePluginStrings['flipHorizontal'] + "\" class=\"lg-flip-hor lg-icon\"></button>";
+            rotateIcons +=
+                '<button type="button" id="lg-flip-hor" aria-label="' +
+                this.settings.rotatePluginStrings['flipHorizontal'] +
+                '" class="lg-flip-hor lg-icon"></button>';
         }
         if (this.settings.rotateLeft) {
-            rotateIcons += "<button type=\"button\" id=\"lg-rotate-left\" aria-label=\"" + this.settings.rotatePluginStrings['rotateLeft'] + "\" class=\"lg-rotate-left lg-icon\"></button>";
+            rotateIcons +=
+                '<button type="button" id="lg-rotate-left" aria-label="' +
+                this.settings.rotatePluginStrings['rotateLeft'] +
+                '" class="lg-rotate-left lg-icon"></button>';
         }
         if (this.settings.rotateRight) {
-            rotateIcons += "<button type=\"button\" id=\"lg-rotate-right\" aria-label=\"" + this.settings.rotatePluginStrings['rotateRight'] + "\" class=\"lg-rotate-right lg-icon\"></button>";
+            rotateIcons +=
+                '<button type="button" id="lg-rotate-right" aria-label="' +
+                this.settings.rotatePluginStrings['rotateRight'] +
+                '" class="lg-rotate-right lg-icon"></button>';
         }
         this.core.$toolbar.append(rotateIcons);
     };
@@ -115,36 +129,21 @@ var Rotate = /** @class */ (function () {
         // even after navigating to diferent slides
         this.rotateValuesList = {};
         // event triggered after appending slide content
-        this.core.LGel.on(lGEvents.afterAppendSlide + ".rotate", function (event) {
+        this.core.LGel.on(lGEvents.afterAppendSlide + '.rotate', function (event) {
             var index = event.detail.index;
-            var imageWrap = _this.core
-                .getSlideItem(index)
-                .find('.lg-img-wrap')
-                .first();
+            var imageWrap = _this.core.getSlideItem(index).find('.lg-img-wrap').first();
             imageWrap.wrap('lg-img-rotate');
             _this.core
                 .getSlideItem(_this.core.index)
                 .find('.lg-img-rotate')
                 .css('transition-duration', _this.settings.rotateSpeed + 'ms');
         });
-        this.core.outer
-            .find('#lg-rotate-left')
-            .first()
-            .on('click.lg', this.rotateLeft.bind(this));
-        this.core.outer
-            .find('#lg-rotate-right')
-            .first()
-            .on('click.lg', this.rotateRight.bind(this));
-        this.core.outer
-            .find('#lg-flip-hor')
-            .first()
-            .on('click.lg', this.flipHorizontal.bind(this));
-        this.core.outer
-            .find('#lg-flip-ver')
-            .first()
-            .on('click.lg', this.flipVertical.bind(this));
+        this.core.outer.find('#lg-rotate-left').first().on('click.lg', this.rotateLeft.bind(this));
+        this.core.outer.find('#lg-rotate-right').first().on('click.lg', this.rotateRight.bind(this));
+        this.core.outer.find('#lg-flip-hor').first().on('click.lg', this.flipHorizontal.bind(this));
+        this.core.outer.find('#lg-flip-ver').first().on('click.lg', this.flipVertical.bind(this));
         // Reset rotate on slide change
-        this.core.LGel.on(lGEvents.beforeSlide + ".rotate", function (event) {
+        this.core.LGel.on(lGEvents.beforeSlide + '.rotate', function (event) {
             if (!_this.rotateValuesList[event.detail.index]) {
                 _this.rotateValuesList[event.detail.index] = {
                     rotate: 0,
@@ -155,18 +154,18 @@ var Rotate = /** @class */ (function () {
         });
     };
     Rotate.prototype.applyStyles = function () {
-        var $image = this.core
-            .getSlideItem(this.core.index)
-            .find('.lg-img-rotate')
-            .first();
-        $image.css('transform', 'rotate(' +
-            this.rotateValuesList[this.core.index].rotate +
-            'deg)' +
-            ' scale3d(' +
-            this.rotateValuesList[this.core.index].flipHorizontal +
-            ', ' +
-            this.rotateValuesList[this.core.index].flipVertical +
-            ', 1)');
+        var $image = this.core.getSlideItem(this.core.index).find('.lg-img-rotate').first();
+        $image.css(
+            'transform',
+            'rotate(' +
+                this.rotateValuesList[this.core.index].rotate +
+                'deg)' +
+                ' scale3d(' +
+                this.rotateValuesList[this.core.index].flipHorizontal +
+                ', ' +
+                this.rotateValuesList[this.core.index].flipVertical +
+                ', 1)',
+        );
     };
     Rotate.prototype.rotateLeft = function () {
         this.rotateValuesList[this.core.index].rotate -= 90;
@@ -187,7 +186,8 @@ var Rotate = /** @class */ (function () {
             return 0;
         }
         var st = this.$LG(el).style();
-        var tm = st.getPropertyValue('-webkit-transform') ||
+        var tm =
+            st.getPropertyValue('-webkit-transform') ||
             st.getPropertyValue('-moz-transform') ||
             st.getPropertyValue('-ms-transform') ||
             st.getPropertyValue('-o-transform') ||
@@ -203,11 +203,7 @@ var Rotate = /** @class */ (function () {
         return 0;
     };
     Rotate.prototype.flipHorizontal = function () {
-        var rotateEl = this.core
-            .getSlideItem(this.core.index)
-            .find('.lg-img-rotate')
-            .first()
-            .get();
+        var rotateEl = this.core.getSlideItem(this.core.index).find('.lg-img-rotate').first().get();
         var currentRotation = this.getCurrentRotation(rotateEl);
         var rotateAxis = 'flipHorizontal';
         if (currentRotation === 90 || currentRotation === 270) {
@@ -220,11 +216,7 @@ var Rotate = /** @class */ (function () {
         });
     };
     Rotate.prototype.flipVertical = function () {
-        var rotateEl = this.core
-            .getSlideItem(this.core.index)
-            .find('.lg-img-rotate')
-            .first()
-            .get();
+        var rotateEl = this.core.getSlideItem(this.core.index).find('.lg-img-rotate').first().get();
         var currentRotation = this.getCurrentRotation(rotateEl);
         var rotateAxis = 'flipVertical';
         if (currentRotation === 90 || currentRotation === 270) {
@@ -261,7 +253,7 @@ var Rotate = /** @class */ (function () {
         this.core.LGel.off('.rotate');
     };
     return Rotate;
-}());
+})();
 
 export default Rotate;
 //# sourceMappingURL=lg-rotate.es5.js.map

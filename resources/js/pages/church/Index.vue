@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import Header from '@/components/template/Header.vue';
 import BusinessInfo from '@/components/BusinessInfo.vue';
+import Header from '@/components/template/Header.vue';
 import { Church } from '@/types/church';
-import { route } from 'ziggy-js';
 import { Head } from '@inertiajs/vue3';
 import { onMounted } from 'vue';
+import { route } from 'ziggy-js';
 
 const props = defineProps<{ churches: Church[] }>();
 
@@ -37,20 +37,20 @@ onMounted(() => {
     structuredData.text = JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'ItemList',
-        'name': '교회 목록',
-        'description': '명성교회 주보고에 등록된 교회 목록',
-        'numberOfItems': props.churches.length,
-        'itemListElement': props.churches.map((church, index) => ({
+        name: '교회 목록',
+        description: '명성교회 주보고에 등록된 교회 목록',
+        numberOfItems: props.churches.length,
+        itemListElement: props.churches.map((church, index) => ({
             '@type': 'ListItem',
-            'position': index + 1,
-            'item': {
+            position: index + 1,
+            item: {
                 '@type': 'Place',
                 '@id': route('church.show', { id: church.id }),
-                'name': church.name,
-                'address': church.address,
-                'image': church.icon_url
-            }
-        }))
+                name: church.name,
+                address: church.address,
+                image: church.icon_url,
+            },
+        })),
     });
     document.head.appendChild(structuredData);
 });
@@ -81,13 +81,7 @@ onMounted(() => {
 
         <div class="page-content space-top p-b60">
             <div class="container">
-                <ins
-                    class="kakao_ad_area"
-                    style="display: block"
-                    data-ad-unit="DAN-bE302RQ73kwLuzKI"
-                    data-ad-width="320"
-                    data-ad-height="50"
-                ></ins>
+                <ins class="kakao_ad_area" style="display: block" data-ad-unit="DAN-bE302RQ73kwLuzKI" data-ad-width="320" data-ad-height="50"></ins>
                 <div class="row g-3">
                     <div v-for="church in churches" class="col-12" v-bind:key="church.id">
                         <div class="card" @click="goToContent(church.id)">
@@ -99,7 +93,7 @@ onMounted(() => {
                                 <h5 class="card-title">{{ church.address }}</h5>
                                 <!--                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
                                 <p class="mb-0 text-right">
-                                    <a :href="route('church.show', { id: church.id })" class="btn btn-primary text-right btn-sm">자세히</a>
+                                    <a :href="route('church.show', { id: church.id })" class="btn btn-primary btn-sm text-right">자세히</a>
                                 </p>
                             </div>
                         </div>
