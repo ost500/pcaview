@@ -20,7 +20,7 @@ function goToContent(id: number) {
     window.location.href = safeRoute('contents.show', { id: id });
 }
 
-// HTML에서 텍스트만 추출하는 함수 (줄바꿈 보존)
+// HTML에서 텍스트만 추출하는 함수 (줄바꿈 보존, SSR-safe)
 function extractTextFromHtml(html: string, maxLength: number = 300): string {
     if (!html) return '';
 
@@ -31,10 +31,15 @@ function extractTextFromHtml(html: string, maxLength: number = 300): string {
         .replace(/<\/div>/gi, '\n')
         .replace(/<\/li>/gi, '\n');
 
-    // HTML 태그 제거
-    const temp = document.createElement('div');
-    temp.innerHTML = processedHtml;
-    const text = temp.textContent || temp.innerText || '';
+    // HTML 태그 제거 (SSR-safe: 정규식 사용)
+    const text = processedHtml
+        .replace(/<[^>]*>/g, '') // 모든 HTML 태그 제거
+        .replace(/&nbsp;/g, ' ') // &nbsp; 처리
+        .replace(/&amp;/g, '&') // &amp; 처리
+        .replace(/&lt;/g, '<') // &lt; 처리
+        .replace(/&gt;/g, '>') // &gt; 처리
+        .replace(/&quot;/g, '"') // &quot; 처리
+        .replace(/&#39;/g, "'"); // &#39; 처리
 
     // 연속된 공백을 하나로, 3개 이상의 줄바꿈을 2개로 정리
     const cleanText = text
