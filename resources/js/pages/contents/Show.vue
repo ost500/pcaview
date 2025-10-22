@@ -5,7 +5,6 @@ import { Contents } from '@/types/contents';
 import { Head } from '@inertiajs/vue3';
 import { ref, onMounted } from 'vue';
 import VueEasyLightbox from 'vue-easy-lightbox';
-import { route } from 'ziggy-js';
 
 const props = defineProps<{ contents: Contents }>();
 
