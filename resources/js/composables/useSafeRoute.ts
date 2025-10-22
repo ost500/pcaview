@@ -1,83 +1,36 @@
 /**
- * SSR 환경에서 안전하게 Ziggy route를 사용하기 위한 composable
+ * SSR 환경에서 안전하게 Wayfinder route를 사용하기 위한 composable
  */
 
-// 기본 폴백 경로 맵
-const fallbackRoutes: Record<string, string> = {
-    'home': '/',
-    'church': '/church',
-    'church.show': '/church/:id',
-    'department': '/department',
-    'department.show': '/department/:id',
-    'profile': '/profile',
-    'contents.show': '/contents/:id',
-    'dashboard': '/dashboard',
-    'login': '/login',
-    'register': '/register',
-    'password.request': '/forgot-password',
-    'logout': '/logout',
-    'profile.edit': '/settings/profile',
-    'profile.subscribe': '/profile/subscribe',
-    'privacy-policy': '/privacy-policy',
-};
+import * as routes from '@/routes';
 
 /**
- * Ziggy가 사용 가능한지 확인
- */
-function isZiggyAvailable(): boolean {
-    if (typeof window === 'undefined') {
-        // SSR 환경
-        return false;
-    }
-
-    // 클라이언트 환경에서 Ziggy 확인
-    try {
-        const { route } = require('ziggy-js');
-        return typeof route === 'function';
-    } catch {
-        return false;
-    }
-}
-
-/**
- * SSR 환경에서 안전하게 route를 생성합니다
+ * Wayfinder 라우트를 안전하게 생성합니다
  * @param name - 라우트 이름
  * @param params - 라우트 파라미터 (선택)
  * @returns 라우트 URL
  */
 export function safeRoute(name: string, params?: any): string {
-    // SSR 환경에서는 바로 fallback 사용
-    if (typeof window === 'undefined') {
-        let fallback = fallbackRoutes[name] || '/';
-
-        // 파라미터가 있으면 경로에 적용
-        if (params && typeof params === 'object') {
-            Object.entries(params).forEach(([key, value]) => {
-                fallback = fallback.replace(`:${key}`, String(value));
-            });
-        }
-
-        return fallback;
-    }
-
-    // 클라이언트 환경에서는 Ziggy 사용 시도
     try {
-        const { route } = require('ziggy-js');
-        return route(name, params);
-    } catch (error) {
-        console.error(`Route error for ${name}:`, error);
+        // Wayfinder routes에서 라우트 함수 가져오기
+        const routeFn = (routes as any)[name];
 
-        // 폴백 경로 가져오기
-        let fallback = fallbackRoutes[name] || '/';
-
-        // 파라미터가 있으면 경로에 적용
-        if (params && typeof params === 'object') {
-            Object.entries(params).forEach(([key, value]) => {
-                fallback = fallback.replace(`:${key}`, String(value));
-            });
+        if (!routeFn) {
+            console.warn(`Route '${name}' not found in Wayfinder routes`);
+            return '/';
         }
 
-        return fallback;
+        // URL 생성
+        if (typeof routeFn.url === 'function') {
+            return routeFn.url(params ? { query: params } : undefined);
+        }
+
+        // 함수 직접 호출로 RouteDefinition 얻기
+        const definition = routeFn(params ? { query: params } : undefined);
+        return definition.url;
+    } catch (error) {
+        console.error(`Error generating route for '${name}':`, error);
+        return '/';
     }
 }
 
@@ -92,11 +45,38 @@ export function isCurrentRoute(pattern: string): boolean {
         return false;
     }
 
-    // 클라이언트 환경에서만 체크
     try {
-        const { route } = require('ziggy-js');
-        return route().current(pattern);
+        // 현재 URL 경로 가져오기
+        const currentPath = window.location.pathname;
+
+        // 패턴을 정규식으로 변환 (* 를 .* 로)
+        const regexPattern = pattern.replace(/\*/g, '.*');
+        const regex = new RegExp(`^${regexPattern}$`);
+
+        // 정확한 일치 체크
+        if (pattern === currentPath) {
+            return true;
+        }
+
+        // 라우트 이름으로 URL 가져오기
+        const routeName = pattern.replace(/\*$/, '');
+        const routeFn = (routes as any)[routeName];
+
+        if (routeFn && typeof routeFn.url === 'function') {
+            const routeUrl = routeFn.url();
+
+            // 와일드카드 패턴 체크
+            if (pattern.endsWith('*')) {
+                return currentPath.startsWith(routeUrl);
+            }
+
+            // 정확한 일치
+            return currentPath === routeUrl;
+        }
+
+        return false;
     } catch (error) {
+        console.error(`Error checking current route for pattern '${pattern}':`, error);
         return false;
     }
 }
