@@ -17,11 +17,20 @@ export interface NavItem {
     isActive?: boolean;
 }
 
+export interface ZiggyConfig {
+    routes: Record<string, any>;
+    location: string;
+    url: string;
+    port: number | null;
+    defaults: Record<string, any>;
+}
+
 export type AppPageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
     name: string;
     quote: { message: string; author: string };
     auth: Auth;
     sidebarOpen: boolean;
+    ziggy: ZiggyConfig;
 };
 
 export interface User {

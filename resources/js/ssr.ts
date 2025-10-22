@@ -4,6 +4,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createSSRApp, DefineComponent, h } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import { ZiggyVue } from 'ziggy-js';
+import type { ZiggyConfig } from '@/types';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -15,11 +16,13 @@ createServer(
             title: (title) => (title ? `${title} - ${appName}` : appName),
             resolve: (name) => resolvePageComponent(`./pages/${name}.vue`, import.meta.glob<DefineComponent>('./pages/**/*.vue')),
             setup: ({ App, props, plugin }) => {
+                const ziggy: ZiggyConfig = (page.props.ziggy as ZiggyConfig) || { routes: {}, location: '', url: '', port: null, defaults: {} };
+
                 return createSSRApp({ render: () => h(App, props) })
                     .use(plugin)
                     .use(ZiggyVue, {
-                        ...page.props.ziggy,
-                        location: new URL(page.props.ziggy.location),
+                        ...ziggy,
+                        location: new URL(ziggy.location || 'http://localhost'),
                     });
             },
         }),
