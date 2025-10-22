@@ -1,5 +1,3 @@
-import { route as ziggyRoute } from 'ziggy-js';
-
 /**
  * SSR 환경에서 안전하게 Ziggy route를 사용하기 위한 composable
  */
@@ -16,8 +14,30 @@ const fallbackRoutes: Record<string, string> = {
     'dashboard': '/dashboard',
     'login': '/login',
     'register': '/register',
+    'password.request': '/forgot-password',
+    'logout': '/logout',
+    'profile.edit': '/settings/profile',
+    'profile.subscribe': '/profile/subscribe',
     'privacy-policy': '/privacy-policy',
 };
+
+/**
+ * Ziggy가 사용 가능한지 확인
+ */
+function isZiggyAvailable(): boolean {
+    if (typeof window === 'undefined') {
+        // SSR 환경
+        return false;
+    }
+
+    // 클라이언트 환경에서 Ziggy 확인
+    try {
+        const { route } = require('ziggy-js');
+        return typeof route === 'function';
+    } catch {
+        return false;
+    }
+}
 
 /**
  * SSR 환경에서 안전하게 route를 생성합니다
@@ -26,8 +46,24 @@ const fallbackRoutes: Record<string, string> = {
  * @returns 라우트 URL
  */
 export function safeRoute(name: string, params?: any): string {
+    // SSR 환경에서는 바로 fallback 사용
+    if (typeof window === 'undefined') {
+        let fallback = fallbackRoutes[name] || '/';
+
+        // 파라미터가 있으면 경로에 적용
+        if (params && typeof params === 'object') {
+            Object.entries(params).forEach(([key, value]) => {
+                fallback = fallback.replace(`:${key}`, String(value));
+            });
+        }
+
+        return fallback;
+    }
+
+    // 클라이언트 환경에서는 Ziggy 사용 시도
     try {
-        return ziggyRoute(name, params);
+        const { route } = require('ziggy-js');
+        return route(name, params);
     } catch (error) {
         console.error(`Route error for ${name}:`, error);
 
@@ -51,8 +87,15 @@ export function safeRoute(name: string, params?: any): string {
  * @returns 현재 라우트가 패턴과 일치하는지 여부
  */
 export function isCurrentRoute(pattern: string): boolean {
+    // SSR 환경에서는 항상 false 반환
+    if (typeof window === 'undefined') {
+        return false;
+    }
+
+    // 클라이언트 환경에서만 체크
     try {
-        return ziggyRoute().current(pattern);
+        const { route } = require('ziggy-js');
+        return route().current(pattern);
     } catch (error) {
         return false;
     }
