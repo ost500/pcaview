@@ -4,6 +4,13 @@
 
 import * as routes from '@/routes';
 
+// 파라미터가 있는 라우트를 위한 폴백 패턴
+const parameterizedRoutePatterns: Record<string, string> = {
+    'church.show': '/church/:id',
+    'department.show': '/department/:id',
+    'contents.show': '/contents/:id',
+};
+
 /**
  * Wayfinder 라우트를 안전하게 생성합니다
  * @param name - 라우트 이름
@@ -16,6 +23,25 @@ export function safeRoute(name: string, params?: any): string {
         const routeFn = (routes as any)[name];
 
         if (!routeFn) {
+            // 파라미터가 있는 라우트의 경우 폴백 패턴 사용
+            if (parameterizedRoutePatterns[name]) {
+                let url = parameterizedRoutePatterns[name];
+
+                // 파라미터 치환
+                if (params) {
+                    if (typeof params === 'object') {
+                        Object.entries(params).forEach(([key, value]) => {
+                            url = url.replace(`:${key}`, String(value));
+                        });
+                    } else {
+                        // params가 단일 값인 경우 (예: id만 전달)
+                        url = url.replace(/:id/, String(params));
+                    }
+                }
+
+                return url;
+            }
+
             console.warn(`Route '${name}' not found in Wayfinder routes`);
             return '/';
         }
