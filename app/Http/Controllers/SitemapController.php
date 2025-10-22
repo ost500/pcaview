@@ -73,7 +73,7 @@ class SitemapController extends Controller
             // Add thumbnail as primary image
             if ($content->thumbnail_url) {
                 $images[] = [
-                    'loc' => $content->thumbnail_url,
+                    'loc' => $this->ensureAbsoluteUrl($content->thumbnail_url),
                     'title' => $content->title,
                     'caption' => $content->title . ' - ' . ($content->department?->name ?? '명성교회 주보고'),
                 ];
@@ -84,7 +84,7 @@ class SitemapController extends Controller
                 foreach ($content->images->take(3) as $image) {
                     if ($image->file_url) {
                         $images[] = [
-                            'loc' => $image->file_url,
+                            'loc' => $this->ensureAbsoluteUrl($image->file_url),
                             'title' => $content->title,
                             'caption' => $content->title,
                         ];
@@ -139,5 +139,24 @@ class SitemapController extends Controller
         }
 
         $urlset->appendChild($url);
+    }
+
+    /**
+     * Convert relative URLs to absolute URLs for sitemap
+     * External URLs (http/https) are returned as-is
+     */
+    private function ensureAbsoluteUrl(?string $url): ?string
+    {
+        if (!$url) {
+            return null;
+        }
+
+        // Already absolute URL (external images like YouTube, Kakao)
+        if (str_starts_with($url, 'http://') || str_starts_with($url, 'https://')) {
+            return $url;
+        }
+
+        // Convert relative URL to absolute (local storage images)
+        return url($url);
     }
 }
