@@ -19,4 +19,22 @@ class Contents extends Model
     {
         return $this->belongsTo(Department::class);
     }
+
+    /**
+     * Get the thumbnail URL attribute.
+     * Convert HTTP to HTTPS for security and SEO.
+     */
+    public function getThumbnailUrlAttribute($value): ?string
+    {
+        if (! $value) {
+            return null;
+        }
+
+        // Convert HTTP to HTTPS for Kakao CDN and other image URLs
+        if (str_starts_with($value, 'http://')) {
+            return str_replace('http://', 'https://', $value);
+        }
+
+        return $value;
+    }
 }
