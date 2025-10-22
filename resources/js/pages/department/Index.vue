@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Header from '@/components/template/Header.vue';
 import BusinessInfo from '@/components/BusinessInfo.vue';
-import { route } from 'ziggy-js';
+import { safeRoute } from '@/composables/useSafeRoute';
 import { Department } from '@/types/department';
 import { Head } from '@inertiajs/vue3';
 import { onMounted } from 'vue';
@@ -9,7 +9,7 @@ import { onMounted } from 'vue';
 const props = defineProps<{ departments: Department[] }>();
 
 function goToContent(id: number) {
-    window.location.href = route('department.show', { id: id });
+    window.location.href = safeRoute('department.show', { id: id });
 }
 
 // Kakao AdFit 광고 로드
@@ -45,7 +45,7 @@ onMounted(() => {
             'position': index + 1,
             'item': {
                 '@type': 'Organization',
-                '@id': route('department.show', { id: department.id }),
+                '@id': safeRoute('department.show', { id: department.id }),
                 'name': department.name,
                 'image': department.icon_image
             }
@@ -63,7 +63,7 @@ onMounted(() => {
 
             <!-- Open Graph -->
             <meta property="og:type" content="website" />
-            <meta property="og:url" :content="route('department')" />
+            <meta property="og:url" :content="safeRoute('department')" />
             <meta property="og:title" content="부서 목록 - 명성교회 주보고" />
             <meta property="og:description" content="명성교회 주보고에 등록된 교회 부서 목록입니다. 각 부서의 주보와 소식을 확인하세요." />
 
@@ -73,7 +73,7 @@ onMounted(() => {
             <meta name="twitter:description" content="명성교회 주보고에 등록된 교회 부서 목록입니다." />
 
             <!-- Canonical URL -->
-            <link rel="canonical" :href="route('department')" />
+            <link rel="canonical" :href="safeRoute('department')" />
         </Head>
 
         <Header title="부서"></Header>

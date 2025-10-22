@@ -7,7 +7,7 @@ import { Department } from '@/types/department';
 import { Pagination } from '@/types/pagination';
 import { router, Head } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
-import { route } from 'ziggy-js';
+import { safeRoute } from '@/composables/useSafeRoute';
 
 const props = defineProps<{ department: Department; contents: Pagination<Contents> }>();
 
@@ -23,7 +23,7 @@ const loadMore = () => {
     isLoading.value = true;
 
     router.get(
-        route('department.show', { id: props.department.id }),
+        safeRoute('department.show', { id: props.department.id }),
         { page: nextPage },
         {
             preserveState: true,
@@ -53,7 +53,7 @@ const loadMore = () => {
 
         <!-- Open Graph -->
         <meta property="og:type" content="website" />
-        <meta property="og:url" :content="route('department.show', { id: department.id })" />
+        <meta property="og:url" :content="safeRoute('department.show', { id: department.id })" />
         <meta property="og:title" :content="department.name + ' - 명성교회 주보고'" />
         <meta property="og:description" :content="department.name + ' 부서의 주보와 소식을 확인하세요.'" />
         <meta property="og:image" :content="department.icon_image" />
@@ -61,13 +61,13 @@ const loadMore = () => {
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:url" :content="route('department.show', { id: department.id })" />
+        <meta name="twitter:url" :content="safeRoute('department.show', { id: department.id })" />
         <meta name="twitter:title" :content="department.name + ' - 명성교회 주보고'" />
         <meta name="twitter:description" :content="department.name + ' 부서의 주보와 소식을 확인하세요.'" />
         <meta name="twitter:image" :content="department.icon_image" />
 
         <!-- Canonical URL -->
-        <link rel="canonical" :href="route('department.show', { id: department.id })" />
+        <link rel="canonical" :href="safeRoute('department.show', { id: department.id })" />
     </Head>
     <Header :title="'부서 / ' + department.name" :backbutton="true"></Header>
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Header from '@/components/template/Header.vue';
 import { router, usePage, useForm } from '@inertiajs/vue3';
-import { route } from 'ziggy-js';
+import { safeRoute } from '@/composables/useSafeRoute';
 import { computed, ref } from 'vue';
 import type { Department } from '@/types/department';
 import BusinessInfo from '@/components/BusinessInfo.vue';
@@ -24,7 +24,7 @@ const loginForm = useForm({
 });
 
 const handleLogin = () => {
-    loginForm.post(route('login'), {
+    loginForm.post(safeRoute('login'), {
         preserveScroll: true,
         onSuccess: () => {
             loginForm.reset('password');
@@ -37,21 +37,21 @@ const subscribed = ref<Set<number>>(new Set(props.subscribedDepartmentIds || [])
 
 const handleLogout = () => {
     if (confirm('로그아웃 하시겠습니까?')) {
-        router.post(route('logout'), {}, {
+        router.post(safeRoute('logout'), {}, {
             onSuccess: () => {
-                window.location.href = route('home');
+                window.location.href = safeRoute('home');
             }
         });
     }
 };
 
 const goToSettings = () => {
-    window.location.href = route('profile.edit');
+    window.location.href = safeRoute('profile.edit');
 };
 
 // 부서 구독 토글
 const toggleSubscription = (departmentId: number) => {
-    router.post(route('profile.subscribe'), {
+    router.post(safeRoute('profile.subscribe'), {
         department_id: departmentId
     }, {
         preserveScroll: true,
@@ -104,7 +104,7 @@ const toggleSubscription = (departmentId: number) => {
                         <div class="mb-3">
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <label for="password" class="form-label mb-0">비밀번호</label>
-                                <a v-if="canResetPassword" :href="route('password.request')" class="text-muted small">
+                                <a v-if="canResetPassword" :href="safeRoute('password.request')" class="text-muted small">
                                     비밀번호 찾기
                                 </a>
                             </div>
@@ -142,7 +142,7 @@ const toggleSubscription = (departmentId: number) => {
                         </button>
 
                         <!-- 회원가입 버튼 -->
-                        <a :href="route('register')" class="btn btn-outline-secondary btn-block w-100 mt-2">
+                        <a :href="safeRoute('register')" class="btn btn-outline-secondary btn-block w-100 mt-2">
                             회원가입
                         </a>
                     </form>

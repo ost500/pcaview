@@ -16,13 +16,23 @@ createServer(
             title: (title) => (title ? `${title} - ${appName}` : appName),
             resolve: (name) => resolvePageComponent(`./pages/${name}.vue`, import.meta.glob<DefineComponent>('./pages/**/*.vue')),
             setup: ({ App, props, plugin }) => {
-                const ziggy: ZiggyConfig = (page.props.ziggy as ZiggyConfig) || { routes: {}, location: '', url: '', port: null, defaults: {} };
+                // SSR에서 Ziggy 설정 안전하게 초기화
+                const ziggy: ZiggyConfig = (page.props.ziggy as ZiggyConfig) || {
+                    routes: {},
+                    location: '',
+                    url: 'http://localhost',
+                    port: null,
+                    defaults: {},
+                };
+
+                // location이 빈 문자열이면 기본값 설정
+                const location = ziggy.location || ziggy.url || 'http://localhost';
 
                 return createSSRApp({ render: () => h(App, props) })
                     .use(plugin)
                     .use(ZiggyVue, {
                         ...ziggy,
-                        location: new URL(ziggy.location || 'http://localhost'),
+                        location: new URL(location),
                     });
             },
         }),

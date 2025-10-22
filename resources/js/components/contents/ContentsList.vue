@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Contents } from '@/types/contents';
 import { onMounted, onUnmounted, ref } from 'vue';
-import { route } from 'ziggy-js';
+import { safeRoute } from '@/composables/useSafeRoute';
 
 const props = defineProps<{
     contents: Contents[];
@@ -17,7 +17,7 @@ const loadMoreTrigger = ref<HTMLElement | null>(null);
 let observer: IntersectionObserver | null = null;
 
 function goToContent(id: number) {
-    window.location.href = route('contents.show', { id: id });
+    window.location.href = safeRoute('contents.show', { id: id });
 }
 
 // HTML에서 텍스트만 추출하는 함수 (줄바꿈 보존)
@@ -112,7 +112,7 @@ onUnmounted(() => {
                 <div class="card-body">
                     <h5 class="card-title mb-3">{{ content.title }}</h5>
                     <p class="mb-0 text-right">
-                        <a :href="route('contents.show', { id: content.id })" class="btn btn-primary btn-sm text-right">자세히</a>
+                        <a :href="safeRoute('contents.show', { id: content.id })" class="btn btn-primary btn-sm text-right">자세히</a>
                     </p>
                 </div>
             </div>

@@ -2,14 +2,14 @@
 import Header from '@/components/template/Header.vue';
 import BusinessInfo from '@/components/BusinessInfo.vue';
 import { Church } from '@/types/church';
-import { route } from 'ziggy-js';
+import { safeRoute } from '@/composables/useSafeRoute';
 import { Head } from '@inertiajs/vue3';
 import { onMounted } from 'vue';
 
 const props = defineProps<{ churches: Church[] }>();
 
 function goToContent(id: number) {
-    window.location.href = route('church.show', { id: id });
+    window.location.href = safeRoute('church.show', { id: id });
 }
 
 // Kakao AdFit 광고 로드
@@ -45,7 +45,7 @@ onMounted(() => {
             'position': index + 1,
             'item': {
                 '@type': 'Place',
-                '@id': route('church.show', { id: church.id }),
+                '@id': safeRoute('church.show', { id: church.id }),
                 'name': church.name,
                 'address': church.address,
                 'image': church.icon_url
@@ -64,7 +64,7 @@ onMounted(() => {
 
             <!-- Open Graph -->
             <meta property="og:type" content="website" />
-            <meta property="og:url" :content="route('church')" />
+            <meta property="og:url" :content="safeRoute('church')" />
             <meta property="og:title" content="교회 목록 - 명성교회 주보고" />
             <meta property="og:description" content="명성교회 주보고에 등록된 교회 목록입니다. 다양한 교회의 주보와 소식을 확인하세요." />
 
@@ -74,7 +74,7 @@ onMounted(() => {
             <meta name="twitter:description" content="명성교회 주보고에 등록된 교회 목록입니다." />
 
             <!-- Canonical URL -->
-            <link rel="canonical" :href="route('church')" />
+            <link rel="canonical" :href="safeRoute('church')" />
         </Head>
 
         <Header title="교회"></Header>
@@ -99,7 +99,7 @@ onMounted(() => {
                                 <h5 class="card-title">{{ church.address }}</h5>
                                 <!--                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
                                 <p class="mb-0 text-right">
-                                    <a :href="route('church.show', { id: church.id })" class="btn btn-primary text-right btn-sm">자세히</a>
+                                    <a :href="safeRoute('church.show', { id: church.id })" class="btn btn-primary text-right btn-sm">자세히</a>
                                 </p>
                             </div>
                         </div>

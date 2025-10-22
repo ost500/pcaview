@@ -11,7 +11,7 @@ import { Department } from '@/types/department';
 import { Pagination } from '@/types/pagination';
 import { Head, router, useRemember } from '@inertiajs/vue3';
 import { onMounted, ref, watch } from 'vue';
-import { route } from 'ziggy-js';
+import { safeRoute } from '@/composables/useSafeRoute';
 
 // PWA 상태 관리
 const { showInstallPrompt, showIOSInstructions, isIOS, promptInstall, dismissPrompt, closeIOSInstructions, dismissPermanently } = usePWA();
@@ -53,7 +53,7 @@ const loadMore = () => {
     const nextPage = currentPage.value + 1;
 
     router.get(
-        route('home'),
+        safeRoute('home'),
         { page: nextPage },
         {
             preserveState: true,
@@ -167,7 +167,7 @@ onMounted(() => {
             <div class="swiper chat-swiper">
                 <div class="swiper-wrapper">
                     <div v-for="department in departments" class="swiper-slide m-r15" v-bind:key="department.id">
-                        <a :href="route('department.show', { id: department.id })" class="recent" :class="{ active: isSubscribed(department.id) }">
+                        <a :href="safeRoute('department.show', { id: department.id })" class="recent" :class="{ active: isSubscribed(department.id) }">
                             <div class="media media-60 rounded-circle">
                                 <img :src="department.icon_image" :alt="department.name + 'icon'" />
                             </div>

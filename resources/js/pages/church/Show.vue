@@ -5,7 +5,7 @@ import { Church } from '@/types/church';
 import { ref } from 'vue';
 import VueEasyLightbox from 'vue-easy-lightbox';
 import { Head } from '@inertiajs/vue3';
-import { route } from 'ziggy-js';
+import { safeRoute } from '@/composables/useSafeRoute';
 
 const props = defineProps<{ church: Church }>();
 
@@ -31,7 +31,7 @@ function close() {
 
         <!-- Open Graph -->
         <meta property="og:type" content="place" />
-        <meta property="og:url" :content="route('church.show', { id: church.id })" />
+        <meta property="og:url" :content="safeRoute('church.show', { id: church.id })" />
         <meta property="og:title" :content="church.name + ' - 명성교회 주보고'" />
         <meta property="og:description" :content="church.name + ' 교회 정보 - 예배시간과 약도를 확인하세요.'" />
         <meta property="og:image" :content="church.icon_url" />
@@ -39,13 +39,13 @@ function close() {
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:url" :content="route('church.show', { id: church.id })" />
+        <meta name="twitter:url" :content="safeRoute('church.show', { id: church.id })" />
         <meta name="twitter:title" :content="church.name + ' - 명성교회 주보고'" />
         <meta name="twitter:description" :content="church.name + ' 교회 정보 - 예배시간과 약도를 확인하세요.'" />
         <meta name="twitter:image" :content="church.icon_url" />
 
         <!-- Canonical URL -->
-        <link rel="canonical" :href="route('church.show', { id: church.id })" />
+        <link rel="canonical" :href="safeRoute('church.show', { id: church.id })" />
 
         <!-- Schema.org JSON-LD -->
         <script type="application/ld+json" v-html="JSON.stringify({
@@ -57,7 +57,7 @@ function close() {
                 'addressLocality': church.address
             },
             'image': church.icon_url,
-            'url': route('church.show', { id: church.id })
+            'url': safeRoute('church.show', { id: church.id })
         })"></script>
     </Head>
     <Header :title="'교회 / ' + church.name" :backbutton="true"></Header>
