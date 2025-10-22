@@ -16,8 +16,11 @@ const emit = defineEmits<{
 const loadMoreTrigger = ref<HTMLElement | null>(null);
 let observer: IntersectionObserver | null = null;
 
+// SSR-safe navigation function
 function goToContent(id: number) {
-    window.location.href = safeRoute('contents.show', { id: id });
+    if (typeof window !== 'undefined') {
+        window.location.href = safeRoute('contents.show', { id: id });
+    }
 }
 
 // HTML에서 텍스트만 추출하는 함수 (줄바꿈 보존, SSR-safe)
