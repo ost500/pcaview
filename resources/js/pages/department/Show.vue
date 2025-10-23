@@ -46,7 +46,7 @@ const loadMore = () => {
 </script>
 
 <template>
-    <Head :title="department.name + ' - 명성교회 주보고'">
+    <Head :title="department.name + ' 주보고'">
         <!-- Basic Meta Tags -->
         <meta name="description" :content="department.name + ' 부서의 주보와 소식을 확인하세요.'" />
         <meta name="keywords" :content="'교회, 주보, ' + department.name + ', 부서 소식'" />
@@ -54,15 +54,15 @@ const loadMore = () => {
         <!-- Open Graph -->
         <meta property="og:type" content="website" />
         <meta property="og:url" :content="safeRoute('department.show', { id: department.id })" />
-        <meta property="og:title" :content="department.name + ' - 명성교회 주보고'" />
+        <meta property="og:title" :content="department.name + ' 주보고'" />
         <meta property="og:description" :content="department.name + ' 부서의 주보와 소식을 확인하세요.'" />
         <meta property="og:image" :content="department.icon_image" />
-        <meta property="og:site_name" content="명성교회 주보고" />
+        <meta property="og:site_name" content="주보고" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:url" :content="safeRoute('department.show', { id: department.id })" />
-        <meta name="twitter:title" :content="department.name + ' - 명성교회 주보고'" />
+        <meta name="twitter:title" :content="department.name + ' 주보고'" />
         <meta name="twitter:description" :content="department.name + ' 부서의 주보와 소식을 확인하세요.'" />
         <meta name="twitter:image" :content="department.icon_image" />
 

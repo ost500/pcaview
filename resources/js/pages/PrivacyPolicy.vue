@@ -4,8 +4,8 @@ import { Head } from '@inertiajs/vue3';
 </script>
 
 <template>
-    <Head title="개인정보 처리방침">
-        <meta name="description" content="명성교회 주보고 개인정보 처리방침 - 이용자의 개인정보를 안전하게 보호합니다." />
+    <Head title="개인정보 처리방침 | 주보고">
+        <meta name="description" content="주보고 개인정보 처리방침 - 이용자의 개인정보를 안전하게 보호합니다." />
     </Head>
 
     <Header title="개인정보 처리방침"></Header>
@@ -16,7 +16,7 @@ import { Head } from '@inertiajs/vue3';
             <div class="space-y-4">
                 <h1 class="text-3xl font-bold">개인정보 처리방침</h1>
                 <p class="text-muted-foreground">
-                    명성교회 주보고(이하 "서비스")는 이용자의 개인정보를 중요시하며, 「개인정보 보호법」 등
+                    주보고(이하 "서비스")는 이용자의 개인정보를 중요시하며, 「개인정보 보호법」 등
                     관련 법령을 준수하고 있습니다.
                 </p>
             </div>

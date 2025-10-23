@@ -75,7 +75,7 @@ class SitemapController extends Controller
                 $images[] = [
                     'loc' => $this->ensureAbsoluteUrl($content->thumbnail_url),
                     'title' => $content->title,
-                    'caption' => $content->title . ' - ' . ($content->department?->name ?? '명성교회 주보고'),
+                    'caption' => $content->title . ' - ' . ($content->department?->name ?? '주보고'),
                 ];
             }
 

@@ -24,7 +24,7 @@ function close() {
 </script>
 
 <template>
-    <Head :title="church.name + ' - 명성교회 주보고'">
+    <Head :title="church.name + ' 주보고'">
         <!-- Basic Meta Tags -->
         <meta name="description" :content="church.name + ' 교회 정보 - 예배시간과 약도를 확인하세요.'" />
         <meta name="keywords" :content="'교회, ' + church.name + ', 예배시간, 교회 위치, 약도'" />
@@ -32,15 +32,15 @@ function close() {
         <!-- Open Graph -->
         <meta property="og:type" content="place" />
         <meta property="og:url" :content="safeRoute('church.show', { id: church.id })" />
-        <meta property="og:title" :content="church.name + ' - 명성교회 주보고'" />
+        <meta property="og:title" :content="church.name + ' 주보고'" />
         <meta property="og:description" :content="church.name + ' 교회 정보 - 예배시간과 약도를 확인하세요.'" />
         <meta property="og:image" :content="church.icon_url" />
-        <meta property="og:site_name" content="명성교회 주보고" />
+        <meta property="og:site_name" content="주보고" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:url" :content="safeRoute('church.show', { id: church.id })" />
-        <meta name="twitter:title" :content="church.name + ' - 명성교회 주보고'" />
+        <meta name="twitter:title" :content="church.name + ' 주보고'" />
         <meta name="twitter:description" :content="church.name + ' 교회 정보 - 예배시간과 약도를 확인하세요.'" />
         <meta name="twitter:image" :content="church.icon_url" />
 

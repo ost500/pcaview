@@ -45,7 +45,7 @@ const dismissPermanently = () => {
                             <div class="w-100 text-center">
                                 <!-- 앱 아이콘 -->
                                 <div class="mx-auto mb-3" style="width: 80px; height: 80px; background: white; border-radius: 20px; padding: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-                                    <img src="/jubogo_favicon.png" alt="명성교회 주보고" style="width: 100%; height: 100%; border-radius: 12px;" />
+                                    <img src="/jubogo_favicon.png" alt="주보고" style="width: 100%; height: 100%; border-radius: 12px;" />
                                 </div>
                                 <h5 class="modal-title text-white fw-bold mb-1" style="font-size: 1.5rem;">설치 방법 안내</h5>
                                 <p class="text-white-50 mb-0" style="font-size: 0.875rem;">
@@ -61,7 +61,7 @@ const dismissPermanently = () => {
                             <!-- iOS 안내 -->
                             <template v-if="props.isIOS">
                                 <p class="text-muted mb-4" style="font-size: 0.875rem;">
-                                    Safari에서 명성교회 주보고를 홈 화면에 추가하면 앱처럼 빠르게 이용할 수 있습니다.
+                                    Safari에서 주보고를 홈 화면에 추가하면 앱처럼 빠르게 이용할 수 있습니다.
                                 </p>
 
                                 <!-- iOS 단계별 안내 카드 -->
@@ -118,7 +118,7 @@ const dismissPermanently = () => {
                                 <!-- iOS 결과 안내 -->
                                 <div class="alert alert-success mb-0" style="background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%); border: none; border-radius: 1rem;">
                                     <p class="mb-0" style="font-size: 0.875rem;">
-                                        ✨ 홈 화면에 명성교회 주보고 아이콘이 생기고, 앱처럼 빠르게 실행할 수 있습니다!
+                                        ✨ 홈 화면에 주보고 아이콘이 생기고, 앱처럼 빠르게 실행할 수 있습니다!
                                     </p>
                                 </div>
                             </template>
@@ -126,7 +126,7 @@ const dismissPermanently = () => {
                             <!-- 데스크톱 안내 -->
                             <template v-else>
                                 <p class="text-muted mb-4" style="font-size: 0.875rem;">
-                                    명성교회 주보고를 즐겨찾기에 추가하면 더욱 빠르게 접속할 수 있습니다.
+                                    주보고를 즐겨찾기에 추가하면 더욱 빠르게 접속할 수 있습니다.
                                 </p>
 
                                 <!-- 브라우저별 안내 카드 -->
@@ -174,7 +174,7 @@ const dismissPermanently = () => {
                                 <!-- 데스크톱 결과 안내 -->
                                 <div class="alert alert-info mb-0" style="background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); border: none; border-radius: 1rem;">
                                     <p class="mb-0" style="font-size: 0.875rem;">
-                                        ✨ 즐겨찾기에서 명성교회 주보고를 빠르게 찾을 수 있습니다!
+                                        ✨ 즐겨찾기에서 주보고를 빠르게 찾을 수 있습니다!
                                     </p>
                                 </div>
                             </template>
