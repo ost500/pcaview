@@ -166,16 +166,21 @@ onMounted(() => {
 
     <div class="page-content space-top p-b60">
         <div class="container">
-            <div class="swiper chat-swiper">
-                <div class="swiper-wrapper">
-                    <div v-for="department in departments" class="swiper-slide m-r15" v-bind:key="department.id">
-                        <a :href="safeRoute('department.show', { id: department.id })" class="recent" :class="{ active: isSubscribed(department.id) }">
-                            <div class="media media-60 rounded-circle">
-                                <img :src="department.icon_image" :alt="department.name + 'icon'" />
-                            </div>
-                            <span>{{ department.name }}</span>
-                        </a>
-                    </div>
+            <!-- 부서 목록 수평 스크롤 -->
+            <div class="department-scroll-container">
+                <div class="department-scroll-wrapper">
+                    <a
+                        v-for="department in departments"
+                        :key="department.id"
+                        :href="safeRoute('department.show', { id: department.id })"
+                        class="department-item"
+                        :class="{ active: isSubscribed(department.id) }"
+                    >
+                        <div class="department-icon">
+                            <img :src="department.icon_image" :alt="department.name + ' 아이콘'" loading="lazy" />
+                        </div>
+                        <span class="department-name">{{ department.name }}</span>
+                    </a>
                 </div>
             </div>
             <div class="title-bar">
@@ -196,3 +201,93 @@ onMounted(() => {
         </div>
     </div>
 </template>
+
+<style scoped>
+/* 부서 목록 수평 스크롤 컨테이너 */
+.department-scroll-container {
+    margin-bottom: 0;
+    margin-left: -1rem;
+    margin-right: -1rem;
+}
+
+.department-scroll-wrapper {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0.5rem 1rem 1rem 1rem;
+    /* 스크롤바 숨김 (선택사항) */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    /* 부드러운 스크롤 */
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
+}
+
+.department-scroll-wrapper::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+/* 부서 아이템 */
+.department-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 70px;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+}
+
+.department-item:active {
+    transform: scale(0.95);
+}
+
+/* 부서 아이콘 */
+.department-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid transparent;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.department-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 활성 상태 (구독한 부서) */
+.department-item.active .department-icon {
+    border-color: var(--primary, #667eea);
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+}
+
+/* 부서 이름 */
+.department-name {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #000000;
+    text-align: center;
+    max-width: 70px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-height: 1.2;
+}
+
+
+/* 호버 효과 (데스크톱) */
+@media (hover: hover) {
+    .department-item:hover {
+        transform: translateY(-2px);
+    }
+
+    .department-item:hover .department-icon {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+}
+</style>
