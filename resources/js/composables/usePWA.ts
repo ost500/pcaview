@@ -8,6 +8,27 @@ export function usePWA() {
     const isMobile = ref(false);
     const isIOS = ref(false);
     const isAndroid = ref(false);
+    const isInAppBrowser = ref(false);
+
+    // 앱 내 브라우저(WebView) 감지
+    const detectInAppBrowser = () => {
+        const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+
+        // Android WebView 감지 (User Agent에 "wv" 포함)
+        if (/wv/i.test(userAgent)) {
+            isInAppBrowser.value = true;
+            return true;
+        }
+
+        // 커스텀 앱 식별자 감지 (앱에서 설정한 경우)
+        // 예: JubogoApp, jubogo 등
+        if (/JubogoApp|jubogo/i.test(userAgent)) {
+            isInAppBrowser.value = true;
+            return true;
+        }
+
+        return false;
+    };
 
     // 모바일 기기 감지
     const detectMobile = () => {
@@ -145,13 +166,21 @@ export function usePWA() {
 
     onMounted(() => {
         detectMobile();
+        detectInAppBrowser();
         checkIfInstalled();
 
         console.log('=== PWA 초기화 ===');
         console.log('isInstalled:', isInstalled.value);
+        console.log('isInAppBrowser:', isInAppBrowser.value);
         console.log('shouldShowPrompt:', shouldShowPrompt());
         console.log('localStorage dismissed:', localStorage.getItem('pwa-prompt-dismissed'));
         console.log('localStorage never-show:', localStorage.getItem('pwa-prompt-never-show'));
+
+        // 앱 내 브라우저에서 접근한 경우 프롬프트 표시 안 함
+        if (isInAppBrowser.value) {
+            console.log('프롬프트 표시 안 함 (앱 내 브라우저)');
+            return;
+        }
 
         // 이미 설치되었거나 최근에 닫은 경우 프롬프트 표시 안 함
         if (isInstalled.value || !shouldShowPrompt()) {
@@ -188,6 +217,7 @@ export function usePWA() {
         isMobile,
         isIOS,
         isAndroid,
+        isInAppBrowser,
         promptInstall,
         dismissPrompt,
         dismissPermanently,
