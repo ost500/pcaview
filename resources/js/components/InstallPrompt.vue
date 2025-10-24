@@ -3,6 +3,7 @@ import { X, Download, EyeOff } from 'lucide-vue-next';
 
 const props = defineProps<{
     showInstallPrompt: boolean;
+    isAndroid?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -110,7 +111,8 @@ const handleDismissPermanently = () => {
                         <div class="modal-footer" style="border: none; padding: 0 1.5rem 1.5rem; gap: 0.5rem;">
                             <button @click="handleInstall" type="button" class="btn btn-primary w-100 fw-semibold" style="background: linear-gradient(135deg, #667eea, #764ba2); border: none; border-radius: 12px; padding: 0.875rem; font-size: 1rem;">
                                 <Download :size="18" class="me-2" style="display: inline-block; vertical-align: middle;" />
-                                지금 설치하기
+                                <template v-if="props.isAndroid">Play Store에서 설치</template>
+                                <template v-else>지금 설치하기</template>
                             </button>
                             <div class="d-flex gap-2 w-100">
                                 <button @click="handleDismiss" type="button" class="btn btn-light flex-fill" style="border-radius: 10px; padding: 0.75rem; font-size: 0.875rem;">

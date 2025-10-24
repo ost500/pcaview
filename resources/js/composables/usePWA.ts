@@ -7,6 +7,7 @@ export function usePWA() {
     const isInstalled = ref(false);
     const isMobile = ref(false);
     const isIOS = ref(false);
+    const isAndroid = ref(false);
 
     // 모바일 기기 감지
     const detectMobile = () => {
@@ -14,6 +15,8 @@ export function usePWA() {
         isMobile.value = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase());
         // iOS 기기 감지
         isIOS.value = /iphone|ipad|ipod/i.test(userAgent.toLowerCase());
+        // Android 기기 감지
+        isAndroid.value = /android/i.test(userAgent.toLowerCase());
         return isMobile.value;
     };
 
@@ -53,12 +56,21 @@ export function usePWA() {
         console.log('=== 설치하기 클릭 ===');
         console.log('deferredPrompt:', deferredPrompt.value);
         console.log('isIOS:', isIOS.value);
+        console.log('isAndroid:', isAndroid.value);
         console.log('isMobile:', isMobile.value);
 
         // 설치하기 버튼 클릭 시 3일간 표시 안 함
         localStorage.setItem('pwa-prompt-never-show', Date.now().toString());
 
-        // Android Chrome/Edge - 네이티브 프롬프트
+        // Android - Play Store로 리디렉션
+        if (isAndroid.value) {
+            console.log('Android Play Store로 리디렉션');
+            window.location.href = 'https://play.google.com/store/apps/details?id=com.jubogo.porting&pcampaignid=web_share';
+            showInstallPrompt.value = false;
+            return;
+        }
+
+        // Android Chrome/Edge - 네이티브 프롬프트 (백업)
         if (deferredPrompt.value) {
             console.log('Android 네이티브 프롬프트 실행');
             deferredPrompt.value.prompt();
@@ -175,6 +187,7 @@ export function usePWA() {
         isInstalled,
         isMobile,
         isIOS,
+        isAndroid,
         promptInstall,
         dismissPrompt,
         dismissPermanently,

@@ -4,6 +4,7 @@ import { X, Share, Plus, Home, Star, Command } from 'lucide-vue-next';
 const props = defineProps<{
     showIOSInstructions: boolean;
     isIOS: boolean;
+    isAndroid?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -49,7 +50,8 @@ const dismissPermanently = () => {
                                 </div>
                                 <h5 class="modal-title text-white fw-bold mb-1" style="font-size: 1.5rem;">설치 방법 안내</h5>
                                 <p class="text-white-50 mb-0" style="font-size: 0.875rem;">
-                                    <template v-if="props.isIOS">iOS Safari에서 설치하기</template>
+                                    <template v-if="props.isAndroid">Android에서 설치하기</template>
+                                    <template v-else-if="props.isIOS">iOS Safari에서 설치하기</template>
                                     <template v-else>데스크톱에서 즐겨찾기 추가</template>
                                 </p>
                             </div>
@@ -58,8 +60,64 @@ const dismissPermanently = () => {
 
                         <!-- 바디 -->
                         <div class="modal-body" style="padding: 1.5rem;">
+                            <!-- Android 안내 -->
+                            <template v-if="props.isAndroid">
+                                <p class="text-muted mb-4" style="font-size: 0.875rem;">
+                                    Play Store에서 주보고 앱을 다운로드하여 더 나은 경험을 즐기세요.
+                                </p>
+
+                                <!-- Android 단계별 안내 카드 -->
+                                <div class="card mb-3" style="border: 2px solid #f0f0f0; border-radius: 1rem; background: #fafafa;">
+                                    <div class="card-body p-3">
+                                        <!-- 1단계 -->
+                                        <div class="d-flex align-items-start mb-3">
+                                            <div class="flex-shrink-0" style="width: 36px; height: 36px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.875rem;">
+                                                1
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <h6 class="mb-1 fw-semibold" style="font-size: 0.875rem;">Play Store 방문</h6>
+                                                <p class="mb-0 text-muted" style="font-size: 0.75rem;">아래 버튼을 눌러 Play Store로 이동하세요</p>
+                                            </div>
+                                        </div>
+
+                                        <hr class="my-2" style="border-color: #e0e0e0;" />
+
+                                        <!-- 2단계 -->
+                                        <div class="d-flex align-items-start">
+                                            <div class="flex-shrink-0" style="width: 36px; height: 36px; background: linear-gradient(135deg, #f093fb, #f5576c); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.875rem;">
+                                                2
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <h6 class="mb-1 fw-semibold" style="font-size: 0.875rem;">앱 설치</h6>
+                                                <p class="mb-0 text-muted" style="font-size: 0.75rem;">"설치" 버튼을 눌러 주보고 앱을 다운로드하세요</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Play Store 버튼 -->
+                                <a
+                                    href="https://play.google.com/store/apps/details?id=com.jubogo.porting&pcampaignid=web_share"
+                                    target="_blank"
+                                    class="btn btn-primary w-100 fw-semibold mb-3"
+                                    style="background: linear-gradient(135deg, #667eea, #764ba2); border: none; border-radius: 12px; padding: 0.875rem; font-size: 1rem; text-decoration: none; color: white; display: block; text-align: center;"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" style="display: inline-block; vertical-align: middle; margin-right: 0.5rem;" viewBox="0 0 24 24">
+                                        <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z" />
+                                    </svg>
+                                    Play Store에서 설치하기
+                                </a>
+
+                                <!-- Android 결과 안내 -->
+                                <div class="alert alert-success mb-0" style="background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%); border: none; border-radius: 1rem;">
+                                    <p class="mb-0" style="font-size: 0.875rem;">
+                                        ✨ Play Store에서 설치하면 자동 업데이트와 안정적인 성능을 제공받을 수 있습니다!
+                                    </p>
+                                </div>
+                            </template>
+
                             <!-- iOS 안내 -->
-                            <template v-if="props.isIOS">
+                            <template v-else-if="props.isIOS">
                                 <p class="text-muted mb-4" style="font-size: 0.875rem;">
                                     Safari에서 주보고를 홈 화면에 추가하면 앱처럼 빠르게 이용할 수 있습니다.
                                 </p>

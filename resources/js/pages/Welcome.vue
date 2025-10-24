@@ -14,7 +14,7 @@ import { onMounted, ref, watch } from 'vue';
 import { safeRoute } from '@/composables/useSafeRoute';
 
 // PWA 상태 관리
-const { showInstallPrompt, showIOSInstructions, isIOS, promptInstall, dismissPrompt, closeIOSInstructions, dismissPermanently } = usePWA();
+const { showInstallPrompt, showIOSInstructions, isIOS, isAndroid, promptInstall, dismissPrompt, closeIOSInstructions, dismissPermanently } = usePWA();
 
 const props = defineProps<{
     contents: Pagination<Contents>;
@@ -142,6 +142,7 @@ onMounted(() => {
     <!-- PWA 설치 프롬프트 -->
     <InstallPrompt
         :show-install-prompt="showInstallPrompt"
+        :is-android="isAndroid"
         @install="promptInstall"
         @dismiss="dismissPrompt"
         @dismiss-permanently="dismissPermanently"
@@ -151,6 +152,7 @@ onMounted(() => {
     <IOSInstallInstructions
         :show-i-o-s-instructions="showIOSInstructions"
         :is-i-o-s="isIOS"
+        :is-android="isAndroid"
         @close="closeIOSInstructions"
         @dismiss-permanently="dismissPermanently"
     />
