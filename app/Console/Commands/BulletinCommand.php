@@ -36,21 +36,21 @@ class BulletinCommand extends Command
      */
     public function handle()
     {
-//        $bulletinCrawlService = app(JuboCrawlService::class);
-//        $mschJubo = app(MschJubo::class);
-//        $bulletinCrawlService->crawl($mschJubo);
-//
-//        $brightSoriCrawlService = app(BrightSoriCrawlService::class);
-//        $brightSound = app(BrightSound::class);
-//        $brightSoriCrawlService->crawl($brightSound);
-//
-//        $newsongJCrawlService = app(NewsongJCrawlService::class);
-//        $newsongJ = app(NewsongJJubo::class);
-//        $newsongJCrawlService->crawl($newsongJ);
-//
-//        $mschYoutube = app(MschYoutube::class);
-//        $mschYoutubeCrawler = app(MschYoutubeCrawlService::class);
-//        $mschYoutubeCrawler->crawl($mschYoutube);
+        $bulletinCrawlService = app(JuboCrawlService::class);
+        $mschJubo = app(MschJubo::class);
+        $bulletinCrawlService->crawl($mschJubo);
+
+        $brightSoriCrawlService = app(BrightSoriCrawlService::class);
+        $brightSound = app(BrightSound::class);
+        $brightSoriCrawlService->crawl($brightSound);
+
+        $newsongJCrawlService = app(NewsongJCrawlService::class);
+        $newsongJ = app(NewsongJJubo::class);
+        $newsongJCrawlService->crawl($newsongJ);
+
+        $mschYoutube = app(MschYoutube::class);
+        $mschYoutubeCrawler = app(MschYoutubeCrawlService::class);
+        $mschYoutubeCrawler->crawl($mschYoutube);
 
         $nfriendsCrawlService = app(NFriendsCrawlService::class);
         $nfriends = app(NFriendsJubo::class);
