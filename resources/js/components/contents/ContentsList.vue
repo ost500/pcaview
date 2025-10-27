@@ -2,6 +2,7 @@
 import { Contents } from '@/types/contents';
 import { onMounted, onUnmounted, ref } from 'vue';
 import { safeRoute } from '@/composables/useSafeRoute';
+import CoupangAd from '@/components/ads/CoupangAd.vue';
 
 const props = defineProps<{
     contents: Contents[];
@@ -63,6 +64,11 @@ function isHtmlType(content: Contents): boolean {
     return content.file_type === 'HTML';
 }
 
+// 광고를 표시할지 확인하는 함수 (3개 콘텐츠마다)
+function shouldShowAd(index: number): boolean {
+    return (index + 1) % 3 === 0;
+}
+
 onMounted(() => {
     // Setup Intersection Observer for infinite scroll
     if (loadMoreTrigger.value && props.hasMore) {
@@ -94,37 +100,42 @@ onUnmounted(() => {
 
 <template>
     <div class="row">
-        <div v-for="content in props.contents" class="col-12" v-bind:key="content.id">
-            <div class="card" @click="goToContent(content.id)">
-                <!-- Department 정보 -->
-                <div v-if="content.department" class="card-header department-header">
-                    <div class="d-flex align-items-center">
-                        <div class="department-icon">
-                            <img :src="content.department.icon_image" :alt="content.department.name" />
+        <template v-for="(content, index) in props.contents" :key="content.id">
+            <div class="col-12">
+                <div class="card" @click="goToContent(content.id)">
+                    <!-- Department 정보 -->
+                    <div v-if="content.department" class="card-header department-header">
+                        <div class="d-flex align-items-center">
+                            <div class="department-icon">
+                                <img :src="content.department.icon_image" :alt="content.department.name" />
+                            </div>
+                            <span class="department-name">{{ content.department.name }}</span>
                         </div>
-                        <span class="department-name">{{ content.department.name }}</span>
+                    </div>
+
+                    <!-- 내용: 이미지 또는 텍스트 미리보기 -->
+                    <div v-if="!isHtmlType(content)" style="max-height: 600px; overflow: hidden">
+                        <img :src="content.thumbnail_url" class="card-img-top" alt="..." />
+                    </div>
+                    <div v-if="isHtmlType(content)" class="card-body">
+                        <p class="card-text text-muted mb-0 preview-text">
+                            {{ extractTextFromHtml(content.body) }}
+                        </p>
+                    </div>
+
+                    <!-- 타이틀 및 자세히 버튼 -->
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">{{ content.title }}</h5>
+                        <p class="mb-0 text-right">
+                            <a :href="safeRoute('contents.show', { id: content.id })" class="btn btn-primary btn-sm text-right">자세히</a>
+                        </p>
                     </div>
                 </div>
-
-                <!-- 내용: 이미지 또는 텍스트 미리보기 -->
-                <div v-if="!isHtmlType(content)" style="max-height: 600px; overflow: hidden">
-                    <img :src="content.thumbnail_url" class="card-img-top" alt="..." />
-                </div>
-                <div v-if="isHtmlType(content)" class="card-body">
-                    <p class="card-text text-muted mb-0 preview-text">
-                        {{ extractTextFromHtml(content.body) }}
-                    </p>
-                </div>
-
-                <!-- 타이틀 및 자세히 버튼 -->
-                <div class="card-body">
-                    <h5 class="card-title mb-3">{{ content.title }}</h5>
-                    <p class="mb-0 text-right">
-                        <a :href="safeRoute('contents.show', { id: content.id })" class="btn btn-primary btn-sm text-right">자세히</a>
-                    </p>
-                </div>
             </div>
-        </div>
+
+            <!-- 3개 콘텐츠마다 쿠팡 광고 삽입 -->
+            <CoupangAd v-if="shouldShowAd(index)" :position="index" />
+        </template>
 
         <!-- Infinite scroll trigger -->
         <div ref="loadMoreTrigger" class="col-12 text-center py-4">
