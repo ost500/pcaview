@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import Header from '@/components/template/Header.vue';
 import BusinessInfo from '@/components/BusinessInfo.vue';
+import Header from '@/components/template/Header.vue';
 import { Contents } from '@/types/contents';
 import { Head } from '@inertiajs/vue3';
-import { ref, onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import VueEasyLightbox from 'vue-easy-lightbox';
 
 const props = defineProps<{ contents: Contents }>();
@@ -50,30 +50,30 @@ onMounted(() => {
     script.text = JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'Article',
-        'mainEntityOfPage': {
+        mainEntityOfPage: {
             '@type': 'WebPage',
-            '@id': window.location.href
+            '@id': window.location.href,
         },
-        'headline': props.contents.title,
-        'image': props.contents.thumbnail_url,
-        'datePublished': props.contents.published_at,
-        'dateModified': props.contents.updated_at || props.contents.published_at,
-        'author': {
+        headline: props.contents.title,
+        image: props.contents.thumbnail_url,
+        datePublished: props.contents.published_at,
+        dateModified: props.contents.updated_at || props.contents.published_at,
+        author: {
             '@type': 'Organization',
-            'name': props.contents.department?.name || '주보고'
+            name: props.contents.department?.name || '주보고',
         },
-        'publisher': {
+        publisher: {
             '@type': 'Organization',
-            'name': '주보고',
-            'logo': {
+            name: '주보고',
+            logo: {
                 '@type': 'ImageObject',
-                'url': window.location.origin + '/og_image.png'
-            }
+                url: window.location.origin + '/og_image.png',
+            },
         },
-        'description': props.contents.title + ' - ' + (props.contents.department?.name || '교회 소식'),
-        'inLanguage': 'ko-KR',
-        'articleSection': props.contents.department?.name || '교회 소식',
-        'keywords': '교회, 주보, ' + (props.contents.department?.name || '') + ', ' + props.contents.title
+        description: props.contents.title + ' - ' + (props.contents.department?.name || '교회 소식'),
+        inLanguage: 'ko-KR',
+        articleSection: props.contents.department?.name || '교회 소식',
+        keywords: '교회, 주보, ' + (props.contents.department?.name || '') + ', ' + props.contents.title,
     });
     document.head.appendChild(script);
 });
@@ -110,11 +110,6 @@ onMounted(() => {
         <Header title="주보" :backbutton="true"></Header>
 
         <div class="page-content space-top p-b60">
-            <div class="p-b0 container">
-                <div class="title-bar">
-                    <h6 class="title">소식</h6>
-                </div>
-            </div>
             <iframe
                 src="https://ads-partners.coupang.com/widgets.html?id=927016&template=carousel&trackingCode=AF7527668&subId=&width=680&height=140&tsource="
                 width="100%"
@@ -125,14 +120,12 @@ onMounted(() => {
                 browsingtopics
             ></iframe>
 
-            <div class="container p-0">
-                <ins
-                    class="kakao_ad_area"
-                    style="display: block"
-                    data-ad-unit="DAN-bE302RQ73kwLuzKI"
-                    data-ad-width="320"
-                    data-ad-height="50"
-                ></ins>
+            <ins class="kakao_ad_area" style="display: block" data-ad-unit="DAN-bE302RQ73kwLuzKI" data-ad-width="320" data-ad-height="50"></ins>
+
+            <div class="p-b0 p-t0 container">
+                <div class="title-bar">
+                    <h6 class="title">소식</h6>
+                </div>
                 <div class="row" id="contentArea">
                     <div class="col-12">
                         <div class="card">
@@ -260,5 +253,10 @@ onMounted(() => {
     font-size: 0.95rem;
     font-weight: 600;
     color: #495057;
+}
+
+/* 하단 네비게이션 바 공간 확보 */
+.page-content.p-b60 {
+    padding-bottom: 80px !important;
 }
 </style>
