@@ -81,7 +81,7 @@ onMounted(() => {
 
 <template>
     <div>
-        <Head :title="contents.title + ' | 주보고'">
+        <Head :title="contents.title">
             <!-- Basic Meta Tags -->
             <meta name="description" :content="contents.title + ' - ' + (contents.department?.name || '교회 소식')" />
             <meta name="keywords" :content="'교회, 주보, ' + (contents.department?.name || '') + ', ' + contents.title" />

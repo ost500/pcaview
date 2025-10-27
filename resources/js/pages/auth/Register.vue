@@ -13,7 +13,7 @@ import { LoaderCircle } from 'lucide-vue-next';
 
 <template>
     <AuthBase title="회원가입" description="아래 정보를 입력하여 계정을 만드세요">
-        <Head title="회원가입 | 주보고">
+        <Head title="회원가입">
             <meta name="robots" content="noindex, nofollow" />
         </Head>
 
