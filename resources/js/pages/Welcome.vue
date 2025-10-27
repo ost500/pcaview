@@ -119,21 +119,21 @@ onMounted(() => {
 <template>
     <Head title="명성교회 주보와 소식">
         <!-- Basic Meta Tags -->
-        <meta name="description" content="교회의 모든 부서 주보와 소식을 한곳에 모았습니다. 하나님께 보고 드리는 시간 주보고가 올려 드립니다." />
-        <meta name="keywords" content="교회, 주보, 교회 소식, 교회 공지, 부서 주보, 예배 안내" />
+        <meta name="description" content="명성교회 주보와 소식을 한곳에 모았습니다. 명성교회 부서 주보, 예배 안내, 교회 소식을 확인하세요." />
+        <meta name="keywords" content="명성교회, 명성교회 주보, 명성교회 소식, 교회, 주보, 교회 소식, 교회 공지, 부서 주보, 예배 안내" />
 
         <!-- Open Graph -->
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://jubogo.com" />
         <meta property="og:title" content="명성교회 - 명성교회 주보와 소식 주보고" />
-        <meta property="og:description" content="교회의 모든 부서 주보와 소식을 한곳에 모았습니다." />
+        <meta property="og:description" content="명성교회 주보와 소식을 한곳에 모았습니다. 명성교회 부서 주보, 예배 안내, 교회 소식을 확인하세요." />
         <meta property="og:site_name" content="주보고" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content="https://jubogo.com" />
         <meta name="twitter:title" content="명성교회 - 명성교회 주보와 소식 주보고" />
-        <meta name="twitter:description" content="교회의 모든 부서 주보와 소식을 한곳에 모았습니다." />
+        <meta name="twitter:description" content="명성교회 주보와 소식을 한곳에 모았습니다. 명성교회 부서 주보, 예배 안내, 교회 소식을 확인하세요." />
 
         <!-- Canonical URL -->
         <link rel="canonical" href="https://jubogo.com" />
