@@ -18288,7 +18288,7 @@ button:focus {
 }
 
 .card {
-  margin-bottom: 0;
+  margin-bottom: 1.25rem;
   background-color: var(--card-bg);
   transition: all 0.5s ease-in-out;
   position: relative;
