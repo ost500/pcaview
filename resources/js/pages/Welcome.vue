@@ -290,4 +290,10 @@ onMounted(() => {
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
 }
+
+/* 가로 스크롤 방지 - 광고 iframe */
+iframe {
+    max-width: 100%;
+    overflow: hidden;
+}
 </style>

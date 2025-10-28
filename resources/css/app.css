@@ -164,4 +164,16 @@
     body {
         @apply bg-background text-foreground;
     }
+
+    /* 가로 스크롤 방지 */
+    html,
+    body {
+        overflow-x: hidden;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    * {
+        max-width: 100%;
+    }
 }

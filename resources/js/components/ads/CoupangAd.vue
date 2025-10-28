@@ -24,5 +24,12 @@ defineProps<Props>();
 .coupang-ad-container {
     margin: 1rem 0;
     padding: 0 0.5rem;
+    overflow: hidden;
+    max-width: 100%;
+}
+
+.coupang-ad-container iframe {
+    max-width: 100%;
+    display: block;
 }
 </style>

@@ -259,4 +259,10 @@ onMounted(() => {
 .page-content.p-b60 {
     padding-bottom: 80px !important;
 }
+
+/* 가로 스크롤 방지 - 광고 iframe */
+iframe {
+    max-width: 100%;
+    overflow: hidden;
+}
 </style>
