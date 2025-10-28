@@ -898,9 +898,10 @@ progress {
   --bs-gutter-y: 0;
   display: flex;
   flex-wrap: wrap;
+  width: 100%;
   margin-top: calc(-1 * var(--bs-gutter-y));
-  margin-right: calc(-0.5 * var(--bs-gutter-x));
-  margin-left: calc(-0.5 * var(--bs-gutter-x));
+  margin-right: 0;
+  margin-left: 0;
 }
 .row > * {
   flex-shrink: 0;
@@ -1013,6 +1014,8 @@ progress {
 .col-12 {
   flex: 0 0 auto;
   width: 100%;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .offset-1 {
@@ -18285,7 +18288,7 @@ button:focus {
 }
 
 .card {
-  margin-bottom: 1.25rem;
+  margin-bottom: 0;
   background-color: var(--card-bg);
   transition: all 0.5s ease-in-out;
   position: relative;
