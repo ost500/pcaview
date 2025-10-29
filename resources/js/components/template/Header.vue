@@ -16,21 +16,8 @@ const props = defineProps<Props>();
 const goBack = () => {
     window.history.back();
 };
-
-const isProduction = import.meta.env.PROD; // vite 기본 제공 플래그
 </script>
 <template>
-    <!--     Preloader -->
-    <div v-if="isProduction" id="preloader">
-        <div class="loader">
-            <div class="load-circle">
-                <div></div>
-                <div></div>
-            </div>
-        </div>
-    </div>
-    <!-- Preloader end-->
-
     <header class="header header-fixed" :title="props.title">
         <div class="container">
             <div class="header-content">
