@@ -197,6 +197,9 @@ onMounted(() => {
     width: 100%;
     margin: 1rem 0;
     border-collapse: collapse;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
 }
 
 .content-body :deep(table td),
@@ -204,6 +207,8 @@ onMounted(() => {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
+    white-space: normal;
+    word-break: break-word;
 }
 
 .content-body :deep(table th) {
