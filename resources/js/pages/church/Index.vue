@@ -12,7 +12,8 @@ function goToContent(id: number) {
     window.location.href = safeRoute('church.show', { id: id });
 }
 
-// Kakao AdFit 광고 로드
+// Kakao AdFit 광고 로드 - 주석 처리
+/*
 const loadKakaoAd = () => {
     const existingScript = document.querySelector('script[src*="t1.daumcdn.net/kas"]');
     if (existingScript) {
@@ -25,11 +26,15 @@ const loadKakaoAd = () => {
     script.src = 'https://t1.daumcdn.net/kas/static/ba.min.js';
     document.head.appendChild(script);
 };
+*/
 
 onMounted(() => {
+    // 광고 로드 주석 처리
+    /*
     setTimeout(() => {
         loadKakaoAd();
     }, 100);
+    */
 
     // JSON-LD structured data 추가
     const structuredData = document.createElement('script');
@@ -81,6 +86,7 @@ onMounted(() => {
 
         <div class="page-content space-top p-b60">
             <div class="container">
+                <!-- 카카오 광고 주석 처리
                 <ins
                     class="kakao_ad_area"
                     style="display: block"
@@ -88,6 +94,7 @@ onMounted(() => {
                     data-ad-width="320"
                     data-ad-height="50"
                 ></ins>
+                -->
                 <div class="row g-3">
                     <div v-for="church in churches" class="col-12" v-bind:key="church.id">
                         <div class="card" @click="goToContent(church.id)">
@@ -105,6 +112,7 @@ onMounted(() => {
                         </div>
                     </div>
                 </div>
+                <!-- 쿠팡 광고 주석 처리
                 <iframe
                     src="https://ads-partners.coupang.com/widgets.html?id=927016&template=carousel&trackingCode=AF7527668&subId=&width=680&height=140&tsource="
                     width="100%"
@@ -114,6 +122,7 @@ onMounted(() => {
                     referrerpolicy="unsafe-url"
                     browsingtopics
                 ></iframe>
+                -->
                 <BusinessInfo class="mt-3" />
             </div>
         </div>

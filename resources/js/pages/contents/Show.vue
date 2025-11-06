@@ -21,7 +21,8 @@ function close() {
     showViewer.value = false;
 }
 
-// Kakao AdFit 광고 로드
+// Kakao AdFit 광고 로드 - 주석 처리
+/*
 const loadKakaoAd = () => {
     // 기존 스크립트가 있으면 제거 (중복 방지)
     const existingScript = document.querySelector('script[src*="t1.daumcdn.net/kas"]');
@@ -36,13 +37,16 @@ const loadKakaoAd = () => {
     script.src = 'https://t1.daumcdn.net/kas/static/ba.min.js';
     document.head.appendChild(script);
 };
+*/
 
 onMounted(() => {
-    // Kakao AdFit 광고 로드
+    // Kakao AdFit 광고 로드 - 주석 처리
     // DOM이 완전히 렌더링된 후 실행
+    /*
     setTimeout(() => {
         loadKakaoAd();
     }, 100);
+    */
 
     // JSON-LD structured data 추가
     const script = document.createElement('script');
@@ -110,6 +114,7 @@ onMounted(() => {
         <Header title="주보" :backbutton="true"></Header>
 
         <div class="page-content space-top p-b60">
+            <!-- 쿠팡 광고 주석 처리
             <iframe
                 src="https://ads-partners.coupang.com/widgets.html?id=927016&template=carousel&trackingCode=AF7527668&subId=&width=680&height=140&tsource="
                 width="100%"
@@ -119,8 +124,11 @@ onMounted(() => {
                 referrerpolicy="unsafe-url"
                 browsingtopics
             ></iframe>
+            -->
 
+            <!-- 카카오 광고 주석 처리
             <ins class="kakao_ad_area" style="display: block" data-ad-unit="DAN-bE302RQ73kwLuzKI" data-ad-width="320" data-ad-height="50"></ins>
+            -->
 
             <div class="p-b0 p-t0 container">
                 <div class="title-bar">

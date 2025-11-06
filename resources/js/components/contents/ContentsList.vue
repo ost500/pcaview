@@ -2,7 +2,7 @@
 import { Contents } from '@/types/contents';
 import { onMounted, onUnmounted, ref } from 'vue';
 import { safeRoute } from '@/composables/useSafeRoute';
-import CoupangAd from '@/components/ads/CoupangAd.vue';
+// import CoupangAd from '@/components/ads/CoupangAd.vue'; // 광고 주석 처리
 
 const props = defineProps<{
     contents: Contents[];
@@ -64,10 +64,12 @@ function isHtmlType(content: Contents): boolean {
     return content.file_type === 'HTML';
 }
 
-// 광고를 표시할지 확인하는 함수 (3개 콘텐츠마다)
+// 광고를 표시할지 확인하는 함수 (3개 콘텐츠마다) - 주석 처리
+/*
 function shouldShowAd(index: number): boolean {
     return (index + 1) % 3 === 0;
 }
+*/
 
 onMounted(() => {
     // Setup Intersection Observer for infinite scroll
@@ -133,8 +135,8 @@ onUnmounted(() => {
                 </div>
             </div>
 
-            <!-- 3개 콘텐츠마다 쿠팡 광고 삽입 -->
-            <CoupangAd v-if="shouldShowAd(index)" :position="index" />
+            <!-- 3개 콘텐츠마다 쿠팡 광고 삽입 - 주석 처리 -->
+            <!-- <CoupangAd v-if="shouldShowAd(index)" :position="index" /> -->
         </template>
 
         <!-- Infinite scroll trigger -->
