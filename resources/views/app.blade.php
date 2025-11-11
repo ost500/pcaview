@@ -33,6 +33,13 @@
             gtag('js', new Date());
 
             gtag('config', 'G-HVL5EFDXYN');
+
+            // Google Ads Conversion Tracking - Page View
+            gtag('event', 'conversion', {
+                'send_to': 'AW-858744148/4PCDCJPAmtgaENTKvZkD',
+                'value': 1.0,
+                'currency': 'KRW'
+            });
         </script>
     @endif
     {{-- 광고 스크립트 주석 처리 --}}
