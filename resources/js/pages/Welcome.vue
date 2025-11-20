@@ -188,7 +188,7 @@ onMounted(() => {
                 </div>
             </div>
             <div class="title-bar">
-                <h6 class="title">소식</h6>
+                <h6 class="title">명성교회 주보 및 소식</h6>
             </div>
             <!-- 카카오 광고 주석 처리
             <ins class="kakao_ad_area" style="display: block" data-ad-unit="DAN-bE302RQ73kwLuzKI" data-ad-width="320" data-ad-height="50"></ins>

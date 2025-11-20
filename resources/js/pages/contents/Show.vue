@@ -64,20 +64,20 @@ onMounted(() => {
         dateModified: props.contents.updated_at || props.contents.published_at,
         author: {
             '@type': 'Organization',
-            name: props.contents.department?.name || '주보고',
+            name: props.contents.department?.name || '명성교회',
         },
         publisher: {
             '@type': 'Organization',
-            name: '주보고',
+            name: '명성교회 주보고',
             logo: {
                 '@type': 'ImageObject',
                 url: window.location.origin + '/og_image.png',
             },
         },
-        description: props.contents.title + ' - ' + (props.contents.department?.name || '교회 소식'),
+        description: '명성교회 ' + props.contents.title + ' - ' + (props.contents.department?.name || '교회 소식'),
         inLanguage: 'ko-KR',
-        articleSection: props.contents.department?.name || '교회 소식',
-        keywords: '교회, 주보, ' + (props.contents.department?.name || '') + ', ' + props.contents.title,
+        articleSection: props.contents.department?.name || '명성교회 소식',
+        keywords: '명성교회, 명성교회 주보, 교회, 주보, ' + (props.contents.department?.name || '') + ', ' + props.contents.title,
     });
     document.head.appendChild(script);
 });
@@ -85,16 +85,16 @@ onMounted(() => {
 
 <template>
     <div>
-        <Head :title="contents.title">
+        <Head :title="`명성교회 ${contents.title}`">
             <!-- Basic Meta Tags -->
-            <meta name="description" :content="contents.title + ' - ' + (contents.department?.name || '교회 소식')" />
-            <meta name="keywords" :content="'교회, 주보, ' + (contents.department?.name || '') + ', ' + contents.title" />
+            <meta name="description" :content="`명성교회 ${contents.title} - ${contents.department?.name || '교회 소식'}`" />
+            <meta name="keywords" :content="`명성교회, 명성교회 주보, 교회, 주보, ${contents.department?.name || ''}, ${contents.title}`" />
 
             <!-- Open Graph / Facebook -->
             <meta property="og:type" content="article" />
             <meta property="og:url" :content="`https://jubogo.com/contents/${contents.id}`" />
-            <meta property="og:title" :content="contents.title" />
-            <meta property="og:description" :content="contents.title + ' - ' + (contents.department?.name || '교회 소식')" />
+            <meta property="og:title" :content="`명성교회 ${contents.title}`" />
+            <meta property="og:description" :content="`명성교회 ${contents.title} - ${contents.department?.name || '교회 소식'}`" />
             <meta property="og:image" :content="contents.thumbnail_url" />
             <meta property="og:image:width" content="1200" />
             <meta property="og:image:height" content="630" />
@@ -104,8 +104,8 @@ onMounted(() => {
             <!-- Twitter Card -->
             <meta name="twitter:card" content="summary_large_image" />
             <meta name="twitter:url" :content="`https://jubogo.com/contents/${contents.id}`" />
-            <meta name="twitter:title" :content="contents.title" />
-            <meta name="twitter:description" :content="contents.title + ' - ' + (contents.department?.name || '교회 소식')" />
+            <meta name="twitter:title" :content="`명성교회 ${contents.title}`" />
+            <meta name="twitter:description" :content="`명성교회 ${contents.title} - ${contents.department?.name || '교회 소식'}`" />
             <meta name="twitter:image" :content="contents.thumbnail_url" />
 
             <!-- Canonical URL -->

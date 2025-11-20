@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="naver-site-verification" content="d38dc0cb3c08594d6f931db8566686d940c6c9e7" />
     <meta name="language" content="Korean" />
+    <meta name="author" content="주보고 - 명성교회" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
 
     {{-- Inline script to detect system dark mode preference and apply it immediately --}}
     <script>
@@ -21,8 +23,8 @@
         })();
     </script>
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HVL5EFDXYN"></script>
-    @if(app()->isProduction())
+    @if(app()->isProduction() && config('services.google.analytics_id'))
+        <script async src="https://www.googletagmanager.com/gtag/js?id={{ config('services.google.analytics_id') }}"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
 
@@ -32,7 +34,7 @@
 
             gtag('js', new Date());
 
-            gtag('config', 'G-HVL5EFDXYN');
+            gtag('config', '{{ config('services.google.analytics_id') }}');
 
             // Google Ads Conversion Tracking - Page View
             gtag('event', 'conversion', {
