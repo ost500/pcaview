@@ -25,72 +25,72 @@ const isActive = (routes: string | string[]): boolean => {
         class="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white shadow-lg"
         aria-label="Bottom Navigation"
     >
-        <div class="mx-auto flex h-16 max-w-screen-xl items-center justify-around px-4">
+        <div class="mx-auto flex h-14 max-w-screen-xl items-center justify-around px-2 sm:h-16 sm:px-4">
             <!-- Home -->
             <a
                 :href="safeRoute('home')"
-                class="group flex flex-col items-center gap-1 px-3 py-2 transition-colors"
+                class="group flex min-w-[3.5rem] flex-1 flex-col items-center gap-0.5 py-2 transition-colors active:scale-95 sm:gap-1 sm:px-3"
                 :class="
                     isActive(['home', 'contents*'])
                         ? 'text-blue-600'
-                        : 'text-gray-600 hover:text-blue-600'
+                        : 'text-gray-600 active:text-blue-600 sm:hover:text-blue-600'
                 "
                 aria-label="홈"
             >
-                <Home :size="24" :stroke-width="isActive(['home', 'contents*']) ? 2.5 : 2" />
-                <span class="text-xs font-medium">홈</span>
+                <Home :size="22" :stroke-width="isActive(['home', 'contents*']) ? 2.5 : 2" class="sm:h-6 sm:w-6" />
+                <span class="text-[0.625rem] font-medium sm:text-xs">홈</span>
             </a>
 
             <!-- Church -->
             <a
                 :href="safeRoute('church')"
-                class="group flex flex-col items-center gap-1 px-3 py-2 transition-colors"
+                class="group flex min-w-[3.5rem] flex-1 flex-col items-center gap-0.5 py-2 transition-colors active:scale-95 sm:gap-1 sm:px-3"
                 :class="
                     isActive('church*')
                         ? 'text-blue-600'
-                        : 'text-gray-600 hover:text-blue-600'
+                        : 'text-gray-600 active:text-blue-600 sm:hover:text-blue-600'
                 "
                 aria-label="교회"
             >
-                <Church :size="24" :stroke-width="isActive('church*') ? 2.5 : 2" />
-                <span class="text-xs font-medium">교회</span>
+                <Church :size="22" :stroke-width="isActive('church*') ? 2.5 : 2" class="sm:h-6 sm:w-6" />
+                <span class="text-[0.625rem] font-medium sm:text-xs">교회</span>
             </a>
 
             <!-- Department -->
             <a
                 :href="safeRoute('department')"
-                class="group flex flex-col items-center gap-1 px-3 py-2 transition-colors"
+                class="group flex min-w-[3.5rem] flex-1 flex-col items-center gap-0.5 py-2 transition-colors active:scale-95 sm:gap-1 sm:px-3"
                 :class="
                     isActive('department*')
                         ? 'text-blue-600'
-                        : 'text-gray-600 hover:text-blue-600'
+                        : 'text-gray-600 active:text-blue-600 sm:hover:text-blue-600'
                 "
                 aria-label="부서"
             >
-                <Star :size="24" :stroke-width="isActive('department*') ? 2.5 : 2" />
-                <span class="text-xs font-medium">부서</span>
+                <Star :size="22" :stroke-width="isActive('department*') ? 2.5 : 2" class="sm:h-6 sm:w-6" />
+                <span class="text-[0.625rem] font-medium sm:text-xs">부서</span>
             </a>
 
             <!-- Profile -->
             <a
                 href="#"
                 @click.prevent="handleProfileClick"
-                class="group flex flex-col items-center gap-1 px-3 py-2 transition-colors"
+                class="group flex min-w-[3.5rem] flex-1 flex-col items-center gap-0.5 py-2 transition-colors active:scale-95 sm:gap-1 sm:px-3"
                 :class="
                     isActive(['profile*', 'settings*'])
                         ? 'text-blue-600'
-                        : 'text-gray-600 hover:text-blue-600'
+                        : 'text-gray-600 active:text-blue-600 sm:hover:text-blue-600'
                 "
                 :aria-label="auth.user ? '프로필' : '로그인'"
             >
-                <User :size="24" :stroke-width="isActive(['profile*', 'settings*']) ? 2.5 : 2" />
-                <span class="text-xs font-medium">{{ auth.user ? '프로필' : '로그인' }}</span>
+                <User :size="22" :stroke-width="isActive(['profile*', 'settings*']) ? 2.5 : 2" class="sm:h-6 sm:w-6" />
+                <span class="text-[0.625rem] font-medium sm:text-xs">{{ auth.user ? '프로필' : '로그인' }}</span>
             </a>
         </div>
     </nav>
 
     <!-- Spacer to prevent content from going under fixed menu bar -->
-    <div class="h-16"></div>
+    <div class="h-14 sm:h-16"></div>
 </template>
 
 <style scoped>

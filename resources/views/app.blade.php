@@ -141,8 +141,8 @@
     @vite(['resources/js/app.ts', "resources/js/pages/{$page['component']}.vue"])
     @routes
 </head>
-<body class="font-sans antialiased body-bg2">
-<div class="page-wrapper">
+<body class="bg-white font-sans antialiased">
+<div class="min-h-screen bg-white">
     @inertia
 </div>
 </body>

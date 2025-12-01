@@ -20,14 +20,14 @@ const goBack = () => {
 <template>
     <!-- Fixed header with shadow -->
     <header class="fixed left-0 right-0 top-0 z-40 bg-white shadow-sm">
-        <div class="container mx-auto px-4">
-            <div class="flex h-16 items-center justify-between">
+        <div class="mx-auto max-w-screen-xl px-4">
+            <div class="flex h-14 items-center justify-between sm:h-16">
                 <!-- Left content -->
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 sm:gap-3">
                     <button
                         v-if="backbutton"
                         @click="goBack"
-                        class="flex h-10 w-10 items-center justify-center rounded-full text-gray-700 transition-colors hover:bg-gray-100"
+                        class="flex h-10 w-10 min-w-[2.5rem] items-center justify-center rounded-full text-gray-700 transition-colors active:bg-gray-200 sm:hover:bg-gray-100"
                         aria-label="뒤로가기"
                     >
                         <ArrowLeft :size="20" />
@@ -35,7 +35,7 @@ const goBack = () => {
 
                     <Logo />
 
-                    <h1 class="text-lg font-semibold text-gray-900">{{ props.title }}</h1>
+                    <h1 class="truncate text-base font-semibold text-gray-900 sm:text-lg">{{ props.title }}</h1>
                 </div>
 
                 <!-- Middle content (placeholder for future features) -->
@@ -48,7 +48,7 @@ const goBack = () => {
     </header>
 
     <!-- Spacer to prevent content from going under fixed header -->
-    <div class="h-16"></div>
+    <div class="h-14 sm:h-16"></div>
 
     <MenuBar />
 </template>
