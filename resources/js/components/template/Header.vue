@@ -47,8 +47,6 @@ const goBack = () => {
         </div>
     </header>
 
-    <!-- Spacer to prevent content from going under fixed header -->
-    <div class="h-14 sm:h-16"></div>
 
     <MenuBar />
 </template>
