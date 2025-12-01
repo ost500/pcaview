@@ -23,6 +23,9 @@ class TrendRepository
                 'link' => $item->link,
                 'image_url' => $item->imageUrl,
                 'traffic_count' => $item->trafficCount,
+                'picture' => $item->picture,
+                'picture_source' => $item->pictureSource,
+                'news_items' => $item->newsItems,
             ]
         );
     }

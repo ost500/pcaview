@@ -16,11 +16,15 @@ class Trend extends Model
         'image_url',
         'traffic_count',
         'pub_date',
+        'picture',
+        'picture_source',
+        'news_items',
     ];
 
     protected $casts = [
         'pub_date' => 'datetime',
         'traffic_count' => 'integer',
+        'news_items' => 'array',
     ];
 
     /**
