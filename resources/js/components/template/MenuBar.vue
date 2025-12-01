@@ -22,7 +22,7 @@ const isActive = (routes: string | string[]): boolean => {
 <template>
     <!-- Fixed bottom navigation bar -->
     <nav
-        class="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800"
+        class="fixed bottom-0 left-0 right-0 z-50 border-t border-gray-200 bg-white shadow-lg"
         aria-label="Bottom Navigation"
     >
         <div class="mx-auto flex h-16 max-w-screen-xl items-center justify-around px-4">
@@ -32,8 +32,8 @@ const isActive = (routes: string | string[]): boolean => {
                 class="group flex flex-col items-center gap-1 px-3 py-2 transition-colors"
                 :class="
                     isActive(['home', 'contents*'])
-                        ? 'text-blue-600 dark:text-blue-400'
-                        : 'text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400'
+                        ? 'text-blue-600'
+                        : 'text-gray-600 hover:text-blue-600'
                 "
                 aria-label="홈"
             >
@@ -47,8 +47,8 @@ const isActive = (routes: string | string[]): boolean => {
                 class="group flex flex-col items-center gap-1 px-3 py-2 transition-colors"
                 :class="
                     isActive('church*')
-                        ? 'text-blue-600 dark:text-blue-400'
-                        : 'text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400'
+                        ? 'text-blue-600'
+                        : 'text-gray-600 hover:text-blue-600'
                 "
                 aria-label="교회"
             >
@@ -62,8 +62,8 @@ const isActive = (routes: string | string[]): boolean => {
                 class="group flex flex-col items-center gap-1 px-3 py-2 transition-colors"
                 :class="
                     isActive('department*')
-                        ? 'text-blue-600 dark:text-blue-400'
-                        : 'text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400'
+                        ? 'text-blue-600'
+                        : 'text-gray-600 hover:text-blue-600'
                 "
                 aria-label="부서"
             >
@@ -78,8 +78,8 @@ const isActive = (routes: string | string[]): boolean => {
                 class="group flex flex-col items-center gap-1 px-3 py-2 transition-colors"
                 :class="
                     isActive(['profile*', 'settings*'])
-                        ? 'text-blue-600 dark:text-blue-400'
-                        : 'text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400'
+                        ? 'text-blue-600'
+                        : 'text-gray-600 hover:text-blue-600'
                 "
                 :aria-label="auth.user ? '프로필' : '로그인'"
             >
