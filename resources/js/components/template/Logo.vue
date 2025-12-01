@@ -6,11 +6,11 @@ const homeUrl = safeRoute('home');
 </script>
 
 <template>
-    <a :href="homeUrl">
-        <img style="height: 50px" src="/jubogo_logo.png" alt="cplus logo">
+    <a :href="homeUrl" class="flex items-center transition-opacity hover:opacity-80" aria-label="홈으로 이동">
+        <img src="/jubogo_logo.png" alt="주보고 로고" class="h-12 w-auto object-contain" />
     </a>
 </template>
 
 <style scoped>
-
+/* Component styles are handled by Tailwind classes */
 </style>

@@ -168,8 +168,8 @@ onMounted(() => {
 
     <Header title="홈"></Header>
 
-    <div class="page-content space-top p-b60">
-        <div class="container">
+    <div class="pb-16 pt-4">
+        <div class="container mx-auto px-4">
             <!-- 부서 목록 수평 스크롤 -->
             <div class="department-scroll-container">
                 <div class="department-scroll-wrapper">
@@ -187,8 +187,8 @@ onMounted(() => {
                     </a>
                 </div>
             </div>
-            <div class="title-bar">
-                <h6 class="title">명성교회 주보 및 소식</h6>
+            <div class="mb-4 mt-4">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">명성교회 주보 및 소식</h2>
             </div>
             <!-- 카카오 광고 주석 처리
             <ins class="kakao_ad_area" style="display: block" data-ad-unit="DAN-bE302RQ73kwLuzKI" data-ad-width="320" data-ad-height="50"></ins>
