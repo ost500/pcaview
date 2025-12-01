@@ -10,6 +10,12 @@ class GoogleTrendsService
     private const RSS_URL = 'https://trends.google.co.kr/trending/rss?geo=KR';
     private const TIMEOUT = 30;
 
+    public function __construct(
+        private ?TrendRepository $repository = null
+    ) {
+        $this->repository = $repository ?? new TrendRepository();
+    }
+
     /**
      * Google Trends RSS 데이터를 가져와서 파싱
      *
@@ -134,5 +140,45 @@ class GoogleTrendsService
         });
 
         return $trends;
+    }
+
+    /**
+     * 트렌드 데이터를 가져와서 데이터베이스에 저장
+     *
+     * @return int 저장된 개수
+     */
+    public function fetchAndSave(): int
+    {
+        $trends = $this->fetchTrends();
+
+        if (empty($trends)) {
+            return 0;
+        }
+
+        return $this->repository->saveMany($trends);
+    }
+
+    /**
+     * 데이터베이스에서 최신 트렌드 가져오기
+     */
+    public function getLatestFromDatabase(int $limit = 10): \Illuminate\Support\Collection
+    {
+        return $this->repository->getLatest($limit);
+    }
+
+    /**
+     * 데이터베이스에서 오늘의 트렌드 가져오기
+     */
+    public function getTodayFromDatabase(int $limit = 10): \Illuminate\Support\Collection
+    {
+        return $this->repository->getToday($limit);
+    }
+
+    /**
+     * 트렌드 검색
+     */
+    public function search(string $keyword, int $limit = 20): \Illuminate\Support\Collection
+    {
+        return $this->repository->search($keyword, $limit);
     }
 }
