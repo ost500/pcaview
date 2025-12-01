@@ -101,99 +101,80 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="row">
-        <template v-for="(content, index) in props.contents" :key="content.id">
-            <div class="col-12">
-                <div class="card" @click="goToContent(content.id)">
+    <div class="mx-auto w-full max-w-2xl">
+        <div class="space-y-4">
+            <template v-for="(content, index) in props.contents" :key="content.id">
+                <div
+                    class="cursor-pointer overflow-hidden rounded-lg bg-white shadow-sm transition-shadow hover:shadow-md"
+                    @click="goToContent(content.id)"
+                >
                     <!-- Department 정보 -->
-                    <div v-if="content.department" class="card-header department-header">
-                        <div class="d-flex align-items-center">
-                            <div class="department-icon">
-                                <img :src="content.department.icon_image" :alt="content.department.name" />
-                            </div>
-                            <span class="department-name">{{ content.department.name }}</span>
+                    <div v-if="content.department" class="flex items-center gap-3 border-b border-gray-100 px-4 py-3">
+                        <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-50">
+                            <img
+                                :src="content.department.icon_image"
+                                :alt="content.department.name"
+                                class="h-full w-full object-cover"
+                            />
                         </div>
+                        <span class="text-sm font-semibold text-gray-700">{{ content.department.name }}</span>
                     </div>
 
                     <!-- 내용: 이미지 또는 텍스트 미리보기 -->
-                    <div v-if="!isHtmlType(content)" style="max-height: 600px; overflow: hidden">
-                        <img :src="content.thumbnail_url" class="card-img-top" alt="..." />
+                    <div v-if="!isHtmlType(content)" class="max-h-[600px] overflow-hidden">
+                        <img
+                            :src="content.thumbnail_url"
+                            class="w-full object-cover"
+                            alt="콘텐츠 이미지"
+                            loading="lazy"
+                        />
                     </div>
-                    <div v-if="isHtmlType(content)" class="card-body">
-                        <p class="card-text text-muted mb-0 preview-text">
+                    <div v-if="isHtmlType(content)" class="px-4 py-3">
+                        <p class="preview-text mb-0 text-sm text-gray-600">
                             {{ extractTextFromHtml(content.body) }}
                         </p>
                     </div>
 
                     <!-- 타이틀 및 자세히 버튼 -->
-                    <div class="card-body">
-                        <h5 class="card-title mb-3">{{ content.title }}</h5>
-                        <p class="mb-0 text-right">
-                            <a :href="safeRoute('contents.show', { id: content.id })" class="btn btn-primary btn-sm text-right">자세히</a>
-                        </p>
+                    <div class="px-4 py-3">
+                        <h5 class="mb-3 text-base font-semibold text-gray-900">{{ content.title }}</h5>
+                        <div class="text-right">
+                            <a
+                                :href="safeRoute('contents.show', { id: content.id })"
+                                class="inline-block rounded-md bg-blue-600 px-4 py-1.5 text-xs font-medium text-white transition-colors hover:bg-blue-700"
+                            >
+                                자세히
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- 3개 콘텐츠마다 쿠팡 광고 삽입 - 주석 처리 -->
-            <!-- <CoupangAd v-if="shouldShowAd(index)" :position="index" /> -->
-        </template>
+                <!-- 3개 콘텐츠마다 쿠팡 광고 삽입 - 주석 처리 -->
+                <!-- <CoupangAd v-if="shouldShowAd(index)" :position="index" /> -->
+            </template>
 
-        <!-- Infinite scroll trigger -->
-        <div ref="loadMoreTrigger" class="col-12 text-center py-4">
-            <div v-if="isLoading" class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">로딩 중...</span>
-            </div>
-            <div v-else-if="!hasMore" class="text-muted">
-                <small>모든 소식을 불러왔습니다</small>
+            <!-- Infinite scroll trigger -->
+            <div ref="loadMoreTrigger" class="py-4 text-center">
+                <div v-if="isLoading" class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" role="status">
+                    <span class="sr-only">로딩 중...</span>
+                </div>
+                <div v-else-if="!hasMore" class="text-sm text-gray-500">
+                    모든 소식을 불러왔습니다
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
-.page-link {
-    width: 2.5rem !important;
-    height: 2.5rem !important;
-    font-size: 1.5rem !important;
-}
-
 .preview-text {
     white-space: pre-line;
     word-break: keep-all;
     line-height: 1.6;
-    font-size: 0.9rem;
     max-height: 200px;
     overflow: hidden;
-}
-
-.department-header {
-    background-color: transparent;
-    border-bottom: none;
-    padding: 0.75rem 1rem;
-}
-
-.department-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin-right: 0.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f8f9fa;
-}
-
-.department-icon img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.department-name {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: #495057;
+    display: -webkit-box;
+    -webkit-line-clamp: 8;
+    -webkit-box-orient: vertical;
 }
 </style>
