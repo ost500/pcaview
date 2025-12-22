@@ -10,6 +10,7 @@ class Trend extends Model
     use HasFactory;
 
     protected $fillable = [
+        'department_id',
         'title',
         'description',
         'link',
@@ -57,5 +58,13 @@ class Trend extends Model
     public function scopeBetweenDates($query, $startDate, $endDate)
     {
         return $query->whereBetween('pub_date', [$startDate, $endDate]);
+    }
+
+    /**
+     * Department 관계 정의
+     */
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
     }
 }

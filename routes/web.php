@@ -5,6 +5,7 @@ use App\Http\Controllers\ContentsController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\TrendController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -13,7 +14,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/church', [ChurchController::class, 'index'])->name('church');
 Route::get('/church/{id}', [ChurchController::class, 'show'])->name('church.show');
 Route::get('/department', [DepartmentController::class, 'index'])->name('department');
-Route::get('/department/{id}', [DepartmentController::class, 'show'])->name('department.show');
+Route::get('/department/{id}', [DepartmentController::class, 'show'])->where('id', '[0-9]+')->name('department.show');
+Route::get('/department/{keyword}', [DepartmentController::class, 'keyword'])->name('department.keyword');
 
 Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile');
 Route::post('/profile/subscribe', [App\Http\Controllers\ProfileController::class, 'toggleSubscription'])->middleware('auth')->name('profile.subscribe');

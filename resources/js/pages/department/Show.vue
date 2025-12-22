@@ -1,13 +1,13 @@
 <script setup lang="ts">
+import BusinessInfo from '@/components/BusinessInfo.vue';
 import ContentsList from '@/components/contents/ContentsList.vue';
 import Header from '@/components/template/Header.vue';
-import BusinessInfo from '@/components/BusinessInfo.vue';
+import { safeRoute } from '@/composables/useSafeRoute';
 import { Contents } from '@/types/contents';
 import { Department } from '@/types/department';
 import { Pagination } from '@/types/pagination';
-import { router, Head } from '@inertiajs/vue3';
-import { ref, computed } from 'vue';
-import { safeRoute } from '@/composables/useSafeRoute';
+import { Head, router } from '@inertiajs/vue3';
+import { ref, watch } from 'vue';
 
 const props = defineProps<{ department: Department; contents: Pagination<Contents> }>();
 
@@ -19,8 +19,8 @@ const isLoading = ref(false);
 const loadMore = () => {
     if (isLoading.value || !hasMorePages.value) return;
 
-    const nextPage = currentPage.value + 1;
     isLoading.value = true;
+    const nextPage = currentPage.value + 1;
 
     router.get(
         safeRoute('department.show', { id: props.department.id }),
@@ -30,8 +30,8 @@ const loadMore = () => {
             preserveScroll: true,
             replace: true,
             only: ['contents'],
-            onSuccess: (page: any) => {
-                const newContents = page.props.contents;
+            onSuccess: (page) => {
+                const newContents = page.props.contents as Pagination<Contents>;
                 allContents.value = [...allContents.value, ...newContents.data];
                 currentPage.value = newContents.current_page;
                 hasMorePages.value = !!newContents.next_page_url;
@@ -40,9 +40,21 @@ const loadMore = () => {
             onError: () => {
                 isLoading.value = false;
             },
-        }
+        },
     );
 };
+
+// Watch for props changes (initial load)
+watch(
+    () => props.contents,
+    (newContents) => {
+        if (newContents.current_page === 1) {
+            allContents.value = [...newContents.data];
+            currentPage.value = newContents.current_page;
+            hasMorePages.value = !!newContents.next_page_url;
+        }
+    },
+);
 </script>
 
 <template>
@@ -69,35 +81,54 @@ const loadMore = () => {
         <!-- Canonical URL -->
         <link rel="canonical" :href="safeRoute('department.show', { id: department.id })" />
     </Head>
-    <Header :title="'부서 / ' + department.name" :backbutton="true"></Header>
 
-    <div class="page-content space-top p-b60">
-        <div class="container pt-0">
-            <div class="profile-area">
-                <div class="main-profile">
-                    <div class="about-profile">
-                        <div class="media rounded-circle">
-                            <img :src="department.icon_image" :alt="department.name + ' 아이콘'" loading="lazy" decoding="async" />
-                            <svg class="radial-progress m-b20" data-percentage="100" viewBox="0 0 80 80">
-                                <circle class="incomplete" cx="40" cy="40" r="35"></circle>
-                                <circle class="complete" cx="40" cy="40" r="35" style="stroke-dashoffset: 0"></circle>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="profile-detail">
-                        <h4 class="name">{{ department.name }}</h4>
-                    </div>
-                </div>
+    <Header :title="department.name" :backbutton="true"></Header>
 
-                <div class="detail-bottom-area">
-                    <div class="about">
-                        <ContentsList :contents="allContents" :isLoading="isLoading" :hasMore="hasMorePages" @loadMore="loadMore"></ContentsList>
-                    </div>
+    <div class="bg-white pb-14 pt-3 sm:pb-16 sm:pt-4">
+        <div class="mx-auto max-w-screen-xl px-4">
+            <!-- 부서 정보 -->
+            <div class="mb-4 flex items-center gap-4 sm:mb-6">
+                <div class="department-icon">
+                    <img :src="department.icon_image" :alt="department.name + ' 아이콘'" loading="lazy" />
                 </div>
-                <BusinessInfo class="mt-3" />
+                <div>
+                    <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">{{ department.name }}</h1>
+                    <p v-if="department.description" class="mt-1 text-sm text-gray-600">{{ department.description }}</p>
+                </div>
             </div>
+
+            <!-- 컨텐츠 리스트 -->
+            <div class="mb-3 mt-3 sm:mb-4 sm:mt-4">
+                <h2 class="text-base font-semibold text-gray-900 sm:text-lg">{{ department.name }} 주보 및 소식</h2>
+            </div>
+            <ContentsList :contents="allContents" :is-loading="isLoading" :has-more="hasMorePages" @load-more="loadMore"></ContentsList>
+            <BusinessInfo class="mt-3" />
         </div>
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+/* 부서 아이콘 */
+.department-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--primary, #667eea);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+}
+
+.department-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+@media (min-width: 640px) {
+    .department-icon {
+        width: 100px;
+        height: 100px;
+    }
+}
+</style>

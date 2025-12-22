@@ -3,22 +3,29 @@
 namespace App\Domain\trend;
 
 use App\Models\Trend;
+use App\Models\Department;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class TrendRepository
 {
     /**
      * TrendItem을 데이터베이스에 저장 (중복 방지)
+     * Title을 기반으로 Department도 자동 생성
      */
     public function save(TrendItem $item): Trend
     {
+        // Title을 기반으로 Department 생성 또는 조회
+        $department = $this->findOrCreateDepartment($item->title, $item->picture);
+
         return Trend::updateOrCreate(
             [
                 'title' => $item->title,
                 'pub_date' => $item->pubDate,
             ],
             [
+                'department_id' => $department->id,
                 'description' => $item->description,
                 'link' => $item->link,
                 'image_url' => $item->imageUrl,
@@ -26,6 +33,22 @@ class TrendRepository
                 'picture' => $item->picture,
                 'picture_source' => $item->pictureSource,
                 'news_items' => $item->newsItems,
+            ]
+        );
+    }
+
+    /**
+     * Title을 기반으로 Department 찾기 또는 생성
+     */
+    private function findOrCreateDepartment(string $title, ?string $picture = null): Department
+    {
+        // Title을 Department name으로 사용
+        // 같은 title이 이미 존재하면 재사용
+        return Department::firstOrCreate(
+            ['name' => $title],
+            [
+                'description' => "트렌드: {$title}",
+                'icon_image' => $picture,
             ]
         );
     }
