@@ -26,4 +26,15 @@ class DepartmentController extends Controller
 
         return Inertia::render('department/Show', ['department' => $department, 'contents' => $contents]);
     }
+
+    public function keyword(string $keyword)
+    {
+        $department = Department::where('name', $keyword)->first();
+        $contents = Contents::with('department')
+            ->where('department_id', $department->id)
+            ->latest('published_at')
+            ->paginate(20);
+
+        return Inertia::render('department/Show', ['department' => $department, 'contents' => $contents]);
+    }
 }
