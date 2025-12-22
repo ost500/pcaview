@@ -54,9 +54,11 @@ class NateNewsService
     {
         $items = [];
 
-        // DOMDocument로 HTML 파싱
+        // DOMDocument로 HTML 파싱 (UTF-8 인코딩 명시)
         $dom = new \DOMDocument();
-        @$dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'));
+        libxml_use_internal_errors(true);
+        $dom->loadHTML('<?xml encoding="UTF-8">' . $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        libxml_clear_errors();
         $xpath = new \DOMXPath($dom);
 
         // Nate 뉴스 검색 결과 리스트 찾기
@@ -93,7 +95,9 @@ class NateNewsService
         if ($titleNodes->length === 0) return null;
 
         $titleNode = $titleNodes->item(0);
-        $title = trim($titleNode->textContent);
+        $title = $titleNode->textContent;
+        $title = html_entity_decode($title, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $title = trim($title);
 
         // URL (메인 링크)
         $linkNodes = $xpath->query('.//a[@class="thumb-wrap"]', $node);
@@ -110,18 +114,23 @@ class NateNewsService
 
         // 요약 (span.txt)
         $snippetNodes = $xpath->query('.//span[@class="txt"]', $node);
-        $snippet = $snippetNodes->length > 0 ? trim($snippetNodes->item(0)->textContent) : '';
-
-        // HTML 태그 제거 및 정리
-        $snippet = strip_tags($snippet);
-        $snippet = preg_replace('/\s+/', ' ', $snippet);
-        $snippet = trim($snippet);
+        $snippet = '';
+        if ($snippetNodes->length > 0) {
+            // textContent로 직접 가져와서 인코딩 문제 방지
+            $snippet = $snippetNodes->item(0)->textContent;
+            // HTML 엔티티 디코딩
+            $snippet = html_entity_decode($snippet, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            // 공백 정리
+            $snippet = preg_replace('/\s+/u', ' ', $snippet);
+            $snippet = trim($snippet);
+        }
 
         // 출처 (span.time 내의 첫 번째 텍스트)
         $timeNodes = $xpath->query('.//span[@class="time"]', $node);
         $source = '';
         if ($timeNodes->length > 0) {
             $timeText = $timeNodes->item(0)->textContent;
+            $timeText = html_entity_decode($timeText, ENT_QUOTES | ENT_HTML5, 'UTF-8');
             // 날짜 부분 제거하고 언론사만 추출
             $parts = explode("\n", trim($timeText));
             $source = trim($parts[0]);
