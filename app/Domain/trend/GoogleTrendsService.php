@@ -13,7 +13,7 @@ class GoogleTrendsService
     public function __construct(
         private ?TrendRepository $repository = null
     ) {
-        $this->repository = $repository ?? new TrendRepository();
+        $this->repository = $repository ?? app(TrendRepository::class);
     }
 
     /**

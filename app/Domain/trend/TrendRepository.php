@@ -4,20 +4,32 @@ namespace App\Domain\trend;
 
 use App\Models\Trend;
 use App\Models\Department;
+use App\Domain\news\NateNewsService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class TrendRepository
 {
+    public function __construct(
+        private NateNewsService $nateNewsService
+    ) {}
+
     /**
      * TrendItem을 데이터베이스에 저장 (중복 방지)
      * Title을 기반으로 Department도 자동 생성
+     * Nate 뉴스도 자동으로 가져와서 news_items에 추가
      */
     public function save(TrendItem $item): Trend
     {
         // Title을 기반으로 Department 생성 또는 조회
         $department = $this->findOrCreateDepartment($item->title, $item->picture);
+
+        // Nate 뉴스 검색
+        $nateNews = $this->nateNewsService->searchNews($item->title);
+
+        // 기존 news_items와 Nate 뉴스 병합
+        $allNewsItems = array_merge($item->newsItems, $nateNews);
 
         return Trend::updateOrCreate(
             [
@@ -32,7 +44,7 @@ class TrendRepository
                 'traffic_count' => $item->trafficCount,
                 'picture' => $item->picture,
                 'picture_source' => $item->pictureSource,
-                'news_items' => $item->newsItems,
+                'news_items' => $allNewsItems,
             ]
         );
     }
