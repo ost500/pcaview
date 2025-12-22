@@ -10,6 +10,10 @@ class Contents extends Model
 {
     protected $guarded = [];
 
+    protected $casts = [
+        'published_at' => 'datetime',
+    ];
+
     public function images(): HasMany
     {
         return $this->hasMany(ContentsImage::class);
