@@ -96,8 +96,7 @@ class NateNewsService
 
         $titleNode = $titleNodes->item(0);
         $title = $titleNode->textContent;
-        $title = html_entity_decode($title, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-        $title = trim($title);
+        $title = $this->cleanUtf8String($title);
 
         // URL (메인 링크)
         $linkNodes = $xpath->query('.//a[@class="thumb-wrap"]', $node);
@@ -116,13 +115,8 @@ class NateNewsService
         $snippetNodes = $xpath->query('.//span[@class="txt"]', $node);
         $snippet = '';
         if ($snippetNodes->length > 0) {
-            // textContent로 직접 가져와서 인코딩 문제 방지
             $snippet = $snippetNodes->item(0)->textContent;
-            // HTML 엔티티 디코딩
-            $snippet = html_entity_decode($snippet, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-            // 공백 정리
-            $snippet = preg_replace('/\s+/u', ' ', $snippet);
-            $snippet = trim($snippet);
+            $snippet = $this->cleanUtf8String($snippet);
         }
 
         // 출처 (span.time 내의 첫 번째 텍스트)
@@ -130,7 +124,7 @@ class NateNewsService
         $source = '';
         if ($timeNodes->length > 0) {
             $timeText = $timeNodes->item(0)->textContent;
-            $timeText = html_entity_decode($timeText, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $timeText = $this->cleanUtf8String($timeText);
             // 날짜 부분 제거하고 언론사만 추출
             $parts = explode("\n", trim($timeText));
             $source = trim($parts[0]);
@@ -153,5 +147,29 @@ class NateNewsService
             'source' => $source,
             'picture' => $picture,
         ];
+    }
+
+    /**
+     * UTF-8 문자열 정리 (JSON 인코딩 가능하도록)
+     */
+    private function cleanUtf8String(string $text): string
+    {
+        // HTML 엔티티 디코딩
+        $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        // UTF-8로 확실하게 변환 (잘못된 문자 제거)
+        $text = mb_convert_encoding($text, 'UTF-8', 'UTF-8');
+
+        // 공백 정리
+        $text = preg_replace('/\s+/u', ' ', $text);
+        $text = trim($text);
+
+        // JSON 인코딩 가능 여부 확인 및 수정
+        if (!mb_check_encoding($text, 'UTF-8')) {
+            // UTF-8이 아닌 경우 강제 변환
+            $text = mb_convert_encoding($text, 'UTF-8', mb_detect_encoding($text));
+        }
+
+        return $text;
     }
 }

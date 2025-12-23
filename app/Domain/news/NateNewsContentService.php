@@ -4,7 +4,10 @@ namespace App\Domain\news;
 
 use App\Models\Contents;
 use App\Models\Department;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 /**
  * Nate 뉴스를 Contents로 변환하여 저장하는 서비스
@@ -38,6 +41,12 @@ class NateNewsContentService
                     continue; // 이미 존재하면 스킵
                 }
 
+                // 이미지가 있으면 S3에 업로드
+                $thumbnailUrl = null;
+                if (!empty($newsItem['picture'])) {
+                    $thumbnailUrl = $this->uploadImageToS3($newsItem['picture'], $department->id);
+                }
+
                 // Contents 생성
                 Contents::create([
                     'department_id' => $department->id,
@@ -45,7 +54,7 @@ class NateNewsContentService
                     'title' => $newsItem['title'],
                     'body' => $newsItem['snippet'] ?? null,
                     'file_url' => $newsItem['url'],
-                    'thumbnail_url' => $newsItem['picture'] ?? null,
+                    'thumbnail_url' => $thumbnailUrl,
                     'published_at' => now(), // Nate 뉴스는 현재 시각 사용
                 ]);
 
@@ -59,5 +68,47 @@ class NateNewsContentService
         }
 
         return $savedCount;
+    }
+
+    /**
+     * 외부 이미지 URL을 다운로드하여 S3에 업로드
+     *
+     * @param string $imageUrl 원본 이미지 URL
+     * @param int $departmentId Department ID
+     * @return string|null S3 URL 또는 null (실패 시)
+     */
+    private function uploadImageToS3(string $imageUrl, int $departmentId): ?string
+    {
+        try {
+            // 외부 이미지 다운로드
+            $response = Http::timeout(10)->get($imageUrl);
+
+            if (!$response->successful()) {
+                Log::warning('Failed to download image', ['url' => $imageUrl]);
+                return null;
+            }
+
+            // 파일 확장자 추출 (기본값: jpg)
+            $extension = pathinfo(parse_url($imageUrl, PHP_URL_PATH), PATHINFO_EXTENSION);
+            if (empty($extension) || !in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                $extension = 'jpg';
+            }
+
+            // S3 저장 경로 생성
+            $fileName = Str::uuid() . '.' . $extension;
+            $s3Path = "news/thumbnails/{$departmentId}/{$fileName}";
+
+            // S3에 업로드
+            Storage::put($s3Path, $response->body());
+
+            // S3 URL 반환
+            return Storage::url($s3Path);
+        } catch (\Exception $e) {
+            Log::error('Failed to upload image to S3', [
+                'error' => $e->getMessage(),
+                'image_url' => $imageUrl,
+            ]);
+            return null;
+        }
     }
 }
