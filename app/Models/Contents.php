@@ -24,6 +24,11 @@ class Contents extends Model
         return $this->belongsTo(Department::class);
     }
 
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class, 'content_id');
+    }
+
     /**
      * Get the thumbnail URL attribute.
      * Convert HTTP to HTTPS for security and SEO.

@@ -9,6 +9,8 @@ const parameterizedRoutePatterns: Record<string, string> = {
     'church.show': '/church/:id',
     'department.show': '/department/:id',
     'contents.show': '/contents/:id',
+    'comments.store': '/contents/:content/comments',
+    'comments.destroy': '/comments/:comment',
 };
 
 /**

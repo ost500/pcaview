@@ -1,11 +1,10 @@
 <?php
 
 use App\Http\Controllers\ChurchController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ContentsController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\SitemapController;
-use App\Http\Controllers\TrendController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -25,6 +24,9 @@ Route::get('dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('contents/{id}', [ContentsController::class, 'show'])->name('contents.show');
+
+Route::post('/contents/{content}/comments', [CommentController::class, 'store'])->name('comments.store');
+Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->middleware('auth')->name('comments.destroy');
 
 Route::get('/privacy-policy', function () {
     return Inertia::render('PrivacyPolicy');

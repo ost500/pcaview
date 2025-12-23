@@ -2,11 +2,15 @@
 import BusinessInfo from '@/components/BusinessInfo.vue';
 import Header from '@/components/template/Header.vue';
 import { Contents } from '@/types/contents';
-import { Head } from '@inertiajs/vue3';
-import { onMounted, ref } from 'vue';
+import { Head, router, usePage } from '@inertiajs/vue3';
+import { onMounted, ref, computed } from 'vue';
 import VueEasyLightbox from 'vue-easy-lightbox';
+import { safeRoute } from '@/composables/useSafeRoute';
 
 const props = defineProps<{ contents: Contents }>();
+
+const page = usePage();
+const user = computed(() => page.props.auth.user);
 
 const images = props.contents.images?.map((image) => image.file_url) || [];
 const showViewer = ref(false);
@@ -20,6 +24,66 @@ function open(indexNumber: number) {
 function close() {
     showViewer.value = false;
 }
+
+// 댓글 기능
+const commentBody = ref('');
+const guestName = ref('');
+const isSubmitting = ref(false);
+
+const submitComment = () => {
+    if (!commentBody.value.trim()) return;
+    if (!user.value && !guestName.value.trim()) {
+        alert('이름을 입력해주세요.');
+        return;
+    }
+
+    isSubmitting.value = true;
+    const data: any = { body: commentBody.value };
+    if (!user.value) {
+        data.guest_name = guestName.value;
+    }
+
+    router.post(
+        safeRoute('comments.store', { content: props.contents.id }),
+        data,
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                commentBody.value = '';
+                if (!user.value) {
+                    guestName.value = '';
+                }
+            },
+            onFinish: () => {
+                isSubmitting.value = false;
+            },
+        }
+    );
+};
+
+const deleteComment = (commentId: number) => {
+    if (!confirm('댓글을 삭제하시겠습니까?')) return;
+
+    router.delete(safeRoute('comments.destroy', { comment: commentId }), {
+        preserveScroll: true,
+    });
+};
+
+const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+
+    if (minutes < 1) return '방금 전';
+    if (minutes < 60) return `${minutes}분 전`;
+    if (hours < 24) return `${hours}시간 전`;
+    if (days < 7) return `${days}일 전`;
+
+    return date.toLocaleDateString('ko-KR');
+};
 
 // Kakao AdFit 광고 로드 - 주석 처리
 /*
@@ -87,14 +151,14 @@ onMounted(() => {
     <div>
         <Head :title="`PCAview ${contents.title}`">
             <!-- Basic Meta Tags -->
-            <meta name="description" :content="`PCAview ${contents.title} - ${contents.department?.name || '교회 소식'}`" />
-            <meta name="keywords" :content="`PCAview, PCAview 주보, 교회, 주보, ${contents.department?.name || ''}, ${contents.title}`" />
+            <meta name="description" :content="`PCAview ${contents.title} - ${contents.department?.name}`" />
+            <meta name="keywords" :content="`PCAview, PCAview ${contents.department?.name || ''}, ${contents.title}`" />
 
             <!-- Open Graph / Facebook -->
             <meta property="og:type" content="article" />
             <meta property="og:url" :content="`https://pcaview.com/contents/${contents.id}`" />
             <meta property="og:title" :content="`PCAview ${contents.title}`" />
-            <meta property="og:description" :content="`PCAview ${contents.title} - ${contents.department?.name || '교회 소식'}`" />
+            <meta property="og:description" :content="`PCAview ${contents.title} - ${contents.department?.name}`" />
             <meta property="og:image" :content="contents.thumbnail_url" />
             <meta property="og:image:width" content="1200" />
             <meta property="og:image:height" content="630" />
@@ -105,7 +169,7 @@ onMounted(() => {
             <meta name="twitter:card" content="summary_large_image" />
             <meta name="twitter:url" :content="`https://pcaview.com/contents/${contents.id}`" />
             <meta name="twitter:title" :content="`PCAview ${contents.title}`" />
-            <meta name="twitter:description" :content="`PCAview ${contents.title} - ${contents.department?.name || '교회 소식'}`" />
+            <meta name="twitter:description" :content="`PCAview ${contents.title} - ${contents.department?.name}`" />
             <meta name="twitter:image" :content="contents.thumbnail_url" />
 
             <!-- Canonical URL -->
@@ -114,7 +178,7 @@ onMounted(() => {
         <Header title="VIEW" :backbutton="true"></Header>
 
         <div class="mx-auto w-full max-w-2xl">
-            <div class="space-y-4">
+            <div class="space-y-4 pb-20">
                 <div class="page-content py-10">
                     <div class="container pt-0 pb-0">
                         <div class="rounded-lg bg-white shadow">
@@ -195,6 +259,91 @@ onMounted(() => {
                                 </a>
                             </div>
 
+                        </div>
+
+                        <!-- 댓글 섹션 -->
+                        <div class="mt-4 rounded-lg bg-white shadow">
+                            <div class="border-b border-gray-200 px-4 py-3">
+                                <h3 class="text-base font-semibold text-gray-900">
+                                    댓글 <span class="text-sm text-gray-500">({{ contents.comments?.length || 0 }})</span>
+                                </h3>
+                            </div>
+
+                            <!-- 댓글 작성 폼 -->
+                            <div class="border-b border-gray-100 p-4">
+                                <form @submit.prevent="submitComment" class="space-y-3">
+                                    <!-- 비로그인 시 이름 입력 -->
+                                    <div v-if="!user">
+                                        <input
+                                            v-model="guestName"
+                                            type="text"
+                                            placeholder="이름을 입력하세요"
+                                            maxlength="50"
+                                            class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                                            :disabled="isSubmitting"
+                                        />
+                                    </div>
+                                    <textarea
+                                        v-model="commentBody"
+                                        placeholder="댓글을 입력하세요..."
+                                        rows="3"
+                                        maxlength="1000"
+                                        class="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                                        :disabled="isSubmitting"
+                                    ></textarea>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs text-gray-500">{{ commentBody.length }} / 1000</span>
+                                        <button
+                                            type="submit"
+                                            :disabled="isSubmitting || !commentBody.trim() || (!user && !guestName.trim())"
+                                            class="rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-2 text-sm font-medium text-white transition-all hover:from-blue-700 hover:to-purple-700 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
+                                        >
+                                            {{ isSubmitting ? '등록 중...' : '댓글 등록' }}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- 댓글 목록 -->
+                            <div v-if="contents.comments && contents.comments.length > 0" class="divide-y divide-gray-100">
+                                <div v-for="comment in contents.comments" :key="comment.id" class="px-4 py-4">
+                                    <div class="flex items-start gap-3">
+                                        <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-purple-100">
+                                            <svg class="h-6 w-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                                            </svg>
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <div class="flex items-start justify-between gap-2">
+                                                <div class="flex flex-col">
+                                                    <div class="flex items-center gap-2">
+                                                        <p class="text-sm font-medium text-gray-900">{{ comment.display_name }}</p>
+                                                        <p class="text-xs text-gray-500">{{ formatDate(comment.created_at) }}</p>
+                                                    </div>
+                                                    <p class="mt-2 whitespace-pre-wrap text-sm text-gray-700">{{ comment.body }}</p>
+                                                </div>
+                                                <div class="flex flex-shrink-0 items-center gap-2">
+                                                    <span v-if="comment.ip_last_digits" class="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
+                                                        XXX.{{ comment.ip_last_digits }}
+                                                    </span>
+                                                    <button
+                                                        v-if="(user && comment.user_id && user.id === comment.user_id) || (!comment.user_id)"
+                                                        @click="deleteComment(comment.id)"
+                                                        class="text-xs text-red-600 hover:text-red-700 hover:underline"
+                                                    >
+                                                        삭제
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 댓글 없음 -->
+                            <div v-else class="px-4 py-8 text-center text-sm text-gray-500">
+                                첫 번째 댓글을 작성해보세요!
+                            </div>
                         </div>
                     </div>
                 </div>
