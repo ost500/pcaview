@@ -113,43 +113,27 @@ onMounted(() => {
         </Head>
         <Header title="주보" :backbutton="true"></Header>
 
-        <div class="page-content space-top p-b60">
-            <!-- 쿠팡 광고 주석 처리
-            <iframe
-                src="https://ads-partners.coupang.com/widgets.html?id=927016&template=carousel&trackingCode=AF7527668&subId=&width=680&height=140&tsource="
-                width="100%"
-                height="140"
-                frameborder="0"
-                scrolling="no"
-                referrerpolicy="unsafe-url"
-                browsingtopics
-            ></iframe>
-            -->
-
-            <!-- 카카오 광고 주석 처리
-            <ins class="kakao_ad_area" style="display: block" data-ad-unit="DAN-bE302RQ73kwLuzKI" data-ad-width="320" data-ad-height="50"></ins>
-            -->
-
-            <div class="p-b0 p-t0 container">
-                <div class="title-bar">
-                    <h6 class="title">소식</h6>
-                </div>
-                <div class="row" id="contentArea">
-                    <div class="col-12">
-                        <div class="card">
+        <div class="mx-auto w-full max-w-2xl">
+            <div class="space-y-4">
+                <div class="page-content space-top pb-20">
+                    <div class="container pt-0 pb-0">
+                        <div class="rounded-lg bg-white shadow">
                             <!-- Department 정보 -->
-                            <div v-if="contents.department" class="card-header department-header">
-                                <div class="d-flex align-items-center">
-                                    <div class="department-icon">
-                                        <img :src="contents.department.icon_image" :alt="contents.department.name" />
-                                    </div>
-                                    <span class="department-name">{{ contents.department.name }}</span>
+                            <div v-if="contents.department" class="flex items-center gap-3 border-b border-sky-100 bg-white/50 px-4 py-3 backdrop-blur-sm">
+                                <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
+                                    <img
+                                        :src="contents.department.icon_image"
+                                        :alt="contents.department.name"
+                                        class="h-full w-full object-cover"
+                                    />
                                 </div>
+                                <span class="text-sm font-semibold text-sky-900">{{ contents.department.name }}</span>
                             </div>
 
+
                             <!-- Title -->
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">{{ contents.title }}</h5>
+                            <div class="border-b border-gray-200 px-4 py-3">
+                                <h5 class="mb-0 text-lg font-semibold">{{ contents.title }}</h5>
                             </div>
 
                             <!-- 이미지 또는 비디오 -->
@@ -158,7 +142,7 @@ onMounted(() => {
                                     <img
                                         :src="image.file_url"
                                         @click="open(index)"
-                                        class="card-img-top"
+                                        class="w-full"
                                         :alt="contents.title"
                                         loading="lazy"
                                         decoding="async"
@@ -179,14 +163,38 @@ onMounted(() => {
                             ></iframe>
 
                             <!-- HTML 본문 내용 -->
-                            <div class="card-body" v-if="contents.body">
+                            <div class="p-4" v-if="contents.body">
                                 <div class="content-body" v-html="contents.body"></div>
+                            </div>
+
+                            <!-- 외부 링크 (뉴스 타입인 경우) -->
+                            <div v-if="contents.type === 'news' && contents.file_url" class="px-4 pb-4">
+                                <a
+                                    :href="contents.file_url"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+                                >
+                                    원문 보기
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                                        />
+                                    </svg>
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <BusinessInfo class="mt-3" />
             </div>
+        </div>
+
+        <!-- BusinessInfo 최하단 고정 -->
+        <div class="fixed bottom-0 left-0 right-0 z-10 bg-white shadow-lg">
+            <BusinessInfo />
         </div>
     </div>
 </template>
@@ -195,6 +203,7 @@ onMounted(() => {
 .content-body {
     line-height: 1.6;
     word-break: keep-all;
+    color: #000;
 }
 
 .content-body :deep(p) {
@@ -238,12 +247,6 @@ onMounted(() => {
     height: auto;
 }
 
-.department-header {
-    background-color: transparent;
-    border-bottom: none;
-    padding: 0.75rem 1rem;
-}
-
 .department-icon {
     width: 40px;
     height: 40px;
@@ -254,6 +257,7 @@ onMounted(() => {
     align-items: center;
     justify-content: center;
     background-color: #f8f9fa;
+    flex-shrink: 0;
 }
 
 .department-icon img {
@@ -266,11 +270,6 @@ onMounted(() => {
     font-size: 0.95rem;
     font-weight: 600;
     color: #495057;
-}
-
-/* 하단 네비게이션 바 공간 확보 */
-.page-content.p-b60 {
-    padding-bottom: 80px !important;
 }
 
 /* 가로 스크롤 방지 - 광고 iframe */
