@@ -98,9 +98,6 @@ watch(
             </div>
 
             <!-- 컨텐츠 리스트 -->
-            <div class="mb-3 mt-3 sm:mb-4 sm:mt-4">
-                <h2 class="text-base font-semibold text-gray-900 sm:text-lg">{{ department.name }} 주보 및 소식</h2>
-            </div>
             <ContentsList :contents="allContents" :is-loading="isLoading" :has-more="hasMorePages" @load-more="loadMore"></ContentsList>
             <BusinessInfo class="mt-3" />
         </div>

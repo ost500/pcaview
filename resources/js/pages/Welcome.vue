@@ -121,7 +121,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <Head title="PCAview 주보와 소식">
+    <Head title="PCAView 소식">
         <!-- Basic Meta Tags -->
         <meta name="description" content="PCAview 주보와 소식을 한곳에 모았습니다. PCAview 부서 주보, 예배 안내, 교회 소식을 확인하세요." />
         <meta name="keywords" content="PCAview, PCAview 주보, PCAview 소식, 교회, 주보, 교회 소식, 교회 공지, 부서 주보, 예배 안내" />
@@ -186,9 +186,6 @@ onMounted(() => {
                         <span class="department-name">{{ department.name }}</span>
                     </a>
                 </div>
-            </div>
-            <div class="mb-3 mt-3 sm:mb-4 sm:mt-4">
-                <h2 class="text-base font-semibold text-gray-900 sm:text-lg">PCAview 주보 및 소식</h2>
             </div>
             <!-- 카카오 광고 주석 처리
             <ins class="kakao_ad_area" style="display: block" data-ad-unit="DAN-bE302RQ73kwLuzKI" data-ad-width="320" data-ad-height="50"></ins>

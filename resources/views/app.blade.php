@@ -61,7 +61,7 @@
     </style>
 
     <title inertia>{{ config('app.name', 'Laravel') }}</title>
-    <meta name="description" content="PCAview - 트렌드 바다를 바라보는 피카뷰">
+    <meta name="description" content="PCAview - 빠르게 돌아가는 세상을 바라보는 뷰 피카뷰">
     <meta name="keywords" content="PCAview, 피카뷰, 트렌드, 뉴스, 소식">
 
     <!-- Canonical URL -->
@@ -72,8 +72,8 @@
     <meta property="og:locale" content="ko_KR" />
     <meta property="og:url" content="{{ url('/') }}" />
     <meta property="og:site_name" content="PCAview" />
-    <meta property="og:title" content="PCAview - 트렌드 바다를 바라보는 피카뷰" />
-    <meta property="og:description" content="PCAview - 트렌드 바다를 바라보는 피카뷰" />
+    <meta property="og:title" content="PCAview - 빠르게 돌아가는 세상을 바라보는 뷰 피카뷰" />
+    <meta property="og:description" content="PCAview - 빠르게 돌아가는 세상을 바라보는 뷰 피카뷰" />
     <meta property="og:image" content="{{ url('/og_image.png') }}" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -81,8 +81,8 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="{{ url('/') }}" />
-    <meta name="twitter:title" content="PCAview - 트렌드 바다를 바라보는 피카뷰" />
-    <meta name="twitter:description" content="PCAview - 트렌드 바다를 바라보는 피카뷰" />
+    <meta name="twitter:title" content="PCAview - 빠르게 돌아가는 세상을 바라보는 뷰 피카뷰" />
+    <meta name="twitter:description" content="PCAview - 빠르게 돌아가는 세상을 바라보는 뷰 피카뷰" />
     <meta name="twitter:image" content="{{ url('/og_image.png') }}" />
 
     {{-- Inertia Head - This will override above meta tags for page-specific content --}}
@@ -126,7 +126,7 @@
         "name": "PCAview",
         "alternateName": "피카뷰",
         "url": "{{ url('/') }}",
-        "description": "PCAview - 트렌드 바다를 바라보는 피카뷰",
+        "description": "PCAview - 빠르게 돌아가는 세상을 바라보는 뷰 피카뷰",
         "inLanguage": "ko-KR",
         "publisher": {
             "@@type": "Organization",

@@ -111,7 +111,7 @@ onMounted(() => {
             <!-- Canonical URL -->
             <link rel="canonical" :href="`https://jubogo.com/contents/${contents.id}`" />
         </Head>
-        <Header title="주보" :backbutton="true"></Header>
+        <Header title="VIEW" :backbutton="true"></Header>
 
         <div class="mx-auto w-full max-w-2xl">
             <div class="space-y-4">
