@@ -81,44 +81,38 @@ onMounted(() => {
             <link rel="canonical" :href="safeRoute('department')" />
         </Head>
 
-        <Header title="부서"></Header>
+        <Header title="VIEW"></Header>
 
-        <div class="page-content space-top p-b60">
-            <div class="container">
-                <!-- 카카오 광고 주석 처리
-                <ins
-                    class="kakao_ad_area"
-                    style="display: block"
-                    data-ad-unit="DAN-bE302RQ73kwLuzKI"
-                    data-ad-width="320"
-                    data-ad-height="50"
-                ></ins>
-                -->
-                <div class="row g-3">
-                    <div v-for="department in departments" class="col-6" v-bind:key="department.id">
-                        <div class="card" @click="goToContent(department.id)">
-                            <div class="card-header">
-                                <h5 class="card-title">{{ department.name }}</h5>
+        <div class="bg-white pb-14 pt-3 sm:pb-16 sm:pt-4">
+            <div class="mx-auto max-w-screen-xl px-4">
+                <!-- 3 Column Grid -->
+                <div class="grid grid-cols-3 gap-3 sm:gap-4">
+                    <div
+                        v-for="department in departments"
+                        :key="department.id"
+                        @click="goToContent(department.id)"
+                        class="cursor-pointer transition-transform active:scale-95 sm:hover:scale-105"
+                    >
+                        <div class="overflow-hidden rounded-lg bg-white shadow-md">
+                            <!-- Icon Image -->
+                            <div class="aspect-square w-full overflow-hidden bg-gray-100">
+                                <img
+                                    :src="department.icon_image"
+                                    :alt="department.name + ' 아이콘'"
+                                    class="h-full w-full object-cover"
+                                />
                             </div>
-                            <img :src="department.icon_image" class="card-img-top" alt="..." />
-                            <div class="card-body">
-                                <!--                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+                            <!-- Department Name -->
+                            <div class="p-2 sm:p-3">
+                                <h3 class="text-center text-xs font-medium text-gray-900 sm:text-sm">
+                                    {{ department.name }}
+                                </h3>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- 쿠팡 광고 주석 처리
-                <iframe
-                    src="https://ads-partners.coupang.com/widgets.html?id=927016&template=carousel&trackingCode=AF7527668&subId=&width=680&height=140&tsource="
-                    width="100%"
-                    height="140"
-                    frameborder="0"
-                    scrolling="no"
-                    referrerpolicy="unsafe-url"
-                    browsingtopics
-                ></iframe>
-                -->
-                <BusinessInfo class="mt-3" />
+
+                <BusinessInfo class="mt-4" />
             </div>
         </div>
     </div>

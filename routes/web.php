@@ -17,7 +17,7 @@ Route::get('/department', [DepartmentController::class, 'index'])->name('departm
 Route::get('/department/{id}', [DepartmentController::class, 'show'])->where('id', '[0-9]+')->name('department.show');
 Route::get('/department/{keyword}', [DepartmentController::class, 'keyword'])->name('department.keyword');
 
-Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile');
+Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile')->middleware(['auth']);
 Route::post('/profile/subscribe', [App\Http\Controllers\ProfileController::class, 'toggleSubscription'])->middleware('auth')->name('profile.subscribe');
 
 Route::get('dashboard', function () {
