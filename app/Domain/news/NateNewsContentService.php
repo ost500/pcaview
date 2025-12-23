@@ -47,7 +47,7 @@ class NateNewsContentService
                     $thumbnailUrl = $this->uploadImageToS3($newsItem['picture'], $department->id);
                 }
 
-                // Contents 생성
+                // Contents 생성 (이미 NateNewsService에서 UTF-8 변환됨)
                 Contents::create([
                     'department_id' => $department->id,
                     'type' => 'news', // Nate 뉴스 타입

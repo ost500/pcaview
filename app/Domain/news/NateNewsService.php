@@ -24,6 +24,7 @@ class NateNewsService
                     'User-Agent' => 'Mozilla/5.0 (compatible; LaravelApp/1.0)',
                     'Accept' => 'text/html,application/xhtml+xml',
                     'Accept-Language' => 'ko-KR,ko;q=0.9',
+                    'Accept-Charset' => 'UTF-8',
                 ])
                 ->get(self::SEARCH_URL, [
                     'q' => $keyword,
@@ -37,7 +38,16 @@ class NateNewsService
                 return [];
             }
 
-            return $this->parseNewsItems($response->body());
+            // 응답 본문을 UTF-8로 확실하게 변환
+            $html = $response->body();
+
+            // 인코딩 감지 및 UTF-8 변환
+            $encoding = mb_detect_encoding($html, ['UTF-8', 'EUC-KR', 'CP949', 'ISO-8859-1'], true);
+            if ($encoding && $encoding !== 'UTF-8') {
+                $html = mb_convert_encoding($html, 'UTF-8', $encoding);
+            }
+
+            return $this->parseNewsItems($html);
         } catch (\Exception $e) {
             Log::error('Error fetching Nate news', [
                 'error' => $e->getMessage(),
@@ -54,10 +64,13 @@ class NateNewsService
     {
         $items = [];
 
-        // DOMDocument로 HTML 파싱 (UTF-8 인코딩 명시)
+        // DOMDocument로 HTML 파싱 (이미 UTF-8로 변환된 상태)
         $dom = new \DOMDocument();
         libxml_use_internal_errors(true);
-        $dom->loadHTML('<?xml encoding="UTF-8">' . $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+
+        // UTF-8 선언과 함께 로드
+        @$dom->loadHTML('<?xml encoding="UTF-8">' . $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+
         libxml_clear_errors();
         $xpath = new \DOMXPath($dom);
 
@@ -154,22 +167,11 @@ class NateNewsService
      */
     private function cleanUtf8String(string $text): string
     {
-        // HTML 엔티티 디코딩
-        $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-
-        // UTF-8로 확실하게 변환 (잘못된 문자 제거)
-        $text = mb_convert_encoding($text, 'UTF-8', 'UTF-8');
-
         // 공백 정리
         $text = preg_replace('/\s+/u', ' ', $text);
         $text = trim($text);
 
-        // JSON 인코딩 가능 여부 확인 및 수정
-        if (!mb_check_encoding($text, 'UTF-8')) {
-            // UTF-8이 아닌 경우 강제 변환
-            $text = mb_convert_encoding($text, 'UTF-8', mb_detect_encoding($text));
-        }
-
+        // 이미 UTF-8로 변환되어 있으므로 추가 변환 불필요
         return $text;
     }
 }
