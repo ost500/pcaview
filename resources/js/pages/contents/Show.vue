@@ -115,7 +115,7 @@ onMounted(() => {
 
         <div class="mx-auto w-full max-w-2xl">
             <div class="space-y-4">
-                <div class="page-content space-top pb-20">
+                <div class="page-content py-10">
                     <div class="container pt-0 pb-0">
                         <div class="rounded-lg bg-white shadow">
                             <!-- Department 정보 -->
@@ -164,6 +164,14 @@ onMounted(() => {
 
                             <!-- HTML 본문 내용 -->
                             <div class="p-4" v-if="contents.body">
+                                <img
+                                    :src="contents.thumbnail_url"
+                                    class="w-full"
+                                    :alt="contents.title"
+                                    loading="lazy"
+                                    decoding="async"
+                                />
+
                                 <div class="content-body" v-html="contents.body"></div>
                             </div>
 
@@ -186,16 +194,14 @@ onMounted(() => {
                                     </svg>
                                 </a>
                             </div>
+
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
 
-        <!-- BusinessInfo 최하단 고정 -->
-        <div class="fixed bottom-0 left-0 right-0 z-10 bg-white shadow-lg">
-            <BusinessInfo />
-        </div>
     </div>
 </template>
 
