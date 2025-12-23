@@ -1,5 +1,6 @@
 export type Contents = {
     id: number;
+    type: string;
     title: string;
     body: string;
     file_url: string;

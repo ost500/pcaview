@@ -24,18 +24,15 @@ class OgImageGenerateService
             new Driver()
         );
 
-        if (filter_var($thumbNail, FILTER_VALIDATE_URL)) {
-            $image = $manager->read(file_get_contents($thumbNail));
-        } else {
-            $image = $manager->read(public_path($thumbNail));
-        }
+        $image = $manager->read(file_get_contents($thumbNail));
 
         $image->scale(width: 800);
         $image->crop(width: 800, height: 400);
 
         $encoded = $image->toPng();
 
-        $encoded->save(public_path('og_image.png'));
+        // S3에 OG 이미지 저장
+        \Illuminate\Support\Facades\Storage::put('og_images/og_image.png', (string) $encoded);
 
         cache()->forget('OgImageGenerator');
     }

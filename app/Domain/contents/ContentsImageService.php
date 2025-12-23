@@ -23,35 +23,46 @@ class ContentsImageService
 
         $type = $contents->type;
         $beforePath = "$type/before/{$contents->id}.pdf";
-        Storage::disk('public')->put($beforePath, $response->getBody()->getContents());
 
-        $pdf = new Pdf(Storage::disk('public')->path($beforePath));
+        // S3에 임시 PDF 저장
+        Storage::put($beforePath, $response->getBody()->getContents());
 
-        // after 디렉토리 생성
-        $dir = Storage::disk('public')->path("$type/after");
-        if (!is_dir($dir)) {
-            mkdir($dir, 0755, true);
-        }
+        // 로컬 임시 파일로 다운로드 (PDF 처리용)
+        $tempPdfPath = sys_get_temp_dir() . "/{$contents->id}.pdf";
+        file_put_contents($tempPdfPath, Storage::get($beforePath));
+
+        $pdf = new Pdf($tempPdfPath);
 
         // 전체 페이지 변환
         $pageCount = $pdf->pageCount();
         $contentsImages = collect();
 
         for ($page = 1; $page <= $pageCount; $page++) {
+            // 로컬 임시 파일로 저장
+            $tempImagePath = sys_get_temp_dir() . "/{$contents->id}_{$page}.webp";
             $pdf->selectPage($page)
                 ->format(OutputFormat::Webp)
-                ->save(Storage::disk('public')->path("$type/after/{$contents->id}_{$page}"));
+                ->save($tempImagePath);
 
-            $afterFile = "/storage/$type/after/{$contents->id}_{$page}." . OutputFormat::Webp->value;
+            // S3에 업로드
+            $s3Path = "$type/after/{$contents->id}_{$page}." . OutputFormat::Webp->value;
+            Storage::put($s3Path, file_get_contents($tempImagePath));
+
+            // 로컬 임시 파일 삭제
+            unlink($tempImagePath);
+
+            // S3 URL 생성
+            $fileUrl = Storage::url($s3Path);
             $contentsImages->push(ContentsImage::create([
                 'contents_id' => $contents->id,
                 'page' => $page,
-                'file_url' => $afterFile
+                'file_url' => $fileUrl
             ]));
         }
 
-        // 원본 PDF 삭제
-        Storage::disk('public')->delete($beforePath);
+        // 임시 파일들 삭제
+        unlink($tempPdfPath);
+        Storage::delete($beforePath);
 
         return $contentsImages->sortBy('page');
     }
