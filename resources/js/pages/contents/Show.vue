@@ -85,6 +85,74 @@ const formatDate = (dateString: string) => {
     return date.toLocaleDateString('ko-KR');
 };
 
+// Nate 뉴스 본문 절반으로 자르기 (저작권 보호)
+const displayBody = computed(() => {
+    if (props.contents.type !== 'nate_news' || !props.contents.body) {
+        return props.contents.body;
+    }
+
+    // 임시 div를 만들어서 텍스트 길이 계산
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = props.contents.body;
+
+    const fullText = tempDiv.textContent || tempDiv.innerText || '';
+    const textLength = fullText.length;
+
+    if (textLength === 0) {
+        return props.contents.body;
+    }
+
+    // 절반 지점 계산
+    const halfLength = Math.ceil(textLength / 2);
+
+    // HTML 요소들을 순회하면서 텍스트 길이 누적
+    let currentLength = 0;
+    let truncatePoint: Node | null = null;
+
+    const walker = document.createTreeWalker(
+        tempDiv,
+        NodeFilter.SHOW_ALL,
+        null
+    );
+
+    let currentNode: Node | null;
+    while (currentNode = walker.nextNode()) {
+        if (currentNode.nodeType === Node.TEXT_NODE) {
+            const textContent = currentNode.textContent || '';
+            currentLength += textContent.length;
+
+            if (currentLength >= halfLength) {
+                truncatePoint = currentNode;
+                break;
+            }
+        }
+    }
+
+    if (truncatePoint) {
+        // truncatePoint 이후의 모든 노드 제거
+        let nodeToRemove = truncatePoint.nextSibling;
+        while (nodeToRemove) {
+            const next = nodeToRemove.nextSibling;
+            nodeToRemove.parentNode?.removeChild(nodeToRemove);
+            nodeToRemove = next;
+        }
+
+        // 상위 노드들도 확인하면서 이후 형제 노드 제거
+        let parent = truncatePoint.parentNode;
+        while (parent && parent !== tempDiv) {
+            let sibling = parent.nextSibling;
+            while (sibling) {
+                const next = sibling.nextSibling;
+                sibling.parentNode?.removeChild(sibling);
+                sibling = next;
+            }
+            parent = parent.parentNode;
+        }
+    }
+
+    return tempDiv.innerHTML;
+});
+
 // Kakao AdFit 광고 로드 - 주석 처리
 /*
 const loadKakaoAd = () => {
@@ -236,10 +304,23 @@ onMounted(() => {
                                     decoding="async"
                                 />
 
-                                <div class="content-body" v-html="contents.body"></div>
+                                <div class="content-body" v-html="displayBody"></div>
+
+                                <!-- Nate 뉴스 저작권 안내 -->
+                                <div v-if="contents.type === 'nate_news' && contents.file_url" class="mt-5 rounded border-l-4 border-blue-500 bg-gray-50 p-4">
+                                    <p class="mb-0 text-sm text-gray-600">저작권 보호를 위해 본문의 일부만 표시됩니다.</p>
+                                    <a
+                                        :href="contents.file_url"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="mt-2 inline-flex items-center font-medium text-blue-600 transition hover:text-blue-700"
+                                    >
+                                        원문 보기 →
+                                    </a>
+                                </div>
                             </div>
 
-                            <!-- 외부 링크 (뉴스 타입인 경우) -->
+                            <!-- 외부 링크 (일반 뉴스 타입인 경우) -->
                             <div v-if="contents.type === 'news' && contents.file_url" class="px-4 pb-4">
                                 <a
                                     :href="contents.file_url"

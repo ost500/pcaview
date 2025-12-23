@@ -2,10 +2,11 @@
 
 namespace App\Domain\church\msch;
 
-enum MSCHContentsType
+enum MSCHContentsType: string
 {
-    case BULLETIN;
-    case NEWS;
-    case VIDEO;
-    case HTML;
+    case BULLETIN = 'bulletin';
+    case NEWS = 'news';
+    case NATE_NEWS = 'nate_news';
+    case VIDEO = 'video';
+    case HTML = 'html';
 }
