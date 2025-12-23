@@ -2,7 +2,7 @@
 import { usePage } from '@inertiajs/vue3';
 import { safeRoute, isCurrentRoute } from '@/composables/useSafeRoute';
 import { computed } from 'vue';
-import { Home, Church, Star, User } from 'lucide-vue-next';
+import { Home, Star, User } from 'lucide-vue-next';
 
 const page = usePage();
 const auth = computed(() => page.props.auth);
@@ -41,21 +41,6 @@ const isActive = (routes: string | string[]): boolean => {
                 <span class="text-[0.625rem] font-medium sm:text-xs">홈</span>
             </a>
 
-            <!-- Church -->
-            <a
-                :href="safeRoute('church')"
-                class="group flex min-w-[3.5rem] flex-1 flex-col items-center gap-0.5 py-2 transition-colors active:scale-95 sm:gap-1 sm:px-3"
-                :class="
-                    isActive('church*')
-                        ? 'text-blue-600'
-                        : 'text-gray-600 active:text-blue-600 sm:hover:text-blue-600'
-                "
-                aria-label="교회"
-            >
-                <Church :size="22" :stroke-width="isActive('church*') ? 2.5 : 2" class="sm:h-6 sm:w-6" />
-                <span class="text-[0.625rem] font-medium sm:text-xs">교회</span>
-            </a>
-
             <!-- Department -->
             <a
                 :href="safeRoute('department')"
@@ -65,10 +50,10 @@ const isActive = (routes: string | string[]): boolean => {
                         ? 'text-blue-600'
                         : 'text-gray-600 active:text-blue-600 sm:hover:text-blue-600'
                 "
-                aria-label="부서"
+                aria-label="VIEW"
             >
                 <Star :size="22" :stroke-width="isActive('department*') ? 2.5 : 2" class="sm:h-6 sm:w-6" />
-                <span class="text-[0.625rem] font-medium sm:text-xs">부서</span>
+                <span class="text-[0.625rem] font-medium sm:text-xs">VIEW</span>
             </a>
 
             <!-- Profile -->
