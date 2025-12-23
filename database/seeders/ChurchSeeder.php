@@ -17,7 +17,7 @@ class ChurchSeeder extends Seeder
         DB::table('churches')->truncate();
 
         Church::create([
-            'name' => '명성교회',
+            'name' => 'PCAview',
             'icon_url' => '/image/msch.webp',
             'logo_url' => '/image/msch_logo.jpg',
             'worship_time_image' => '/image/worship_time_image.png',

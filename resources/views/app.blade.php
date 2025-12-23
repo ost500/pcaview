@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="naver-site-verification" content="d38dc0cb3c08594d6f931db8566686d940c6c9e7" />
     <meta name="language" content="Korean" />
-    <meta name="author" content="주보고 - 명성교회" />
+    <meta name="author" content="주보고 - PCAview" />
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
 
     {{-- Inline script to detect system dark mode preference and apply it immediately --}}

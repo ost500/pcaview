@@ -7,7 +7,7 @@ const homeUrl = safeRoute('home');
 
 <template>
     <a :href="homeUrl" class="flex items-center transition-opacity hover:opacity-80" aria-label="홈으로 이동">
-        <img src="/jubogo_logo.png" alt="주보고 로고" class="h-12 w-auto object-contain" />
+        <img src="/jubogo_logo.png" alt="PCAview 로고" class="h-12 w-auto object-contain" />
     </a>
 </template>
 

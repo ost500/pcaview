@@ -55,7 +55,7 @@ class NateNewsContentService
                     'body' => $newsItem['snippet'] ?? null,
                     'file_url' => $newsItem['url'],
                     'thumbnail_url' => $thumbnailUrl,
-                    'published_at' => now(), // Nate 뉴스는 현재 시각 사용
+                    'published_at' => $newsItem['published_at'] ?? now(), // 실제 발행일시 사용
                 ]);
 
                 $savedCount++;

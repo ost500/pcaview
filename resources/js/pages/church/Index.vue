@@ -64,14 +64,14 @@ onMounted(() => {
 <template>
     <div>
         <Head title="교회 목록">
-            <meta name="description" content="명성교회를 포함한 교회 목록입니다. 다양한 교회의 주보와 소식을 확인하세요." />
-            <meta name="keywords" content="명성교회, 교회, 교회 목록, 주보, 교회 소식" />
+            <meta name="description" content="PCAview를 포함한 교회 목록입니다. 다양한 교회의 주보와 소식을 확인하세요." />
+            <meta name="keywords" content="PCAview, 교회, 교회 목록, 주보, 교회 소식" />
 
             <!-- Open Graph -->
             <meta property="og:type" content="website" />
             <meta property="og:url" :content="safeRoute('church')" />
             <meta property="og:title" content="교회 목록" />
-            <meta property="og:description" content="명성교회를 포함한 교회 목록입니다. 다양한 교회의 주보와 소식을 확인하세요." />
+            <meta property="og:description" content="PCAview를 포함한 교회 목록입니다. 다양한 교회의 주보와 소식을 확인하세요." />
 
             <!-- Twitter Card -->
             <meta name="twitter:card" content="summary" />

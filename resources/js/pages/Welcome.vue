@@ -121,23 +121,23 @@ onMounted(() => {
 </script>
 
 <template>
-    <Head title="명성교회 주보와 소식">
+    <Head title="PCAview 주보와 소식">
         <!-- Basic Meta Tags -->
-        <meta name="description" content="명성교회 주보와 소식을 한곳에 모았습니다. 명성교회 부서 주보, 예배 안내, 교회 소식을 확인하세요." />
-        <meta name="keywords" content="명성교회, 명성교회 주보, 명성교회 소식, 교회, 주보, 교회 소식, 교회 공지, 부서 주보, 예배 안내" />
+        <meta name="description" content="PCAview 주보와 소식을 한곳에 모았습니다. PCAview 부서 주보, 예배 안내, 교회 소식을 확인하세요." />
+        <meta name="keywords" content="PCAview, PCAview 주보, PCAview 소식, 교회, 주보, 교회 소식, 교회 공지, 부서 주보, 예배 안내" />
 
         <!-- Open Graph -->
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://jubogo.com" />
-        <meta property="og:title" content="명성교회 - 명성교회 주보와 소식 주보고" />
-        <meta property="og:description" content="명성교회 주보와 소식을 한곳에 모았습니다. 명성교회 부서 주보, 예배 안내, 교회 소식을 확인하세요." />
+        <meta property="og:title" content="PCAview - PCAview 주보와 소식 주보고" />
+        <meta property="og:description" content="PCAview 주보와 소식을 한곳에 모았습니다. PCAview 부서 주보, 예배 안내, 교회 소식을 확인하세요." />
         <meta property="og:site_name" content="주보고" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content="https://jubogo.com" />
-        <meta name="twitter:title" content="명성교회 - 명성교회 주보와 소식 주보고" />
-        <meta name="twitter:description" content="명성교회 주보와 소식을 한곳에 모았습니다. 명성교회 부서 주보, 예배 안내, 교회 소식을 확인하세요." />
+        <meta name="twitter:title" content="PCAview - PCAview 주보와 소식 주보고" />
+        <meta name="twitter:description" content="PCAview 주보와 소식을 한곳에 모았습니다. PCAview 부서 주보, 예배 안내, 교회 소식을 확인하세요." />
 
         <!-- Canonical URL -->
         <link rel="canonical" href="https://jubogo.com" />
@@ -188,7 +188,7 @@ onMounted(() => {
                 </div>
             </div>
             <div class="mb-3 mt-3 sm:mb-4 sm:mt-4">
-                <h2 class="text-base font-semibold text-gray-900 sm:text-lg">명성교회 주보 및 소식</h2>
+                <h2 class="text-base font-semibold text-gray-900 sm:text-lg">PCAview 주보 및 소식</h2>
             </div>
             <!-- 카카오 광고 주석 처리
             <ins class="kakao_ad_area" style="display: block" data-ad-unit="DAN-bE302RQ73kwLuzKI" data-ad-width="320" data-ad-height="50"></ins>

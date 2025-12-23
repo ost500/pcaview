@@ -5,7 +5,7 @@ import { Head } from '@inertiajs/vue3';
 
 <template>
     <Head title="개인정보 처리방침">
-        <meta name="description" content="명성교회 주보고 개인정보 처리방침 - 이용자의 개인정보를 안전하게 보호합니다." />
+        <meta name="description" content="PCAview 주보고 개인정보 처리방침 - 이용자의 개인정보를 안전하게 보호합니다." />
     </Head>
 
     <Header title="개인정보 처리방침"></Header>

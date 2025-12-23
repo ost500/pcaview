@@ -17,7 +17,7 @@ class DepartmentSeeder extends Seeder
         DB::table('departments')->truncate();
 
         Department::create([
-            'name' => '명성교회',
+            'name' => 'PCAview',
             'icon_image' => '/image/msch.webp'
         ]);
 
@@ -32,7 +32,7 @@ class DepartmentSeeder extends Seeder
         ]);
 
         Department::create([
-            'name' => '명성교회 유튜브',
+            'name' => 'PCAview 유튜브',
             'icon_image' => '/image/msch_youtube.png'
         ]);
 

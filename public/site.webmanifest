@@ -1,7 +1,7 @@
 {
-    "name": "명성교회 - 명성교회 주보와 소식 주보고",
-    "short_name": "주보고",
-    "description": "명성교회 주보와 소식을 한곳에 모았습니다. 명성교회 부서 주보, 예배 안내, 교회 소식을 확인하세요.",
+    "name": "PCAview - 대한예수교장로회(합동) 교회 소식",
+    "short_name": "PCAview",
+    "description": "PCAview - 대한예수교장로회(합동) 교회 소식과 주보를 한곳에서 확인하세요.",
     "icons": [
         {
             "src": "/apple-touch-icon.png",

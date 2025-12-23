@@ -132,15 +132,21 @@ class NateNewsService
             $snippet = $this->cleanUtf8String($snippet);
         }
 
-        // 출처 (span.time 내의 첫 번째 텍스트)
+        // 출처 및 발행일시 (span.time 내의 텍스트)
         $timeNodes = $xpath->query('.//span[@class="time"]', $node);
         $source = '';
+        $publishedAt = null;
         if ($timeNodes->length > 0) {
             $timeText = $timeNodes->item(0)->textContent;
             $timeText = $this->cleanUtf8String($timeText);
-            // 날짜 부분 제거하고 언론사만 추출
-            $parts = explode("\n", trim($timeText));
+            // 날짜와 언론사 분리 (예: "연합뉴스\n2025.12.23 14:30")
+            $parts = array_map('trim', explode("\n", trim($timeText)));
             $source = trim($parts[0]);
+
+            // 날짜 파싱
+            if (isset($parts[1])) {
+                $publishedAt = $this->parsePublishedDate($parts[1]);
+            }
         }
 
         // 이미지 (thumb 영역의 img)
@@ -159,6 +165,7 @@ class NateNewsService
             'url' => $url,
             'source' => $source,
             'picture' => $picture,
+            'published_at' => $publishedAt,
         ];
     }
 
@@ -173,5 +180,51 @@ class NateNewsService
 
         // 이미 UTF-8로 변환되어 있으므로 추가 변환 불필요
         return $text;
+    }
+
+    /**
+     * 발행 날짜 문자열 파싱
+     *
+     * @param string $dateString 날짜 문자열 (예: "2025.12.23 14:30", "1시간전", "어제 20:15")
+     * @return string|null Carbon 날짜 문자열 또는 null
+     */
+    private function parsePublishedDate(string $dateString): ?string
+    {
+        try {
+            // "YYYY.MM.DD HH:MM" 형식
+            if (preg_match('/(\d{4})\.(\d{2})\.(\d{2})\s+(\d{2}):(\d{2})/', $dateString, $matches)) {
+                $date = \Carbon\Carbon::createFromFormat(
+                    'Y-m-d H:i',
+                    "{$matches[1]}-{$matches[2]}-{$matches[3]} {$matches[4]}:{$matches[5]}"
+                );
+                return $date->toDateTimeString();
+            }
+
+            // "N시간전" 형식
+            if (preg_match('/(\d+)시간전/', $dateString, $matches)) {
+                return \Carbon\Carbon::now()->subHours((int) $matches[1])->toDateTimeString();
+            }
+
+            // "N분전" 형식
+            if (preg_match('/(\d+)분전/', $dateString, $matches)) {
+                return \Carbon\Carbon::now()->subMinutes((int) $matches[1])->toDateTimeString();
+            }
+
+            // "어제 HH:MM" 형식
+            if (preg_match('/어제\s+(\d{2}):(\d{2})/', $dateString, $matches)) {
+                return \Carbon\Carbon::yesterday()
+                    ->setTime((int) $matches[1], (int) $matches[2])
+                    ->toDateTimeString();
+            }
+
+            // 파싱 실패 시 현재 시각 반환
+            return \Carbon\Carbon::now()->toDateTimeString();
+        } catch (\Exception $e) {
+            Log::warning('Failed to parse published date', [
+                'date_string' => $dateString,
+                'error' => $e->getMessage(),
+            ]);
+            return \Carbon\Carbon::now()->toDateTimeString();
+        }
     }
 }

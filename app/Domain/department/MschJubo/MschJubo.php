@@ -10,7 +10,7 @@ class MschJubo implements DepartmentInterface
 {
     public function getModel(): Department
     {
-        return Department::where('name', '명성교회')->first();
+        return Department::where('name', 'PCAview')->first();
     }
 
     public function contentsUrl(?string $path = null): string

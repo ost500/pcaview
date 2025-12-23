@@ -11,7 +11,7 @@ class MschYoutube implements DepartmentInterface
 
     public function getModel(): Department
     {
-        $departmentName = '명성교회 유튜브';
+        $departmentName = 'PCAview 유튜브';
         $department = Department::where('name', $departmentName)->first();
         if (!$department) {
             $department = Department::create([
