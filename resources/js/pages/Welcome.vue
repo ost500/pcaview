@@ -121,23 +121,23 @@ onMounted(() => {
 </script>
 
 <template>
-    <Head title="PCAView 소식">
+    <Head title="PCAview">
         <!-- Basic Meta Tags -->
-        <meta name="description" content="PCAview 주보와 소식을 한곳에 모았습니다. PCAview 부서 주보, 예배 안내, 교회 소식을 확인하세요." />
-        <meta name="keywords" content="PCAview, PCAview 주보, PCAview 소식, 교회, 주보, 교회 소식, 교회 공지, 부서 주보, 예배 안내" />
+        <meta name="description" content="빠르게 돌아가는 세상을 바라보는 뷰 피카뷰" />
+        <meta name="keywords" content="PCAview, 피카뷰, 트렌드, 뉴스, 소식" />
 
         <!-- Open Graph -->
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://jubogo.com" />
-        <meta property="og:title" content="PCAview - PCAview 주보와 소식 주보고" />
-        <meta property="og:description" content="PCAview 주보와 소식을 한곳에 모았습니다. PCAview 부서 주보, 예배 안내, 교회 소식을 확인하세요." />
-        <meta property="og:site_name" content="주보고" />
+        <meta property="og:title" content="PCAview - 빠르게 돌아가는 세상을 바라보는 뷰 피카뷰" />
+        <meta property="og:description" content="빠르게 돌아가는 세상을 바라보는 뷰 피카뷰" />
+        <meta property="og:site_name" content="PCAview" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content="https://jubogo.com" />
-        <meta name="twitter:title" content="PCAview - PCAview 주보와 소식 주보고" />
-        <meta name="twitter:description" content="PCAview 주보와 소식을 한곳에 모았습니다. PCAview 부서 주보, 예배 안내, 교회 소식을 확인하세요." />
+        <meta name="twitter:title" content="PCAview - 빠르게 돌아가는 세상을 바라보는 뷰 피카뷰" />
+        <meta name="twitter:description" content="빠르게 돌아가는 세상을 바라보는 뷰 피카뷰" />
 
         <!-- Canonical URL -->
         <link rel="canonical" href="https://jubogo.com" />
