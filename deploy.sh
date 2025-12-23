@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# 배포 스크립트 - jubogo.com SSR 배포
+# 배포 스크립트 - pcaview.com SSR 배포
 # 사용법: bash deploy.sh
 
 set -e  # 에러 발생 시 중단
 
-echo "🚀 jubogo.com 배포 시작..."
+echo "🚀 pcaview.com 배포 시작..."
 
 # 1. Git 변경사항 확인
 echo "📦 Git 상태 확인..."
@@ -18,11 +18,11 @@ git push origin main
 # 3. 프로덕션 서버 배포
 echo "🌐 프로덕션 서버 배포 중..."
 
-ssh forge@jubogo.com << 'ENDSSH'
+ssh forge@pcaview.com << 'ENDSSH'
 set -e
 
 echo "📂 프로젝트 디렉토리로 이동..."
-cd jubogo.com
+cd pcaview.com
 
 echo "⬇️  최신 코드 가져오기..."
 git pull origin main
@@ -63,8 +63,8 @@ echo ""
 echo "✨ 배포가 완료되었습니다!"
 echo ""
 echo "🧪 테스트 URL:"
-echo "   - 홈: https://jubogo.com/"
-echo "   - 콘텐츠: https://jubogo.com/contents/201"
+echo "   - 홈: https://pcaview.com/"
+echo "   - 콘텐츠: https://pcaview.com/contents/201"
 echo ""
 echo "📝 확인 사항:"
 echo "   1. 페이지가 정상 로드되는지"

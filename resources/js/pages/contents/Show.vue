@@ -92,24 +92,24 @@ onMounted(() => {
 
             <!-- Open Graph / Facebook -->
             <meta property="og:type" content="article" />
-            <meta property="og:url" :content="`https://jubogo.com/contents/${contents.id}`" />
+            <meta property="og:url" :content="`https://pcaview.com/contents/${contents.id}`" />
             <meta property="og:title" :content="`PCAview ${contents.title}`" />
             <meta property="og:description" :content="`PCAview ${contents.title} - ${contents.department?.name || '교회 소식'}`" />
             <meta property="og:image" :content="contents.thumbnail_url" />
             <meta property="og:image:width" content="1200" />
             <meta property="og:image:height" content="630" />
-            <meta property="og:site_name" content="주보고" />
+            <meta property="og:site_name" content="PCAview" />
             <meta property="article:published_time" :content="contents.published_at" />
 
             <!-- Twitter Card -->
             <meta name="twitter:card" content="summary_large_image" />
-            <meta name="twitter:url" :content="`https://jubogo.com/contents/${contents.id}`" />
+            <meta name="twitter:url" :content="`https://pcaview.com/contents/${contents.id}`" />
             <meta name="twitter:title" :content="`PCAview ${contents.title}`" />
             <meta name="twitter:description" :content="`PCAview ${contents.title} - ${contents.department?.name || '교회 소식'}`" />
             <meta name="twitter:image" :content="contents.thumbnail_url" />
 
             <!-- Canonical URL -->
-            <link rel="canonical" :href="`https://jubogo.com/contents/${contents.id}`" />
+            <link rel="canonical" :href="`https://pcaview.com/contents/${contents.id}`" />
         </Head>
         <Header title="VIEW" :backbutton="true"></Header>
 

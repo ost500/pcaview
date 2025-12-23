@@ -13,4 +13,4 @@ Allow: /
 User-agent: Googlebot
 Allow: /
 
-Sitemap: https://jubogo.com/sitemap.xml
+Sitemap: https://pcaview.com/sitemap.xml

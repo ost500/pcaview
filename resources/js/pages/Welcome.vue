@@ -128,19 +128,19 @@ onMounted(() => {
 
         <!-- Open Graph -->
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://jubogo.com" />
+        <meta property="og:url" content="https://pcaview.com" />
         <meta property="og:title" content="PCAview - 빠르게 돌아가는 세상을 바라보는 뷰 피카뷰" />
         <meta property="og:description" content="빠르게 돌아가는 세상을 바라보는 뷰 피카뷰" />
         <meta property="og:site_name" content="PCAview" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content="https://jubogo.com" />
+        <meta name="twitter:url" content="https://pcaview.com" />
         <meta name="twitter:title" content="PCAview - 빠르게 돌아가는 세상을 바라보는 뷰 피카뷰" />
         <meta name="twitter:description" content="빠르게 돌아가는 세상을 바라보는 뷰 피카뷰" />
 
         <!-- Canonical URL -->
-        <link rel="canonical" href="https://jubogo.com" />
+        <link rel="canonical" href="https://pcaview.com" />
     </Head>
 
     <!-- PWA 설치 프롬프트 -->

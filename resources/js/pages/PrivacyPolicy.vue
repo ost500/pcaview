@@ -170,7 +170,7 @@ import { Head } from '@inertiajs/vue3';
                     </p>
                     <div class="rounded-lg border border-sidebar-border bg-muted/30 p-4">
                         <p class="font-medium">개인정보 보호책임자</p>
-                        <p class="text-muted-foreground">이메일: privacy@jubogo.com</p>
+                        <p class="text-muted-foreground">이메일: privacy@pcaview.com</p>
                     </div>
                 </section>
 

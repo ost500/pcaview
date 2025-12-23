@@ -42,7 +42,7 @@ async function run() {
 
         await page.waitForNavigation({ waitUntil: 'networkidle2' });
 
-        await page.type('.KDC_Input__root__3M8Hf', 'https://jubogo.com');
+        await page.type('.KDC_Input__root__3M8Hf', 'https://pcaview.com');
         await page.click('button.KDC_Button__root__N26ep.KDC_Button__normal_medium__mu29P.KDC_Button__color_special__CUcY7.purge-btn')
 
         await page.waitForResponse(url);
@@ -50,7 +50,7 @@ async function run() {
         await page.evaluate(() => {
             document.querySelector('.KDC_Input__root__3M8Hf').value = '';
         });
-        await page.type('.KDC_Input__root__3M8Hf', 'jubogo.com');
+        await page.type('.KDC_Input__root__3M8Hf', 'pcaview.com');
         await page.click('button.KDC_Button__root__N26ep.KDC_Button__normal_medium__mu29P.KDC_Button__color_special__CUcY7.purge-btn')
 
         await page.waitForResponse(url);
