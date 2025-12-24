@@ -143,7 +143,8 @@ onMounted(() => {
         <link rel="canonical" href="https://pcaview.com" />
     </Head>
 
-    <!-- PWA 설치 프롬프트 -->
+    <!-- PWA 설치 프롬프트 - 임시 주석처리 -->
+    <!--
     <InstallPrompt
         :show-install-prompt="showInstallPrompt"
         :is-android="isAndroid"
@@ -151,8 +152,10 @@ onMounted(() => {
         @dismiss="dismissPrompt"
         @dismiss-permanently="dismissPermanently"
     />
+    -->
 
-    <!-- iOS 설치 안내 모달 -->
+    <!-- iOS 설치 안내 모달 - 임시 주석처리 -->
+    <!--
     <IOSInstallInstructions
         :show-i-o-s-instructions="showIOSInstructions"
         :is-i-o-s="isIOS"
@@ -160,11 +163,14 @@ onMounted(() => {
         @close="closeIOSInstructions"
         @dismiss-permanently="dismissPermanently"
     />
+    -->
 
-    <!-- 개발용 디버그 버튼 (임시) -->
+    <!-- 개발용 디버그 버튼 (임시) - 주석처리 -->
+    <!--
     <div v-if="isDev" class="fixed right-4 bottom-20 z-50">
         <button @click="debugResetPWA" class="rounded bg-red-600 px-3 py-2 text-xs text-white shadow-lg hover:bg-red-700">PWA 초기화</button>
     </div>
+    -->
 
     <Header title="홈"></Header>
 
