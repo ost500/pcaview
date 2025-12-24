@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { safeRoute } from '@/composables/useSafeRoute';
 import { Contents } from '@/types/contents';
 import { onMounted, onUnmounted, ref } from 'vue';
-import { safeRoute } from '@/composables/useSafeRoute';
 // import CoupangAd from '@/components/ads/CoupangAd.vue'; // 광고 주석 처리
 
 const props = defineProps<{
@@ -21,6 +21,12 @@ let observer: IntersectionObserver | null = null;
 function goToContent(id: number) {
     if (typeof window !== 'undefined') {
         window.location.href = safeRoute('contents.show', { id: id });
+    }
+}
+
+function goToDepartment(id: number) {
+    if (typeof window !== 'undefined') {
+        window.location.href = safeRoute('department.show', { id: id });
     }
 }
 
@@ -85,7 +91,7 @@ onMounted(() => {
                 root: null,
                 rootMargin: '200px',
                 threshold: 0.1,
-            }
+            },
         );
 
         observer.observe(loadMoreTrigger.value);
@@ -105,42 +111,35 @@ onUnmounted(() => {
         <div class="space-y-4">
             <template v-for="(content, index) in props.contents" :key="content.id">
                 <div
-                    class="cursor-pointer overflow-hidden rounded-lg bg-gradient-to-br from-sky-50 to-blue-50 shadow-sm transition-all hover:shadow-md hover:from-sky-100 hover:to-blue-100"
-                    @click="goToContent(content.id)"
+                    class="cursor-pointer overflow-hidden rounded-lg bg-gradient-to-br from-sky-50 to-blue-50 shadow-sm transition-all hover:from-sky-100 hover:to-blue-100 hover:shadow-md"
                 >
                     <!-- Department 정보 -->
-                    <div v-if="content.department" class="flex items-center gap-3 border-b border-sky-100 bg-white/50 px-4 py-3 backdrop-blur-sm">
+                    <div
+                        v-if="content.department"
+                        @click="goToDepartment(content.department.id)"
+                        class="flex items-center gap-3 border-b border-sky-100 bg-white/50 px-4 py-3 backdrop-blur-sm"
+                    >
                         <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
-                            <img
-                                :src="content.department.icon_image"
-                                :alt="content.department.name"
-                                class="h-full w-full object-cover"
-                            />
+                            <img :src="content.department.icon_image" :alt="content.department.name" class="h-full w-full object-cover" />
                         </div>
                         <span class="text-sm font-semibold text-sky-900">{{ content.department.name }}</span>
                     </div>
 
                     <!-- 내용: 이미지 또는 텍스트 미리보기 -->
-                    <div v-if="!isHtmlType(content)" class="max-h-[600px] overflow-hidden">
-                        <img
-                            :src="content.thumbnail_url"
-                            class="w-full object-cover"
-                            alt="콘텐츠 이미지"
-                            loading="lazy"
-                        />
+                    <div v-if="!isHtmlType(content)" class="max-h-[600px] overflow-hidden" @click="goToContent(content.id)">
+                        <img v-if="content.thumbnail_url" :src="content.thumbnail_url" class="w-full object-cover" alt="콘텐츠 이미지" loading="lazy" />
                     </div>
-                    <div v-if="isHtmlType(content)" class="bg-white/60 px-4 py-3 backdrop-blur-sm">
+                    <div v-if="isHtmlType(content)" class="bg-white/60 px-4 py-3 backdrop-blur-sm" @click="goToContent(content.id)">
                         <p class="preview-text mb-0 text-sm text-slate-700">
                             {{ extractTextFromHtml(content.body) }}
                         </p>
                     </div>
 
                     <!-- 타이틀 및 자세히 버튼 -->
-                    <div class="bg-white/60 px-4 py-3 backdrop-blur-sm">
+                    <div class="bg-white/60 px-4 py-3 backdrop-blur-sm" @click="goToContent(content.id)">
                         <h5 class="mb-3 text-base font-semibold text-sky-900">{{ content.title }}</h5>
                         <div class="text-right">
                             <a
-                                :href="safeRoute('contents.show', { id: content.id })"
                                 class="inline-block rounded-md bg-sky-600 px-4 py-1.5 text-xs font-medium text-white transition-colors hover:bg-sky-700 active:bg-sky-800"
                             >
                                 자세히
@@ -155,12 +154,14 @@ onUnmounted(() => {
 
             <!-- Infinite scroll trigger -->
             <div ref="loadMoreTrigger" class="py-4 text-center">
-                <div v-if="isLoading" class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" role="status">
+                <div
+                    v-if="isLoading"
+                    class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent"
+                    role="status"
+                >
                     <span class="sr-only">로딩 중...</span>
                 </div>
-                <div v-else-if="!hasMore" class="text-sm text-gray-500">
-                    모든 소식을 불러왔습니다
-                </div>
+                <div v-else-if="!hasMore" class="text-sm text-gray-500">모든 소식을 불러왔습니다</div>
             </div>
         </div>
     </div>

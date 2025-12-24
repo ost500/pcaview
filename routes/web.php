@@ -4,6 +4,7 @@ use App\Http\Controllers\ChurchController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ContentsController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\FeedController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -27,6 +28,8 @@ Route::get('contents/{id}', [ContentsController::class, 'show'])->name('contents
 
 Route::post('/contents/{content}/comments', [CommentController::class, 'store'])->name('comments.store');
 Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->middleware('auth')->name('comments.destroy');
+
+Route::post('/feed', [FeedController::class, 'store'])->name('feed.store');
 
 Route::get('/privacy-policy', function () {
     return Inertia::render('PrivacyPolicy');

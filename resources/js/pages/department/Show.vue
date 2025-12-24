@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import BusinessInfo from '@/components/BusinessInfo.vue';
 import ContentsList from '@/components/contents/ContentsList.vue';
+import FeedComposer from '@/components/feed/FeedComposer.vue';
 import Header from '@/components/template/Header.vue';
 import { safeRoute } from '@/composables/useSafeRoute';
 import { Contents } from '@/types/contents';
@@ -96,6 +97,9 @@ watch(
                     <p v-if="department.description" class="mt-1 text-sm text-gray-600">{{ department.description }}</p>
                 </div>
             </div>
+
+            <!-- 피드 작성 컴포넌트 -->
+            <FeedComposer :department="department" />
 
             <!-- 컨텐츠 리스트 -->
             <ContentsList :contents="allContents" :is-loading="isLoading" :has-more="hasMorePages" @load-more="loadMore"></ContentsList>

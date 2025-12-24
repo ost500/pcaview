@@ -268,7 +268,7 @@ onMounted(() => {
                                 <h5 class="mb-0 text-lg font-semibold">{{ contents.title }}</h5>
                             </div>
 
-                            <!-- 이미지 또는 비디오 -->
+                           <!-- 이미지 또는 비디오 -->
                             <div v-if="contents.file_type != 'YOUTUBE' && contents.file_type != 'HTML'">
                                 <div v-for="(image, index) in contents.images" v-bind:key="image.id">
                                     <img
@@ -296,14 +296,6 @@ onMounted(() => {
 
                             <!-- HTML 본문 내용 -->
                             <div class="p-4" v-if="contents.body">
-                                <img
-                                    :src="contents.thumbnail_url"
-                                    class="w-full"
-                                    :alt="contents.title"
-                                    loading="lazy"
-                                    decoding="async"
-                                />
-
                                 <div class="content-body" v-html="displayBody"></div>
 
                                 <!-- Nate 뉴스 저작권 안내 -->
