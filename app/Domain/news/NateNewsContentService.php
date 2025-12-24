@@ -52,7 +52,7 @@ class NateNewsContentService
                 // 이미지가 있으면 S3에 업로드
                 $thumbnailUrl = null;
                 if (!empty($newsItem['picture'])) {
-                    $thumbnailUrl = $this->uploadImageToS3($newsItem['picture'], $department->id);
+                    $thumbnailUrl = $this->uploadImageToS3($newsItem['picture'], $department->id, true);
                 }
 
                 // 뉴스 URL에서 본문 내용 및 제목 크롤링
@@ -65,7 +65,7 @@ class NateNewsContentService
                 $publishedAt = $newsData['published_at'] ?? $newsItem['published_at'] ?? now();
 
                 // Contents 생성 (이미 NateNewsService에서 UTF-8 변환됨)
-                Contents::create([
+                $contents = Contents::create([
                     'department_id' => $department->id,
                     'type' => ContentsType::NATE_NEWS, // Nate 뉴스 타입
                     'title' => $title,
@@ -74,6 +74,30 @@ class NateNewsContentService
                     'thumbnail_url' => $thumbnailUrl,
                     'published_at' => $publishedAt, // 크롤링한 발행일시 우선 사용
                 ]);
+
+                // 본문에서 추출한 이미지 저장
+                if (!empty($newsData['images']) && is_array($newsData['images'])) {
+                    foreach ($newsData['images'] as $index => $imageUrl) {
+                        try {
+                            // 이미지 URL을 S3에 업로드
+                            $uploadedUrl = $this->uploadImageToS3($imageUrl, $department->id);
+
+                            if ($uploadedUrl) {
+                                // ContentsImage 레코드 생성
+                                $contents->images()->create([
+                                    'file_url' => $uploadedUrl,
+                                    'order' => $index,
+                                ]);
+                            }
+                        } catch (\Exception $e) {
+                            Log::warning('Failed to save image for content', [
+                                'content_id' => $contents->id,
+                                'image_url' => $imageUrl,
+                                'error' => $e->getMessage(),
+                            ]);
+                        }
+                    }
+                }
 
                 $savedCount++;
             } catch (\Exception $e) {
@@ -88,10 +112,10 @@ class NateNewsContentService
     }
 
     /**
-     * 뉴스 URL에서 제목, 본문, 발행일시 크롤링
+     * 뉴스 URL에서 제목, 본문, 발행일시, 이미지 크롤링
      *
      * @param string $url 뉴스 URL
-     * @return array{title: string|null, body: string|null, published_at: string|null} 제목, 본문, 발행일시 배열
+     * @return array{title: string|null, body: string|null, published_at: string|null, images: array} 제목, 본문, 발행일시, 이미지 배열
      */
     private function fetchNewsBody(string $url): array
     {
@@ -107,7 +131,7 @@ class NateNewsContentService
 
             if (!$response->successful()) {
                 Log::warning('Failed to fetch news body', ['url' => $url]);
-                return ['title' => null, 'body' => null, 'published_at' => null];
+                return ['title' => null, 'body' => null, 'published_at' => null, 'images' => []];
             }
 
             $html = $response->body();
@@ -130,15 +154,15 @@ class NateNewsContentService
                 'error' => $e->getMessage(),
                 'url' => $url,
             ]);
-            return ['title' => null, 'body' => null, 'published_at' => null];
+            return ['title' => null, 'body' => null, 'published_at' => null, 'images' => []];
         }
     }
 
     /**
-     * HTML에서 제목, 본문, 발행일시 추출
+     * HTML에서 제목, 본문, 발행일시, 이미지 추출
      *
      * @param string $html HTML 내용 (UTF-8 인코딩)
-     * @return array{title: string|null, body: string|null, published_at: string|null} 제목, 본문, 발행일시 배열
+     * @return array{title: string|null, body: string|null, published_at: string|null, images: array} 제목, 본문, 발행일시, 이미지 배열
      */
     private function extractTitleAndBodyFromHtml(string $html): array
     {
@@ -261,10 +285,20 @@ class NateNewsContentService
             }
         }
 
+        // 본문에서 이미지 URL 추출
+        $images = [];
+        if ($bodyHtml) {
+            $imgPattern = '/<img[^>]+src=["\']([^"\']+)["\'][^>]*>/i';
+            if (preg_match_all($imgPattern, $bodyHtml, $matches)) {
+                $images = array_slice($matches[1], 0, 10); // 최대 10개 이미지
+            }
+        }
+
         return [
             'title' => $title,
             'body' => $bodyHtml,
             'published_at' => $publishedAt,
+            'images' => $images,
         ];
     }
 
@@ -428,9 +462,10 @@ class NateNewsContentService
      *
      * @param string $imageUrl 원본 이미지 URL
      * @param int $departmentId Department ID
+     * @param bool $isThumbnail 썸네일 여부 (기본값: false)
      * @return string|null S3 URL 또는 null (실패 시)
      */
-    private function uploadImageToS3(string $imageUrl, int $departmentId): ?string
+    private function uploadImageToS3(string $imageUrl, int $departmentId, bool $isThumbnail = false): ?string
     {
         try {
             // 외부 이미지 다운로드
@@ -447,9 +482,10 @@ class NateNewsContentService
                 $extension = 'jpg';
             }
 
-            // S3 저장 경로 생성
+            // S3 저장 경로 생성 (썸네일과 일반 이미지 구분)
             $fileName = Str::uuid() . '.' . $extension;
-            $s3Path = "news/thumbnails/{$departmentId}/{$fileName}";
+            $folder = $isThumbnail ? 'thumbnails' : 'images';
+            $s3Path = "news/{$folder}/{$departmentId}/{$fileName}";
 
             // S3에 업로드
             Storage::put($s3Path, $response->body());
