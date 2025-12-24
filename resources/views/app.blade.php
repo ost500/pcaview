@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="naver-site-verification" content="d38dc0cb3c08594d6f931db8566686d940c6c9e7" />
+    <meta name="naver-site-verification" content="412837f0e82d7f332b93f558db15607fbf8c9c40" />
     <meta name="language" content="Korean" />
     <meta name="author" content="주보고 - PCAview" />
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
