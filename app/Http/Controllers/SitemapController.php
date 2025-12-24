@@ -48,7 +48,18 @@ class SitemapController extends Controller
             $lastmod = $department->updated_at
                 ? (is_string($department->updated_at) ? $department->updated_at : $department->updated_at->format('Y-m-d'))
                 : null;
-            $this->addUrl($xml, $urlset, route('department.show', $department->id), 'daily', '0.8', $lastmod);
+
+            // Add department icon as image
+            $images = [];
+            if ($department->icon_image) {
+                $images[] = [
+                    'loc' => $this->ensureAbsoluteUrl($department->icon_image),
+                    'title' => $department->name,
+                    'caption' => $department->name . ' - ' . ($department->description ?? '부서'),
+                ];
+            }
+
+            $this->addUrl($xml, $urlset, route('department.show', $department->id), 'daily', '0.8', $lastmod, $images);
         }
 
         // Contents with images
