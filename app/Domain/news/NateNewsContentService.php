@@ -59,9 +59,10 @@ class NateNewsContentService
                 $this->currentNewsUrl = $newsItem['url'];
                 $newsData = $this->fetchNewsBody($newsItem['url']);
 
-                // 제목과 본문 추출 (크롤링한 데이터가 있으면 사용, 없으면 원본 사용)
+                // 제목, 본문, 발행일시 추출 (크롤링한 데이터가 있으면 사용, 없으면 원본 사용)
                 $title = $newsData['title'] ?? $newsItem['title'];
                 $body = $newsData['body'] ?? $newsItem['snippet'] ?? null;
+                $publishedAt = $newsData['published_at'] ?? $newsItem['published_at'] ?? now();
 
                 // Contents 생성 (이미 NateNewsService에서 UTF-8 변환됨)
                 Contents::create([
@@ -71,7 +72,7 @@ class NateNewsContentService
                     'body' => $body,
                     'file_url' => $newsItem['url'],
                     'thumbnail_url' => $thumbnailUrl,
-                    'published_at' => $newsItem['published_at'] ?? now(), // 실제 발행일시 사용
+                    'published_at' => $publishedAt, // 크롤링한 발행일시 우선 사용
                 ]);
 
                 $savedCount++;
@@ -87,10 +88,10 @@ class NateNewsContentService
     }
 
     /**
-     * 뉴스 URL에서 제목과 본문 내용 크롤링
+     * 뉴스 URL에서 제목, 본문, 발행일시 크롤링
      *
      * @param string $url 뉴스 URL
-     * @return array{title: string|null, body: string|null} 제목과 본문 배열
+     * @return array{title: string|null, body: string|null, published_at: string|null} 제목, 본문, 발행일시 배열
      */
     private function fetchNewsBody(string $url): array
     {
@@ -106,7 +107,7 @@ class NateNewsContentService
 
             if (!$response->successful()) {
                 Log::warning('Failed to fetch news body', ['url' => $url]);
-                return ['title' => null, 'body' => null];
+                return ['title' => null, 'body' => null, 'published_at' => null];
             }
 
             $html = $response->body();
@@ -129,15 +130,15 @@ class NateNewsContentService
                 'error' => $e->getMessage(),
                 'url' => $url,
             ]);
-            return ['title' => null, 'body' => null];
+            return ['title' => null, 'body' => null, 'published_at' => null];
         }
     }
 
     /**
-     * HTML에서 제목과 본문 추출
+     * HTML에서 제목, 본문, 발행일시 추출
      *
      * @param string $html HTML 내용 (UTF-8 인코딩)
-     * @return array{title: string|null, body: string|null} 제목과 본문 배열
+     * @return array{title: string|null, body: string|null, published_at: string|null} 제목, 본문, 발행일시 배열
      */
     private function extractTitleAndBodyFromHtml(string $html): array
     {
@@ -228,9 +229,41 @@ class NateNewsContentService
             }
         }
 
+        // 발행일시 추출
+        $publishedAt = null;
+        $dateSelectors = [
+            "//meta[@property='article:published_time']/@content",  // OG article 발행일
+            "//meta[@name='article:published_time']/@content",
+            "//time[@class='date']/@datetime",                      // 네이트 뉴스 날짜
+            "//time[@itemprop='datePublished']/@datetime",          // Schema.org
+            "//span[@class='date']",                                // 네이트 뉴스 날짜 텍스트
+            "//span[contains(@class, 'article-date')]",
+            "//span[contains(@class, 'news-date')]",
+            "//div[@class='info']//span[contains(text(), '20')]",  // 날짜 포함 텍스트
+        ];
+
+        foreach ($dateSelectors as $selector) {
+            $nodes = $xpath->query($selector);
+            if ($nodes && $nodes->length > 0) {
+                $dateNode = $nodes->item(0);
+                if ($dateNode) {
+                    $dateText = trim($dateNode->nodeValue ?? $dateNode->textContent);
+                    if (!empty($dateText)) {
+                        // 날짜 파싱 시도
+                        $parsedDate = $this->parsePublishedDate($dateText);
+                        if ($parsedDate) {
+                            $publishedAt = $parsedDate;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
         return [
             'title' => $title,
             'body' => $bodyHtml,
+            'published_at' => $publishedAt,
         ];
     }
 
@@ -426,6 +459,67 @@ class NateNewsContentService
             Log::error('Failed to upload image to S3', [
                 'error' => $e->getMessage(),
                 'image_url' => $imageUrl,
+            ]);
+            return null;
+        }
+    }
+
+    /**
+     * 발행 날짜 문자열 파싱
+     *
+     * @param string $dateString 날짜 문자열 (예: "2025.12.23 14:30", "1시간전", "어제 20:15", ISO 8601)
+     * @return string|null Carbon 날짜 문자열 또는 null
+     */
+    private function parsePublishedDate(string $dateString): ?string
+    {
+        try {
+            // ISO 8601 형식 (예: 2025-12-23T14:30:00Z, 2025-12-23T14:30:00+09:00)
+            if (preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/', $dateString)) {
+                $date = \Carbon\Carbon::parse($dateString);
+                return $date->toDateTimeString();
+            }
+
+            // "YYYY.MM.DD HH:MM" 형식
+            if (preg_match('/(\d{4})\.(\d{2})\.(\d{2})\s+(\d{2}):(\d{2})/', $dateString, $matches)) {
+                $date = \Carbon\Carbon::createFromFormat(
+                    'Y-m-d H:i',
+                    "{$matches[1]}-{$matches[2]}-{$matches[3]} {$matches[4]}:{$matches[5]}"
+                );
+                return $date->toDateTimeString();
+            }
+
+            // "YYYY-MM-DD HH:MM:SS" 형식
+            if (preg_match('/(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):(\d{2})/', $dateString, $matches)) {
+                $date = \Carbon\Carbon::createFromFormat(
+                    'Y-m-d H:i:s',
+                    "{$matches[1]}-{$matches[2]}-{$matches[3]} {$matches[4]}:{$matches[5]}:{$matches[6]}"
+                );
+                return $date->toDateTimeString();
+            }
+
+            // "N시간전" 형식
+            if (preg_match('/(\d+)시간전/', $dateString, $matches)) {
+                return \Carbon\Carbon::now()->subHours((int) $matches[1])->toDateTimeString();
+            }
+
+            // "N분전" 형식
+            if (preg_match('/(\d+)분전/', $dateString, $matches)) {
+                return \Carbon\Carbon::now()->subMinutes((int) $matches[1])->toDateTimeString();
+            }
+
+            // "어제 HH:MM" 형식
+            if (preg_match('/어제\s+(\d{2}):(\d{2})/', $dateString, $matches)) {
+                return \Carbon\Carbon::yesterday()
+                    ->setTime((int) $matches[1], (int) $matches[2])
+                    ->toDateTimeString();
+            }
+
+            // 파싱 실패 시 null 반환 (현재 시각 사용하지 않음)
+            return null;
+        } catch (\Exception $e) {
+            Log::warning('Failed to parse published date', [
+                'date_string' => $dateString,
+                'error' => $e->getMessage(),
             ]);
             return null;
         }
