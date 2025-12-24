@@ -23,7 +23,6 @@
         "spatie/pdf-to-image": "^3.1",
         "symfony/css-selector": "^7.3",
         "symfony/dom-crawler": "^7.3",
-        "symfony/filesystem": "^7.3",
         "tightenco/ziggy": "^2.5"
     },
     "require-dev": {
