@@ -41,10 +41,15 @@ class NateNewsService
             // 응답 본문을 UTF-8로 확실하게 변환
             $html = $response->body();
 
-            // 인코딩 감지 및 UTF-8 변환
-            $encoding = mb_detect_encoding($html, ['UTF-8', 'EUC-KR', 'CP949', 'ISO-8859-1'], true);
+            // 인코딩 감지 및 UTF-8 변환 (잘못된 문자 무시)
+            $encoding = mb_detect_encoding($html, ['UTF-8', 'EUC-KR', 'CP949'], true);
             if ($encoding && $encoding !== 'UTF-8') {
-                $html = mb_convert_encoding($html, 'UTF-8', $encoding);
+                // iconv로 변환 시 잘못된 문자 무시 (//IGNORE)
+                $html = iconv($encoding, 'UTF-8//IGNORE', $html);
+                if ($html === false) {
+                    // iconv 실패 시 mb_convert_encoding 사용
+                    $html = mb_convert_encoding($response->body(), 'UTF-8', $encoding);
+                }
             }
 
             return $this->parseNewsItems($html);
@@ -68,8 +73,9 @@ class NateNewsService
         $dom = new \DOMDocument();
         libxml_use_internal_errors(true);
 
-        // UTF-8 선언과 함께 로드
-        @$dom->loadHTML('<?xml encoding="UTF-8">' . $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        // HTML 로드 (meta charset으로 인코딩 지정)
+        $htmlWithCharset = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">' . $html;
+        @$dom->loadHTML($htmlWithCharset);
 
         libxml_clear_errors();
         $xpath = new \DOMXPath($dom);

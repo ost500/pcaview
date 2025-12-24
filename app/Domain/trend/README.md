@@ -119,7 +119,7 @@ class TrendController extends Controller
 
     public function index(): JsonResponse
     {
-        $trends = $this->trendsService->fetchTopTrends(10);
+        $trends = $this->trendsService->****fetchTopTrends(10);
 
         return response()->json([
             'trends' => $this->trendsService->trendsToArray($trends),
