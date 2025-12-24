@@ -23,8 +23,8 @@
         })();
     </script>
     <!-- Google tag (gtag.js) -->
-    @if(app()->isProduction() && config('services.google.analytics_id'))
-        <script async src="https://www.googletagmanager.com/gtag/js?id={{ config('services.google.analytics_id') }}"></script>
+    @if(app()->isProduction())
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-4S522L2ZLN"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
 
@@ -34,14 +34,7 @@
 
             gtag('js', new Date());
 
-            gtag('config', '{{ config('services.google.analytics_id') }}');
-
-            // Google Ads Conversion Tracking - Page View
-            gtag('event', 'conversion', {
-                'send_to': 'AW-858744148/4PCDCJPAmtgaENTKvZkD',
-                'value': 1.0,
-                'currency': 'KRW'
-            });
+            gtag('config', 'G-4S522L2ZLN');
         </script>
     @endif
 
@@ -101,38 +94,38 @@
 
     <!-- Schema.org Organization -->
     <script type="application/ld+json">
-    {
-        "@@context": "https://schema.org",
-        "@@type": "Organization",
-        "name": "PCAview",
-        "legalName": "해시미터",
-        "url": "{{ url('/') }}",
-        "logo": "{{ url('/og_image.png') }}",
-        "foundingDate": "2025",
-        "contactPoint": {
-            "@@type": "ContactPoint",
-            "contactType": "customer service",
-            "email": "ost5253@gmail.com"
-        },
-        "sameAs": []
-    }
+        {
+           "@@context": "https://schema.org",
+           "@@type": "Organization",
+           "name": "PCAview",
+           "legalName": "해시미터",
+           "url": "{{ url('/') }}",
+   "logo": "{{ url('/og_image.png') }}",
+   "foundingDate": "2025",
+   "contactPoint": {
+       "@@type": "ContactPoint",
+       "contactType": "customer service",
+       "email": "ost5253@gmail.com"
+   },
+   "sameAs": []
+}
     </script>
 
     <!-- Schema.org WebSite -->
     <script type="application/ld+json">
-    {
-        "@@context": "https://schema.org",
-        "@@type": "WebSite",
-        "name": "PCAview",
-        "alternateName": "피카뷰",
-        "url": "{{ url('/') }}",
-        "description": "PCAview - 빠르게 돌아가는 세상을 바라보는 뷰 피카뷰",
-        "inLanguage": "ko-KR",
-        "publisher": {
-            "@@type": "Organization",
-            "name": "PCAview"
-        }
-    }
+        {
+           "@@context": "https://schema.org",
+           "@@type": "WebSite",
+           "name": "PCAview",
+           "alternateName": "피카뷰",
+           "url": "{{ url('/') }}",
+   "description": "PCAview - 빠르게 돌아가는 세상을 바라보는 뷰 피카뷰",
+   "inLanguage": "ko-KR",
+   "publisher": {
+       "@@type": "Organization",
+       "name": "PCAview"
+   }
+}
     </script>
 
     <link rel="preconnect" href="https://fonts.bunny.net">
