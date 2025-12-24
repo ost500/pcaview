@@ -138,7 +138,17 @@ onUnmounted(() => {
                     <!-- 타이틀 및 자세히 버튼 -->
                     <div class="bg-white/60 px-4 py-3 backdrop-blur-sm" @click="goToContent(content.id)">
                         <h5 class="mb-3 text-base font-semibold text-sky-900">{{ content.title }}</h5>
-                        <div class="text-right">
+                        <div class="flex items-center justify-between">
+                            <!-- 댓글 개수 -->
+                            <div v-if="content.comments_count !== undefined" class="flex items-center gap-1.5 text-sky-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                </svg>
+                                <span class="text-xs font-medium">{{ content.comments_count }}</span>
+                            </div>
+                            <div v-else class="flex-shrink-0"></div>
+
+                            <!-- 자세히 버튼 -->
                             <a
                                 class="inline-block rounded-md bg-sky-600 px-4 py-1.5 text-xs font-medium text-white transition-colors hover:bg-sky-700 active:bg-sky-800"
                             >

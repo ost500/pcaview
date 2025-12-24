@@ -20,6 +20,7 @@ class DepartmentController extends Controller
     {
         $department = Department::find($id);
         $contents = Contents::with('department')
+            ->withCount('comments')
             ->where('department_id', $id)
             ->latest('published_at')
             ->paginate(20);
@@ -31,6 +32,7 @@ class DepartmentController extends Controller
     {
         $department = Department::where('name', $keyword)->first();
         $contents = Contents::with('department')
+            ->withCount('comments')
             ->where('department_id', $department->id)
             ->latest('published_at')
             ->paginate(20);

@@ -11,6 +11,7 @@ export type Contents = {
     file_type: string | null;
     department?: Department | null;
     comments?: Comment[];
+    comments_count?: number;
 };
 
 export type Department = {
