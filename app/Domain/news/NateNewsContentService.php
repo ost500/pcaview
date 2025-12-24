@@ -232,6 +232,7 @@ class NateNewsContentService
         // 발행일시 추출
         $publishedAt = null;
         $dateSelectors = [
+            "//*[@id='articleView']/p/span[2]/em",                  // 네이트 뉴스 articleView 발행일 (최우선)
             "//meta[@property='article:published_time']/@content",  // OG article 발행일
             "//meta[@name='article:published_time']/@content",
             "//time[@class='date']/@datetime",                      // 네이트 뉴스 날짜
@@ -481,6 +482,15 @@ class NateNewsContentService
 
             // "YYYY.MM.DD HH:MM" 형식
             if (preg_match('/(\d{4})\.(\d{2})\.(\d{2})\s+(\d{2}):(\d{2})/', $dateString, $matches)) {
+                $date = \Carbon\Carbon::createFromFormat(
+                    'Y-m-d H:i',
+                    "{$matches[1]}-{$matches[2]}-{$matches[3]} {$matches[4]}:{$matches[5]}"
+                );
+                return $date->toDateTimeString();
+            }
+
+            // "YYYY-MM-DD HH:MM" 형식 (네이트 뉴스 articleView)
+            if (preg_match('/(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2})/', $dateString, $matches)) {
                 $date = \Carbon\Carbon::createFromFormat(
                     'Y-m-d H:i',
                     "{$matches[1]}-{$matches[2]}-{$matches[3]} {$matches[4]}:{$matches[5]}"
