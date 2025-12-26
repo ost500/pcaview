@@ -239,8 +239,8 @@ class NateNewsContentService
             if ($nodes && $nodes->length > 0) {
                 $node = $nodes->item(0);
 
-                // C14N으로 저장하여 HTML 엔티티 인코딩 방지
-                $bodyHtml = $node->C14N();
+                // saveHTML()로 변경 - 이미지 포함한 모든 HTML 요소 보존
+                $bodyHtml = $dom->saveHTML($node);
 
                 // 광고, 스크립트 등 불필요한 요소 제거
                 $bodyHtml = $this->cleanHtml($bodyHtml);
@@ -356,8 +356,19 @@ class NateNewsContentService
             }
         }
 
-        // C14N으로 저장하여 HTML 엔티티 인코딩 방지
-        $html = $dom->documentElement ? $dom->documentElement->C14N() : '';
+        // saveHTML()로 변경 - 이미지 및 모든 HTML 요소 보존
+        $html = '';
+        if ($dom->documentElement) {
+            // body 태그 내용만 추출
+            $body = $xpath->query('//body')->item(0);
+            if ($body) {
+                $html = $dom->saveHTML($body);
+                // body 태그 자체 제거
+                $html = preg_replace('/<\/?body[^>]*>/', '', $html);
+            } else {
+                $html = $dom->saveHTML($dom->documentElement);
+            }
+        }
 
         // 구글 광고 주석 제거
         $html = preg_replace('/<!--.*?google_ad.*?-->/s', '', $html);
