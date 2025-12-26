@@ -68,7 +68,7 @@ watch(
         <meta property="og:type" content="website" />
         <meta property="og:url" :content="`https://pcaview.com/department/${department.id}`" />
         <meta property="og:title" :content="`${department.name} - PCAview`" />
-        <meta property="og:description" :content="`${department.name}의 최신 소식과 트렌드를 실시간으로 확인하세요.`" />
+        <meta property="og:description" :content="department.description || `${department.name}의 최신 소식과 트렌드를 실시간으로 확인하세요.`" />
         <meta property="og:image" :content="department.icon_image || 'https://pcaview.com/pcaview_icon.png'" />
         <meta property="og:image:width" content="400" />
         <meta property="og:image:height" content="400" />
@@ -78,7 +78,7 @@ watch(
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:url" :content="`https://pcaview.com/department/${department.id}`" />
         <meta name="twitter:title" :content="`${department.name} - PCAview`" />
-        <meta name="twitter:description" :content="`${department.name}의 최신 소식과 트렌드를 실시간으로 확인하세요.`" />
+        <meta name="twitter:description" :content="department.description || `${department.name}의 최신 소식과 트렌드를 실시간으로 확인하세요.`" />
         <meta name="twitter:image" :content="department.icon_image || 'https://pcaview.com/pcaview_icon.png'" />
 
         <!-- Canonical URL -->
