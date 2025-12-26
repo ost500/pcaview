@@ -76,8 +76,18 @@ class NaverNewsService
         libxml_clear_errors();
         $xpath = new \DOMXPath($dom);
 
-        // Naver 뉴스 검색 결과 리스트 찾기 (news_area 클래스)
-        $newsNodes = $xpath->query('//ul[@class="list_news"]/li[@class="bx"]');
+        // Naver 뉴스 검색 결과 리스트 찾기 (여러 가능한 구조 시도)
+        $newsNodes = $xpath->query('//ul[@class="list_news"]/li');
+
+        // 다른 구조 시도
+        if ($newsNodes->length === 0) {
+            $newsNodes = $xpath->query('//div[contains(@class, "news_wrap")]');
+        }
+
+        // 또 다른 구조 시도
+        if ($newsNodes->length === 0) {
+            $newsNodes = $xpath->query('//li[contains(@class, "bx")]');
+        }
 
         $count = 0;
         foreach ($newsNodes as $node) {
@@ -105,13 +115,27 @@ class NaverNewsService
      */
     private function parseNewsNode(\DOMXPath $xpath, \DOMNode $node): ?array
     {
-        // 제목 (a.news_tit)
+        // 제목 찾기 (여러 가능한 셀렉터 시도)
+        $titleNode = null;
         $titleNodes = $xpath->query('.//a[@class="news_tit"]', $node);
+        if ($titleNodes->length === 0) {
+            $titleNodes = $xpath->query('.//a[contains(@class, "news_tit")]', $node);
+        }
+        if ($titleNodes->length === 0) {
+            $titleNodes = $xpath->query('.//a[contains(@class, "title")]', $node);
+        }
+        if ($titleNodes->length === 0) {
+            // 첫 번째 a 태그 시도
+            $titleNodes = $xpath->query('.//a[@href]', $node);
+        }
+
         if ($titleNodes->length === 0) return null;
 
         $titleNode = $titleNodes->item(0);
         $title = $titleNode->textContent;
         $title = $this->cleanUtf8String($title);
+
+        if (empty($title)) return null;
 
         // URL
         $url = $titleNode->getAttribute('href');
@@ -119,16 +143,30 @@ class NaverNewsService
             $url = 'https://search.naver.com' . $url;
         }
 
-        // 요약 (div.news_dsc)
+        // 요약 찾기
         $snippetNodes = $xpath->query('.//div[@class="news_dsc"]', $node);
+        if ($snippetNodes->length === 0) {
+            $snippetNodes = $xpath->query('.//div[contains(@class, "dsc")]', $node);
+        }
+        if ($snippetNodes->length === 0) {
+            $snippetNodes = $xpath->query('.//p', $node);
+        }
+
         $snippet = '';
         if ($snippetNodes->length > 0) {
             $snippet = $snippetNodes->item(0)->textContent;
             $snippet = $this->cleanUtf8String($snippet);
         }
 
-        // 출처 (a.info.press)
+        // 출처 찾기
         $sourceNodes = $xpath->query('.//a[@class="info press"]', $node);
+        if ($sourceNodes->length === 0) {
+            $sourceNodes = $xpath->query('.//a[contains(@class, "press")]', $node);
+        }
+        if ($sourceNodes->length === 0) {
+            $sourceNodes = $xpath->query('.//span[contains(@class, "press")]', $node);
+        }
+
         $source = '';
         if ($sourceNodes->length > 0) {
             $source = $sourceNodes->item(0)->textContent;
