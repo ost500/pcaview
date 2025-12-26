@@ -37,6 +37,10 @@ npm ci --production=false
 echo "🏗️  SSR 빌드..."
 npm run build:ssr
 
+echo "⚙️  SSR 환경변수 설정..."
+grep -q "INERTIA_SSR_ENABLED" .env || echo "INERTIA_SSR_ENABLED=true" >> .env
+grep -q "INERTIA_SSR_URL" .env || echo "INERTIA_SSR_URL=http://127.0.0.1:13714" >> .env
+
 echo "🔧 Laravel 최적화..."
 php artisan optimize:clear
 php artisan config:cache
