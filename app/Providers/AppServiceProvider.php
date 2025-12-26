@@ -26,11 +26,10 @@ class AppServiceProvider extends ServiceProvider
         // 이벤트-리스너 등록
         Event::listen(
             TrendFetched::class,
-            [
-                FetchNateNewsForTrend::class,
-                // TODO: Naver 뉴스는 JavaScript 렌더링으로 변경되어 현재 크롤링 불가
-                // FetchNaverNewsForTrend::class,
-            ]
+            FetchNateNewsForTrend::class
         );
+
+        // TODO: Naver 뉴스는 JavaScript 렌더링으로 변경되어 현재 크롤링 불가
+        // Event::listen(TrendFetched::class, FetchNaverNewsForTrend::class);
     }
 }
