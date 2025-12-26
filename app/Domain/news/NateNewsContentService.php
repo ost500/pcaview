@@ -49,12 +49,6 @@ class NateNewsContentService
                     continue; // 이미 존재하면 스킵
                 }
 
-                // 이미지가 있으면 S3에 업로드
-                $thumbnailUrl = null;
-                if (!empty($newsItem['picture'])) {
-                    $thumbnailUrl = $this->uploadImageToS3($newsItem['picture'], $department->id, true);
-                }
-
                 // 뉴스 URL에서 본문 내용 및 제목 크롤링
                 $this->currentNewsUrl = $newsItem['url'];
                 $newsData = $this->fetchNewsBody($newsItem['url']);
@@ -63,6 +57,16 @@ class NateNewsContentService
                 $title = $newsData['title'] ?? $newsItem['title'];
                 $body = $newsData['body'] ?? $newsItem['snippet'] ?? null;
                 $publishedAt = $newsData['published_at'] ?? $newsItem['published_at'] ?? now();
+
+                // 썸네일 이미지 결정 (우선순위: 본문 첫 이미지 > 검색 결과 이미지)
+                $thumbnailUrl = null;
+                if (!empty($newsData['images']) && is_array($newsData['images']) && isset($newsData['images'][0])) {
+                    // 본문에서 추출한 첫 번째 이미지를 썸네일로 사용
+                    $thumbnailUrl = $this->uploadImageToS3($newsData['images'][0], $department->id, true);
+                } elseif (!empty($newsItem['picture'])) {
+                    // 검색 결과의 picture를 썸네일로 사용
+                    $thumbnailUrl = $this->uploadImageToS3($newsItem['picture'], $department->id, true);
+                }
 
                 // Contents 생성 (이미 NateNewsService에서 UTF-8 변환됨)
                 $contents = Contents::create([
