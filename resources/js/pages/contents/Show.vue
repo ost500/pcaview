@@ -91,6 +91,11 @@ const displayBody = computed(() => {
         return props.contents.body;
     }
 
+    // SSR에서는 원본 반환 (클라이언트에서 처리)
+    if (import.meta.env.SSR) {
+        return props.contents.body;
+    }
+
     // 임시 div를 만들어서 텍스트 길이 계산
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = props.contents.body;
