@@ -7,6 +7,7 @@ enum ContentsType: string
     case BULLETIN = 'bulletin';
     case NEWS = 'news';
     case NATE_NEWS = 'nate_news';
+    case NAVER_NEWS = 'naver_news';
     case YOUTUBE = 'youtube';
     case HTML = 'html';
 }
