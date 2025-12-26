@@ -2,43 +2,26 @@
 
 namespace App\Domain\trend;
 
+use App\Events\TrendFetched;
 use App\Models\Trend;
 use App\Models\Department;
-use App\Domain\news\NateNewsService;
-use App\Domain\news\NateNewsContentService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class TrendRepository
 {
-    public function __construct(
-        private NateNewsService $nateNewsService,
-        private NateNewsContentService $nateNewsContentService
-    ) {}
 
     /**
      * TrendItem을 데이터베이스에 저장 (중복 방지)
      * Title을 기반으로 Department도 자동 생성
-     * Nate 뉴스도 자동으로 가져와서 news_items에 추가하고 Contents로 저장
+     * TrendFetched 이벤트를 디스패치하여 비동기로 Nate 뉴스 가져오기 실행
      */
     public function save(TrendItem $item): Trend
     {
         // Title을 기반으로 Department 생성 또는 조회
         $department = $this->findOrCreateDepartment($item->title, $item->picture);
 
-        // Nate 뉴스 검색
-        $nateNews = $this->nateNewsService->searchNews($item->title);
-
-        // Nate 뉴스를 Contents로 저장
-        if (!empty($nateNews)) {
-            $this->nateNewsContentService->saveNewsAsContents($nateNews, $department);
-        }
-
-        // 기존 news_items와 Nate 뉴스 병합
-        $allNewsItems = array_merge($item->newsItems, $nateNews);
-
-        return Trend::updateOrCreate(
+        $trend = Trend::updateOrCreate(
             [
                 'title' => $item->title,
                 'pub_date' => $item->pubDate,
@@ -51,9 +34,14 @@ class TrendRepository
                 'traffic_count' => $item->trafficCount,
                 'picture' => $item->picture,
                 'picture_source' => $item->pictureSource,
-                'news_items' => $allNewsItems,
+                'news_items' => $item->newsItems,
             ]
         );
+
+        // TrendFetched 이벤트 디스패치 (리스너가 Nate 뉴스 가져오기 처리)
+        TrendFetched::dispatch($trend);
+
+        return $trend;
     }
 
     /**
