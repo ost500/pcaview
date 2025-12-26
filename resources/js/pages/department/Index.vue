@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Header from '@/components/template/Header.vue';
 import BusinessInfo from '@/components/BusinessInfo.vue';
+import DepartmentCard from '@/components/department/DepartmentCard.vue';
 import { safeRoute } from '@/composables/useSafeRoute';
 import { Department } from '@/types/department';
 import { Head } from '@inertiajs/vue3';
@@ -87,29 +88,12 @@ onMounted(() => {
             <div class="mx-auto max-w-screen-xl px-4">
                 <!-- 3 Column Grid -->
                 <div class="grid grid-cols-3 gap-3 sm:gap-4">
-                    <div
+                    <DepartmentCard
                         v-for="department in departments"
                         :key="department.id"
-                        @click="goToContent(department.id)"
-                        class="cursor-pointer transition-transform active:scale-95 sm:hover:scale-105"
-                    >
-                        <div class="overflow-hidden rounded-lg bg-white shadow-md">
-                            <!-- Icon Image -->
-                            <div class="aspect-square w-full overflow-hidden bg-gray-100">
-                                <img
-                                    :src="department.icon_image || '/pcaview_icon.png'"
-                                    :alt="department.name + ' 아이콘'"
-                                    class="h-full w-full object-cover"
-                                />
-                            </div>
-                            <!-- Department Name -->
-                            <div class="p-2 sm:p-3">
-                                <h3 class="text-center text-xs font-medium text-gray-900 sm:text-sm">
-                                    {{ department.name }}
-                                </h3>
-                            </div>
-                        </div>
-                    </div>
+                        :department="department"
+                        @click="goToContent"
+                    />
                 </div>
 
                 <BusinessInfo class="mt-4" />
