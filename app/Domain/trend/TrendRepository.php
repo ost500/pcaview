@@ -18,12 +18,12 @@ class TrendRepository
      */
     public function save(TrendItem $item): Trend
     {
-        // news_items의 title들을 모아서 description 생성 (최대 5개)
+        // news_items의 title들을 모아서 description 생성 (최대 2개)
         $titles = array_filter(
             array_map(fn($newsItem) => $newsItem['title'] ?? '', $item->newsItems),
             fn($title) => !empty($title)
         );
-        $description = implode(' | ', array_slice($titles, 0, 5));
+        $description = implode(' | ', array_slice($titles, 0, 2));
 
         // Title을 기반으로 Department 생성 또는 조회
         $department = $this->findOrCreateDepartment($item->title, $description, $item->picture);

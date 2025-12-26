@@ -14,7 +14,7 @@ class NateNewsService
     private const TIMEOUT = 30;
 
     /**
-     * 키워드로 뉴스 검색 (상위 5개)
+     * 키워드로 뉴스 검색 (상위 2개)
      */
     public function searchNews(string $keyword): array
     {
@@ -85,7 +85,7 @@ class NateNewsService
 
         $count = 0;
         foreach ($newsNodes as $node) {
-            if ($count >= 5) break;
+            if ($count >= 2) break;
 
             try {
                 $item = $this->parseNewsNode($xpath, $node);
