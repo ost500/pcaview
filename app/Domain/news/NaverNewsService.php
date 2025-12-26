@@ -76,18 +76,26 @@ class NaverNewsService
         libxml_clear_errors();
         $xpath = new \DOMXPath($dom);
 
-        // Naver 뉴스 검색 결과 리스트 찾기 (여러 가능한 구조 시도)
-        $newsNodes = $xpath->query('//ul[@class="list_news"]/li');
+        // Naver 뉴스 검색 결과 리스트 찾기 (2024 신규 구조)
+        // API 기반 렌더링 구조: news_area 클래스 찾기
+        $newsNodes = $xpath->query('//div[@class="news_area"]');
 
-        // 다른 구조 시도
+        // 구버전 구조 시도
         if ($newsNodes->length === 0) {
-            $newsNodes = $xpath->query('//div[contains(@class, "news_wrap")]');
+            $newsNodes = $xpath->query('//ul[@class="list_news"]/li');
         }
 
         // 또 다른 구조 시도
         if ($newsNodes->length === 0) {
+            $newsNodes = $xpath->query('//div[contains(@class, "news_wrap")]');
+        }
+
+        // 마지막 fallback
+        if ($newsNodes->length === 0) {
             $newsNodes = $xpath->query('//li[contains(@class, "bx")]');
         }
+
+        Log::info('Naver news nodes found', ['count' => $newsNodes->length]);
 
         $count = 0;
         foreach ($newsNodes as $node) {
@@ -115,27 +123,42 @@ class NaverNewsService
      */
     private function parseNewsNode(\DOMXPath $xpath, \DOMNode $node): ?array
     {
-        // 제목 찾기 (여러 가능한 셀렉터 시도)
+        // 제목 찾기 (2024 신규 구조: news_tit 클래스)
         $titleNode = null;
         $titleNodes = $xpath->query('.//a[@class="news_tit"]', $node);
+
         if ($titleNodes->length === 0) {
             $titleNodes = $xpath->query('.//a[contains(@class, "news_tit")]', $node);
         }
+
+        // a 태그의 title 속성 또는 텍스트 사용
         if ($titleNodes->length === 0) {
             $titleNodes = $xpath->query('.//a[contains(@class, "title")]', $node);
         }
+
+        // API 기반 구조: 특정 클래스명 찾기
         if ($titleNodes->length === 0) {
-            // 첫 번째 a 태그 시도
-            $titleNodes = $xpath->query('.//a[@href]', $node);
+            $titleNodes = $xpath->query('.//a[contains(@class, "api_txt_lines")]', $node);
         }
 
-        if ($titleNodes->length === 0) return null;
+        if ($titleNodes->length === 0) {
+            Log::warning('No title found in Naver news node');
+            return null;
+        }
 
         $titleNode = $titleNodes->item(0);
-        $title = $titleNode->textContent;
+
+        // title 속성 우선 사용, 없으면 textContent
+        $title = $titleNode->getAttribute('title');
+        if (empty($title)) {
+            $title = $titleNode->textContent;
+        }
         $title = $this->cleanUtf8String($title);
 
-        if (empty($title)) return null;
+        if (empty($title) || strlen($title) < 5) {
+            Log::warning('Invalid title in Naver news', ['title' => $title]);
+            return null;
+        }
 
         // URL
         $url = $titleNode->getAttribute('href');
