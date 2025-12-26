@@ -121,23 +121,23 @@ onMounted(() => {
 </script>
 
 <template>
-    <Head title="PCAview">
+    <Head title="PCAview(피카뷰) - 트렌딩 뉴스와 실시간 소식">
         <!-- Basic Meta Tags -->
-        <meta name="description" content="빠르게 돌아가는 세상을 바라보는 뷰 피카뷰" />
-        <meta name="keywords" content="PCAview, 피카뷰, 트렌드, 뉴스, 소식" />
+        <meta name="description" content="PCAview(피카뷰)에서 트렌딩 뉴스와 실시간 소식을 한눈에 확인하세요. 다양한 분야의 최신 트렌드와 이슈를 빠르게 만나보세요." />
+        <meta name="keywords" content="PCAview, 피카뷰, 트렌드, 뉴스, 실시간 소식, 이슈, 트렌딩, 최신 뉴스" />
 
         <!-- Open Graph -->
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://pcaview.com" />
-        <meta property="og:title" content="PCAview - 빠르게 돌아가는 세상을 바라보는 뷰 피카뷰" />
-        <meta property="og:description" content="빠르게 돌아가는 세상을 바라보는 뷰 피카뷰" />
+        <meta property="og:title" content="PCAview(피카뷰) - 트렌딩 뉴스와 실시간 소식" />
+        <meta property="og:description" content="다양한 분야의 최신 트렌드와 이슈를 한눈에 확인하세요. 실시간 업데이트되는 뉴스와 소식을 PCAview에서 만나보세요." />
         <meta property="og:site_name" content="PCAview" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content="https://pcaview.com" />
-        <meta name="twitter:title" content="PCAview - 빠르게 돌아가는 세상을 바라보는 뷰 피카뷰" />
-        <meta name="twitter:description" content="빠르게 돌아가는 세상을 바라보는 뷰 피카뷰" />
+        <meta name="twitter:title" content="PCAview(피카뷰) - 트렌딩 뉴스와 실시간 소식" />
+        <meta name="twitter:description" content="다양한 분야의 최신 트렌드와 이슈를 한눈에 확인하세요. 실시간 업데이트되는 뉴스와 소식을 PCAview에서 만나보세요." />
 
         <!-- Canonical URL -->
         <link rel="canonical" href="https://pcaview.com" />

@@ -23,6 +23,12 @@
             }
         })();
     </script>
+
+    <!-- Preconnect for performance optimization -->
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+    <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+    <link rel="dns-prefetch" href="https://www.google-analytics.com">
+
     <!-- Google tag (gtag.js) -->
     @if(app()->isProduction())
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-4S522L2ZLN"></script>
@@ -55,8 +61,8 @@
     </style>
 
     <title inertia>{{ config('app.name', 'Laravel') }}</title>
-    <meta name="description" content="PCAview - 빠르게 돌아가는 세상을 바라보는 뷰 피카뷰">
-    <meta name="keywords" content="PCAview, 피카뷰, 트렌드, 뉴스, 소식">
+    <meta name="description" content="PCAview(피카뷰) - 트렌딩 뉴스와 실시간 소식을 한눈에. 다양한 분야의 최신 트렌드와 이슈를 빠르게 확인하세요.">
+    <meta name="keywords" content="PCAview, 피카뷰, 트렌드, 뉴스, 실시간 소식, 이슈, 트렌딩">
 
     <!-- Canonical URL -->
     <link rel="canonical" href="{{ request()->url() }}" />
@@ -66,8 +72,8 @@
     <meta property="og:locale" content="ko_KR" />
     <meta property="og:url" content="{{ url('/') }}" />
     <meta property="og:site_name" content="PCAview" />
-    <meta property="og:title" content="PCAview - 빠르게 돌아가는 세상을 바라보는 뷰 피카뷰" />
-    <meta property="og:description" content="PCAview - 빠르게 돌아가는 세상을 바라보는 뷰 피카뷰" />
+    <meta property="og:title" content="PCAview(피카뷰) - 트렌딩 뉴스와 실시간 소식" />
+    <meta property="og:description" content="다양한 분야의 최신 트렌드와 이슈를 한눈에 확인하세요. 실시간 업데이트되는 뉴스와 소식을 PCAview에서 만나보세요." />
     <meta property="og:image" content="{{ url('/og_image.png') }}" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -75,8 +81,8 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="{{ url('/') }}" />
-    <meta name="twitter:title" content="PCAview - 빠르게 돌아가는 세상을 바라보는 뷰 피카뷰" />
-    <meta name="twitter:description" content="PCAview - 빠르게 돌아가는 세상을 바라보는 뷰 피카뷰" />
+    <meta name="twitter:title" content="PCAview(피카뷰) - 트렌딩 뉴스와 실시간 소식" />
+    <meta name="twitter:description" content="다양한 분야의 최신 트렌드와 이슈를 한눈에 확인하세요. 실시간 업데이트되는 뉴스와 소식을 PCAview에서 만나보세요." />
     <meta name="twitter:image" content="{{ url('/og_image.png') }}" />
 
     {{-- Inertia Head - This will override above meta tags for page-specific content --}}
@@ -120,7 +126,7 @@
            "name": "PCAview",
            "alternateName": "피카뷰",
            "url": "{{ url('/') }}",
-   "description": "PCAview - 빠르게 돌아가는 세상을 바라보는 뷰 피카뷰",
+   "description": "트렌딩 뉴스와 실시간 소식을 한눈에. 다양한 분야의 최신 트렌드와 이슈를 빠르게 확인하세요.",
    "inLanguage": "ko-KR",
    "publisher": {
        "@@type": "Organization",

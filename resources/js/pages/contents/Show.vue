@@ -200,16 +200,16 @@ onMounted(() => {
         },
         publisher: {
             '@type': 'Organization',
-            name: 'PCAview 주보고',
+            name: 'PCAview',
             logo: {
                 '@type': 'ImageObject',
                 url: window.location.origin + '/og_image.png',
             },
         },
-        description: 'PCAview ' + props.contents.title + ' - ' + (props.contents.department?.name || '교회 소식'),
+        description: 'PCAview ' + props.contents.title + ' - ' + (props.contents.department?.name || '소식'),
         inLanguage: 'ko-KR',
         articleSection: props.contents.department?.name || 'PCAview 소식',
-        keywords: 'PCAview, PCAview 주보, 교회, 주보, ' + (props.contents.department?.name || '') + ', ' + props.contents.title,
+        keywords: 'PCAview, 피카뷰, 트렌드, 뉴스, ' + (props.contents.department?.name || '') + ', ' + props.contents.title,
     });
     document.head.appendChild(script);
 });

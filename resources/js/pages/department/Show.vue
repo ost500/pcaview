@@ -59,28 +59,30 @@ watch(
 </script>
 
 <template>
-    <Head :title="department.name">
+    <Head :title="`${department.name} - PCAview`">
         <!-- Basic Meta Tags -->
-        <meta name="description" :content="department.name + ' 부서의 소식을 확인하세요.'" />
-        <meta name="keywords" :content="department.name + ', 부서 소식'" />
+        <meta name="description" :content="`${department.name}의 최신 소식과 트렌드를 실시간으로 확인하세요. ${department.description || 'PCAview에서 제공하는 다양한 콘텐츠를 만나보세요.'}`" />
+        <meta name="keywords" :content="`PCAview, 피카뷰, ${department.name}, 뉴스, 트렌드, 실시간 소식`" />
 
         <!-- Open Graph -->
         <meta property="og:type" content="website" />
-        <meta property="og:url" :content="safeRoute('department.show', { id: department.id })" />
-        <meta property="og:title" :content="department.name" />
-        <meta property="og:description" :content="department.name + ' 부서의 소식을 확인하세요.'" />
+        <meta property="og:url" :content="`https://pcaview.com/department/${department.id}`" />
+        <meta property="og:title" :content="`${department.name} - PCAview`" />
+        <meta property="og:description" :content="`${department.name}의 최신 소식과 트렌드를 실시간으로 확인하세요.`" />
         <meta property="og:image" :content="department.icon_image" />
+        <meta property="og:image:width" content="400" />
+        <meta property="og:image:height" content="400" />
         <meta property="og:site_name" content="PCAview" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:url" :content="safeRoute('department.show', { id: department.id })" />
-        <meta name="twitter:title" :content="department.name" />
-        <meta name="twitter:description" :content="department.name + ' 부서의 소식을 확인하세요.'" />
+        <meta name="twitter:url" :content="`https://pcaview.com/department/${department.id}`" />
+        <meta name="twitter:title" :content="`${department.name} - PCAview`" />
+        <meta name="twitter:description" :content="`${department.name}의 최신 소식과 트렌드를 실시간으로 확인하세요.`" />
         <meta name="twitter:image" :content="department.icon_image" />
 
         <!-- Canonical URL -->
-        <link rel="canonical" :href="safeRoute('department.show', { id: department.id })" />
+        <link rel="canonical" :href="`https://pcaview.com/department/${department.id}`" />
     </Head>
 
     <Header :title="department.name" :backbutton="true"></Header>
