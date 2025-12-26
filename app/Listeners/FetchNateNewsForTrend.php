@@ -52,12 +52,25 @@ class FetchNateNewsForTrend implements ShouldQueue
 
             // Trend의 news_items 업데이트
             $allNewsItems = array_merge($trend->news_items ?? [], $nateNews);
-            $trend->update(['news_items' => $allNewsItems]);
+
+            // news_items의 title들을 모아서 description 생성
+            $newsTitles = array_slice(
+                array_map(fn($item) => $item['title'] ?? '', $allNewsItems),
+                0,
+                5 // 최대 5개까지만 사용
+            );
+            $description = implode(' | ', array_filter($newsTitles));
+
+            $trend->update([
+                'news_items' => $allNewsItems,
+                'description' => $description ?: $trend->description, // 빈 경우 기존 description 유지
+            ]);
 
             Log::info('Nate news fetched for trend', [
                 'trend_id' => $trend->id,
                 'trend_title' => $trend->title,
                 'saved_count' => $savedCount,
+                'description' => $description,
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to fetch Nate news for trend', [
