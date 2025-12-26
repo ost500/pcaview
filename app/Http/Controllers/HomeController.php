@@ -18,12 +18,14 @@ class HomeController extends Controller
         if ($user) {
             $subscribedDepartmentIds = $user->departments()->pluck('departments.id');
             $contents = Contents::with('department')
+                ->withCount('comments')
                 ->whereIn('department_id', $subscribedDepartmentIds)
                 ->latest('published_at')
                 ->paginate(20);
         } else {
             // 비로그인 사용자는 모든 콘텐츠 표시
             $contents = Contents::with('department')
+                ->withCount('comments')
                 ->latest('published_at')
                 ->paginate(20);
             $subscribedDepartmentIds = collect();
