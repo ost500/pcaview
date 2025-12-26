@@ -326,8 +326,8 @@ class NateNewsContentService
             "//*[@id='adDiv']",                  // 네이트 광고 div
             "//*[@id='topBannerWrap']",          // 상단 배너
             "//*[@id='inContentAd']",            // 본문 내 광고
-            "//*[contains(@id, 'ad_')]",         // ad_로 시작하는 ID
-            "//*[contains(@class, 'ad_')]",      // ad_를 포함하는 class
+            "//*[contains(@id, 'ad_') and not(contains(@class, 'imgad_area'))]", // ad_로 시작하는 ID (imgad_area 제외)
+            "//*[contains(@class, 'ad_') and not(contains(@class, 'imgad_area'))]", // ad_를 포함하는 class (imgad_area 제외)
             "//*[contains(@class, 'ad-')]",      // ad-를 포함하는 class
             "//*[contains(@class, 'adArea')]",   // 광고 영역
             "//*[contains(@class, 'advertisement')]", // 광고
