@@ -18,8 +18,15 @@ class TrendRepository
      */
     public function save(TrendItem $item): Trend
     {
+        // news_items의 title들을 모아서 description 생성 (최대 5개)
+        $titles = array_filter(
+            array_map(fn($newsItem) => $newsItem['title'] ?? '', $item->newsItems),
+            fn($title) => !empty($title)
+        );
+        $description = implode(' | ', array_slice($titles, 0, 5));
+
         // Title을 기반으로 Department 생성 또는 조회
-        $department = $this->findOrCreateDepartment($item->title, $item->picture);
+        $department = $this->findOrCreateDepartment($item->title, $description, $item->picture);
 
         $trend = Trend::updateOrCreate(
             [
@@ -28,7 +35,7 @@ class TrendRepository
             ],
             [
                 'department_id' => $department->id,
-                'description' => $item->description,
+                'description' => $description,
                 'link' => $item->link,
                 'image_url' => $item->imageUrl,
                 'traffic_count' => $item->trafficCount,
@@ -47,14 +54,14 @@ class TrendRepository
     /**
      * Title을 기반으로 Department 찾기 또는 생성
      */
-    private function findOrCreateDepartment(string $title, ?string $picture = null): Department
+    private function findOrCreateDepartment(string $title, string $description, ?string $picture = null): Department
     {
         // Title을 Department name으로 사용
         // 같은 title이 이미 존재하면 재사용
         return Department::firstOrCreate(
             ['name' => $title],
             [
-                'description' => "트렌드: {$title}",
+                'description' => $description,
                 'icon_image' => $picture,
             ]
         );
