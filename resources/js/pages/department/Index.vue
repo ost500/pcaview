@@ -52,7 +52,7 @@ onMounted(() => {
                 '@type': 'Organization',
                 '@id': safeRoute('department.show', { id: department.id }),
                 'name': department.name,
-                'image': department.icon_image
+                'image': department.icon_image || 'https://pcaview.com/pcaview_icon.png'
             }
         }))
     });
@@ -97,7 +97,7 @@ onMounted(() => {
                             <!-- Icon Image -->
                             <div class="aspect-square w-full overflow-hidden bg-gray-100">
                                 <img
-                                    :src="department.icon_image"
+                                    :src="department.icon_image || '/pcaview_icon.png'"
                                     :alt="department.name + ' 아이콘'"
                                     class="h-full w-full object-cover"
                                 />

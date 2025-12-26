@@ -120,7 +120,7 @@ onUnmounted(() => {
                         class="flex items-center gap-3 border-b border-sky-100 bg-white/50 px-4 py-3 backdrop-blur-sm"
                     >
                         <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
-                            <img :src="content.department.icon_image" :alt="content.department.name" class="h-full w-full object-cover" />
+                            <img :src="content.department.icon_image || '/pcaview_icon.png'" :alt="content.department.name" class="h-full w-full object-cover" />
                         </div>
                         <span class="text-sm font-semibold text-sky-900">{{ content.department.name }}</span>
                     </div>

@@ -213,7 +213,7 @@ const toggleSubscription = (departmentId: number) => {
                             @click="toggleSubscription(department.id)"
                         >
                             <div class="h-12 w-12 flex-shrink-0 overflow-hidden rounded-full">
-                                <img :src="department.icon_image" :alt="department.name" class="h-full w-full object-cover" />
+                                <img :src="department.icon_image || '/pcaview_icon.png'" :alt="department.name" class="h-full w-full object-cover" />
                             </div>
                             <div class="flex-1">
                                 <h4 class="font-medium text-gray-900">{{ department.name }}</h4>

@@ -84,7 +84,7 @@ const submitPost = () => {
                 <!-- Department 정보 -->
                 <div v-if="department" class="flex items-center gap-3 border-b border-sky-100 bg-white/50 px-4 py-3 backdrop-blur-sm">
                     <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
-                        <img :src="department.icon_image" :alt="department.name" class="h-full w-full object-cover" />
+                        <img :src="department.icon_image || '/pcaview_icon.png'" :alt="department.name" class="h-full w-full object-cover" />
                     </div>
                     <span class="text-sm font-semibold text-sky-900">{{ department.name }}</span>
                 </div>

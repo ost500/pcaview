@@ -187,7 +187,7 @@ onMounted(() => {
                         :class="{ active: isSubscribed(department.id) }"
                     >
                         <div class="department-icon">
-                            <img :src="department.icon_image" :alt="department.name + ' 아이콘'" loading="lazy" />
+                            <img :src="department.icon_image || '/pcaview_icon.png'" :alt="department.name + ' 아이콘'" loading="lazy" />
                         </div>
                         <span class="department-name">{{ department.name }}</span>
                     </a>

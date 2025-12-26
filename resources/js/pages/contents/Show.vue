@@ -254,7 +254,7 @@ onMounted(() => {
                             <div v-if="contents.department" class="flex items-center gap-3 border-b border-sky-100 bg-white/50 px-4 py-3 backdrop-blur-sm">
                                 <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
                                     <img
-                                        :src="contents.department.icon_image"
+                                        :src="contents.department.icon_image || '/pcaview_icon.png'"
                                         :alt="contents.department.name"
                                         class="h-full w-full object-cover"
                                     />
