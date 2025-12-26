@@ -30,7 +30,7 @@ class HomeController extends Controller
         }
 
         $churches = Church::all();
-        $departments = Department::all();
+        $departments = Department::latest()->take(30)->get();
 
         // For infinite scroll requests, only return contents data
         if ($request->wantsJson() || $request->header('X-Inertia-Partial-Data')) {
