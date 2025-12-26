@@ -5,8 +5,6 @@ namespace App\Listeners;
 use App\Events\TrendFetched;
 use App\Domain\news\NateNewsContentService;
 use App\Domain\news\NateNewsService;
-use App\Domain\news\NaverNewsContentService;
-use App\Domain\news\NaverNewsService;
 use App\Models\Department;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -21,9 +19,7 @@ class FetchNateNewsForTrend implements ShouldQueue
      */
     public function __construct(
         private NateNewsService $nateNewsService,
-        private NateNewsContentService $nateNewsContentService,
-        private NaverNewsService $naverNewsService,
-        private NaverNewsContentService $naverNewsContentService
+        private NateNewsContentService $nateNewsContentService
     ) {
         //
     }
@@ -52,36 +48,16 @@ class FetchNateNewsForTrend implements ShouldQueue
             }
 
             // Nate 뉴스를 Contents로 저장
-            $nateSavedCount = $this->nateNewsContentService->saveNewsAsContents($nateNews, $department);
+            $savedCount = $this->nateNewsContentService->saveNewsAsContents($nateNews, $department);
 
             // Trend의 news_items 업데이트
             $allNewsItems = array_merge($trend->news_items ?? [], $nateNews);
-
-            // Naver 뉴스 검색 (news_items의 title로 검색)
-            $naverNews = [];
-            foreach ($allNewsItems as $newsItem) {
-                if (!empty($newsItem['title'])) {
-                    $naverResult = $this->naverNewsService->searchNews($newsItem['title']);
-                    if (!empty($naverResult)) {
-                        $naverNews = array_merge($naverNews, $naverResult);
-                    }
-                }
-            }
-
-            // Naver 뉴스를 Contents로 저장
-            $naverSavedCount = 0;
-            if (!empty($naverNews)) {
-                $naverSavedCount = $this->naverNewsContentService->saveNewsAsContents($naverNews, $department);
-                $allNewsItems = array_merge($allNewsItems, $naverNews);
-            }
-
             $trend->update(['news_items' => $allNewsItems]);
 
-            Log::info('News fetched for trend', [
+            Log::info('Nate news fetched for trend', [
                 'trend_id' => $trend->id,
                 'trend_title' => $trend->title,
-                'nate_saved_count' => $nateSavedCount,
-                'naver_saved_count' => $naverSavedCount,
+                'saved_count' => $savedCount,
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to fetch Nate news for trend', [
