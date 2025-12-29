@@ -121,7 +121,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <Head title="PCAview(피카뷰) - 트렌딩 뉴스와 실시간 소식">
+    <Head>
         <!-- Basic Meta Tags -->
         <meta name="description" content="PCAview(피카뷰)에서 트렌딩 뉴스와 실시간 소식을 한눈에 확인하세요. 다양한 분야의 최신 트렌드와 이슈를 빠르게 만나보세요." />
         <meta name="keywords" content="PCAview, 피카뷰, 트렌드, 뉴스, 실시간 소식, 이슈, 트렌딩, 최신 뉴스" />

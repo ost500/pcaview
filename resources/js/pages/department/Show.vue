@@ -59,7 +59,7 @@ watch(
 </script>
 
 <template>
-    <Head :title="`${department.name} - PCAview`">
+    <Head :title="department.name">
         <!-- Basic Meta Tags -->
         <meta name="description" :content="`${department.name}의 최신 소식과 트렌드를 실시간으로 확인하세요. ${department.description || 'PCAview에서 제공하는 다양한 콘텐츠를 만나보세요.'}`" />
         <meta name="keywords" :content="`PCAview, 피카뷰, ${department.name}, 뉴스, 트렌드, 실시간 소식`" />
