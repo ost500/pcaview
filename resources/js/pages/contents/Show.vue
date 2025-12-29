@@ -222,7 +222,7 @@ onMounted(() => {
 
 <template>
     <div>
-        <Head :title="`PCAview ${contents.title}`">
+        <Head :title="`${contents.department?.name || 'PCAview'} - ${contents.title}`">
             <!-- Basic Meta Tags -->
             <meta name="description" :content="`PCAview ${contents.title} - ${contents.department?.name}`" />
             <meta name="keywords" :content="`PCAview, PCAview ${contents.department?.name || ''}, ${contents.title}`" />
