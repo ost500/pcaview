@@ -88,13 +88,14 @@
     {{-- Inertia Head - This will override above meta tags for page-specific content --}}
     @inertiaHead
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/jubogo_favicon.png?v=2">
-    <link rel="icon" type="image/x-icon" href="/jubogo_favicon.ico?v=2">
-    <link rel="shortcut icon" href="/jubogo_favicon.ico?v=2">
+    <!-- Favicon - Google recommends multiples of 48x48 pixels -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2">
+    <link rel="icon" type="image/png" sizes="48x48" href="/jubogo_favicon.png?v=2">
+    <link rel="icon" type="image/png" sizes="96x96" href="/jubogo_favicon_96.png?v=2">
+    <link rel="shortcut icon" href="/favicon.ico?v=2">
 
     <!-- Apple Touch Icon -->
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
 
     <!-- PWA Manifest -->
     <link rel="manifest" href="/site.webmanifest">
