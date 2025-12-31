@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Events\TrendFetched;
 use App\Listeners\FetchNateNewsForTrend;
 use App\Listeners\FetchNaverNewsForTrend;
+use App\Listeners\SyncDekricaTrendListener;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
@@ -27,6 +28,12 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(
             TrendFetched::class,
             FetchNateNewsForTrend::class
+        );
+
+        // Dekrica API 연동
+        Event::listen(
+            TrendFetched::class,
+            SyncDekricaTrendListener::class
         );
 
         // TODO: Naver 뉴스는 JavaScript 렌더링으로 변경되어 현재 크롤링 불가
