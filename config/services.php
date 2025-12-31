@@ -39,4 +39,9 @@ return [
         'analytics_id' => env('GOOGLE_ANALYTICS_ID'),
     ],
 
+    'dekrica' => [
+        'base_url' => env('DEKRICA_BASE_URL', 'http://dekkle.abc'),
+        'api_key' => env('DEKRICA_API_KEY', 'pcaview_api_key_2025_dekkle_secret'),
+    ],
+
 ];
