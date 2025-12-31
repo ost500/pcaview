@@ -125,7 +125,8 @@ class SyncDekricaTrendData implements ShouldQueue
 
         // 뉴스 아이템에 포함된 태그들 추가
         if (!empty($item['tags']) && is_array($item['tags'])) {
-            foreach ($item['tags'] as $tagName) {
+            foreach ($item['tags'] as $tag) {
+                $tagName = $tag['name'];
                 if (empty($tagName) || !is_string($tagName)) {
                     continue;
                 }
