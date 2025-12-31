@@ -29,6 +29,11 @@ class Contents extends Model
         return $this->hasMany(Comment::class, 'content_id');
     }
 
+    public function platformComments(): HasMany
+    {
+        return $this->hasMany(ContentsPlatformComment::class, 'content_id');
+    }
+
     /**
      * Get the thumbnail URL attribute.
      * Convert HTTP to HTTPS for security and SEO.

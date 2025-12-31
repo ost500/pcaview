@@ -43,3 +43,20 @@ export type Comment = {
     display_name: string;
     ip_last_digits: string;
 };
+
+export type ContentsPlatformComment = {
+    id: number;
+    content_id: number;
+    comment_id: string;
+    source: string;
+    author: string;
+    content: string;
+    likes: number;
+    dislikes: number;
+    created_date: string | null;
+    is_best: boolean;
+    is_mobile: boolean;
+    reply_count: number;
+    created_at: string;
+    updated_at: string;
+};
