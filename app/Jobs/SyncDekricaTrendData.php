@@ -63,7 +63,7 @@ class SyncDekricaTrendData implements ShouldQueue
 
         // "트렌드" department 찾기 또는 생성
         return Department::firstOrCreate(
-            ['name' => '트렌드'],
+            ['name' => $this->tag],
             [
                 'description' => '실시간 트렌드 뉴스',
                 'icon_image' => '/pcaview_icon.png',
