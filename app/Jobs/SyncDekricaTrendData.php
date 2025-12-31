@@ -105,20 +105,54 @@ class SyncDekricaTrendData implements ShouldQueue
                 ]
             );
 
-            // 태그 연결 (트렌드 태그)
-            $tag = Tag::firstOrCreate(['name' => $this->tag]);
-
-            // 이미 연결되어 있지 않으면 연결
-            if (!$content->tags->contains($tag->id)) {
-                $content->tags()->attach($tag->id);
-                $tag->incrementUsage();
-            }
+            // 태그들 동기화
+            $this->syncTags($content, $item);
 
             // 플랫폼 댓글 동기화
             if (! empty($item['comments'])) {
                 $this->syncComments($content, $item['comments']);
             }
         });
+    }
+
+    private function syncTags(Contents $content, array $item): void
+    {
+        $tagIds = [];
+
+        // 검색 키워드 태그 추가
+        $searchTag = Tag::firstOrCreate(['name' => $this->tag]);
+        $tagIds[] = $searchTag->id;
+
+        // 뉴스 아이템에 포함된 태그들 추가
+        if (!empty($item['tags']) && is_array($item['tags'])) {
+            foreach ($item['tags'] as $tagName) {
+                if (empty($tagName) || !is_string($tagName)) {
+                    continue;
+                }
+
+                $tag = Tag::firstOrCreate(['name' => trim($tagName)]);
+                $tagIds[] = $tag->id;
+            }
+        }
+
+        // 중복 제거
+        $tagIds = array_unique($tagIds);
+
+        // 기존 태그들 가져오기
+        $existingTagIds = $content->tags()->pluck('tags.id')->toArray();
+
+        // 새로 추가할 태그들
+        $newTagIds = array_diff($tagIds, $existingTagIds);
+
+        // 새 태그 연결 및 usage_count 증가
+        if (!empty($newTagIds)) {
+            $content->tags()->attach($newTagIds);
+
+            // 각 태그의 사용 횟수 증가
+            Tag::whereIn('id', $newTagIds)->each(function ($tag) {
+                $tag->incrementUsage();
+            });
+        }
     }
 
     private function syncComments(Contents $content, array $comments): void
