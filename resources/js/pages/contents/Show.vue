@@ -85,9 +85,10 @@ const formatDate = (dateString: string) => {
     return date.toLocaleDateString('ko-KR');
 };
 
-// Nate 뉴스 본문 절반으로 자르기 (저작권 보호)
+// 전체 뉴스 본문 절반으로 자르기 (저작권 보호)
 const displayBody = computed(() => {
-    if (props.contents.type !== 'nate_news' || !props.contents.body) {
+    const newsTypes = ['nate_news', 'news'];
+    if (!newsTypes.includes(props.contents.type) || !props.contents.body) {
         return props.contents.body;
     }
 
@@ -303,8 +304,8 @@ onMounted(() => {
                             <div class="p-4" v-if="contents.body">
                                 <div class="content-body" v-html="displayBody"></div>
 
-                                <!-- Nate 뉴스 저작권 안내 -->
-                                <div v-if="contents.type === 'nate_news' && contents.file_url" class="mt-5 rounded border-l-4 border-blue-500 bg-gray-50 p-4">
+                                <!-- 뉴스 저작권 안내 -->
+                                <div v-if="['nate_news', 'news'].includes(contents.type) && contents.file_url" class="mt-5 rounded border-l-4 border-blue-500 bg-gray-50 p-4">
                                     <p class="mb-0 text-sm text-gray-600">저작권 보호를 위해 본문의 일부만 표시됩니다.</p>
                                     <a
                                         :href="contents.file_url"
@@ -315,26 +316,6 @@ onMounted(() => {
                                         원문 보기 →
                                     </a>
                                 </div>
-                            </div>
-
-                            <!-- 외부 링크 (일반 뉴스 타입인 경우) -->
-                            <div v-if="contents.type === 'news' && contents.file_url" class="px-4 pb-4">
-                                <a
-                                    :href="contents.file_url"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
-                                >
-                                    원문 보기
-                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                                        />
-                                    </svg>
-                                </a>
                             </div>
 
                         </div>
