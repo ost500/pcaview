@@ -271,7 +271,8 @@ onMounted(() => {
 
                             <!-- Title -->
                             <div class="border-b border-gray-200 px-4 py-3">
-                                <h5 class="mb-0 text-lg font-semibold">{{ contents.title }}</h5>
+                                <h5 class="mb-2 text-lg font-semibold">{{ contents.title }}</h5>
+                                <p class="text-xs text-gray-500">{{ formatDate(contents.published_at) }}</p>
                             </div>
 
                            <!-- 이미지 또는 비디오 -->
