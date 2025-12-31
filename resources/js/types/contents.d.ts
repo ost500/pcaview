@@ -12,6 +12,7 @@ export type Contents = {
     department?: Department | null;
     comments?: Comment[];
     comments_count?: number;
+    tags?: Tag[];
 };
 
 export type Department = {
@@ -59,4 +60,11 @@ export type ContentsPlatformComment = {
     reply_count: number;
     created_at: string;
     updated_at: string;
+};
+
+export type Tag = {
+    id: number;
+    name: string;
+    slug: string;
+    usage_count: number;
 };

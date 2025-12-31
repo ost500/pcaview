@@ -226,7 +226,7 @@ onMounted(() => {
         description: 'PCAview ' + props.contents.title + ' - ' + (props.contents.department?.name || '소식'),
         inLanguage: 'ko-KR',
         articleSection: props.contents.department?.name || 'PCAview 소식',
-        keywords: 'PCAview, 피카뷰, 트렌드, 뉴스, ' + (props.contents.department?.name || '') + ', ' + props.contents.title,
+        keywords: 'PCAview, 피카뷰, 트렌드, 뉴스, ' + (props.contents.department?.name || '') + ', ' + props.contents.title + (props.contents.tags && props.contents.tags.length > 0 ? ', ' + props.contents.tags.map(t => t.name).join(', ') : ''),
     });
     document.head.appendChild(script);
 });
@@ -237,7 +237,7 @@ onMounted(() => {
         <Head :title="`${contents.department?.name || 'PCAview'} - ${contents.title}`">
             <!-- Basic Meta Tags -->
             <meta name="description" :content="`PCAview ${contents.title} - ${contents.department?.name}`" />
-            <meta name="keywords" :content="`PCAview, PCAview ${contents.department?.name || ''}, ${contents.title}`" />
+            <meta name="keywords" :content="`PCAview, PCAview ${contents.department?.name || ''}, ${contents.title}${contents.tags && contents.tags.length > 0 ? ', ' + contents.tags.map(t => t.name).join(', ') : ''}`" />
 
             <!-- Open Graph / Facebook -->
             <meta property="og:type" content="article" />
@@ -284,6 +284,17 @@ onMounted(() => {
                             <div class="border-b border-gray-200 px-4 py-3">
                                 <h5 class="mb-2 text-lg font-semibold">{{ contents.title }}</h5>
                                 <p class="text-xs text-gray-500">{{ formatDateTime(contents.published_at) }}</p>
+
+                                <!-- Tags -->
+                                <div v-if="contents.tags && contents.tags.length > 0" class="mt-3 flex flex-wrap gap-2">
+                                    <span
+                                        v-for="tag in contents.tags"
+                                        :key="tag.id"
+                                        class="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 hover:bg-blue-100 transition-colors"
+                                    >
+                                        #{{ tag.name }}
+                                    </span>
+                                </div>
                             </div>
 
                            <!-- 이미지 또는 비디오 -->

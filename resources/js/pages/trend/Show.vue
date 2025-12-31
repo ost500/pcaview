@@ -3,6 +3,7 @@ import Header from '@/components/template/Header.vue';
 import BusinessInfo from '@/components/BusinessInfo.vue';
 import { Head } from '@inertiajs/vue3';
 import { safeRoute } from '@/composables/useSafeRoute';
+import type { Tag } from '@/types/contents';
 
 interface Trend {
     id: number;
@@ -20,6 +21,7 @@ interface Trend {
         snippet: string;
         source: string;
     }> | null;
+    tags?: Tag[];
 }
 
 const props = defineProps<{ trend: Trend }>();
@@ -29,7 +31,7 @@ const props = defineProps<{ trend: Trend }>();
     <Head :title="trend.title + ' - 트렌드'">
         <!-- Basic Meta Tags -->
         <meta name="description" :content="trend.description" />
-        <meta name="keywords" :content="'트렌드, ' + trend.title + ', 인기검색어'" />
+        <meta name="keywords" :content="'트렌드, ' + trend.title + ', 인기검색어' + (trend.tags && trend.tags.length > 0 ? ', ' + trend.tags.map(t => t.name).join(', ') : '')" />
 
         <!-- Open Graph -->
         <meta property="og:type" content="article" />
@@ -74,6 +76,18 @@ const props = defineProps<{ trend: Trend }>();
                         <span>🔥 검색량: {{ trend.traffic_count?.toLocaleString() || 'N/A' }}</span>
                         <span>📅 {{ new Date(trend.pub_date).toLocaleDateString('ko-KR') }}</span>
                     </div>
+
+                    <!-- Tags -->
+                    <div v-if="trend.tags && trend.tags.length > 0" class="mt-3 flex flex-wrap gap-2">
+                        <span
+                            v-for="tag in trend.tags"
+                            :key="tag.id"
+                            class="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 hover:bg-blue-100 transition-colors"
+                        >
+                            #{{ tag.name }}
+                        </span>
+                    </div>
+
                     <a
                         v-if="trend.link"
                         :href="trend.link"
