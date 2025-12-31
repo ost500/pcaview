@@ -40,7 +40,7 @@ class Tag extends Model
      */
     public function contents(): BelongsToMany
     {
-        return $this->belongsToMany(Contents::class, 'content_tag')
+        return $this->belongsToMany(Contents::class, 'content_tag', 'tag_id', 'content_id')
             ->withTimestamps();
     }
 
