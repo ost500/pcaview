@@ -85,6 +85,17 @@ const formatDate = (dateString: string) => {
     return date.toLocaleDateString('ko-KR');
 };
 
+const formatDateTime = (dateString: string) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+
+    return `${year}.${month}.${day} ${hours}:${minutes}`;
+};
+
 // 전체 뉴스 본문 절반으로 자르기 (저작권 보호)
 const displayBody = computed(() => {
     const newsTypes = ['nate_news', 'news'];
@@ -272,7 +283,7 @@ onMounted(() => {
                             <!-- Title -->
                             <div class="border-b border-gray-200 px-4 py-3">
                                 <h5 class="mb-2 text-lg font-semibold">{{ contents.title }}</h5>
-                                <p class="text-xs text-gray-500">{{ formatDate(contents.published_at) }}</p>
+                                <p class="text-xs text-gray-500">{{ formatDateTime(contents.published_at) }}</p>
                             </div>
 
                            <!-- 이미지 또는 비디오 -->
