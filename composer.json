@@ -1,8 +1,8 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/vue-starter-kit",
+    "name": "pcaview/pcaview",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "PCAview - 트렌딩 뉴스와 실시간 소식",
     "keywords": [
         "laravel",
         "framework"
