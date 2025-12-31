@@ -30,7 +30,26 @@ class Tag extends Model
             if (empty($tag->slug)) {
                 // 한글인 경우 그대로 사용, 그 외에는 slug 변환
                 $slug = Str::slug($tag->name);
-                $tag->slug = empty($slug) ? $tag->name : $slug;
+
+                // slug가 비어있거나, 원본 이름과 너무 차이가 나면 원본 사용
+                // 예: "시즌2 기대" → "2" (너무 짧음) → "시즌2 기대" 사용
+                if (empty($slug) || mb_strlen($slug) < mb_strlen($tag->name) / 2) {
+                    $baseSlug = $tag->name;
+                } else {
+                    $baseSlug = $slug;
+                }
+
+                // Unique slug 생성
+                $uniqueSlug = $baseSlug;
+                $counter = 1;
+
+                // slug가 이미 존재하면 suffix 추가
+                while (static::where('slug', $uniqueSlug)->exists()) {
+                    $counter++;
+                    $uniqueSlug = $baseSlug . '-' . $counter;
+                }
+
+                $tag->slug = $uniqueSlug;
             }
         });
     }

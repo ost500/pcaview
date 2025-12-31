@@ -90,7 +90,7 @@ class NateNewsContentService
                                 // ContentsImage 레코드 생성
                                 $contents->images()->create([
                                     'file_url' => $uploadedUrl,
-                                    'order' => $index,
+                                    'page' => $index,
                                 ]);
                             }
                         } catch (\Exception $e) {
