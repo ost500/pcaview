@@ -25,7 +25,7 @@ class NaverNewsContentService
     /**
      * Naver 뉴스 배열을 Contents로 변환하여 저장
      *
-     * @param array $newsItems Naver 뉴스 아이템 배열
+     * @param NaverNewsItem[] $newsItems Naver 뉴스 아이템 배열
      * @param Department $department 연결할 Department
      * @return int 저장된 개수
      */
@@ -35,13 +35,19 @@ class NaverNewsContentService
 
         foreach ($newsItems as $newsItem) {
             try {
+                // NaverNewsItem 타입 확인
+                if (!$newsItem instanceof NaverNewsItem) {
+                    Log::warning('Invalid news item type', ['type' => get_class($newsItem)]);
+                    continue;
+                }
+
                 // 필수 필드 확인
-                if (empty($newsItem['title']) || empty($newsItem['url'])) {
+                if (empty($newsItem->title) || empty($newsItem->url)) {
                     continue;
                 }
 
                 // URL 기반으로 중복 체크
-                $existingContent = Contents::where('file_url', $newsItem['url'])
+                $existingContent = Contents::where('file_url', $newsItem->url)
                     ->where('department_id', $department->id)
                     ->first();
 
@@ -50,22 +56,22 @@ class NaverNewsContentService
                 }
 
                 // 뉴스 URL에서 본문 내용 및 제목 크롤링
-                $this->currentNewsUrl = $newsItem['url'];
-                $newsData = $this->fetchNewsBody($newsItem['url']);
+                $this->currentNewsUrl = $newsItem->url;
+                $newsData = $this->fetchNewsBody($newsItem->url);
 
                 // 제목, 본문, 발행일시 추출 (크롤링한 데이터가 있으면 사용, 없으면 원본 사용)
-                $title = $newsData['title'] ?? $newsItem['title'];
-                $body = $newsData['body'] ?? $newsItem['snippet'] ?? null;
-                $publishedAt = $newsData['published_at'] ?? $newsItem['published_at'] ?? now();
+                $title = $newsData['title'] ?? $newsItem->title;
+                $body = $newsData['body'] ?? $newsItem->snippet ?? null;
+                $publishedAt = $newsData['published_at'] ?? $newsItem->publishedAt ?? now();
 
                 // 썸네일 이미지 결정 (우선순위: 본문 첫 이미지 > 검색 결과 이미지)
                 $thumbnailUrl = null;
                 if (!empty($newsData['images']) && is_array($newsData['images']) && isset($newsData['images'][0])) {
                     // 본문에서 추출한 첫 번째 이미지를 썸네일로 사용
                     $thumbnailUrl = $this->uploadImageToS3($newsData['images'][0], $department->id, true);
-                } elseif (!empty($newsItem['picture'])) {
+                } elseif (!empty($newsItem->picture)) {
                     // 검색 결과의 picture를 썸네일로 사용
-                    $thumbnailUrl = $this->uploadImageToS3($newsItem['picture'], $department->id, true);
+                    $thumbnailUrl = $this->uploadImageToS3($newsItem->picture, $department->id, true);
                 }
 
                 // Contents 생성 (이미 NaverNewsService에서 UTF-8 변환됨)
@@ -74,7 +80,7 @@ class NaverNewsContentService
                     'type' => ContentsType::NAVER_NEWS, // Naver 뉴스 타입
                     'title' => $title,
                     'body' => $body,
-                    'file_url' => $newsItem['url'],
+                    'file_url' => $newsItem->url,
                     'thumbnail_url' => $thumbnailUrl,
                     'published_at' => $publishedAt, // 크롤링한 발행일시 우선 사용
                 ]);

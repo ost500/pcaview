@@ -44,4 +44,9 @@ return [
         'api_key' => env('DEKRICA_API_KEY', 'pcaview_api_key_2025_dekkle_secret'),
     ],
 
+    'naver' => [
+        'client_id' => env('NAVER_CLIENT_ID'),
+        'client_secret' => env('NAVER_CLIENT_SECRET'),
+    ],
+
 ];
