@@ -45,6 +45,15 @@ class Tag extends Model
     }
 
     /**
+     * Trends와의 다대다 관계
+     */
+    public function trends(): BelongsToMany
+    {
+        return $this->belongsToMany(Trend::class, 'trend_tag')
+            ->withTimestamps();
+    }
+
+    /**
      * 사용 횟수 증가
      */
     public function incrementUsage(): void
