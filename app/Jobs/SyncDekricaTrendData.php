@@ -24,9 +24,7 @@ class SyncDekricaTrendData implements ShouldQueue
     public function handle(): void
     {
         try {
-            // Department 찾기 또는 생성
-            $department = $this->getDepartment();
-
+            // Dekrica API 호출
             // Dekrica API 호출
             $response = $this->fetchTrendData($this->tag);
 
@@ -35,6 +33,10 @@ class SyncDekricaTrendData implements ShouldQueue
 
                 return;
             }
+
+            // Department 찾기 또는 생성 (첫 번째 뉴스 아이템 정보 사용)
+            $firstItem = $response['data'][0] ?? null;
+            $department = $this->getDepartment($firstItem);
 
             // 데이터 저장
             foreach ($response['data'] as $item) {
@@ -55,20 +57,35 @@ class SyncDekricaTrendData implements ShouldQueue
         }
     }
 
-    private function getDepartment(): Department
+    private function getDepartment(?array $firstItem): Department
     {
         if ($this->departmentId) {
             return Department::findOrFail($this->departmentId);
         }
 
-        // "트렌드" department 찾기 또는 생성
-        return Department::firstOrCreate(
-            ['name' => $this->tag],
-            [
-                'description' => '실시간 트렌드 뉴스',
-                'icon_image' => '/pcaview_icon.png',
-            ]
-        );
+        // Department 찾기
+        $department = Department::where('name', $this->tag)->first();
+
+        // Department가 존재하고 description과 icon_image가 이미 있으면 그대로 반환
+        if ($department && $department->description && $department->icon_image) {
+            return $department;
+        }
+
+        // Department가 없거나 description/icon_image가 null이면 업데이트
+        $attributes = ['name' => $this->tag];
+        $values = [];
+
+        // description이 null이면 첫 번째 뉴스의 title로 채우기
+        if (!$department || !$department->description) {
+            $values['description'] = $firstItem['title'] ?? '실시간 트렌드 뉴스';
+        }
+
+        // icon_image가 null이면 첫 번째 뉴스의 thumbnail로 채우기
+        if (!$department || !$department->icon_image) {
+            $values['icon_image'] = $firstItem['thumbnail'] ?? null;
+        }
+
+        return Department::updateOrCreate($attributes, $values);
     }
 
     private function fetchTrendData(string $tag): ?array
