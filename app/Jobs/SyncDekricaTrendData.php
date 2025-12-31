@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\Contents;
 use App\Models\ContentsPlatformComment;
 use App\Models\Department;
+use App\Models\Tag;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\DB;
@@ -103,6 +104,15 @@ class SyncDekricaTrendData implements ShouldQueue
                     'file_type' => 'HTML',
                 ]
             );
+
+            // 태그 연결 (트렌드 태그)
+            $tag = Tag::firstOrCreate(['name' => $this->tag]);
+
+            // 이미 연결되어 있지 않으면 연결
+            if (!$content->tags->contains($tag->id)) {
+                $content->tags()->attach($tag->id);
+                $tag->incrementUsage();
+            }
 
             // 플랫폼 댓글 동기화
             if (! empty($item['comments'])) {
