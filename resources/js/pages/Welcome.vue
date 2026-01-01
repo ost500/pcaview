@@ -175,9 +175,9 @@ onMounted(() => {
     <Header title="홈"></Header>
 
     <div class="bg-white pb-14 pt-3 sm:pb-16 sm:pt-4">
-        <div class="mx-auto max-w-screen-xl px-4">
+        <div class="mx-auto max-w-screen-xl">
             <!-- 부서 목록 수평 스크롤 -->
-            <div class="department-scroll-container">
+            <div class="department-scroll-container max-w-0">
                 <div class="department-scroll-wrapper">
                     <a
                         v-for="department in departments"
@@ -226,7 +226,7 @@ onMounted(() => {
     gap: 1rem;
     overflow-x: auto;
     overflow-y: hidden;
-    padding: 0.5rem 1rem 1rem 1rem;
+    padding: 0.5rem 0 1rem 1rem;
     /* 스크롤바 숨김 (선택사항) */
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE and Edge */
