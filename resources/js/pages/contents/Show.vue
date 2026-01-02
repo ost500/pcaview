@@ -108,7 +108,7 @@ function goToDepartment(id: number) {
 
 // 전체 뉴스 본문 절반으로 자르기 (저작권 보호)
 const displayBody = computed(() => {
-    const newsTypes = ['nate_news', 'news'];
+    const newsTypes = ['nate_news', 'news', 'naver_news'];
     if (!newsTypes.includes(props.contents.type) || !props.contents.body) {
         return props.contents.body;
     }
@@ -342,7 +342,7 @@ onMounted(() => {
                                 <div class="content-body" v-html="displayBody"></div>
 
                                 <!-- 뉴스 저작권 안내 -->
-                                <div v-if="['nate_news', 'news'].includes(contents.type) && contents.file_url" class="mt-5 rounded border-l-4 border-blue-500 bg-gray-50 p-4">
+                                <div v-if="['nate_news', 'news', 'naver_news'].includes(contents.type) && contents.file_url" class="mt-5 rounded border-l-4 border-blue-500 bg-gray-50 p-4">
                                     <p class="mb-0 text-sm text-gray-600">저작권 보호를 위해 본문의 일부만 표시됩니다.</p>
                                     <a
                                         :href="contents.file_url"
