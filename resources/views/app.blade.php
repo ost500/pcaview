@@ -61,31 +61,6 @@
     </style>
 
     <title inertia>{{ config('app.name', 'Laravel') }}</title>
-    <meta name="description" content="PCAview(피카뷰) - 트렌딩 뉴스와 실시간 소식을 한눈에. 다양한 분야의 최신 트렌드와 이슈를 빠르게 확인하세요.">
-    <meta name="keywords" content="PCAview, 피카뷰, 트렌드, 뉴스, 실시간 소식, 이슈, 트렌딩">
-
-    <!-- Canonical URL -->
-    <link rel="canonical" href="{{ request()->url() }}" />
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="ko_KR" />
-    <meta property="og:url" content="{{ url('/') }}" />
-    <meta property="og:site_name" content="PCAview" />
-    <meta property="og:title" content="PCAview(피카뷰) - 트렌딩 뉴스와 실시간 소식" />
-    <meta property="og:description" content="다양한 분야의 최신 트렌드와 이슈를 한눈에 확인하세요. 실시간 업데이트되는 뉴스와 소식을 PCAview에서 만나보세요." />
-    <meta property="og:image" content="{{ url('/og_image.png') }}" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content="{{ url('/') }}" />
-    <meta name="twitter:title" content="PCAview(피카뷰) - 트렌딩 뉴스와 실시간 소식" />
-    <meta name="twitter:description" content="다양한 분야의 최신 트렌드와 이슈를 한눈에 확인하세요. 실시간 업데이트되는 뉴스와 소식을 PCAview에서 만나보세요." />
-    <meta name="twitter:image" content="{{ url('/og_image.png') }}" />
-
-    {{-- Inertia Head - This will override above meta tags for page-specific content --}}
     @inertiaHead
 
     <!-- Favicon - Google recommends multiples of 48x48 pixels -->
