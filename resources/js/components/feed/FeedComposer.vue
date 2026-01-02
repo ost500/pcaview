@@ -23,7 +23,18 @@ const selectedDepartmentId = ref<number | null>(
     props.department?.id ?? (props.departments && props.departments.length > 0 ? props.departments[0].id : null),
 );
 
+// 로그인 체크 및 리다이렉트
+const checkAuth = () => {
+    if (!user.value) {
+        router.get('/login');
+        return false;
+    }
+    return true;
+};
+
 const handleImageSelect = (event: Event) => {
+    if (!checkAuth()) return;
+
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
         const files = Array.from(target.files);
@@ -50,6 +61,8 @@ const removeImage = (index: number) => {
 };
 
 const submitPost = () => {
+    if (!checkAuth()) return;
+
     if (!content.value.trim() && images.value.length === 0) {
         alert('내용을 입력하거나 이미지를 추가해주세요.');
         return;
@@ -131,6 +144,7 @@ const submitPost = () => {
                         maxlength="5000"
                         class="w-full resize-none rounded-lg border border-gray-300 px-4 py-3 text-sm transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
                         :disabled="isSubmitting"
+                        @click="checkAuth"
                     ></textarea>
 
                 </div>

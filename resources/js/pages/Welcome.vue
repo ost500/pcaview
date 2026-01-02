@@ -205,7 +205,7 @@ onMounted(() => {
             -->
 
             <!-- 피드 작성 컴포넌트 (교회 페이지 + 로그인 사용자만 표시) -->
-            <FeedComposer v-if="currentChurch && $page.props.auth.user" :church="currentChurch" :departments="departments" />
+            <FeedComposer v-if="currentChurch" :church="currentChurch" :departments="departments" />
 
             <ContentsList :contents="allContents" :is-loading="isLoading" :has-more="hasMorePages" @load-more="loadMore"></ContentsList>
             <!-- 쿠팡 광고 주석 처리
