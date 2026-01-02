@@ -18,6 +18,13 @@ const props = defineProps<{
     departments: Department[];
 }>();
 
+// URL 파라미터로 헤더 숨김 여부 확인
+const hideHeader = ref(false);
+if (typeof window !== 'undefined') {
+    const urlParams = new URLSearchParams(window.location.search);
+    hideHeader.value = urlParams.get('hideHeader') === 'true';
+}
+
 const allContents = ref<Contents[]>([...props.contents.data]);
 const currentPage = ref(props.contents.current_page);
 const hasMorePages = ref(!!props.contents.next_page_url);
@@ -102,9 +109,9 @@ watch(
         <link rel="canonical" :href="`https://pcaview.com/church/${church.id}`" />
     </Head>
 
-    <Header :title="church.name" :backbutton="true"></Header>
+    <Header v-if="!hideHeader" :title="church.name" :backbutton="true"></Header>
 
-    <div class="bg-white pb-14 pt-3 sm:pb-16 sm:pt-4">
+    <div class="bg-white pb-14 pt-3 sm:pb-16 sm:pt-4" :class="{ 'pt-0': hideHeader }">
         <div class="mx-auto max-w-screen-xl px-4">
             <!-- 교회 정보 -->
             <div class="mb-4 flex items-center gap-4 sm:mb-6">

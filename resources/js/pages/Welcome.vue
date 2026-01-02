@@ -25,6 +25,13 @@ const props = defineProps<{
     currentChurch?: Church;
 }>();
 
+// URL 파라미터로 헤더 숨김 여부 확인
+const hideHeader = ref(false);
+if (typeof window !== 'undefined') {
+    const urlParams = new URLSearchParams(window.location.search);
+    hideHeader.value = urlParams.get('hideHeader') === 'true';
+}
+
 // 개발 환경 확인
 const isDev = import.meta.env.DEV;
 
@@ -179,9 +186,9 @@ onMounted(() => {
     </div>
     -->
 
-    <Header title="홈"></Header>
+    <Header v-if="!hideHeader" title="홈"></Header>
 
-    <div class="bg-white pb-14 pt-3 sm:pb-16 sm:pt-4">
+    <div class="bg-white pb-14 pt-3 sm:pb-16 sm:pt-4" :class="{ 'pt-0': hideHeader }">
         <div class="mx-auto max-w-screen-xl">
             <!-- 부서 목록 수평 스크롤 -->
             <div class="department-scroll-container max-w-none">

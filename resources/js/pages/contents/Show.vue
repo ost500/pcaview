@@ -13,6 +13,13 @@ const props = defineProps<{
     relatedContents: Contents[];
 }>();
 
+// URL 파라미터로 헤더 숨김 여부 확인
+const hideHeader = ref(false);
+if (typeof window !== 'undefined') {
+    const urlParams = new URLSearchParams(window.location.search);
+    hideHeader.value = urlParams.get('hideHeader') === 'true';
+}
+
 const page = usePage();
 const user = computed(() => page.props.auth.user);
 
@@ -270,9 +277,9 @@ onMounted(() => {
             <!-- Canonical URL -->
             <link rel="canonical" :href="`https://pcaview.com/contents/${contents.id}`" />
         </Head>
-        <Header title="VIEW" :backbutton="true"></Header>
+        <Header v-if="!hideHeader" title="VIEW" :backbutton="true"></Header>
 
-        <div class="mx-auto w-full max-w-2xl">
+        <div class="mx-auto w-full max-w-2xl" :class="{ 'pt-3': hideHeader }">
             <div class="space-y-4 pb-20">
                 <div class="page-content py-10">
                     <div class="container pt-0 pb-0">
