@@ -16,6 +16,13 @@ const props = defineProps<Props>();
 const page = usePage();
 const user = computed(() => page.props.auth.user);
 
+// URL 파라미터로 헤더 숨김 여부 확인
+const hideHeader = ref(false);
+if (typeof window !== 'undefined') {
+    const urlParams = new URLSearchParams(window.location.search);
+    hideHeader.value = urlParams.get('hideHeader') === 'true';
+}
+
 // 로그인 폼
 const loginForm = useForm({
     email: '',
@@ -68,9 +75,9 @@ const toggleSubscription = (departmentId: number) => {
 </script>
 
 <template>
-    <Header title="프로필"></Header>
+    <Header v-if="!hideHeader" title="프로필"></Header>
 
-    <div class="bg-white pb-14 pt-3 sm:pb-16 sm:pt-4">
+    <div class="bg-white pb-14 pt-3 sm:pb-16 sm:pt-4" :class="{ 'pt-0': hideHeader }">
         <div class="mx-auto max-w-screen-xl px-4">
             <!-- 로그인 안 된 경우 - 인라인 로그인 폼 -->
             <div v-if="!user" class="mx-auto max-w-md">

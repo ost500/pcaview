@@ -13,20 +13,28 @@ import { register } from '@/routes';
 import { request } from '@/routes/password';
 import { Form, Head } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
+import { ref } from 'vue';
 
 defineProps<{
     status?: string;
     canResetPassword: boolean;
 }>();
+
+// URL 파라미터로 헤더 숨김 여부 확인
+const hideHeader = ref(false);
+if (typeof window !== 'undefined') {
+    const urlParams = new URLSearchParams(window.location.search);
+    hideHeader.value = urlParams.get('hideHeader') === 'true';
+}
 </script>
 
 <template>
     <Head title="로그인">
         <meta name="robots" content="noindex, nofollow" />
     </Head>
-    <Header title="로그인"></Header>
+    <Header v-if="!hideHeader" title="로그인"></Header>
 
-    <AuthLayout title="로그인" description="PCAview에 오신 것을 환영합니다">
+    <AuthLayout title="로그인" description="PCAview에 오신 것을 환영합니다" :class="{ 'pt-0': hideHeader }">
         <div v-if="status" class="mb-4 rounded-lg bg-green-50 p-3 text-center text-sm font-medium text-green-700">
             {{ status }}
         </div>
