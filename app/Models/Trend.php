@@ -21,12 +21,14 @@ class Trend extends Model
         'picture',
         'picture_source',
         'news_items',
+        'last_fetched_at',
     ];
 
     protected $casts = [
         'pub_date' => 'datetime',
         'traffic_count' => 'integer',
         'news_items' => 'array',
+        'last_fetched_at' => 'datetime',
     ];
 
     /**

@@ -14,11 +14,18 @@ class HomeController extends Controller
     {
         $user = $request->user();
 
+        // 중복 제거를 위한 서브쿼리 (department_id, title로 그룹화하여 최신 id만 선택)
+        $uniqueContentsIds = \DB::table('contents')
+            ->select(\DB::raw('MAX(id) as id'))
+            ->groupBy('department_id', 'title')
+            ->pluck('id');
+
         // 로그인한 사용자의 경우 구독한 부서의 콘텐츠만 표시
         if ($user) {
             $subscribedDepartmentIds = $user->departments()->pluck('departments.id');
             $contents = Contents::with(['user', 'church', 'department', 'departments'])
                 ->withCount('comments')
+                ->whereIn('id', $uniqueContentsIds)
                 ->whereHas('departments', function ($query) use ($subscribedDepartmentIds) {
                     $query->whereIn('departments.id', $subscribedDepartmentIds);
                 })
@@ -28,6 +35,7 @@ class HomeController extends Controller
             // 비로그인 사용자는 모든 콘텐츠 표시
             $contents = Contents::with(['user', 'church', 'department', 'departments'])
                 ->withCount('comments')
+                ->whereIn('id', $uniqueContentsIds)
                 ->latest('published_at')
                 ->paginate(20);
             $subscribedDepartmentIds = collect();
@@ -71,9 +79,17 @@ class HomeController extends Controller
             $subscribedDepartmentIds = collect();
         }
 
+        // 중복 제거를 위한 서브쿼리
+        $uniqueContentsIds = \DB::table('contents')
+            ->select(\DB::raw('MAX(id) as id'))
+            ->where('church_id', $church->id)
+            ->groupBy('department_id', 'title')
+            ->pluck('id');
+
         // Church 페이지에서는 해당 교회의 모든 콘텐츠를 표시
         $contents = Contents::with(['user', 'church', 'department', 'departments'])
             ->withCount('comments')
+            ->whereIn('id', $uniqueContentsIds)
             ->where('church_id', $church->id)
             ->latest('published_at')
             ->paginate(20);

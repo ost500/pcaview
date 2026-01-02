@@ -19,8 +19,18 @@ class DepartmentController extends Controller
     public function show(int $id)
     {
         $department = Department::with('church')->findOrFail($id);
+
+        // 중복 제거를 위한 서브쿼리
+        $uniqueContentsIds = \DB::table('contents')
+            ->join('contents_departments', 'contents.id', '=', 'contents_departments.contents_id')
+            ->where('contents_departments.department_id', $id)
+            ->select(\DB::raw('MAX(contents.id) as id'))
+            ->groupBy('contents.department_id', 'contents.title')
+            ->pluck('id');
+
         $contents = Contents::with(['user', 'church', 'department', 'departments'])
             ->withCount('comments')
+            ->whereIn('id', $uniqueContentsIds)
             ->whereHas('departments', function ($query) use ($id) {
                 $query->where('departments.id', $id);
             })
@@ -33,8 +43,18 @@ class DepartmentController extends Controller
     public function keyword(string $keyword)
     {
         $department = Department::with('church')->where('name', $keyword)->firstOrFail();
+
+        // 중복 제거를 위한 서브쿼리
+        $uniqueContentsIds = \DB::table('contents')
+            ->join('contents_departments', 'contents.id', '=', 'contents_departments.contents_id')
+            ->where('contents_departments.department_id', $department->id)
+            ->select(\DB::raw('MAX(contents.id) as id'))
+            ->groupBy('contents.department_id', 'contents.title')
+            ->pluck('id');
+
         $contents = Contents::with(['user', 'church', 'department', 'departments'])
             ->withCount('comments')
+            ->whereIn('id', $uniqueContentsIds)
             ->whereHas('departments', function ($query) use ($department) {
                 $query->where('departments.id', $department->id);
             })
