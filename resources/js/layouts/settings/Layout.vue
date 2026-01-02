@@ -17,6 +17,10 @@ const sidebarNavItems: NavItem[] = [
         title: 'Password',
         href: editPassword(),
     },
+    {
+        title: 'Admin',
+        href: '/admin/departments',
+    },
 ];
 
 const currentPath = typeof window !== undefined ? window.location.pathname : '';
