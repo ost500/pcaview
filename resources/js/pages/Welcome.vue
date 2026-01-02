@@ -177,7 +177,7 @@ onMounted(() => {
     <div class="bg-white pb-14 pt-3 sm:pb-16 sm:pt-4">
         <div class="mx-auto max-w-screen-xl">
             <!-- 부서 목록 수평 스크롤 -->
-            <div class="department-scroll-container max-w-0">
+            <div class="department-scroll-container max-w-none">
                 <div class="department-scroll-wrapper">
                     <a
                         v-for="department in departments"
