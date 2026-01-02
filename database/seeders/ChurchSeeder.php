@@ -14,7 +14,10 @@ class ChurchSeeder extends Seeder
      */
     public function run(): void
     {
+        // Disable foreign key checks
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         DB::table('churches')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         Church::create([
             'name' => 'PCAview',

@@ -11,14 +11,14 @@ class DepartmentController extends Controller
 {
     public function index()
     {
-        $departments = Department::all();
+        $departments = Department::with('church')->get();
 
         return Inertia::render('department/Index', ['departments' => $departments]);
     }
 
     public function show(int $id)
     {
-        $department = Department::find($id);
+        $department = Department::with('church')->findOrFail($id);
         $contents = Contents::with('department')
             ->withCount('comments')
             ->where('department_id', $id)
@@ -30,7 +30,7 @@ class DepartmentController extends Controller
 
     public function keyword(string $keyword)
     {
-        $department = Department::where('name', $keyword)->first();
+        $department = Department::with('church')->where('name', $keyword)->firstOrFail();
         $contents = Contents::with('department')
             ->withCount('comments')
             ->where('department_id', $department->id)

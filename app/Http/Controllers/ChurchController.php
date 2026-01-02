@@ -10,14 +10,14 @@ class ChurchController extends Controller
 {
     public function index()
     {
-        $churches = Church::all();
+        $churches = Church::with('departments')->get();
 
         return Inertia::render('church/Index', ['churches' => $churches]);
     }
 
     public function show(int $id)
     {
-        $church = Church::find($id);
+        $church = Church::with('departments')->findOrFail($id);
 
         return Inertia::render('church/Show', ['church' => $church]);
     }

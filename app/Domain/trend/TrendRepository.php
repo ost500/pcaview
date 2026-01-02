@@ -58,9 +58,14 @@ class TrendRepository
     {
         // Title을 Department name으로 사용
         // 같은 title이 이미 존재하면 재사용
+
+        // 기본 교회 가져오기 (첫 번째 교회, 없으면 null)
+        $church = \App\Models\Church::first();
+
         return Department::firstOrCreate(
             ['name' => $title],
             [
+                'church_id' => $church?->id,
                 'description' => $description,
                 'icon_image' => $picture,
             ]

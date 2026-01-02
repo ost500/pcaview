@@ -19,8 +19,11 @@ class ContentsSeeder extends Seeder
      */
     public function run(): void
     {
+        // Disable foreign key checks
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         DB::table('contents')->truncate();
         DB::table('contents_images')->truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $bulletinCrawlService = app(JuboCrawlService::class);
         $brightSoriCrawlService = app(BrightSoriCrawlService::class);
