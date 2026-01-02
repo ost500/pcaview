@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import BusinessInfo from '@/components/BusinessInfo.vue';
 import Header from '@/components/template/Header.vue';
+import ContentsList from '@/components/contents/ContentsList.vue';
 import { Contents } from '@/types/contents';
 import { Head, router, usePage } from '@inertiajs/vue3';
 import { onMounted, ref, computed } from 'vue';
 import VueEasyLightbox from 'vue-easy-lightbox';
 import { safeRoute } from '@/composables/useSafeRoute';
 
-const props = defineProps<{ contents: Contents }>();
+const props = defineProps<{
+    contents: Contents;
+    relatedContents: Contents[];
+}>();
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
@@ -436,6 +440,16 @@ onMounted(() => {
                             <div v-else class="px-4 py-8 text-center text-sm text-gray-500">
                                 첫 번째 댓글을 작성해보세요!
                             </div>
+                        </div>
+
+                        <!-- 관련 콘텐츠 -->
+                        <div v-if="relatedContents && relatedContents.length > 0" class="mt-4">
+                            <div class="mb-4 px-4 py-3">
+                                <h3 class="text-base font-semibold text-gray-900">
+                                    {{ contents.department ? contents.department.name + '의 ' : '' }}다른 소식
+                                </h3>
+                            </div>
+                            <ContentsList :contents="relatedContents" />
                         </div>
                     </div>
                 </div>
