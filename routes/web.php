@@ -27,6 +27,15 @@ Route::get('dashboard', function () {
 
 Route::get('contents/{id}', [ContentsController::class, 'show'])->name('contents.show');
 
+// 모바일 전용 라우트 (헤더 없음)
+Route::prefix('m')->name('mobile.')->group(function () {
+    Route::get('/', [HomeController::class, 'mobileIndex'])->name('home');
+    Route::get('/c/{church}', [HomeController::class, 'mobileChurch'])->name('church.home');
+    Route::get('/church/{id}', [ChurchController::class, 'mobileShow'])->name('church.show');
+    Route::get('/department/{id}', [DepartmentController::class, 'mobileShow'])->where('id', '[0-9]+')->name('department.show');
+    Route::get('/contents/{id}', [ContentsController::class, 'mobileShow'])->name('contents.show');
+});
+
 Route::post('/contents/{content}/comments', [CommentController::class, 'store'])->name('comments.store');
 Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->middleware('auth')->name('comments.destroy');
 
