@@ -44,18 +44,12 @@ class FeedController extends Controller
             $church = \App\Models\Church::findOrFail($request->church_id);
             $departments = $church->departments;
 
-            if ($departments->isEmpty()) {
-                return redirect()->back()->withErrors(['error' => '해당 교회에 부서가 없습니다.']);
-            }
-
             DB::transaction(function () use ($church, $departments, $request, $imageUrls, $user) {
-                // 하나의 content만 생성 (교회의 대표 department 사용)
-                $primaryDepartment = $church->primaryDepartment ?? $departments->first();
-
+                // 하나의 content만 생성 (church 모드에서는 department_id를 null로 설정)
                 $content = Contents::create([
                     'user_id' => $user->id,
                     'church_id' => $church->id,
-                    'department_id' => $primaryDepartment->id, // 교회의 대표 department 설정
+                    'department_id' => null, // church에서 작성한 경우 null
                     'type' => 'html',
                     'title' => $request->get('content'),
                     'body' => $request->get('content'),
