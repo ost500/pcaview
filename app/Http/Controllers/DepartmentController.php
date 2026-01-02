@@ -22,8 +22,8 @@ class DepartmentController extends Controller
 
         // 중복 제거를 위한 서브쿼리
         $uniqueContentsIds = \DB::table('contents')
-            ->join('contents_departments', 'contents.id', '=', 'contents_departments.contents_id')
-            ->where('contents_departments.department_id', $id)
+            ->join('content_department', 'contents.id', '=', 'content_department.contents_id')
+            ->where('content_department.department_id', $id)
             ->select(\DB::raw('MAX(contents.id) as id'))
             ->groupBy('contents.department_id', 'contents.title')
             ->pluck('id');
@@ -46,8 +46,8 @@ class DepartmentController extends Controller
 
         // 중복 제거를 위한 서브쿼리
         $uniqueContentsIds = \DB::table('contents')
-            ->join('contents_departments', 'contents.id', '=', 'contents_departments.contents_id')
-            ->where('contents_departments.department_id', $department->id)
+            ->join('content_department', 'contents.id', '=', 'content_department.contents_id')
+            ->where('content_department.department_id', $department->id)
             ->select(\DB::raw('MAX(contents.id) as id'))
             ->groupBy('contents.department_id', 'contents.title')
             ->pluck('id');

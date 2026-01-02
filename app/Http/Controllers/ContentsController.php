@@ -21,8 +21,8 @@ class ContentsController extends Controller
         // department가 있는 경우 해당 department의 콘텐츠
         if ($contents->department_id) {
             $uniqueContentsIds = \DB::table('contents')
-                ->join('contents_departments', 'contents.id', '=', 'contents_departments.contents_id')
-                ->where('contents_departments.department_id', $contents->department_id)
+                ->join('content_department', 'contents.id', '=', 'content_department.contents_id')
+                ->where('content_department.department_id', $contents->department_id)
                 ->where('contents.id', '!=', $id)
                 ->select(\DB::raw('MAX(contents.id) as id'))
                 ->groupBy('contents.department_id', 'contents.title')
