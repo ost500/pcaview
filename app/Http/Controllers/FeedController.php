@@ -12,14 +12,6 @@ use Illuminate\Support\Facades\Storage;
 class FeedController extends Controller
 {
     /**
-     * 생성자: 인증 미들웨어 적용
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
-    /**
      * 피드 게시물 저장
      */
     public function store(Request $request)
@@ -56,11 +48,12 @@ class FeedController extends Controller
                 return redirect()->back()->withErrors(['error' => '해당 교회에 부서가 없습니다.']);
             }
 
-            DB::transaction(function () use ($church, $departments, $request, $imageUrls) {
+            DB::transaction(function () use ($church, $departments, $request, $imageUrls, $user) {
                 // 하나의 content만 생성 (교회의 대표 department 사용)
                 $primaryDepartment = $church->primaryDepartment ?? $departments->first();
 
                 $content = Contents::create([
+                    'user_id' => $user->id,
                     'church_id' => $church->id,
                     'department_id' => $primaryDepartment->id, // 교회의 대표 department 설정
                     'type' => 'html',
@@ -91,8 +84,9 @@ class FeedController extends Controller
         // Department mode: 선택된 department에만 content 생성
         $feedDepartment = Department::findOrFail($request->department_id);
 
-        DB::transaction(function () use ($feedDepartment, $request, $imageUrls) {
+        DB::transaction(function () use ($feedDepartment, $request, $imageUrls, $user) {
             $content = Contents::create([
+                'user_id' => $user->id,
                 'church_id' => $feedDepartment->church_id, // department의 church_id 사용
                 'department_id' => $feedDepartment->id, // 대표 department 설정
                 'type' => 'html',

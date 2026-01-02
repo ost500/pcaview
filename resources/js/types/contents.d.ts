@@ -9,10 +9,27 @@ export type Contents = {
     updated_at?: string;
     images: ContentsImage[] | null;
     file_type: string | null;
+    user_id?: number | null;
+    user?: User | null;
+    church?: Church | null;
     department?: Department | null;
     comments?: Comment[];
     comments_count?: number;
     tags?: Tag[];
+};
+
+export type User = {
+    id: number;
+    name: string;
+    email: string;
+    profile_photo_url?: string;
+};
+
+export type Church = {
+    id: number;
+    name: string;
+    slug: string;
+    icon_url: string;
 };
 
 export type Department = {

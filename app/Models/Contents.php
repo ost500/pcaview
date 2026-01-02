@@ -20,6 +20,11 @@ class Contents extends Model
         return $this->hasMany(ContentsImage::class);
     }
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function church(): BelongsTo
     {
         return $this->belongsTo(Church::class);

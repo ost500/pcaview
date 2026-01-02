@@ -30,7 +30,7 @@ Route::get('contents/{id}', [ContentsController::class, 'show'])->name('contents
 Route::post('/contents/{content}/comments', [CommentController::class, 'store'])->name('comments.store');
 Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->middleware('auth')->name('comments.destroy');
 
-Route::post('/feed', [FeedController::class, 'store'])->name('feed.store');
+Route::post('/feed', [FeedController::class, 'store'])->middleware('auth')->name('feed.store');
 
 Route::get('/privacy-policy', function () {
     return Inertia::render('PrivacyPolicy');

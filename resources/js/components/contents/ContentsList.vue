@@ -113,16 +113,28 @@ onUnmounted(() => {
                 <div
                     class="cursor-pointer overflow-hidden rounded-lg bg-gradient-to-br from-sky-50 to-blue-50 shadow-sm transition-all hover:from-sky-100 hover:to-blue-100 hover:shadow-md"
                 >
-                    <!-- Department 정보 -->
+                    <!-- User 정보 (user_id가 있는 경우) 또는 Church 정보 (없는 경우) -->
                     <div
-                        v-if="content.department"
-                        @click="goToDepartment(content.department.id)"
+                        v-if="content.user || content.church"
                         class="flex items-center gap-3 border-b border-sky-100 bg-white/50 px-4 py-3 backdrop-blur-sm"
                     >
                         <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
-                            <img :src="content.department.icon_image || '/pcaview_icon.png'" :alt="content.department.name" class="h-full w-full object-cover" />
+                            <img
+                                v-if="content.user"
+                                :src="content.user.profile_photo_url || '/pcaview_icon.png'"
+                                :alt="content.user.name"
+                                class="h-full w-full object-cover"
+                            />
+                            <img
+                                v-else-if="content.church"
+                                :src="content.church.icon_url || '/pcaview_icon.png'"
+                                :alt="content.church.name"
+                                class="h-full w-full object-cover"
+                            />
                         </div>
-                        <span class="text-sm font-semibold text-sky-900">{{ content.department.name }}</span>
+                        <span class="text-sm font-semibold text-sky-900">
+                            {{ content.user ? content.user.name : (content.church ? content.church.name : '') }}
+                        </span>
                     </div>
 
                     <!-- 내용: 이미지 또는 텍스트 미리보기 -->
@@ -137,7 +149,16 @@ onUnmounted(() => {
 
                     <!-- 타이틀 및 자세히 버튼 -->
                     <div class="bg-white/60 px-4 py-3 backdrop-blur-sm" @click="goToContent(content.id)">
+                        <!-- Department 정보 -->
+                        <div v-if="content.department" class="mb-3 flex items-center gap-2">
+                            <div class="flex h-6 w-6 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
+                                <img :src="content.department.icon_image || '/pcaview_icon.png'" :alt="content.department.name" class="h-full w-full object-cover" />
+                            </div>
+                            <span class="text-xs font-medium text-sky-800">{{ content.department.name }}</span>
+                        </div>
+
                         <h5 class="mb-3 text-base font-semibold text-sky-900">{{ content.title }}</h5>
+
                         <div class="flex items-center justify-between">
                             <!-- 댓글 개수 -->
                             <div v-if="content.comments_count !== undefined" class="flex items-center gap-1.5 text-sky-700">
