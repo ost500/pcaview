@@ -16,8 +16,11 @@ class ChurchFactory extends Factory
      */
     public function definition(): array
     {
+        $name = fake()->company();
+
         return [
-            'name' => fake()->company(),
+            'name' => $name,
+            'slug' => \Illuminate\Support\Str::slug($name),
             'icon_url' => '/image/default_icon.webp',
             'logo_url' => '/image/default_logo.jpg',
             'worship_time_image' => '/image/default_worship.png',

@@ -19,9 +19,11 @@ class DepartmentController extends Controller
     public function show(int $id)
     {
         $department = Department::with('church')->findOrFail($id);
-        $contents = Contents::with('department')
+        $contents = Contents::with(['department', 'departments'])
             ->withCount('comments')
-            ->where('department_id', $id)
+            ->whereHas('departments', function ($query) use ($id) {
+                $query->where('departments.id', $id);
+            })
             ->latest('published_at')
             ->paginate(20);
 
@@ -31,9 +33,11 @@ class DepartmentController extends Controller
     public function keyword(string $keyword)
     {
         $department = Department::with('church')->where('name', $keyword)->firstOrFail();
-        $contents = Contents::with('department')
+        $contents = Contents::with(['department', 'departments'])
             ->withCount('comments')
-            ->where('department_id', $department->id)
+            ->whereHas('departments', function ($query) use ($department) {
+                $query->where('departments.id', $department->id);
+            })
             ->latest('published_at')
             ->paginate(20);
 

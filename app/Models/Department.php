@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Department extends Model
@@ -22,10 +23,21 @@ class Department extends Model
     }
 
     /**
-     * Get the contents for the department.
+     * Get the contents for the department (legacy one-to-many).
+     * @deprecated Use contents() many-to-many relationship instead
      */
-    public function contents(): HasMany
+    public function contentsLegacy(): HasMany
     {
-        return $this->hasMany(Content::class);
+        return $this->hasMany(Contents::class);
+    }
+
+    /**
+     * Get the contents for the department (many-to-many).
+     */
+    public function contents(): BelongsToMany
+    {
+        return $this->belongsToMany(Contents::class, 'content_department', 'department_id', 'content_id')
+            ->withTimestamps()
+            ->orderByDesc('published_at');
     }
 }

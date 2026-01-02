@@ -141,7 +141,8 @@ class NFriendsCrawlService
                         // Contents 생성
                         $contents = Contents::create([
                             'title' => $title,
-                            'department_id' => $departmentModel->id,
+                            'church_id' => $departmentModel->church_id,
+                            'department_id' => $departmentModel->id, // 대표 department 설정
                             'type' => MSCHContentsType::HTML,
                             'file_type' => 'HTML',
                             'body' => $body,
@@ -149,6 +150,9 @@ class NFriendsCrawlService
                             'thumbnail_url' => $thumbnailUrl,
                             'published_at' => $publishedAt,
                         ]);
+
+                        // Attach to department via pivot table
+                        $contents->departments()->attach($departmentModel->id);
 
                         event(new ContentsNewEvent($contents));
 

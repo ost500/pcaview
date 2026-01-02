@@ -20,9 +20,22 @@ class Contents extends Model
         return $this->hasMany(ContentsImage::class);
     }
 
+    public function church(): BelongsTo
+    {
+        return $this->belongsTo(Church::class);
+    }
+
+    // Keep for backward compatibility with existing code
     public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class);
+    }
+
+    // Many-to-many relationship with departments
+    public function departments(): BelongsToMany
+    {
+        return $this->belongsToMany(Department::class, 'content_department', 'content_id', 'department_id')
+            ->withTimestamps();
     }
 
     public function comments(): HasMany

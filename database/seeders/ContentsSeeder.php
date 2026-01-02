@@ -21,6 +21,7 @@ class ContentsSeeder extends Seeder
     {
         // Disable foreign key checks
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('content_department')->truncate(); // pivot table 먼저 truncate
         DB::table('contents')->truncate();
         DB::table('contents_images')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

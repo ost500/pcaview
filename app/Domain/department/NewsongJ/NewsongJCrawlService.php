@@ -35,13 +35,17 @@ class NewsongJCrawlService
 
                     $contents = Contents::create([
                         'title' => $item['title'],
-                        'department_id' => $departmentModel->id,
+                        'church_id' => $departmentModel->church_id,
+                        'department_id' => $departmentModel->id, // 대표 department 설정
                         'type' => MSCHContentsType::NEWS,
                         'body' => '',
                         'file_url' => $item['permalink'] ?? '',
                         'thumbnail_url' => $item['media'][0]['medium']['url'] ?? $item['media'][0]['url'] ?? null,
                         'published_at' => Carbon::createFromTimestamp($item['published_at'] / 1000),
                     ]);
+
+                    // Attach to department via pivot table
+                    $contents->departments()->attach($departmentModel->id);
 
                     foreach ($item['media'] as $index => $media) {
                         if (!isset($media['medium'])) {

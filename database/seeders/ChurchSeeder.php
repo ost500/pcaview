@@ -21,6 +21,7 @@ class ChurchSeeder extends Seeder
 
         Church::create([
             'name' => 'PCAview',
+            'slug' => 'pcaview',
             'icon_url' => '/image/msch.webp',
             'logo_url' => '/image/msch_logo.jpg',
             'worship_time_image' => '/image/worship_time_image.png',

@@ -1,13 +1,27 @@
 <script setup lang="ts">
-import Header from '@/components/template/Header.vue';
 import BusinessInfo from '@/components/BusinessInfo.vue';
-import { Church } from '@/types/church';
-import { ref } from 'vue';
-import VueEasyLightbox from 'vue-easy-lightbox';
-import { Head } from '@inertiajs/vue3';
+import ContentsList from '@/components/contents/ContentsList.vue';
+import FeedComposer from '@/components/feed/FeedComposer.vue';
+import Header from '@/components/template/Header.vue';
 import { safeRoute } from '@/composables/useSafeRoute';
+import { Church } from '@/types/church';
+import { Contents } from '@/types/contents';
+import { Department } from '@/types/department';
+import { Pagination } from '@/types/pagination';
+import { Head, router } from '@inertiajs/vue3';
+import { ref, watch } from 'vue';
+import VueEasyLightbox from 'vue-easy-lightbox';
 
-const props = defineProps<{ church: Church }>();
+const props = defineProps<{
+    church: Church;
+    contents: Pagination<Contents>;
+    departments: Department[];
+}>();
+
+const allContents = ref<Contents[]>([...props.contents.data]);
+const currentPage = ref(props.contents.current_page);
+const hasMorePages = ref(!!props.contents.next_page_url);
+const isLoading = ref(false);
 
 const images = [props.church.worship_time_image, props.church.address_url];
 const showViewer = ref(false);
@@ -21,64 +35,95 @@ function open(indexNumber: number) {
 function close() {
     showViewer.value = false;
 }
+
+const loadMore = () => {
+    if (isLoading.value || !hasMorePages.value) return;
+
+    isLoading.value = true;
+    const nextPage = currentPage.value + 1;
+
+    router.get(
+        safeRoute('church.show', { id: props.church.id }),
+        { page: nextPage },
+        {
+            preserveState: true,
+            preserveScroll: true,
+            replace: true,
+            only: ['contents'],
+            onSuccess: (page) => {
+                const newContents = page.props.contents as Pagination<Contents>;
+                allContents.value = [...allContents.value, ...newContents.data];
+                currentPage.value = newContents.current_page;
+                hasMorePages.value = !!newContents.next_page_url;
+                isLoading.value = false;
+            },
+            onError: () => {
+                isLoading.value = false;
+            },
+        },
+    );
+};
+
+// Watch for props changes (initial load)
+watch(
+    () => props.contents,
+    (newContents) => {
+        if (newContents.current_page === 1) {
+            allContents.value = [...newContents.data];
+            currentPage.value = newContents.current_page;
+            hasMorePages.value = !!newContents.next_page_url;
+        }
+    },
+);
 </script>
 
 <template>
-    <Head :title="church.name + ' 주보고'">
+    <Head :title="church.name">
         <!-- Basic Meta Tags -->
-        <meta name="description" :content="church.name + ' 교회 정보 - 예배시간과 약도를 확인하세요.'" />
-        <meta name="keywords" :content="'교회, ' + church.name + ', 예배시간, 교회 위치, 약도'" />
+        <meta name="description" :content="`${church.name}의 최신 소식과 트렌드를 실시간으로 확인하세요. 예배시간과 약도도 확인할 수 있습니다.`" />
+        <meta name="keywords" :content="`PCAview, 피카뷰, ${church.name}, 교회, 예배시간, 약도, 뉴스, 트렌드`" />
 
         <!-- Open Graph -->
-        <meta property="og:type" content="place" />
-        <meta property="og:url" :content="safeRoute('church.show', { id: church.id })" />
-        <meta property="og:title" :content="church.name + ' 주보고'" />
-        <meta property="og:description" :content="church.name + ' 교회 정보 - 예배시간과 약도를 확인하세요.'" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" :content="`https://pcaview.com/church/${church.id}`" />
+        <meta property="og:title" :content="`${church.name} - PCAview`" />
+        <meta property="og:description" :content="`${church.name}의 최신 소식과 트렌드를 실시간으로 확인하세요.`" />
         <meta property="og:image" :content="church.icon_url" />
-        <meta property="og:site_name" content="주보고" />
+        <meta property="og:site_name" content="PCAview" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:url" :content="safeRoute('church.show', { id: church.id })" />
-        <meta name="twitter:title" :content="church.name + ' 주보고'" />
-        <meta name="twitter:description" :content="church.name + ' 교회 정보 - 예배시간과 약도를 확인하세요.'" />
+        <meta name="twitter:url" :content="`https://pcaview.com/church/${church.id}`" />
+        <meta name="twitter:title" :content="`${church.name} - PCAview`" />
+        <meta name="twitter:description" :content="`${church.name}의 최신 소식과 트렌드를 실시간으로 확인하세요.`" />
         <meta name="twitter:image" :content="church.icon_url" />
 
         <!-- Canonical URL -->
-        <link rel="canonical" :href="safeRoute('church.show', { id: church.id })" />
-
-        <!-- Schema.org JSON-LD -->
-        <script type="application/ld+json" v-html="JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'Church',
-            'name': church.name,
-            'address': {
-                '@type': 'PostalAddress',
-                'addressLocality': church.address
-            },
-            'image': church.icon_url,
-            'url': safeRoute('church.show', { id: church.id })
-        })"></script>
+        <link rel="canonical" :href="`https://pcaview.com/church/${church.id}`" />
     </Head>
-    <Header :title="'교회 / ' + church.name" :backbutton="true"></Header>
 
-    <div class="page-content space-top p-b60">
-        <div class="container pt-0">
-            <div class="profile-area">
-                <div class="main-profile">
-                    <div class="about-profile">
-                        <div class="media rounded-circle">
-                            <img :src="church.icon_url" :alt="church.name + ' 아이콘'" loading="lazy" decoding="async" />
-                            <svg class="radial-progress m-b20" data-percentage="100" viewBox="0 0 80 80">
-                                <circle class="incomplete" cx="40" cy="40" r="35"></circle>
-                                <circle class="complete" cx="40" cy="40" r="35" style="stroke-dashoffset: 0"></circle>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="profile-detail">
-                        <h4 class="name">{{ church.name }}</h4>
-                        <p class="mb-0"><i class="icon feather icon-map-pin me-1"></i>{{ church.address }}</p>
-                    </div>
+    <Header :title="church.name" :backbutton="true"></Header>
+
+    <div class="bg-white pb-14 pt-3 sm:pb-16 sm:pt-4">
+        <div class="mx-auto max-w-screen-xl px-4">
+            <!-- 교회 정보 -->
+            <div class="mb-4 flex items-center gap-4 sm:mb-6">
+                <div class="church-icon">
+                    <img :src="church.icon_url" :alt="church.name + ' 아이콘'" loading="lazy" />
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">{{ church.name }}</h1>
+                    <p class="mt-1 text-sm text-gray-600">
+                        <i class="icon feather icon-map-pin me-1"></i>{{ church.address }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- 예배시간과 약도 -->
+            <div class="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div class="rounded-lg border border-gray-200 p-4">
+                    <h2 class="mb-2 text-lg font-semibold text-gray-900">예배시간</h2>
+                    <img :src="church.worship_time_image" @click="open(0)" :alt="church.name + ' 예배 시간'" loading="lazy" class="cursor-pointer rounded" />
                 </div>
 
                 <div class="detail-bottom-area">
@@ -89,20 +134,42 @@ function close() {
                         </p>
                     </div>
                 </div>
-                <div class="detail-bottom-area">
-                    <div class="about">
-                        <h6 class="title">약도</h6>
-                        <p class="para-text">
-                            <img :src="church.address_url" @click="open(1)" :alt="church.name + ' 약도'" loading="lazy" decoding="async" />
-                        </p>
-                    </div>
-                </div>
-
-                <VueEasyLightbox @hide="close" :visible="showViewer" :imgs="images" :index="index" />
-                <BusinessInfo class="mt-3" />
             </div>
+
+            <!-- 피드 작성 컴포넌트 -->
+            <FeedComposer :church="church" :departments="departments" />
+
+            <!-- 컨텐츠 리스트 -->
+            <ContentsList :contents="allContents" :is-loading="isLoading" :has-more="hasMorePages" @load-more="loadMore"></ContentsList>
+
+            <VueEasyLightbox @hide="close" :visible="showViewer" :imgs="images" :index="index" />
+            <BusinessInfo class="mt-3" />
         </div>
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+/* 교회 아이콘 */
+.church-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--primary, #667eea);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+}
+
+.church-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+@media (min-width: 640px) {
+    .church-icon {
+        width: 100px;
+        height: 100px;
+    }
+}
+</style>

@@ -35,7 +35,7 @@ function extractTextFromHtml(html: string, maxLength: number = 300): string {
     if (!html) return '';
 
     // <p>, <br>, <div> 태그를 줄바꿈으로 변환
-    let processedHtml = html
+    const processedHtml = html
         .replace(/<\/p>/gi, '\n\n')
         .replace(/<br\s*\/?>/gi, '\n')
         .replace(/<\/div>/gi, '\n')

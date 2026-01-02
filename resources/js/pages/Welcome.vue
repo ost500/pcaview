@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import BusinessInfo from '@/components/BusinessInfo.vue';
 import ContentsList from '@/components/contents/ContentsList.vue';
+import FeedComposer from '@/components/feed/FeedComposer.vue';
 import InstallPrompt from '@/components/InstallPrompt.vue';
 import IOSInstallInstructions from '@/components/IOSInstallInstructions.vue';
 import Header from '@/components/template/Header.vue';
@@ -21,6 +22,7 @@ const props = defineProps<{
     churches: Church[];
     departments: Department[];
     subscribedDepartmentIds?: number[];
+    currentChurch?: Church;
 }>();
 
 // 개발 환경 확인
@@ -196,6 +198,10 @@ onMounted(() => {
             <!-- 카카오 광고 주석 처리
             <ins class="kakao_ad_area" style="display: block" data-ad-unit="DAN-bE302RQ73kwLuzKI" data-ad-width="320" data-ad-height="50"></ins>
             -->
+
+            <!-- 피드 작성 컴포넌트 (교회 페이지에서만 표시) -->
+            <FeedComposer v-if="currentChurch" :church="currentChurch" :departments="departments" />
+
             <ContentsList :contents="allContents" :is-loading="isLoading" :has-more="hasMorePages" @load-more="loadMore"></ContentsList>
             <!-- 쿠팡 광고 주석 처리
             <iframe

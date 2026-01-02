@@ -49,13 +49,19 @@ class BrightSoriCrawlService
                     continue;
                 }
 
+                $departmentModel = $department->getModel();
+
                 $newContents = Contents::create([
-                    'department_id' => $department->getModel()->id,
+                    'church_id' => $departmentModel->church_id,
+                    'department_id' => $departmentModel->id, // 대표 department 설정
                     'title' => $this->getTitle($pdf),
                     'type' => $type->name,
                     'file_url' => $fileUrl,
                     'published_at' => $this->getPublishedAt($pdf),
                 ]);
+
+                // Attach to department via pivot table
+                $newContents->departments()->attach($departmentModel->id);
 
                 $contentsImages = $contentsImageService->getImagesFromPdf($newContents);
                 $thumbnailService->getPdfThumbnail($newContents, $contentsImages->first());

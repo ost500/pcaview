@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { store as feedStore } from '@/routes/feed';
+import { Church } from '@/types/church';
 import { Department } from '@/types/department';
 import { router, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
 const props = defineProps<{
-    department: Department;
+    department?: Department;
+    church?: Church;
+    departments?: Department[];
 }>();
 
 const page = usePage();
@@ -16,6 +19,9 @@ const images = ref<File[]>([]);
 const isSubmitting = ref(false);
 const showImagePreview = ref(false);
 const imagePreviewUrls = ref<string[]>([]);
+const selectedDepartmentId = ref<number | null>(
+    props.department?.id ?? (props.departments && props.departments.length > 0 ? props.departments[0].id : null),
+);
 
 const handleImageSelect = (event: Event) => {
     const target = event.target as HTMLInputElement;
@@ -49,11 +55,24 @@ const submitPost = () => {
         return;
     }
 
+    // Church mode: no department selection required
+    // Department mode: department selection required
+    if (!props.church && !selectedDepartmentId.value) {
+        alert('부서를 선택해주세요.');
+        return;
+    }
+
     isSubmitting.value = true;
 
     const formData = new FormData();
     formData.append('content', content.value);
-    formData.append('department_id', props.department.id.toString());
+
+    // If church mode, send church_id; otherwise send department_id
+    if (props.church) {
+        formData.append('church_id', props.church.id.toString());
+    } else if (selectedDepartmentId.value) {
+        formData.append('department_id', selectedDepartmentId.value.toString());
+    }
 
     images.value.forEach((image, index) => {
         formData.append(`images[${index}]`, image);
@@ -81,12 +100,25 @@ const submitPost = () => {
             <div
                 class="cursor-pointer overflow-hidden rounded-lg bg-gradient-to-br from-sky-50 to-blue-50 shadow-sm transition-all hover:from-sky-100 hover:to-blue-100 hover:shadow-md"
             >
-                <!-- Department 정보 -->
-                <div v-if="department" class="flex items-center gap-3 border-b border-sky-100 bg-white/50 px-4 py-3 backdrop-blur-sm">
-                    <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
-                        <img :src="department.icon_image || '/pcaview_icon.png'" :alt="department.name" class="h-full w-full object-cover" />
+                <!-- Department/Church 정보 -->
+                <div class="flex items-center gap-3 border-b border-sky-100 bg-white/50 px-4 py-3 backdrop-blur-sm">
+                    <!-- Church mode: show church info only (no dropdown) -->
+                    <div v-if="church" class="flex items-center gap-3">
+                        <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
+                            <img :src="church.icon_url || '/pcaview_icon.png'" :alt="church.name" class="h-full w-full object-cover" />
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-sm font-semibold text-sky-900">{{ church.name }}</span>
+                            <span class="text-xs text-gray-600">모든 부서에 게시됩니다</span>
+                        </div>
                     </div>
-                    <span class="text-sm font-semibold text-sky-900">{{ department.name }}</span>
+                    <!-- Department mode: fixed department -->
+                    <div v-else-if="department" class="flex items-center gap-3">
+                        <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
+                            <img :src="department.icon_image || '/pcaview_icon.png'" :alt="department.name" class="h-full w-full object-cover" />
+                        </div>
+                        <span class="text-sm font-semibold text-sky-900">{{ department.name }}</span>
+                    </div>
                 </div>
 
                 <!-- 타이틀 및 자세히 버튼 -->

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/c/{church}', [HomeController::class, 'church'])->name('church.home');
 
 Route::get('/church', [ChurchController::class, 'index'])->name('church');
 Route::get('/church/{id}', [ChurchController::class, 'show'])->name('church.show');

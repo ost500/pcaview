@@ -76,7 +76,8 @@ class NaverNewsContentService
 
                 // Contents 생성 (이미 NaverNewsService에서 UTF-8 변환됨)
                 $contents = Contents::create([
-                    'department_id' => $department->id,
+                    'church_id' => $department->church_id,
+                    'department_id' => $department->id, // 대표 department 설정
                     'type' => ContentsType::NAVER_NEWS, // Naver 뉴스 타입
                     'title' => $title,
                     'body' => $body,
@@ -84,6 +85,9 @@ class NaverNewsContentService
                     'thumbnail_url' => $thumbnailUrl,
                     'published_at' => $publishedAt, // 크롤링한 발행일시 우선 사용
                 ]);
+
+                // Attach to department via pivot table
+                $contents->departments()->attach($department->id);
 
                 // 본문에서 추출한 이미지 저장
                 if (!empty($newsData['images']) && is_array($newsData['images'])) {
