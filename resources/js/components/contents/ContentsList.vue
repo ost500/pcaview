@@ -148,16 +148,20 @@ onUnmounted(() => {
                     </div>
 
                     <!-- 타이틀 및 자세히 버튼 -->
-                    <div class="bg-white/60 px-4 py-3 backdrop-blur-sm" @click="goToContent(content.id)">
+                    <div class="bg-white/60 px-4 py-3 backdrop-blur-sm">
                         <!-- Department 정보 -->
-                        <div v-if="content.department" class="mb-3 flex items-center gap-2">
+                        <div
+                            v-if="content.department"
+                            @click="goToDepartment(content.department.id)"
+                            class="mb-3 flex cursor-pointer items-center gap-2 transition-colors hover:text-sky-600"
+                        >
                             <div class="flex h-6 w-6 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
                                 <img :src="content.department.icon_image || '/pcaview_icon.png'" :alt="content.department.name" class="h-full w-full object-cover" />
                             </div>
                             <span class="text-xs font-medium text-sky-800">{{ content.department.name }}</span>
                         </div>
 
-                        <h5 class="mb-3 text-base font-semibold text-sky-900">{{ content.title }}</h5>
+                        <h5 class="mb-3 text-base font-semibold text-sky-900" @click="goToContent(content.id)">{{ content.title }}</h5>
 
                         <div class="flex items-center justify-between">
                             <!-- 댓글 개수 -->
@@ -171,7 +175,8 @@ onUnmounted(() => {
 
                             <!-- 자세히 버튼 -->
                             <a
-                                class="inline-block rounded-md bg-sky-600 px-4 py-1.5 text-xs font-medium text-white transition-colors hover:bg-sky-700 active:bg-sky-800"
+                                @click="goToContent(content.id)"
+                                class="inline-block cursor-pointer rounded-md bg-sky-600 px-4 py-1.5 text-xs font-medium text-white transition-colors hover:bg-sky-700 active:bg-sky-800"
                             >
                                 자세히
                             </a>
