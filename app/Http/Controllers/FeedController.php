@@ -49,12 +49,12 @@ class FeedController extends Controller
             }
 
             DB::transaction(function () use ($church, $departments, $request, $imageUrls) {
-                // 하나의 content만 생성 (첫 번째 department를 대표로 설정)
-                $primaryDepartment = $departments->first();
+                // 하나의 content만 생성 (교회의 대표 department 사용)
+                $primaryDepartment = $church->primaryDepartment ?? $departments->first();
 
                 $content = Contents::create([
                     'church_id' => $church->id,
-                    'department_id' => $primaryDepartment->id, // 첫 번째 department를 대표로 설정
+                    'department_id' => $primaryDepartment->id, // 교회의 대표 department 설정
                     'type' => 'html',
                     'title' => $request->get('content'),
                     'body' => $request->get('content'),
