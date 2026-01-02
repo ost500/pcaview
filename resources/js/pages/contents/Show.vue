@@ -96,6 +96,12 @@ const formatDateTime = (dateString: string) => {
     return `${year}.${month}.${day} ${hours}:${minutes}`;
 };
 
+function goToDepartment(id: number) {
+    if (typeof window !== 'undefined') {
+        window.location.href = safeRoute('department.show', { id: id });
+    }
+}
+
 // 전체 뉴스 본문 절반으로 자르기 (저작권 보호)
 const displayBody = computed(() => {
     const newsTypes = ['nate_news', 'news'];
@@ -268,7 +274,11 @@ onMounted(() => {
                     <div class="container pt-0 pb-0">
                         <div class="rounded-lg bg-white shadow">
                             <!-- Department 정보 -->
-                            <div v-if="contents.department" class="flex items-center gap-3 border-b border-sky-100 bg-white/50 px-4 py-3 backdrop-blur-sm">
+                            <div
+                                v-if="contents.department"
+                                @click="goToDepartment(contents.department.id)"
+                                class="flex cursor-pointer items-center gap-3 border-b border-sky-100 bg-white/50 px-4 py-3 backdrop-blur-sm transition-colors hover:bg-sky-50"
+                            >
                                 <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
                                     <img
                                         :src="contents.department.icon_image || '/pcaview_icon.png'"
