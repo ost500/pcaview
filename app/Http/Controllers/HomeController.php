@@ -22,7 +22,13 @@ class HomeController extends Controller
 
         // 로그인한 사용자의 경우 구독한 부서의 콘텐츠만 표시
         if ($user) {
-            $subscribedDepartmentIds = $user->departments()->pluck('departments.id');
+            // user_departments는 구독 안 하는 부서를 저장
+            $unsubscribedDepartmentIds = $user->departments()->pluck('departments.id');
+
+            // 전체 부서 - 구독 안 하는 부서 = 구독하는 부서
+            $allDepartmentIds = Department::pluck('id');
+            $subscribedDepartmentIds = $allDepartmentIds->diff($unsubscribedDepartmentIds);
+
             $contents = Contents::with(['user', 'church', 'department', 'departments'])
                 ->withCount('comments')
                 ->whereIn('id', $uniqueContentsIds)
@@ -72,9 +78,13 @@ class HomeController extends Controller
 
         // 해당 교회의 콘텐츠 가져오기 (church_id로 필터링)
         if ($user) {
-            $subscribedDepartmentIds = $user->departments()
+            // user_departments는 구독 안 하는 부서를 저장
+            $unsubscribedDepartmentIds = $user->departments()
                 ->whereIn('departments.id', $departmentIds)
                 ->pluck('departments.id');
+
+            // 해당 교회의 부서 중 구독하는 부서
+            $subscribedDepartmentIds = $departmentIds->diff($unsubscribedDepartmentIds);
         } else {
             $subscribedDepartmentIds = collect();
         }

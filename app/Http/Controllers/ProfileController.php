@@ -17,8 +17,11 @@ class ProfileController extends Controller
         $user = $request->user();
         $allDepartments = Department::all();
 
-        // 사용자가 구독한 부서 ID 목록
-        $subscribedDepartmentIds = $user ? $user->departments()->pluck('departments.id')->toArray() : [];
+        // 사용자가 구독 안 하는 부서 ID 목록
+        $unsubscribedDepartmentIds = $user ? $user->departments()->pluck('departments.id')->toArray() : [];
+
+        // 구독하는 부서 = 전체 - 구독 안 하는 부서
+        $subscribedDepartmentIds = $allDepartments->pluck('id')->diff($unsubscribedDepartmentIds)->values()->toArray();
 
         return Inertia::render('Profile', [
             'allDepartments' => $allDepartments,
@@ -39,15 +42,16 @@ class ProfileController extends Controller
         $user = $request->user();
         $departmentId = $request->input('department_id');
 
-        // 이미 구독 중인지 확인
+        // user_departments는 구독 안 하는 부서를 저장
+        // 테이블에 있으면 = 구독 안 함, 없으면 = 구독 중
         if ($user->departments()->where('department_id', $departmentId)->exists()) {
-            // 구독 취소
+            // 테이블에서 제거 = 구독 시작
             $user->departments()->detach($departmentId);
-            $message = '구독이 취소되었습니다.';
-        } else {
-            // 구독
-            $user->departments()->attach($departmentId);
             $message = '구독되었습니다.';
+        } else {
+            // 테이블에 추가 = 구독 취소
+            $user->departments()->attach($departmentId);
+            $message = '구독이 취소되었습니다.';
         }
 
         return back()->with('success', $message);

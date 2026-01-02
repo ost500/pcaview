@@ -43,9 +43,8 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // 모든 부서에 자동으로 구독
-        $allDepartments = Department::all();
-        $user->departments()->attach($allDepartments->pluck('id'));
+        // user_departments는 구독 안 하는 부서를 저장하므로
+        // 회원가입 시 아무것도 저장하지 않으면 모든 부서를 구독한 상태
 
         event(new Registered($user));
 
