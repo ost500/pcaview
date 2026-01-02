@@ -18,6 +18,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(Request $request): Response
     {
+        // intended 파라미터가 있으면 세션에 저장
+        if ($request->has('intended')) {
+            $request->session()->put('url.intended', $request->input('intended'));
+        }
+
         return Inertia::render('auth/Login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => $request->session()->get('status'),

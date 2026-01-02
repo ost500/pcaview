@@ -26,7 +26,11 @@ const selectedDepartmentId = ref<number | null>(
 // 로그인 체크 및 리다이렉트
 const checkAuth = () => {
     if (!user.value) {
-        router.get('/login');
+        // 현재 URL을 저장하고 로그인 페이지로 이동
+        if (typeof window !== 'undefined') {
+            const currentPath = window.location.pathname + window.location.search;
+            router.visit(`/login?intended=${encodeURIComponent(currentPath)}`);
+        }
         return false;
     }
     return true;
