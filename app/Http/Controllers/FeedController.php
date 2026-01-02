@@ -12,6 +12,14 @@ use Illuminate\Support\Facades\Storage;
 class FeedController extends Controller
 {
     /**
+     * 생성자: 인증 미들웨어 적용
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
      * 피드 게시물 저장
      */
     public function store(Request $request)

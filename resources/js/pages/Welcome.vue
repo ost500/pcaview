@@ -204,8 +204,8 @@ onMounted(() => {
             <ins class="kakao_ad_area" style="display: block" data-ad-unit="DAN-bE302RQ73kwLuzKI" data-ad-width="320" data-ad-height="50"></ins>
             -->
 
-            <!-- 피드 작성 컴포넌트 (교회 페이지에서만 표시) -->
-            <FeedComposer v-if="currentChurch" :church="currentChurch" :departments="departments" />
+            <!-- 피드 작성 컴포넌트 (교회 페이지 + 로그인 사용자만 표시) -->
+            <FeedComposer v-if="currentChurch && $page.props.auth.user" :church="currentChurch" :departments="departments" />
 
             <ContentsList :contents="allContents" :is-loading="isLoading" :has-more="hasMorePages" @load-more="loadMore"></ContentsList>
             <!-- 쿠팡 광고 주석 처리

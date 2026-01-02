@@ -137,7 +137,7 @@ watch(
             </div>
 
             <!-- 피드 작성 컴포넌트 -->
-            <FeedComposer :church="church" :departments="departments" />
+            <FeedComposer v-if="$page.props.auth.user" :church="church" :departments="departments" />
 
             <!-- 컨텐츠 리스트 -->
             <ContentsList :contents="allContents" :is-loading="isLoading" :has-more="hasMorePages" @load-more="loadMore"></ContentsList>
