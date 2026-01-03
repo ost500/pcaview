@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import AdminLayout from '@/layouts/admin/AdminLayout.vue';
 
 interface Department {
@@ -20,15 +20,18 @@ interface Props {
     last_page: number;
     per_page: number;
     total: number;
+    links: {
+      url: string | null;
+      label: string;
+      active: boolean;
+    }[];
   };
 }
 
 defineProps<Props>();
 
 function editDepartment(id: number) {
-  if (typeof window !== 'undefined') {
-    window.location.href = `/admin/departments/${id}/edit`;
-  }
+  router.visit(`/admin/departments/${id}/edit`);
 }
 </script>
 
@@ -101,20 +104,21 @@ function editDepartment(id: number) {
           of {{ departments.total }} results
         </div>
         <div class="flex gap-2">
-          <a
-            v-if="departments.current_page > 1"
-            :href="`/admin/departments?page=${departments.current_page - 1}`"
-            class="rounded border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
-            Previous
-          </a>
-          <a
-            v-if="departments.current_page < departments.last_page"
-            :href="`/admin/departments?page=${departments.current_page + 1}`"
-            class="rounded border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
-            Next
-          </a>
+          <Link
+            v-for="link in departments.links"
+            :key="link.label"
+            :href="link.url || '#'"
+            :class="[
+              'rounded border px-4 py-2 text-sm font-medium',
+              link.active
+                ? 'border-blue-500 bg-blue-500 text-white'
+                : link.url
+                  ? 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+                  : 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed'
+            ]"
+            :preserve-scroll="true"
+            v-html="link.label"
+          />
         </div>
       </div>
     </div>
