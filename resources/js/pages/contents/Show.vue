@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import BusinessInfo from '@/components/BusinessInfo.vue';
 import Header from '@/components/template/Header.vue';
 import ContentsList from '@/components/contents/ContentsList.vue';
 import { Contents } from '@/types/contents';
@@ -277,7 +276,7 @@ onMounted(() => {
             <!-- Canonical URL -->
             <link rel="canonical" :href="`https://pcaview.com/contents/${contents.id}`" />
         </Head>
-        <Header v-if="!hideHeader" title="VIEW" :backbutton="true"></Header>
+        <Header v-if="!hideHeader" title="VIEW"></Header>
 
         <div class="mx-auto w-full max-w-2xl" :class="{ 'pt-3': hideHeader }">
             <div class="space-y-4 pb-20">
