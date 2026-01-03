@@ -11,7 +11,7 @@ interface Department {
   church: {
     id: number;
     name: string;
-  };
+  } | null;
 }
 
 interface Props {
@@ -42,9 +42,8 @@ function handleImageChange(event: Event) {
 }
 
 function submit() {
-  form.post(`/admin/departments/${props.department.id}`, {
+  form.put(`/admin/departments/${props.department.id}`, {
     forceFormData: true,
-    _method: 'put',
     preserveScroll: true,
     onSuccess: () => {
       // Success handled by redirect
@@ -73,7 +72,7 @@ function cancel() {
         <!-- Department Info -->
         <div>
           <label class="block text-sm font-medium text-gray-700">Church</label>
-          <div class="mt-1 text-sm text-gray-900">{{ department.church.name }}</div>
+          <div class="mt-1 text-sm text-gray-900">{{ department.church?.name || '-' }}</div>
         </div>
 
         <!-- Name -->
