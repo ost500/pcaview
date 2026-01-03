@@ -10,7 +10,7 @@ interface Department {
   church: {
     id: number;
     name: string;
-  };
+  } | null;
 }
 
 interface Props {
@@ -76,7 +76,7 @@ function editDepartment(id: number) {
                 <div class="text-sm text-gray-500">{{ department.slug }}</div>
               </td>
               <td class="whitespace-nowrap px-6 py-4">
-                <div class="text-sm text-gray-900">{{ department.church.name }}</div>
+                <div class="text-sm text-gray-900">{{ department.church?.name || '-' }}</div>
               </td>
               <td class="whitespace-nowrap px-6 py-4 text-sm font-medium">
                 <button
