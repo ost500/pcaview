@@ -18,7 +18,7 @@ class DepartmentController extends Controller
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('slug', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%")
                     ->orWhereHas('church', function ($q) use ($search) {
                         $q->where('name', 'like', "%{$search}%");
                     });

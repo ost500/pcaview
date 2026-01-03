@@ -6,7 +6,7 @@ import AdminLayout from '@/layouts/admin/AdminLayout.vue';
 interface Department {
   id: number;
   name: string;
-  slug: string;
+  description: string | null;
   icon_image: string | null;
   church: {
     id: number;
@@ -78,7 +78,7 @@ watch(search, (value) => {
           <input
             v-model="search"
             type="text"
-            placeholder="Search by department name, slug, or church..."
+            placeholder="Search by department name, description, or church..."
             class="w-full rounded-lg border border-gray-300 px-4 py-2 pl-10 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
           />
           <svg
@@ -126,9 +126,11 @@ watch(search, (value) => {
                 />
                 <div v-else class="h-10 w-10 rounded-full bg-gray-200"></div>
               </td>
-              <td class="whitespace-nowrap px-6 py-4">
+              <td class="px-6 py-4">
                 <div class="text-sm font-medium text-gray-900">{{ department.name }}</div>
-                <div class="text-sm text-gray-500">{{ department.slug }}</div>
+                <div v-if="department.description" class="text-sm text-gray-500">
+                  {{ department.description }}
+                </div>
               </td>
               <td class="whitespace-nowrap px-6 py-4">
                 <div class="text-sm text-gray-900">{{ department.church?.name || '-' }}</div>
