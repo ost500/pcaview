@@ -10,12 +10,28 @@ use Inertia\Inertia;
 
 class DepartmentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $departments = Department::with('church')->paginate(10);
+        $query = Department::with('church');
+
+        // 검색 기능
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('slug', 'like', "%{$search}%")
+                    ->orWhereHas('church', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        $departments = $query->paginate(20)->withQueryString();
 
         return Inertia::render('admin/departments/Index', [
             'departments' => $departments,
+            'filters' => [
+                'search' => $request->input('search'),
+            ],
         ]);
     }
 
