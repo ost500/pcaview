@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AdminAuth;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Foundation\Application;
@@ -24,6 +25,11 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleAppearance::class,
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
+        ]);
+
+        // 미들웨어 별칭 등록
+        $middleware->alias([
+            'admin' => AdminAuth::class,
         ]);
 
         // 로그인된 사용자가 로그인/회원가입 페이지 접근 시 profile로 리다이렉트

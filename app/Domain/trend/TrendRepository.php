@@ -3,14 +3,13 @@
 namespace App\Domain\trend;
 
 use App\Events\TrendFetched;
-use App\Models\Trend;
 use App\Models\Department;
+use App\Models\Trend;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class TrendRepository
 {
-
     /**
      * TrendItem을 데이터베이스에 저장 (중복 방지)
      * Title을 기반으로 Department도 자동 생성
@@ -20,8 +19,8 @@ class TrendRepository
     {
         // news_items의 title들을 모아서 description 생성 (최대 2개)
         $titles = array_filter(
-            array_map(fn($newsItem) => $newsItem['title'] ?? '', $item->newsItems),
-            fn($title) => !empty($title)
+            array_map(fn ($newsItem) => $newsItem['title'] ?? '', $item->newsItems),
+            fn ($title) => ! empty($title)
         );
         $description = implode(' | ', array_slice($titles, 0, 2));
 
@@ -30,18 +29,18 @@ class TrendRepository
 
         $trend = Trend::updateOrCreate(
             [
-                'title' => $item->title,
+                'title'    => $item->title,
                 'pub_date' => $item->pubDate,
             ],
             [
-                'department_id' => $department->id,
-                'description' => $description,
-                'link' => $item->link,
-                'image_url' => $item->imageUrl,
-                'traffic_count' => $item->trafficCount,
-                'picture' => $item->picture,
+                'department_id'  => $department->id,
+                'description'    => $description,
+                'link'           => $item->link,
+                'image_url'      => $item->imageUrl,
+                'traffic_count'  => $item->trafficCount,
+                'picture'        => $item->picture,
                 'picture_source' => $item->pictureSource,
-                'news_items' => $item->newsItems,
+                'news_items'     => $item->newsItems,
             ]
         );
 
@@ -59,15 +58,12 @@ class TrendRepository
         // Title을 Department name으로 사용
         // 같은 title이 이미 존재하면 재사용
 
-        // 기본 교회 가져오기 (첫 번째 교회, 없으면 null)
-        $church = \App\Models\Church::first();
-
         return Department::firstOrCreate(
             ['name' => $title],
             [
-                'church_id' => $church?->id,
+                'church_id'   => null,
                 'description' => $description,
-                'icon_image' => $picture,
+                'icon_image'  => $picture,
             ]
         );
     }
@@ -75,8 +71,8 @@ class TrendRepository
     /**
      * 여러 TrendItem을 한 번에 저장
      *
-     * @param array<TrendItem> $items
-     * @return int 저장된 개수
+     * @param  array<TrendItem> $items
+     * @return int              저장된 개수
      */
     public function saveMany(array $items): int
     {
@@ -130,7 +126,7 @@ class TrendRepository
     /**
      * 오래된 트렌드 삭제 (데이터 정리)
      *
-     * @param int $days 몇 일 이전 데이터 삭제
+     * @param  int $days 몇 일 이전 데이터 삭제
      * @return int 삭제된 개수
      */
     public function deleteOlderThan(int $days = 30): int
