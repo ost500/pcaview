@@ -2,17 +2,15 @@
 import BusinessInfo from '@/components/BusinessInfo.vue';
 import ContentsList from '@/components/contents/ContentsList.vue';
 import FeedComposer from '@/components/feed/FeedComposer.vue';
-import InstallPrompt from '@/components/InstallPrompt.vue';
-import IOSInstallInstructions from '@/components/IOSInstallInstructions.vue';
 import Header from '@/components/template/Header.vue';
 import { usePWA } from '@/composables/usePWA';
+import { safeRoute } from '@/composables/useSafeRoute';
 import { Church } from '@/types/church';
 import { Contents } from '@/types/contents';
 import { Department } from '@/types/department';
 import { Pagination } from '@/types/pagination';
 import { Head, router, useRemember } from '@inertiajs/vue3';
 import { onMounted, ref, watch } from 'vue';
-import { safeRoute } from '@/composables/useSafeRoute';
 
 // PWA 상태 관리
 const { showInstallPrompt, showIOSInstructions, isIOS, isAndroid, promptInstall, dismissPrompt, closeIOSInstructions, dismissPermanently } = usePWA();
@@ -132,7 +130,10 @@ onMounted(() => {
 <template>
     <Head>
         <!-- Basic Meta Tags -->
-        <meta name="description" content="PCAview(피카뷰)에서 트렌딩 뉴스와 실시간 소식을 한눈에 확인하세요. 다양한 분야의 최신 트렌드와 이슈를 빠르게 만나보세요." />
+        <meta
+            name="description"
+            content="PCAview(피카뷰)에서 트렌딩 뉴스와 실시간 소식을 한눈에 확인하세요. 다양한 분야의 최신 트렌드와 이슈를 빠르게 만나보세요."
+        />
         <meta name="keywords" content="PCAview, 피카뷰, 트렌드, 뉴스, 실시간 소식, 이슈, 트렌딩, 최신 뉴스" />
 
         <!-- Open Graph -->
@@ -140,7 +141,10 @@ onMounted(() => {
         <meta property="og:locale" content="ko_KR" />
         <meta property="og:url" content="https://pcaview.com" />
         <meta property="og:title" content="PCAview(피카뷰) - 트렌딩 뉴스와 실시간 소식" />
-        <meta property="og:description" content="다양한 분야의 최신 트렌드와 이슈를 한눈에 확인하세요. 실시간 업데이트되는 뉴스와 소식을 PCAview에서 만나보세요." />
+        <meta
+            property="og:description"
+            content="다양한 분야의 최신 트렌드와 이슈를 한눈에 확인하세요. 실시간 업데이트되는 뉴스와 소식을 PCAview에서 만나보세요."
+        />
         <meta property="og:site_name" content="PCAview" />
         <meta property="og:image" content="https://pcaview.com/og_image.png" />
         <meta property="og:image:width" content="1200" />
@@ -150,7 +154,10 @@ onMounted(() => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:url" content="https://pcaview.com" />
         <meta name="twitter:title" content="PCAview(피카뷰) - 트렌딩 뉴스와 실시간 소식" />
-        <meta name="twitter:description" content="다양한 분야의 최신 트렌드와 이슈를 한눈에 확인하세요. 실시간 업데이트되는 뉴스와 소식을 PCAview에서 만나보세요." />
+        <meta
+            name="twitter:description"
+            content="다양한 분야의 최신 트렌드와 이슈를 한눈에 확인하세요. 실시간 업데이트되는 뉴스와 소식을 PCAview에서 만나보세요."
+        />
         <meta name="twitter:image" content="https://pcaview.com/og_image.png" />
 
         <!-- Canonical URL -->
@@ -186,9 +193,9 @@ onMounted(() => {
     </div>
     -->
 
-    <Header v-if="!hideHeader" title="홈"></Header>
+    <Header v-if="!hideHeader" title="홈" :church="currentChurch"></Header>
 
-    <div class="bg-white pb-14 pt-3 sm:pb-16 sm:pt-4" :class="{ 'pt-0': hideHeader }">
+    <div class="bg-white pt-3 pb-14 sm:pt-4 sm:pb-16" :class="{ 'pt-0': hideHeader }">
         <div class="mx-auto max-w-screen-xl">
             <!-- 부서 목록 수평 스크롤 -->
             <div class="department-scroll-container max-w-none">
@@ -279,7 +286,9 @@ onMounted(() => {
     border-radius: 50%;
     overflow: hidden;
     border: 3px solid transparent;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    transition:
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
 }
 
 .department-icon img {
@@ -307,7 +316,6 @@ onMounted(() => {
     -webkit-box-orient: vertical;
     line-height: 1.2;
 }
-
 
 /* 호버 효과 (데스크톱) */
 @media (hover: hover) {
