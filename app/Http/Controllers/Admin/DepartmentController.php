@@ -36,14 +36,18 @@ class DepartmentController extends Controller
         ]);
 
         if ($request->hasFile('icon_image')) {
-            // 기존 이미지 삭제 (public 디스크에 있는 경우)
-            if ($department->icon_image && Storage::disk('public')->exists($department->icon_image)) {
-                Storage::disk('public')->delete($department->icon_image);
+            // 기존 이미지 삭제
+            if ($department->icon_image) {
+                $oldPath = parse_url($department->icon_image, PHP_URL_PATH);
+                if ($oldPath && Storage::disk('s3')->exists($oldPath)) {
+                    Storage::disk('s3')->delete($oldPath);
+                }
             }
 
-            // 새 이미지 저장
-            $path = $request->file('icon_image')->store('department-icons', 'public');
-            $validated['icon_image'] = Storage::disk('public')->url($path);
+            // 새 이미지 저장 (S3)
+            $path = $request->file('icon_image')->store('department-icons', 's3');
+            Storage::disk('s3')->setVisibility($path, 'public');
+            $validated['icon_image'] = Storage::disk('s3')->url($path);
         }
 
         $department->update($validated);
