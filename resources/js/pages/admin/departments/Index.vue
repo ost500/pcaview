@@ -95,7 +95,7 @@ function editDepartment(id: number) {
       </div>
 
       <!-- Pagination -->
-      <div v-if="departments.last_page > 1" class="mt-6 flex items-center justify-between">
+      <div v-if="departments.links && departments.links.length > 3" class="mt-6 flex items-center justify-between">
         <div class="text-sm text-gray-700">
           Showing {{ (departments.current_page - 1) * departments.per_page + 1 }} to
           {{

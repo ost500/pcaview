@@ -12,7 +12,7 @@ class DepartmentController extends Controller
 {
     public function index()
     {
-        $departments = Department::with('church')->paginate(20);
+        $departments = Department::with('church')->paginate(10);
 
         return Inertia::render('admin/departments/Index', [
             'departments' => $departments,
