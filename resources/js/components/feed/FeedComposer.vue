@@ -128,7 +128,7 @@ const submitPost = () => {
                         </div>
                         <div class="flex flex-col">
                             <span class="text-sm font-semibold text-sky-900">{{ church.name }}</span>
-                            <span class="text-xs text-gray-600">모든 부서에 게시됩니다</span>
+                            <span class="text-xs text-gray-600">모든 채널에 게시됩니다</span>
                         </div>
                     </div>
                     <!-- Department mode: fixed department -->
