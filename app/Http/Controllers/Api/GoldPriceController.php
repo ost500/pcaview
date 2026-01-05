@@ -63,41 +63,50 @@ class GoldPriceController extends Controller
         $type = $request->input('type', 'pure');
 
         // 기간 계산
-        $query = GoldPrice::query();
-
+        $startDate = null;
         switch ($period) {
             case '7d':
-                $query->where('price_date', '>=', now()->subDays(7));
+                $startDate = now()->subDays(7);
                 break;
             case '1m':
-                $query->where('price_date', '>=', now()->subMonth());
+                $startDate = now()->subMonth();
                 break;
             case '3m':
-                $query->where('price_date', '>=', now()->subMonths(3));
+                $startDate = now()->subMonths(3);
                 break;
             case '6m':
-                $query->where('price_date', '>=', now()->subMonths(6));
+                $startDate = now()->subMonths(6);
                 break;
             case '1y':
-                $query->where('price_date', '>=', now()->subYear());
+                $startDate = now()->subYear();
                 break;
             case 'all':
                 // 모든 데이터
                 break;
         }
 
+        // 날짜별로 가장 최신 데이터만 가져오기 (서브쿼리 사용)
+        $query = GoldPrice::query()
+            ->selectRaw('DATE(price_date) as date, MAX(id) as max_id')
+            ->groupBy('date');
+
+        if ($startDate) {
+            $query->having('date', '>=', $startDate->format('Y-m-d'));
+        }
+
+        $dateIds = $query->pluck('max_id');
+
+        // 실제 데이터 가져오기
+        $prices = GoldPrice::whereIn('id', $dateIds)
+            ->orderBy('price_date', 'asc')
+            ->get();
+
         // 데이터가 너무 많으면 간격을 두고 샘플링
-        $totalCount = $query->count();
         $maxPoints = 500; // 차트에 표시할 최대 포인트 수
 
-        if ($totalCount > $maxPoints) {
-            // 균등하게 샘플링
-            $interval = (int) ceil($totalCount / $maxPoints);
-            $prices = $query->orderBy('price_date', 'asc')
-                ->get()
-                ->filter(fn ($item, $index) => $index % $interval === 0);
-        } else {
-            $prices = $query->orderBy('price_date', 'asc')->get();
+        if ($prices->count() > $maxPoints) {
+            $interval = (int) ceil($prices->count() / $maxPoints);
+            $prices = $prices->filter(fn ($item, $index) => $index % $interval === 0);
         }
 
         // 타입별 데이터 추출
@@ -112,7 +121,7 @@ class GoldPriceController extends Controller
             }
 
             return [
-                'date' => $price->price_date->format('Y-m-d H:i'),
+                'date' => $price->price_date->format('Y-m-d'),
                 'timestamp' => $price->price_date->timestamp * 1000, // JavaScript timestamp
                 'buy' => $price->$buyKey ?? null,
                 'sell' => $price->$sellKey ?? null,
