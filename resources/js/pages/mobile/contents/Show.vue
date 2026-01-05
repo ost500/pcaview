@@ -376,7 +376,15 @@ onMounted(() => {
                             <div v-if="contents.comments && contents.comments.length > 0" class="divide-y divide-gray-100">
                                 <div v-for="comment in contents.comments" :key="comment.id" class="px-4 py-4">
                                     <div class="flex items-start gap-3">
+                                        <!-- 프로필 이미지 -->
+                                        <img
+                                            v-if="comment.user && comment.user.profile_photo"
+                                            :src="comment.user.profile_photo"
+                                            :alt="comment.display_name"
+                                            class="h-10 w-10 flex-shrink-0 rounded-full object-cover"
+                                        />
                                         <div
+                                            v-else
                                             class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-purple-100"
                                         >
                                             <svg class="h-6 w-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
