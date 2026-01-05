@@ -30,8 +30,6 @@ if (typeof window !== 'undefined') {
 const initKakaoSDK = () => {
     const kakaoAppKey = import.meta.env.VITE_KAKAO_CLIENT_ID || '';
 
-    console.log(kakaoAppKey);
-    console.log("kakaoAppKey!!!");
     if (!kakaoAppKey) {
         console.error('VITE_KAKAO_CLIENT_ID가 설정되지 않았습니다.');
         return;
@@ -67,8 +65,6 @@ const handleKakaoLogin = () => {
         return;
     }
 
-    console.log(window.location.origin + '/auth/kakao/callback');
-    console.log(111);
     window.Kakao.Auth.authorize({
         redirectUri: window.location.origin + '/auth/kakao/callback',
         scope: 'profile_nickname,profile_image',
