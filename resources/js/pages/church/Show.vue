@@ -111,7 +111,7 @@ watch(
 
     <Header v-if="!hideHeader" :title="church.name" :backbutton="true"></Header>
 
-    <div class="bg-white pb-14 pt-3 sm:pb-16 sm:pt-4" :class="{ 'pt-0': hideHeader }">
+    <div class="bg-white pt-3 pb-14 sm:pt-4 sm:pb-16" :class="{ 'pt-0': hideHeader }">
         <div class="mx-auto max-w-screen-xl px-4">
             <!-- 교회 정보 -->
             <div class="mb-4 flex items-center gap-4 sm:mb-6">
@@ -120,9 +120,7 @@ watch(
                 </div>
                 <div>
                     <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">{{ church.name }}</h1>
-                    <p class="mt-1 text-sm text-gray-600">
-                        <i class="icon feather icon-map-pin me-1"></i>{{ church.address }}
-                    </p>
+                    <p class="mt-1 text-sm text-gray-600"><i class="icon feather icon-map-pin me-1"></i>{{ church.address }}</p>
                 </div>
             </div>
 
@@ -130,14 +128,26 @@ watch(
             <div class="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div class="rounded-lg border border-gray-200 p-4">
                     <h2 class="mb-2 text-lg font-semibold text-gray-900">예배시간</h2>
-                    <img :src="church.worship_time_image" @click="open(0)" :alt="church.name + ' 예배 시간'" loading="lazy" class="cursor-pointer rounded" />
+                    <img
+                        :src="church.worship_time_image"
+                        @click="open(0)"
+                        :alt="church.name + ' 예배 시간'"
+                        loading="lazy"
+                        class="cursor-pointer rounded"
+                    />
                 </div>
 
                 <div class="detail-bottom-area">
                     <div class="about">
                         <h6 class="title">예배시간</h6>
                         <p class="para-text">
-                            <img :src="church.worship_time_image" @click="open(0)" :alt="church.name + ' 예배 시간'" loading="lazy" decoding="async" />
+                            <img
+                                :src="church.worship_time_image"
+                                @click="open(0)"
+                                :alt="church.name + ' 예배 시간'"
+                                loading="lazy"
+                                decoding="async"
+                            />
                         </p>
                     </div>
                 </div>

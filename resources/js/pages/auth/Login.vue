@@ -2,7 +2,6 @@
 import AuthenticatedSessionController from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
 import InputError from '@/components/InputError.vue';
 import Header from '@/components/template/Header.vue';
-import BusinessInfo from '@/components/BusinessInfo.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -39,12 +38,7 @@ if (typeof window !== 'undefined') {
             {{ status }}
         </div>
 
-        <Form
-            v-bind="AuthenticatedSessionController.store.form()"
-            :reset-on-success="['password']"
-            v-slot="{ errors, processing }"
-            class="space-y-5"
-        >
+        <Form v-bind="AuthenticatedSessionController.store.form()" :reset-on-success="['password']" v-slot="{ errors, processing }" class="space-y-5">
             <div class="space-y-4">
                 <div class="space-y-2">
                     <Label for="email" class="text-sm font-medium text-gray-700">이메일</Label>
@@ -113,13 +107,22 @@ if (typeof window !== 'undefined') {
                 </div>
             </div>
 
+            <a
+                href="/auth/kakao"
+                class="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#FEE500] text-base font-semibold text-[#000000] opacity-85 transition-all hover:opacity-100 hover:shadow-lg"
+                :tabindex="6"
+            >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M12 3C6.477 3 2 6.477 2 10.5c0 2.617 1.674 4.915 4.184 6.258-.174.64-.566 2.073-.65 2.404-.097.382.14.378.295.275.122-.08 1.975-1.323 2.798-1.878.576.078 1.167.118 1.773.118 5.523 0 10-3.477 10-7.5S17.523 3 12 3z"
+                    />
+                </svg>
+                카카오 로그인
+            </a>
+
             <div class="text-center">
                 <span class="text-sm text-gray-600">계정이 없으신가요?</span>
-                <TextLink
-                    :href="register()"
-                    :tabindex="5"
-                    class="ml-1 text-sm font-semibold text-blue-600 hover:text-blue-700 hover:underline"
-                >
+                <TextLink :href="register()" :tabindex="7" class="ml-1 text-sm font-semibold text-blue-600 hover:text-blue-700 hover:underline">
                     가입하기
                 </TextLink>
             </div>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import Header from '@/components/template/Header.vue';
 import BusinessInfo from '@/components/BusinessInfo.vue';
 import DepartmentCard from '@/components/department/DepartmentCard.vue';
+import Header from '@/components/template/Header.vue';
 import { safeRoute } from '@/composables/useSafeRoute';
 import { Department } from '@/types/department';
 import { Head } from '@inertiajs/vue3';
@@ -43,19 +43,19 @@ onMounted(() => {
     structuredData.text = JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'ItemList',
-        'name': '부서 목록',
-        'description': '주보고에 등록된 교회 부서 목록',
-        'numberOfItems': props.departments.length,
-        'itemListElement': props.departments.map((department, index) => ({
+        name: '부서 목록',
+        description: '주보고에 등록된 교회 부서 목록',
+        numberOfItems: props.departments.length,
+        itemListElement: props.departments.map((department, index) => ({
             '@type': 'ListItem',
-            'position': index + 1,
-            'item': {
+            position: index + 1,
+            item: {
                 '@type': 'Organization',
                 '@id': safeRoute('department.show', { id: department.id }),
-                'name': department.name,
-                'image': department.icon_image || 'https://pcaview.com/pcaview_icon.png'
-            }
-        }))
+                name: department.name,
+                image: department.icon_image || 'https://pcaview.com/pcaview_icon.png',
+            },
+        })),
     });
     document.head.appendChild(structuredData);
 });
@@ -84,16 +84,11 @@ onMounted(() => {
 
         <Header title="VIEW"></Header>
 
-        <div class="bg-white pb-14 pt-3 sm:pb-16 sm:pt-4">
+        <div class="bg-white pt-3 pb-14 sm:pt-4 sm:pb-16">
             <div class="mx-auto max-w-screen-xl px-4">
                 <!-- 3 Column Grid -->
                 <div class="grid grid-cols-3 gap-3 sm:gap-4">
-                    <DepartmentCard
-                        v-for="department in departments"
-                        :key="department.id"
-                        :department="department"
-                        @click="goToContent"
-                    />
+                    <DepartmentCard v-for="department in departments" :key="department.id" :department="department" @click="goToContent" />
                 </div>
 
                 <BusinessInfo class="mt-4" />

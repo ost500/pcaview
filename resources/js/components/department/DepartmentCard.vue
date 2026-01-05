@@ -11,10 +11,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-    <div
-        @click="emit('click', department.id)"
-        class="cursor-pointer transition-transform active:scale-95 sm:hover:scale-105"
-    >
+    <div @click="emit('click', department.id)" class="cursor-pointer transition-transform active:scale-95 sm:hover:scale-105">
         <div class="overflow-hidden rounded-lg bg-white shadow-md">
             <!-- Icon Image -->
             <div class="aspect-square w-full overflow-hidden bg-gray-100">

@@ -112,7 +112,9 @@ const submitPost = () => {
 </script>
 
 <template>
-    <div class="mx-auto mb-4 w-full max-w-2xl rounded-lg bg-gradient-to-br from-sky-50 to-blue-50 shadow-sm transition-all hover:from-sky-100 hover:to-blue-100 hover:shadow-md">
+    <div
+        class="mx-auto mb-4 w-full max-w-2xl rounded-lg bg-gradient-to-br from-sky-50 to-blue-50 shadow-sm transition-all hover:from-sky-100 hover:to-blue-100 hover:shadow-md"
+    >
         <div class="space-y-4">
             <div
                 class="cursor-pointer overflow-hidden rounded-lg bg-gradient-to-br from-sky-50 to-blue-50 shadow-sm transition-all hover:from-sky-100 hover:to-blue-100 hover:shadow-md"
@@ -150,7 +152,6 @@ const submitPost = () => {
                         :disabled="isSubmitting"
                         @click="checkAuth"
                     ></textarea>
-
                 </div>
                 <!-- 액션 버튼들 -->
                 <div class="border-t border-gray-200 p-3">
@@ -168,7 +169,6 @@ const submitPost = () => {
                         </label>
                     </div>
                 </div>
-
             </div>
         </div>
 
@@ -200,7 +200,6 @@ const submitPost = () => {
                 </button>
             </div>
         </div>
-
     </div>
 </template>
 

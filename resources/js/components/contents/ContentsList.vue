@@ -133,13 +133,19 @@ onUnmounted(() => {
                             />
                         </div>
                         <span class="text-sm font-semibold text-sky-900">
-                            {{ content.user ? content.user.name : (content.church ? content.church.name : '') }}
+                            {{ content.user ? content.user.name : content.church ? content.church.name : '' }}
                         </span>
                     </div>
 
                     <!-- 내용: 이미지 또는 텍스트 미리보기 -->
                     <div v-if="!isHtmlType(content)" class="max-h-[600px] overflow-hidden" @click="goToContent(content.id)">
-                        <img v-if="content.thumbnail_url" :src="content.thumbnail_url" class="w-full object-cover" alt="콘텐츠 이미지" loading="lazy" />
+                        <img
+                            v-if="content.thumbnail_url"
+                            :src="content.thumbnail_url"
+                            class="w-full object-cover"
+                            alt="콘텐츠 이미지"
+                            loading="lazy"
+                        />
                     </div>
                     <div v-if="isHtmlType(content)" class="bg-white/60 px-4 py-3 backdrop-blur-sm" @click="goToContent(content.id)">
                         <p class="preview-text mb-0 text-sm text-slate-700">
@@ -156,7 +162,11 @@ onUnmounted(() => {
                             class="mb-3 flex cursor-pointer items-center gap-2 transition-colors hover:text-sky-600"
                         >
                             <div class="flex h-6 w-6 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
-                                <img :src="content.department.icon_image || '/pcaview_icon.png'" :alt="content.department.name" class="h-full w-full object-cover" />
+                                <img
+                                    :src="content.department.icon_image || '/pcaview_icon.png'"
+                                    :alt="content.department.name"
+                                    class="h-full w-full object-cover"
+                                />
                             </div>
                             <span class="text-xs font-medium text-sky-800">{{ content.department.name }}</span>
                         </div>
@@ -166,8 +176,19 @@ onUnmounted(() => {
                         <div class="flex items-center justify-between">
                             <!-- 댓글 개수 -->
                             <div v-if="content.comments_count !== undefined" class="flex items-center gap-1.5 text-sky-700">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-4 w-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                                    />
                                 </svg>
                                 <span class="text-xs font-medium">{{ content.comments_count }}</span>
                             </div>

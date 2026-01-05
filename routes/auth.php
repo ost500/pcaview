@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
+use App\Http\Controllers\Auth\KakaoController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
@@ -11,6 +12,9 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
+    // Kakao OAuth
+    Route::get('auth/kakao', [KakaoController::class, 'redirect'])->name('kakao.redirect');
+    Route::get('auth/kakao/callback', [KakaoController::class, 'callback'])->name('kakao.callback');
     Route::get('register', [RegisteredUserController::class, 'create'])
         ->name('register');
 

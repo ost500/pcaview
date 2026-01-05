@@ -68,7 +68,10 @@ watch(
 <template>
     <Head :title="department.name">
         <!-- Basic Meta Tags -->
-        <meta name="description" :content="`${department.name}의 최신 소식과 트렌드를 실시간으로 확인하세요. ${department.description || 'PCAview에서 제공하는 다양한 콘텐츠를 만나보세요.'}`" />
+        <meta
+            name="description"
+            :content="`${department.name}의 최신 소식과 트렌드를 실시간으로 확인하세요. ${department.description || 'PCAview에서 제공하는 다양한 콘텐츠를 만나보세요.'}`"
+        />
         <meta name="keywords" :content="`PCAview, 피카뷰, ${department.name}, 뉴스, 트렌드, 실시간 소식`" />
 
         <!-- Open Graph -->
@@ -94,7 +97,7 @@ watch(
 
     <Header v-if="!hideHeader" :title="department.name" :backbutton="true"></Header>
 
-    <div class="bg-white pb-14 pt-3 sm:pb-16 sm:pt-4" :class="{ 'pt-0': hideHeader }">
+    <div class="bg-white pt-3 pb-14 sm:pt-4 sm:pb-16" :class="{ 'pt-0': hideHeader }">
         <div class="mx-auto max-w-screen-xl px-4">
             <!-- 부서 정보 -->
             <div class="mb-4 flex items-center gap-4 sm:mb-6">

@@ -7,7 +7,7 @@ defineProps<Props>();
 </script>
 
 <template>
-    <div class="col-12 coupang-ad-container">
+    <div class="coupang-ad-container col-12">
         <iframe
             src="https://ads-partners.coupang.com/widgets.html?id=927016&template=carousel&trackingCode=AF7527668&subId=&width=680&height=140&tsource="
             width="100%"

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import Header from '@/components/template/Header.vue';
 import BusinessInfo from '@/components/BusinessInfo.vue';
-import { Church } from '@/types/church';
+import Header from '@/components/template/Header.vue';
 import { safeRoute } from '@/composables/useSafeRoute';
+import { Church } from '@/types/church';
 import { Head } from '@inertiajs/vue3';
 import { onMounted } from 'vue';
 
@@ -42,20 +42,20 @@ onMounted(() => {
     structuredData.text = JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'ItemList',
-        'name': '교회 목록',
-        'description': '주보고에 등록된 교회 목록',
-        'numberOfItems': props.churches.length,
-        'itemListElement': props.churches.map((church, index) => ({
+        name: '교회 목록',
+        description: '주보고에 등록된 교회 목록',
+        numberOfItems: props.churches.length,
+        itemListElement: props.churches.map((church, index) => ({
             '@type': 'ListItem',
-            'position': index + 1,
-            'item': {
+            position: index + 1,
+            item: {
                 '@type': 'Place',
                 '@id': safeRoute('church.show', { id: church.id }),
-                'name': church.name,
-                'address': church.address,
-                'image': church.icon_url
-            }
-        }))
+                name: church.name,
+                address: church.address,
+                image: church.icon_url,
+            },
+        })),
     });
     document.head.appendChild(structuredData);
 });
@@ -106,7 +106,7 @@ onMounted(() => {
                                 <h5 class="card-title">{{ church.address }}</h5>
                                 <!--                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
                                 <p class="mb-0 text-right">
-                                    <a :href="safeRoute('church.show', { id: church.id })" class="btn btn-primary text-right btn-sm">자세히</a>
+                                    <a :href="safeRoute('church.show', { id: church.id })" class="btn btn-primary btn-sm text-right">자세히</a>
                                 </p>
                             </div>
                         </div>

@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import BusinessInfo from '@/components/BusinessInfo.vue';
 import ContentsList from '@/components/contents/ContentsList.vue';
+import { safeRoute } from '@/composables/useSafeRoute';
 import { Contents } from '@/types/contents';
 import { Head, router, usePage } from '@inertiajs/vue3';
-import { onMounted, ref, computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import VueEasyLightbox from 'vue-easy-lightbox';
-import { safeRoute } from '@/composables/useSafeRoute';
 
 const props = defineProps<{
     contents: Contents;
@@ -46,22 +45,18 @@ const submitComment = () => {
         data.guest_name = guestName.value;
     }
 
-    router.post(
-        safeRoute('comments.store', { content: props.contents.id }),
-        data,
-        {
-            preserveScroll: true,
-            onSuccess: () => {
-                commentBody.value = '';
-                if (!user.value) {
-                    guestName.value = '';
-                }
-            },
-            onFinish: () => {
-                isSubmitting.value = false;
-            },
-        }
-    );
+    router.post(safeRoute('comments.store', { content: props.contents.id }), data, {
+        preserveScroll: true,
+        onSuccess: () => {
+            commentBody.value = '';
+            if (!user.value) {
+                guestName.value = '';
+            }
+        },
+        onFinish: () => {
+            isSubmitting.value = false;
+        },
+    });
 };
 
 const deleteComment = (commentId: number) => {
@@ -135,14 +130,10 @@ const displayBody = computed(() => {
     let currentLength = 0;
     let truncatePoint: Node | null = null;
 
-    const walker = document.createTreeWalker(
-        tempDiv,
-        NodeFilter.SHOW_ALL,
-        null
-    );
+    const walker = document.createTreeWalker(tempDiv, NodeFilter.SHOW_ALL, null);
 
     let currentNode: Node | null;
-    while (currentNode = walker.nextNode()) {
+    while ((currentNode = walker.nextNode())) {
         if (currentNode.nodeType === Node.TEXT_NODE) {
             const textContent = currentNode.textContent || '';
             currentLength += textContent.length;
@@ -209,7 +200,12 @@ onMounted(() => {
         description: 'PCAview ' + props.contents.title + ' - ' + (props.contents.department?.name || '소식'),
         inLanguage: 'ko-KR',
         articleSection: props.contents.department?.name || 'PCAview 소식',
-        keywords: 'PCAview, 피카뷰, 트렌드, 뉴스, ' + (props.contents.department?.name || '') + ', ' + props.contents.title + (props.contents.tags && props.contents.tags.length > 0 ? ', ' + props.contents.tags.map(t => t.name).join(', ') : ''),
+        keywords:
+            'PCAview, 피카뷰, 트렌드, 뉴스, ' +
+            (props.contents.department?.name || '') +
+            ', ' +
+            props.contents.title +
+            (props.contents.tags && props.contents.tags.length > 0 ? ', ' + props.contents.tags.map((t) => t.name).join(', ') : ''),
     });
     document.head.appendChild(script);
 });
@@ -220,7 +216,10 @@ onMounted(() => {
         <Head :title="`${contents.department?.name || 'PCAview'} - ${contents.title}`">
             <!-- Basic Meta Tags -->
             <meta name="description" :content="`PCAview ${contents.title} - ${contents.department?.name}`" />
-            <meta name="keywords" :content="`PCAview, PCAview ${contents.department?.name || ''}, ${contents.title}${contents.tags && contents.tags.length > 0 ? ', ' + contents.tags.map(t => t.name).join(', ') : ''}`" />
+            <meta
+                name="keywords"
+                :content="`PCAview, PCAview ${contents.department?.name || ''}, ${contents.title}${contents.tags && contents.tags.length > 0 ? ', ' + contents.tags.map((t) => t.name).join(', ') : ''}`"
+            />
 
             <!-- Open Graph / Facebook -->
             <meta property="og:type" content="article" />
@@ -265,7 +264,6 @@ onMounted(() => {
                                 <span class="text-sm font-semibold text-sky-900">{{ contents.department.name }}</span>
                             </div>
 
-
                             <!-- Title -->
                             <div class="border-b border-gray-200 px-4 py-3">
                                 <h5 class="mb-2 text-lg font-semibold">{{ contents.title }}</h5>
@@ -276,14 +274,14 @@ onMounted(() => {
                                     <span
                                         v-for="tag in contents.tags"
                                         :key="tag.id"
-                                        class="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 hover:bg-blue-100 transition-colors"
+                                        class="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-100"
                                     >
                                         #{{ tag.name }}
                                     </span>
                                 </div>
                             </div>
 
-                           <!-- 이미지 또는 비디오 -->
+                            <!-- 이미지 또는 비디오 -->
                             <div v-if="contents.file_type != 'YOUTUBE' && contents.file_type != 'HTML'">
                                 <div v-for="(image, index) in contents.images" v-bind:key="image.id">
                                     <img
@@ -314,7 +312,10 @@ onMounted(() => {
                                 <div class="content-body" v-html="displayBody"></div>
 
                                 <!-- 뉴스 저작권 안내 -->
-                                <div v-if="['nate_news', 'news', 'naver_news'].includes(contents.type) && contents.file_url" class="mt-5 rounded border-l-4 border-blue-500 bg-gray-50 p-4">
+                                <div
+                                    v-if="['nate_news', 'news', 'naver_news'].includes(contents.type) && contents.file_url"
+                                    class="mt-5 rounded border-l-4 border-blue-500 bg-gray-50 p-4"
+                                >
                                     <p class="mb-0 text-sm text-gray-600">저작권 보호를 위해 본문의 일부만 표시됩니다.</p>
                                     <a
                                         :href="contents.file_url"
@@ -326,7 +327,6 @@ onMounted(() => {
                                     </a>
                                 </div>
                             </div>
-
                         </div>
 
                         <!-- 댓글 섹션 -->
@@ -347,7 +347,7 @@ onMounted(() => {
                                             type="text"
                                             placeholder="이름을 입력하세요"
                                             maxlength="50"
-                                            class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                                            class="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
                                             :disabled="isSubmitting"
                                         />
                                     </div>
@@ -356,7 +356,7 @@ onMounted(() => {
                                         placeholder="댓글을 입력하세요..."
                                         rows="3"
                                         maxlength="1000"
-                                        class="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                                        class="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
                                         :disabled="isSubmitting"
                                     ></textarea>
                                     <div class="flex items-center justify-between">
@@ -376,26 +376,32 @@ onMounted(() => {
                             <div v-if="contents.comments && contents.comments.length > 0" class="divide-y divide-gray-100">
                                 <div v-for="comment in contents.comments" :key="comment.id" class="px-4 py-4">
                                     <div class="flex items-start gap-3">
-                                        <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-purple-100">
+                                        <div
+                                            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-100 to-purple-100"
+                                        >
                                             <svg class="h-6 w-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                                                <path
+                                                    fill-rule="evenodd"
+                                                    d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                                    clip-rule="evenodd"
+                                                />
                                             </svg>
                                         </div>
-                                        <div class="flex-1 min-w-0">
+                                        <div class="min-w-0 flex-1">
                                             <div class="flex items-start justify-between gap-2">
                                                 <div class="flex flex-col">
                                                     <div class="flex items-center gap-2">
                                                         <p class="text-sm font-medium text-gray-900">{{ comment.display_name }}</p>
                                                         <p class="text-xs text-gray-500">{{ formatDate(comment.created_at) }}</p>
                                                     </div>
-                                                    <p class="mt-2 whitespace-pre-wrap text-sm text-gray-700">{{ comment.body }}</p>
+                                                    <p class="mt-2 text-sm whitespace-pre-wrap text-gray-700">{{ comment.body }}</p>
                                                 </div>
                                                 <div class="flex flex-shrink-0 items-center gap-2">
                                                     <span v-if="comment.ip_last_digits" class="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
                                                         XXX.{{ comment.ip_last_digits }}
                                                     </span>
                                                     <button
-                                                        v-if="(user && comment.user_id && user.id === comment.user_id) || (!comment.user_id)"
+                                                        v-if="(user && comment.user_id && user.id === comment.user_id) || !comment.user_id"
                                                         @click="deleteComment(comment.id)"
                                                         class="text-xs text-red-600 hover:text-red-700 hover:underline"
                                                     >
@@ -409,9 +415,7 @@ onMounted(() => {
                             </div>
 
                             <!-- 댓글 없음 -->
-                            <div v-else class="px-4 py-8 text-center text-sm text-gray-500">
-                                첫 번째 댓글을 작성해보세요!
-                            </div>
+                            <div v-else class="px-4 py-8 text-center text-sm text-gray-500">첫 번째 댓글을 작성해보세요!</div>
                         </div>
 
                         <!-- 관련 콘텐츠 -->
@@ -425,10 +429,8 @@ onMounted(() => {
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
-
     </div>
 </template>
 

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import Header from '@/components/template/Header.vue';
 import BusinessInfo from '@/components/BusinessInfo.vue';
-import { Head } from '@inertiajs/vue3';
+import Header from '@/components/template/Header.vue';
 import { safeRoute } from '@/composables/useSafeRoute';
 import type { Tag } from '@/types/contents';
+import { Head } from '@inertiajs/vue3';
 
 interface Trend {
     id: number;
@@ -31,7 +31,15 @@ const props = defineProps<{ trend: Trend }>();
     <Head :title="trend.title + ' - 트렌드'">
         <!-- Basic Meta Tags -->
         <meta name="description" :content="trend.description" />
-        <meta name="keywords" :content="'트렌드, ' + trend.title + ', 인기검색어' + (trend.tags && trend.tags.length > 0 ? ', ' + trend.tags.map(t => t.name).join(', ') : '')" />
+        <meta
+            name="keywords"
+            :content="
+                '트렌드, ' +
+                trend.title +
+                ', 인기검색어' +
+                (trend.tags && trend.tags.length > 0 ? ', ' + trend.tags.map((t) => t.name).join(', ') : '')
+            "
+        />
 
         <!-- Open Graph -->
         <meta property="og:type" content="article" />
@@ -58,20 +66,14 @@ const props = defineProps<{ trend: Trend }>();
             <div class="profile-area">
                 <!-- Trend Image -->
                 <div v-if="trend.picture || trend.image_url" class="trend-image mb-4">
-                    <img
-                        :src="trend.picture || trend.image_url"
-                        :alt="trend.title"
-                        class="w-full rounded-lg"
-                        loading="lazy"
-                        decoding="async"
-                    />
-                    <p v-if="trend.picture_source" class="text-sm text-gray-500 mt-2">출처: {{ trend.picture_source }}</p>
+                    <img :src="trend.picture || trend.image_url" :alt="trend.title" class="w-full rounded-lg" loading="lazy" decoding="async" />
+                    <p v-if="trend.picture_source" class="mt-2 text-sm text-gray-500">출처: {{ trend.picture_source }}</p>
                 </div>
 
                 <!-- Trend Info -->
                 <div class="trend-info mb-6">
-                    <h1 class="text-2xl font-bold mb-2">{{ trend.title }}</h1>
-                    <p class="text-gray-600 mb-4">{{ trend.description }}</p>
+                    <h1 class="mb-2 text-2xl font-bold">{{ trend.title }}</h1>
+                    <p class="mb-4 text-gray-600">{{ trend.description }}</p>
                     <div class="flex items-center gap-4 text-sm text-gray-500">
                         <span>🔥 검색량: {{ trend.traffic_count?.toLocaleString() || 'N/A' }}</span>
                         <span>📅 {{ new Date(trend.pub_date).toLocaleDateString('ko-KR') }}</span>
@@ -82,7 +84,7 @@ const props = defineProps<{ trend: Trend }>();
                         <span
                             v-for="tag in trend.tags"
                             :key="tag.id"
-                            class="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 hover:bg-blue-100 transition-colors"
+                            class="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-100"
                         >
                             #{{ tag.name }}
                         </span>
@@ -93,7 +95,7 @@ const props = defineProps<{ trend: Trend }>();
                         :href="trend.link"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="inline-block mt-4 text-blue-600 hover:underline"
+                        class="mt-4 inline-block text-blue-600 hover:underline"
                     >
                         원문 보기 →
                     </a>
@@ -101,15 +103,15 @@ const props = defineProps<{ trend: Trend }>();
 
                 <!-- News Items -->
                 <div v-if="trend.news_items && trend.news_items.length > 0" class="news-items">
-                    <h2 class="text-xl font-bold mb-4">관련 뉴스</h2>
+                    <h2 class="mb-4 text-xl font-bold">관련 뉴스</h2>
                     <div class="space-y-4">
                         <div v-for="(item, index) in trend.news_items" :key="index" class="news-item border-b pb-4">
-                            <h3 class="font-semibold mb-1">
+                            <h3 class="mb-1 font-semibold">
                                 <a :href="item.link" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600">
                                     {{ item.title }}
                                 </a>
                             </h3>
-                            <p class="text-sm text-gray-600 mb-2">{{ item.snippet }}</p>
+                            <p class="mb-2 text-sm text-gray-600">{{ item.snippet }}</p>
                             <p class="text-xs text-gray-500">{{ item.source }}</p>
                         </div>
                     </div>
