@@ -11,8 +11,14 @@ Artisan::command('inspire', function () {
 Schedule::command('trends:fetch')->hourly();
 Schedule::command('church:fetch')->hourly();
 
-// 금 시세 자동 업데이트 - 매일 오전 9시
+// 국내 금 시세 자동 업데이트 - 매일 오전 9시
 Schedule::command('gold:fetch')->dailyAt('09:00');
 
-// 은 시세 자동 업데이트 - 매일 오전 9시 5분 (금 시세 수집 후)
+// 국내 은 시세 자동 업데이트 - 매일 오전 9시 5분
 Schedule::command('silver:fetch')->dailyAt('09:05');
+
+// 국제 금 시세 자동 업데이트 - 매일 오전 9시 10분
+Schedule::command('international:gold')->dailyAt('09:10');
+
+// 국제 은 시세 자동 업데이트 - 매일 오전 9시 15분
+Schedule::command('international:silver')->dailyAt('09:15');
