@@ -239,16 +239,10 @@ const handleFileChange = async (event: Event) => {
 
                                 <!-- 프로필 사진 -->
                                 <img
-                                    v-if="user.profile_photo_url"
-                                    :src="user.profile_photo_url"
+                                    :src="user.profile_photo"
                                     :alt="user.name"
                                     class="h-full w-full object-cover"
                                 />
-                                <div v-else class="flex h-full w-full items-center justify-center">
-                                    <svg class="h-14 w-14 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
                             </div>
 
                             <!-- 숨겨진 파일 입력 -->

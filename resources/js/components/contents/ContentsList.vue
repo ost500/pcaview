@@ -148,7 +148,7 @@ onUnmounted(() => {
                         <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
                             <img
                                 v-if="content.user"
-                                :src="content.user.profile_photo_url || '/pcaview_icon.png'"
+                                :src="content.user.profile_photo"
                                 :alt="content.user.name"
                                 class="h-full w-full object-cover"
                             />
