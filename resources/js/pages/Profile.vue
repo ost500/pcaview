@@ -2,13 +2,10 @@
 import BusinessInfo from '@/components/BusinessInfo.vue';
 import Header from '@/components/template/Header.vue';
 import { safeRoute } from '@/composables/useSafeRoute';
-import type { Department } from '@/types/department';
 import { router, useForm, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
 interface Props {
-    allDepartments?: Department[];
-    subscribedDepartmentIds?: number[];
     canResetPassword?: boolean;
 }
 
@@ -39,9 +36,6 @@ const handleLogin = () => {
     });
 };
 
-// 구독 상태 관리
-const subscribed = ref<Set<number>>(new Set(props.subscribedDepartmentIds || []));
-
 const handleLogout = () => {
     if (confirm('로그아웃 하시겠습니까?')) {
         router.post(
@@ -58,27 +52,6 @@ const handleLogout = () => {
 
 const goToSettings = () => {
     window.location.href = safeRoute('profile.edit');
-};
-
-// 부서 구독 토글
-const toggleSubscription = (departmentId: number) => {
-    router.post(
-        safeRoute('profile.subscribe'),
-        {
-            department_id: departmentId,
-        },
-        {
-            preserveScroll: true,
-            onSuccess: () => {
-                // 구독 상태 토글
-                if (subscribed.value.has(departmentId)) {
-                    subscribed.value.delete(departmentId);
-                } else {
-                    subscribed.value.add(departmentId);
-                }
-            },
-        },
-    );
 };
 </script>
 
@@ -188,10 +161,18 @@ const toggleSubscription = (departmentId: number) => {
                 <div class="overflow-hidden rounded-2xl bg-gradient-to-br from-blue-50 to-purple-50 shadow-lg">
                     <div class="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-8">
                         <div class="flex justify-center">
-                            <div class="flex h-24 w-24 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
-                                <svg class="h-14 w-14 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-                                </svg>
+                            <div class="h-24 w-24 overflow-hidden rounded-full bg-white/20 backdrop-blur-sm">
+                                <img
+                                    v-if="user.profile_photo_url"
+                                    :src="user.profile_photo_url"
+                                    :alt="user.name"
+                                    class="h-full w-full object-cover"
+                                />
+                                <div v-else class="flex h-full w-full items-center justify-center">
+                                    <svg class="h-14 w-14 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -222,44 +203,6 @@ const toggleSubscription = (departmentId: number) => {
                             이메일 미인증
                         </span>
                     </div>
-                </div>
-
-                <!-- 구독 부서 관리 -->
-                <div class="overflow-hidden rounded-2xl bg-white shadow-lg">
-                    <div class="border-b border-gray-100 px-6 py-4">
-                        <h3 class="flex items-center gap-2 text-lg font-semibold text-gray-900">
-                            <svg class="h-5 w-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path
-                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                                />
-                            </svg>
-                            구독 부서 관리
-                        </h3>
-                        <p class="mt-1 text-sm text-gray-600">관심있는 부서를 체크하세요. 해당 부서의 소식을 받아볼 수 있습니다.</p>
-                    </div>
-
-                    <div v-if="allDepartments && allDepartments.length > 0" class="divide-y divide-gray-100">
-                        <div
-                            v-for="department in allDepartments"
-                            :key="department.id"
-                            class="flex cursor-pointer items-center gap-3 px-6 py-4 transition-colors hover:bg-gray-50 active:bg-gray-100"
-                            @click="toggleSubscription(department.id)"
-                        >
-                            <div class="h-12 w-12 flex-shrink-0 overflow-hidden rounded-full">
-                                <img :src="department.icon_image || '/pcaview_icon.png'" :alt="department.name" class="h-full w-full object-cover" />
-                            </div>
-                            <div class="flex-1">
-                                <h4 class="font-medium text-gray-900">{{ department.name }}</h4>
-                            </div>
-                            <input
-                                type="checkbox"
-                                :checked="subscribed.has(department.id)"
-                                @click.stop="toggleSubscription(department.id)"
-                                class="h-5 w-5 cursor-pointer rounded border-gray-300 text-blue-600 transition-all focus:ring-2 focus:ring-blue-200"
-                            />
-                        </div>
-                    </div>
-                    <div v-else class="px-6 py-8 text-center text-sm text-gray-500">등록된 부서가 없습니다.</div>
                 </div>
 
                 <!-- 메뉴 리스트 -->

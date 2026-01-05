@@ -1,9 +1,26 @@
 import { AppPageProps } from '@/types/index';
 
+// Kakao SDK
+declare global {
+    interface Window {
+        Kakao: {
+            init: (appKey: string) => void;
+            isInitialized: () => boolean;
+            Auth: {
+                authorize: (options: {
+                    redirectUri: string;
+                    scope?: string;
+                }) => void;
+            };
+        };
+    }
+}
+
 // Extend ImportMeta interface for Vite...
 declare module 'vite/client' {
     interface ImportMetaEnv {
         readonly VITE_APP_NAME: string;
+        readonly VITE_KAKAO_CLIENT_ID: string;
         [key: string]: string | boolean | undefined;
     }
 

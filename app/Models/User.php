@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'kakao_id',
+        'profile_photo_url',
     ];
 
     /**

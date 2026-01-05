@@ -23,33 +23,45 @@ class KakaoController extends Controller
     /**
      * Handle Kakao OAuth callback
      */
-    public function callback()
+    public function callback(Request $request)
     {
         try {
-            $kakaoUser = Socialite::driver('kakao')->user();
+            // JavaScript SDK를 사용하므로 Socialite를 통해 인증 코드 처리
+            $kakaoUser = Socialite::driver('kakao')->stateless()->user();
 
-            // Find or create user
+            // 카카오 이메일이 없으면 임시 이메일 생성
+            $email = $kakaoUser->email ?? $kakaoUser->id . '@kakao.pcaview.com';
+
+            // Find user by kakao_id first
             $user = User::where('kakao_id', $kakaoUser->id)->first();
 
             if (!$user) {
-                // Check if email already exists
-                $user = User::where('email', $kakaoUser->email)->first();
+                // Then check if email already exists
+                $user = User::where('email', $email)->first();
 
                 if ($user) {
-                    // Update existing user with Kakao ID
+                    // Update existing user with Kakao ID and profile photo
                     $user->update([
                         'kakao_id' => $kakaoUser->id,
+                        'profile_photo_url' => $kakaoUser->avatar ?? $kakaoUser->avatar_original ?? null,
                     ]);
                 } else {
-                    // Create new user
+                    // Create new user only if no user with this email exists
                     $user = User::create([
                         'name' => $kakaoUser->name ?? $kakaoUser->nickname ?? 'Kakao User',
-                        'email' => $kakaoUser->email ?? $kakaoUser->id . '@kakao.pcaview.com',
+                        'email' => $email,
                         'kakao_id' => $kakaoUser->id,
+                        'profile_photo_url' => $kakaoUser->avatar ?? $kakaoUser->avatar_original ?? null,
                         'password' => Hash::make(Str::random(32)), // Random password for social login users
                         'email_verified_at' => now(), // Auto-verify social login users
                     ]);
                 }
+            } else {
+                // Update profile photo and name for existing kakao user
+                $user->update([
+                    'name' => $kakaoUser->name ?? $kakaoUser->nickname ?? $user->name,
+                    'profile_photo_url' => $kakaoUser->avatar ?? $kakaoUser->avatar_original ?? null,
+                ]);
             }
 
             // Login user
@@ -57,6 +69,8 @@ class KakaoController extends Controller
 
             return redirect()->intended('/');
         } catch (\Exception $e) {
+            \Log::error('Kakao login error: ' . $e->getMessage());
+            \Log::error('Kakao login error trace: ' . $e->getTraceAsString());
             return redirect()->route('login')
                 ->with('error', 'Kakao login failed. Please try again.');
         }

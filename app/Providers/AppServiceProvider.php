@@ -8,6 +8,8 @@ use App\Listeners\FetchNaverNewsForTrend;
 use App\Listeners\SyncDekricaTrendListener;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use SocialiteProviders\Kakao\KakaoExtendSocialite;
+use SocialiteProviders\Manager\SocialiteWasCalled;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -40,6 +42,12 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(
             TrendFetched::class,
             FetchNaverNewsForTrend::class
+        );
+
+        // Kakao Socialite Provider
+        Event::listen(
+            SocialiteWasCalled::class,
+            KakaoExtendSocialite::class.'@handle'
         );
     }
 }

@@ -10,9 +10,9 @@ import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import { register } from '@/routes';
 import { request } from '@/routes/password';
-import { Form, Head } from '@inertiajs/vue3';
+import { Form, Head, router } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 defineProps<{
     status?: string;
@@ -25,6 +25,55 @@ if (typeof window !== 'undefined') {
     const urlParams = new URLSearchParams(window.location.search);
     hideHeader.value = urlParams.get('hideHeader') === 'true';
 }
+
+// Kakao SDK 초기화
+const initKakaoSDK = () => {
+    const kakaoAppKey = import.meta.env.VITE_KAKAO_CLIENT_ID || '';
+
+    console.log(kakaoAppKey);
+    console.log("kakaoAppKey!!!");
+    if (!kakaoAppKey) {
+        console.error('VITE_KAKAO_CLIENT_ID가 설정되지 않았습니다.');
+        return;
+    }
+
+    // SDK가 로드될 때까지 대기
+    if (window.Kakao) {
+        if (!window.Kakao.isInitialized()) {
+            window.Kakao.init(kakaoAppKey);
+            console.log('Kakao SDK 초기화 완료');
+        }
+    } else {
+        // SDK 로드 대기
+        setTimeout(initKakaoSDK, 100);
+    }
+};
+
+onMounted(() => {
+    if (typeof window !== 'undefined') {
+        initKakaoSDK();
+    }
+});
+
+// Kakao 로그인 핸들러
+const handleKakaoLogin = () => {
+    if (!window.Kakao) {
+        alert('Kakao SDK가 로드되지 않았습니다. 페이지를 새로고침해주세요.');
+        return;
+    }
+
+    if (!window.Kakao.isInitialized()) {
+        alert('Kakao SDK 초기화 중입니다. 잠시 후 다시 시도해주세요.');
+        return;
+    }
+
+    console.log(window.location.origin + '/auth/kakao/callback');
+    console.log(111);
+    window.Kakao.Auth.authorize({
+        redirectUri: window.location.origin + '/auth/kakao/callback',
+        scope: 'profile_nickname,profile_image',
+    });
+};
 </script>
 
 <template>
@@ -107,8 +156,9 @@ if (typeof window !== 'undefined') {
                 </div>
             </div>
 
-            <a
-                href="/auth/kakao"
+            <button
+                @click="handleKakaoLogin"
+                type="button"
                 class="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#FEE500] text-base font-semibold text-[#000000] opacity-85 transition-all hover:opacity-100 hover:shadow-lg"
                 :tabindex="6"
             >
@@ -118,7 +168,7 @@ if (typeof window !== 'undefined') {
                     />
                 </svg>
                 카카오 로그인
-            </a>
+            </button>
 
             <div class="text-center">
                 <span class="text-sm text-gray-600">계정이 없으신가요?</span>
