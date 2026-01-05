@@ -10,3 +10,6 @@ Artisan::command('inspire', function () {
 
 Schedule::command('trends:fetch')->hourly();
 Schedule::command('church:fetch')->hourly();
+
+// 금 시세 자동 업데이트 - 매일 오전 9시
+Schedule::command('gold:fetch')->dailyAt('09:00');
