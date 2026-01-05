@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\GoldPrice;
+use App\Models\DomesticMetalPrice;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -14,7 +14,7 @@ class GoldPriceController extends Controller
      */
     public function latest(): JsonResponse
     {
-        $latest = GoldPrice::getLatest();
+        $latest = DomesticMetalPrice::getLatest();
 
         if (! $latest) {
             return response()->json([
@@ -86,7 +86,7 @@ class GoldPriceController extends Controller
         }
 
         // 날짜별로 가장 최신 데이터만 가져오기 (서브쿼리 사용)
-        $query = GoldPrice::query()
+        $query = DomesticMetalPrice::query()
             ->selectRaw('DATE(price_date) as date, MAX(id) as max_id')
             ->groupBy('date');
 
@@ -97,7 +97,7 @@ class GoldPriceController extends Controller
         $dateIds = $query->pluck('max_id');
 
         // 실제 데이터 가져오기
-        $prices = GoldPrice::whereIn('id', $dateIds)
+        $prices = DomesticMetalPrice::whereIn('id', $dateIds)
             ->orderBy('price_date', 'asc')
             ->get();
 
@@ -150,7 +150,7 @@ class GoldPriceController extends Controller
         $type = $request->input('type', 'pure');
 
         // 기간 계산
-        $query = GoldPrice::query();
+        $query = DomesticMetalPrice::query();
 
         switch ($period) {
             case '7d':

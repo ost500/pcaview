@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\GoldPrice;
+use App\Models\DomesticMetalPrice;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 
@@ -28,7 +28,7 @@ class FetchGoldPrice extends Command
     public function handle()
     {
         // 데이터베이스에 데이터가 있는지 확인
-        $hasData = GoldPrice::exists();
+        $hasData = DomesticMetalPrice::exists();
 
         // 데이터가 없으면 1년치, 있으면 지정된 일수만큼 가져오기
         if (! $hasData) {
@@ -78,7 +78,7 @@ class FetchGoldPrice extends Command
 
             foreach ($data['list'] as $item) {
                 try {
-                    GoldPrice::updateOrCreate(
+                    DomesticMetalPrice::updateOrCreate(
                         ['price_date' => $item['date']],
                         [
                             'p_pure' => $item['p_pure'],
@@ -111,7 +111,7 @@ class FetchGoldPrice extends Command
             }
 
             // 최신 가격 표시
-            $latest = GoldPrice::getLatest();
+            $latest = DomesticMetalPrice::getLatest();
             if ($latest) {
                 $this->newLine();
                 $this->info('Latest Gold Price:');

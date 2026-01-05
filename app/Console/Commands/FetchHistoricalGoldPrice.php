@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\GoldPrice;
+use App\Models\DomesticMetalPrice;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 
@@ -28,7 +28,7 @@ class FetchHistoricalGoldPrice extends Command
     public function handle()
     {
         // 가장 오래된 데이터 조회
-        $oldest = GoldPrice::orderBy('price_date', 'asc')->first();
+        $oldest = DomesticMetalPrice::orderBy('price_date', 'asc')->first();
 
         if (! $oldest) {
             $this->error('No existing data found. Run "gold:fetch" first to get initial data.');
@@ -82,7 +82,7 @@ class FetchHistoricalGoldPrice extends Command
 
             foreach ($data['list'] as $item) {
                 try {
-                    GoldPrice::updateOrCreate(
+                    DomesticMetalPrice::updateOrCreate(
                         ['price_date' => $item['date']],
                         [
                             'p_pure' => $item['p_pure'],
@@ -115,7 +115,7 @@ class FetchHistoricalGoldPrice extends Command
             }
 
             // 현재 가장 오래된 데이터 표시
-            $newOldest = GoldPrice::orderBy('price_date', 'asc')->first();
+            $newOldest = DomesticMetalPrice::orderBy('price_date', 'asc')->first();
             if ($newOldest) {
                 $this->newLine();
                 $this->info('Oldest Gold Price in Database:');
