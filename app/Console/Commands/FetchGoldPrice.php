@@ -27,8 +27,17 @@ class FetchGoldPrice extends Command
      */
     public function handle()
     {
-        $days = $this->option('days');
-        $this->info("Fetching gold prices for the last {$days} days...");
+        // 데이터베이스에 데이터가 있는지 확인
+        $hasData = GoldPrice::exists();
+
+        // 데이터가 없으면 1년치, 있으면 지정된 일수만큼 가져오기
+        if (! $hasData) {
+            $days = 365;
+            $this->info('🎯 First time fetch: Getting 1 year of gold price data...');
+        } else {
+            $days = $this->option('days');
+            $this->info("Fetching gold prices for the last {$days} days...");
+        }
 
         // 날짜 계산
         $endDate = now();
