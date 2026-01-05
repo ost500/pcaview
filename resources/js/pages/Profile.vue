@@ -102,6 +102,49 @@ const handleFileChange = async (event: Event) => {
         },
     );
 };
+
+// 이름 수정
+const isEditingName = ref(false);
+const editedName = ref('');
+const updatingName = ref(false);
+
+const startEditingName = () => {
+    editedName.value = user.value.name;
+    isEditingName.value = true;
+};
+
+const cancelEditingName = () => {
+    isEditingName.value = false;
+    editedName.value = '';
+};
+
+const updateName = () => {
+    if (!editedName.value.trim()) {
+        alert('이름을 입력해주세요.');
+        return;
+    }
+
+    updatingName.value = true;
+
+    router.patch(
+        safeRoute('profile.update'),
+        {
+            name: editedName.value,
+            email: user.value.email,
+        },
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                updatingName.value = false;
+                isEditingName.value = false;
+            },
+            onError: (errors) => {
+                updatingName.value = false;
+                alert(errors.name || '이름 수정에 실패했습니다.');
+            },
+        },
+    );
+};
 </script>
 
 <template>
@@ -256,7 +299,53 @@ const handleFileChange = async (event: Event) => {
                         </div>
                     </div>
                     <div class="bg-white px-6 py-6 text-center">
-                        <h2 class="mb-1 text-xl font-bold text-gray-900">{{ user.name }}</h2>
+                        <!-- 이름 표시 및 수정 -->
+                        <div v-if="!isEditingName" class="mb-1 flex items-center justify-center gap-2">
+                            <h2 class="text-xl font-bold text-gray-900">{{ user.name }}</h2>
+                            <button
+                                @click="startEditingName"
+                                class="rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+                                title="이름 수정"
+                            >
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- 이름 수정 폼 -->
+                        <div v-else class="mb-1 space-y-2">
+                            <input
+                                v-model="editedName"
+                                type="text"
+                                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-center text-xl font-bold transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                                placeholder="이름을 입력하세요"
+                                @keyup.enter="updateName"
+                                @keyup.escape="cancelEditingName"
+                            />
+                            <div class="flex justify-center gap-2">
+                                <button
+                                    @click="updateName"
+                                    :disabled="updatingName"
+                                    class="rounded-lg bg-blue-600 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:opacity-50"
+                                >
+                                    {{ updatingName ? '저장 중...' : '저장' }}
+                                </button>
+                                <button
+                                    @click="cancelEditingName"
+                                    :disabled="updatingName"
+                                    class="rounded-lg border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50"
+                                >
+                                    취소
+                                </button>
+                            </div>
+                        </div>
+
                         <p class="mb-3 text-sm text-gray-600">{{ user.email }}</p>
                         <span
                             v-if="user.email_verified_at"

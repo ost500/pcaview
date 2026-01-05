@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { type BreadcrumbItem } from '@/types';
+import { ref } from 'vue';
 
 interface Props {
     mustVerifyEmail: boolean;
@@ -30,6 +31,12 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
 const page = usePage();
 const user = page.props.auth.user;
+
+// 폼 데이터 초기화
+const formData = ref({
+    name: user.name,
+    email: user.email,
+});
 </script>
 
 <template>
@@ -40,14 +47,14 @@ const user = page.props.auth.user;
             <div class="flex flex-col space-y-6">
                 <HeadingSmall title="Profile information" description="Update your name and email address" />
 
-                <Form v-bind="ProfileController.update.form()" class="space-y-6" v-slot="{ errors, processing, recentlySuccessful }">
+                <Form v-bind="ProfileController.update.form()" :data="formData" class="space-y-6" v-slot="{ errors, processing, recentlySuccessful }">
                     <div class="grid gap-2">
                         <Label for="name">Name</Label>
                         <Input
                             id="name"
                             class="mt-1 block w-full"
                             name="name"
-                            :default-value="user.name"
+                            v-model="formData.name"
                             required
                             autocomplete="name"
                             placeholder="Full name"
@@ -62,7 +69,7 @@ const user = page.props.auth.user;
                             type="email"
                             class="mt-1 block w-full"
                             name="email"
-                            :default-value="user.email"
+                            v-model="formData.email"
                             required
                             autocomplete="username"
                             placeholder="Email address"
