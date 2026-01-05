@@ -188,11 +188,12 @@ onUnmounted(() => {
 
                     <!-- 타이틀 및 자세히 버튼 -->
                     <div class="bg-white/60 px-4 py-3 backdrop-blur-sm">
-                        <!-- Department 정보 -->
+                        <!-- Department 정보 (user_id가 있으면 오른쪽 정렬) -->
                         <div
                             v-if="content.department"
                             @click="goToContent(content.id)"
                             class="mb-3 flex cursor-pointer items-center gap-2 transition-colors hover:text-sky-600"
+                            :class="{ 'justify-end': content.user_id }"
                         >
                             <div class="flex h-6 w-6 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
                                 <img
