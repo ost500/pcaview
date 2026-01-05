@@ -191,7 +191,7 @@ onUnmounted(() => {
                         <!-- Department 정보 -->
                         <div
                             v-if="content.department"
-                            @click="goToDepartment(content.department.id)"
+                            @click="goToContent(content.id)"
                             class="mb-3 flex cursor-pointer items-center gap-2 transition-colors hover:text-sky-600"
                         >
                             <div class="flex h-6 w-6 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
@@ -204,9 +204,11 @@ onUnmounted(() => {
                             <span class="text-xs font-medium text-sky-800">{{ content.department.name }}</span>
                         </div>
 
-                        <h5 class="mb-3 text-base font-semibold text-sky-900" @click="goToContent(content.id)">{{ content.title }}</h5>
+                        <h5 class="mb-3 text-base font-semibold text-sky-900" @click="goToContent(content.id)">
+                            {{ content.title }}
+                        </h5>
 
-                        <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between" @click="goToContent(content.id)">
                             <div class="flex items-center gap-3">
                                 <!-- 댓글 개수 -->
                                 <div v-if="content.comments_count !== undefined" class="flex items-center gap-1.5 text-sky-700">

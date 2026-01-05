@@ -248,6 +248,36 @@ onMounted(() => {
                 <div class="page-content py-10">
                     <div class="container pt-0 pb-0">
                         <div class="rounded-lg bg-white shadow">
+                            <!-- User 정보 (user_id가 있는 경우) 또는 Church 정보 (없는 경우) -->
+                            <div
+                                v-if="contents.user || contents.church"
+                                class="flex items-center justify-between gap-3 border-b border-sky-100 bg-white/50 px-4 py-3 backdrop-blur-sm"
+                            >
+                                <div class="flex items-center gap-3">
+                                    <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
+                                        <img
+                                            v-if="contents.user"
+                                            :src="contents.user.profile_photo"
+                                            :alt="contents.user.name"
+                                            class="h-full w-full object-cover"
+                                        />
+                                        <img
+                                            v-else-if="contents.church"
+                                            :src="contents.church.icon_url || '/pcaview_icon.png'"
+                                            :alt="contents.church.name"
+                                            class="h-full w-full object-cover"
+                                        />
+                                    </div>
+                                    <span class="text-sm font-semibold text-sky-900">
+                                        {{ contents.user ? contents.user.name : contents.church ? contents.church.name : '' }}
+                                    </span>
+                                </div>
+                                <!-- 작성 시간 -->
+                                <span v-if="contents.published_at" class="text-xs text-gray-500">
+                                    {{ formatDate(contents.published_at) }}
+                                </span>
+                            </div>
+
                             <!-- Department 정보 -->
                             <div
                                 v-if="contents.department"
