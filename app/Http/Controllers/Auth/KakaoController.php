@@ -67,6 +67,11 @@ class KakaoController extends Controller
             // Login user
             Auth::login($user, true);
 
+            // mobilescreen=true 파라미터가 있으면 프로필로 리다이렉트
+            if ($request->session()->get('login.mobilescreen') === 'true') {
+                return redirect()->route('profile.show');
+            }
+
             return redirect()->intended('/');
         } catch (\Exception $e) {
             \Log::error('Kakao login error: ' . $e->getMessage());

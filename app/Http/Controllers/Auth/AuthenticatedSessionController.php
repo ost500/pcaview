@@ -23,6 +23,11 @@ class AuthenticatedSessionController extends Controller
             $request->session()->put('url.intended', $request->input('intended'));
         }
 
+        // mobilescreen 파라미터가 있으면 세션에 저장
+        if ($request->has('mobilescreen')) {
+            $request->session()->put('login.mobilescreen', $request->input('mobilescreen'));
+        }
+
         return Inertia::render('auth/Login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => $request->session()->get('status'),
@@ -37,6 +42,11 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+
+        // mobilescreen=true 파라미터가 있으면 프로필로 리다이렉트
+        if ($request->input('mobilescreen') === 'true' || $request->session()->get('login.mobilescreen') === 'true') {
+            return redirect()->route('profile.show');
+        }
 
         return redirect()->intended('/');
     }
