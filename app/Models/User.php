@@ -36,6 +36,15 @@ class User extends Authenticatable
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'profile_photo',
+    ];
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

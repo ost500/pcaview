@@ -143,24 +143,30 @@ onUnmounted(() => {
                     <!-- User 정보 (user_id가 있는 경우) 또는 Church 정보 (없는 경우) -->
                     <div
                         v-if="content.user || content.church"
-                        class="flex items-center gap-3 border-b border-sky-100 bg-white/50 px-4 py-3 backdrop-blur-sm"
+                        class="flex items-center justify-between gap-3 border-b border-sky-100 bg-white/50 px-4 py-3 backdrop-blur-sm"
                     >
-                        <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
-                            <img
-                                v-if="content.user"
-                                :src="content.user.profile_photo"
-                                :alt="content.user.name"
-                                class="h-full w-full object-cover"
-                            />
-                            <img
-                                v-else-if="content.church"
-                                :src="content.church.icon_url || '/pcaview_icon.png'"
-                                :alt="content.church.name"
-                                class="h-full w-full object-cover"
-                            />
+                        <div class="flex items-center gap-3">
+                            <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
+                                <img
+                                    v-if="content.user"
+                                    :src="content.user.profile_photo"
+                                    :alt="content.user.name"
+                                    class="h-full w-full object-cover"
+                                />
+                                <img
+                                    v-else-if="content.church"
+                                    :src="content.church.icon_url || '/pcaview_icon.png'"
+                                    :alt="content.church.name"
+                                    class="h-full w-full object-cover"
+                                />
+                            </div>
+                            <span class="text-sm font-semibold text-sky-900">
+                                {{ content.user ? content.user.name : content.church ? content.church.name : '' }}
+                            </span>
                         </div>
-                        <span class="text-sm font-semibold text-sky-900">
-                            {{ content.user ? content.user.name : content.church ? content.church.name : '' }}
+                        <!-- 작성 시간 -->
+                        <span v-if="content.published_at" class="text-xs text-gray-500">
+                            {{ formatDate(content.published_at) }}
                         </span>
                     </div>
 
@@ -219,25 +225,6 @@ onUnmounted(() => {
                                         />
                                     </svg>
                                     <span class="text-xs font-medium">{{ content.comments_count }}</span>
-                                </div>
-
-                                <!-- 발행 날짜 -->
-                                <div v-if="content.published_at" class="flex items-center gap-1.5 text-gray-500">
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        class="h-4 w-4"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                                        />
-                                    </svg>
-                                    <span class="text-xs font-medium">{{ formatDate(content.published_at) }}</span>
                                 </div>
                             </div>
 
