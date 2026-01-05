@@ -30,6 +30,33 @@ function goToDepartment(id: number) {
     }
 }
 
+// 날짜 포맷 함수
+function formatDate(dateString: string): string {
+    if (!dateString) return '';
+
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    // 1분 미만
+    if (diffMins < 1) return '방금 전';
+    // 1시간 미만
+    if (diffMins < 60) return `${diffMins}분 전`;
+    // 24시간 미만
+    if (diffHours < 24) return `${diffHours}시간 전`;
+    // 7일 미만
+    if (diffDays < 7) return `${diffDays}일 전`;
+
+    // 7일 이상은 날짜 표시 (YYYY.MM.DD)
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}.${month}.${day}`;
+}
+
 // HTML에서 텍스트만 추출하는 함수 (줄바꿈 보존, SSR-safe)
 function extractTextFromHtml(html: string, maxLength: number = 300): string {
     if (!html) return '';
@@ -174,25 +201,45 @@ onUnmounted(() => {
                         <h5 class="mb-3 text-base font-semibold text-sky-900" @click="goToContent(content.id)">{{ content.title }}</h5>
 
                         <div class="flex items-center justify-between">
-                            <!-- 댓글 개수 -->
-                            <div v-if="content.comments_count !== undefined" class="flex items-center gap-1.5 text-sky-700">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="h-4 w-4"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                                    />
-                                </svg>
-                                <span class="text-xs font-medium">{{ content.comments_count }}</span>
+                            <div class="flex items-center gap-3">
+                                <!-- 댓글 개수 -->
+                                <div v-if="content.comments_count !== undefined" class="flex items-center gap-1.5 text-sky-700">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        class="h-4 w-4"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                                        />
+                                    </svg>
+                                    <span class="text-xs font-medium">{{ content.comments_count }}</span>
+                                </div>
+
+                                <!-- 발행 날짜 -->
+                                <div v-if="content.published_at" class="flex items-center gap-1.5 text-gray-500">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        class="h-4 w-4"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                        />
+                                    </svg>
+                                    <span class="text-xs font-medium">{{ formatDate(content.published_at) }}</span>
+                                </div>
                             </div>
-                            <div v-else class="flex-shrink-0"></div>
 
                             <!-- 자세히 버튼 -->
                             <a
