@@ -69,7 +69,7 @@ class KakaoController extends Controller
 
             // mobilescreen=true 파라미터가 있으면 프로필로 리다이렉트
             if ($request->session()->get('login.mobilescreen') === 'true') {
-                return redirect()->route('profile.show');
+                return redirect()->route('profile');
             }
 
             return redirect()->intended('/');
