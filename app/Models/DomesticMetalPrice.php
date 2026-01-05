@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DomesticMetalPrice extends Model
 {
-    protected $table = 'domestic_metal_prices';
+    protected $table = 'metal_domestic_prices';
 
     protected $fillable = [
         'price_date',

@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class InternationalMetalPrice extends Model
 {
+    protected $table = 'metal_international_prices';
+
     protected $fillable = [
         'price_date',
         'gold_usd',
