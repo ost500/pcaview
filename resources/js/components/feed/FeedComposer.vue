@@ -153,22 +153,6 @@ const submitPost = () => {
                         @click="checkAuth"
                     ></textarea>
                 </div>
-                <!-- 액션 버튼들 -->
-                <div class="border-t border-gray-200 p-3">
-                    <div class="flex items-center justify-around">
-                        <label class="flex cursor-pointer items-center gap-2 rounded-lg px-4 py-2 transition hover:bg-gray-100">
-                            <svg class="h-5 w-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-                                    clip-rule="evenodd"
-                                />
-                            </svg>
-                            <span class="text-sm font-medium text-gray-700">사진</span>
-                            <input type="file" accept="image/*" multiple class="hidden" @change="handleImageSelect" />
-                        </label>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -191,13 +175,28 @@ const submitPost = () => {
 
             <div class="mt-3 flex items-center justify-between">
                 <span class="text-xs text-gray-500">{{ content.length }} / 5000</span>
-                <button
-                    @click="submitPost"
-                    :disabled="isSubmitting || (!content.trim() && images.length === 0)"
-                    class="rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-2 text-sm font-medium text-white transition-all hover:from-blue-700 hover:to-purple-700 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                    {{ isSubmitting ? '게시 중...' : '게시' }}
-                </button>
+                <div class="flex items-center gap-2">
+                    <!-- 사진 버튼 -->
+                    <label class="flex cursor-pointer items-center gap-1 rounded-lg px-3 py-2 transition hover:bg-gray-100">
+                        <svg class="h-4 w-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                fill-rule="evenodd"
+                                d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                                clip-rule="evenodd"
+                            />
+                        </svg>
+                        <span class="text-xs font-medium text-gray-700">사진</span>
+                        <input type="file" accept="image/*" multiple class="hidden" @change="handleImageSelect" />
+                    </label>
+                    <!-- 게시 버튼 -->
+                    <button
+                        @click="submitPost"
+                        :disabled="isSubmitting || (!content.trim() && images.length === 0)"
+                        class="rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-2 text-sm font-medium text-white transition-all hover:from-blue-700 hover:to-purple-700 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                        {{ isSubmitting ? '게시 중...' : '게시' }}
+                    </button>
+                </div>
             </div>
         </div>
     </div>
