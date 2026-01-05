@@ -53,6 +53,55 @@ const handleLogout = () => {
 const goToSettings = () => {
     window.location.href = safeRoute('profile.edit');
 };
+
+// 프로필 사진 업로드
+const fileInput = ref<HTMLInputElement | null>(null);
+const uploadingPhoto = ref(false);
+
+const triggerFileInput = () => {
+    fileInput.value?.click();
+};
+
+const handleFileChange = async (event: Event) => {
+    const target = event.target as HTMLInputElement;
+    const file = target.files?.[0];
+
+    if (!file) return;
+
+    // 파일 크기 체크 (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+        alert('파일 크기는 5MB 이하여야 합니다.');
+        return;
+    }
+
+    // 이미지 파일 체크
+    if (!file.type.startsWith('image/')) {
+        alert('이미지 파일만 업로드 가능합니다.');
+        return;
+    }
+
+    uploadingPhoto.value = true;
+
+    router.post(
+        '/profile/photo',
+        {
+            profile_photo: file,
+        },
+        {
+            preserveScroll: true,
+            forceFormData: true,
+            onSuccess: () => {
+                uploadingPhoto.value = false;
+                if (target) target.value = '';
+            },
+            onError: (errors) => {
+                uploadingPhoto.value = false;
+                if (target) target.value = '';
+                alert(errors.profile_photo || '프로필 사진 업로드에 실패했습니다.');
+            },
+        },
+    );
+};
 </script>
 
 <template>
@@ -161,7 +210,34 @@ const goToSettings = () => {
                 <div class="overflow-hidden rounded-2xl bg-gradient-to-br from-blue-50 to-purple-50 shadow-lg">
                     <div class="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-8">
                         <div class="flex justify-center">
-                            <div class="h-24 w-24 overflow-hidden rounded-full bg-white/20 backdrop-blur-sm">
+                            <div
+                                @click="triggerFileInput"
+                                class="group relative h-24 w-24 cursor-pointer overflow-hidden rounded-full bg-white/20 backdrop-blur-sm transition-all hover:bg-white/30"
+                            >
+                                <!-- 업로드 중 오버레이 -->
+                                <div
+                                    v-if="uploadingPhoto"
+                                    class="absolute inset-0 z-10 flex items-center justify-center bg-black/50"
+                                >
+                                    <div class="h-8 w-8 animate-spin rounded-full border-4 border-white border-t-transparent"></div>
+                                </div>
+
+                                <!-- 호버 오버레이 -->
+                                <div
+                                    class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100"
+                                >
+                                    <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                                        />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </div>
+
+                                <!-- 프로필 사진 -->
                                 <img
                                     v-if="user.profile_photo_url"
                                     :src="user.profile_photo_url"
@@ -174,6 +250,15 @@ const goToSettings = () => {
                                     </svg>
                                 </div>
                             </div>
+
+                            <!-- 숨겨진 파일 입력 -->
+                            <input
+                                ref="fileInput"
+                                type="file"
+                                accept="image/*"
+                                class="hidden"
+                                @change="handleFileChange"
+                            />
                         </div>
                     </div>
                     <div class="bg-white px-6 py-6 text-center">
@@ -207,25 +292,25 @@ const goToSettings = () => {
 
                 <!-- 메뉴 리스트 -->
                 <div class="overflow-hidden rounded-2xl bg-white shadow-lg">
-                    <div
-                        @click="goToSettings"
-                        class="flex cursor-pointer items-center justify-between border-b border-gray-100 px-6 py-4 transition-colors hover:bg-gray-50 active:bg-gray-100"
-                    >
-                        <div class="flex items-center gap-3">
-                            <svg class="h-5 w-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                                />
-                            </svg>
-                            <span class="font-medium text-gray-900">프로필 수정</span>
-                        </div>
-                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        </svg>
-                    </div>
+<!--                    <div-->
+<!--                        @click="goToSettings"-->
+<!--                        class="flex cursor-pointer items-center justify-between border-b border-gray-100 px-6 py-4 transition-colors hover:bg-gray-50 active:bg-gray-100"-->
+<!--                    >-->
+<!--                        <div class="flex items-center gap-3">-->
+<!--                            <svg class="h-5 w-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
+<!--                                <path-->
+<!--                                    stroke-linecap="round"-->
+<!--                                    stroke-linejoin="round"-->
+<!--                                    stroke-width="2"-->
+<!--                                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"-->
+<!--                                />-->
+<!--                            </svg>-->
+<!--                            <span class="font-medium text-gray-900">프로필 수정</span>-->
+<!--                        </div>-->
+<!--                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
+<!--                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />-->
+<!--                        </svg>-->
+<!--                    </div>-->
                     <div
                         @click="handleLogout"
                         class="flex cursor-pointer items-center justify-between px-6 py-4 transition-colors hover:bg-red-50 active:bg-red-100"

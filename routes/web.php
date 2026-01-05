@@ -20,6 +20,7 @@ Route::get('/department/{keyword}', [DepartmentController::class, 'keyword'])->n
 
 Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile')->middleware(['auth']);
 Route::post('/profile/subscribe', [App\Http\Controllers\ProfileController::class, 'toggleSubscription'])->middleware('auth')->name('profile.subscribe');
+Route::post('/profile/photo', [App\Http\Controllers\ProfileController::class, 'updateProfilePhoto'])->middleware('auth')->name('profile.photo.update');
 
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
