@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\GoldPriceController;
 use App\Http\Controllers\ChurchController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ContentsController;
@@ -45,6 +46,13 @@ Route::post('/feed', [FeedController::class, 'store'])->middleware('auth')->name
 Route::get('/privacy-policy', function () {
     return Inertia::render('PrivacyPolicy');
 })->name('privacy-policy');
+
+// Gold Price API routes
+Route::prefix('api/gold')->group(function () {
+    Route::get('/latest', [GoldPriceController::class, 'latest'])->name('api.gold.latest');
+    Route::get('/history', [GoldPriceController::class, 'history'])->name('api.gold.history');
+    Route::get('/statistics', [GoldPriceController::class, 'statistics'])->name('api.gold.statistics');
+});
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
