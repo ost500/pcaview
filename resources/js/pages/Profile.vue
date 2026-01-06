@@ -3,7 +3,7 @@ import BusinessInfo from '@/components/BusinessInfo.vue';
 import Header from '@/components/template/Header.vue';
 import { safeRoute } from '@/composables/useSafeRoute';
 import { router, useForm, usePage } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 interface Props {
     canResetPassword?: boolean;
@@ -243,6 +243,14 @@ const updateName = () => {
                         >
                             회원가입
                         </a>
+
+                        <!-- 카카오 로그인 버튼 -->
+                        <button onclick="KakaoLogin.kakaoLogin()" class="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#FEE500] text-base font-semibold text-[#000000] transition-all hover:bg-[#FDD835] hover:shadow-lg">
+                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 3C6.5 3 2 6.6 2 11c0 2.8 1.9 5.3 4.7 6.7-.2.8-.7 2.8-.8 3.2-.1.5.2.5.4.4.3-.1 3.7-2.4 4.3-2.8.5.1 1 .1 1.5.1 5.5 0 10-3.6 10-8S17.5 3 12 3z"/>
+                            </svg>
+                            카카오 로그인
+                        </button>
                     </form>
                 </div>
             </div>
