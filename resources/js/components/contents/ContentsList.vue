@@ -97,6 +97,11 @@ function isHtmlType(content: Contents): boolean {
     return content.file_type === 'HTML';
 }
 
+// 뉴스 타입인지 확인하는 함수 (저작권 보호)
+function isNewsType(content: Contents): boolean {
+    return content.type === 'NAVER_NEWS' || content.type === 'NATE_NEWS';
+}
+
 // 광고를 표시할지 확인하는 함수 (3개 콘텐츠마다) - 주석 처리
 /*
 function shouldShowAd(index: number): boolean {
@@ -170,8 +175,8 @@ onUnmounted(() => {
                         </span>
                     </div>
 
-                    <!-- 내용: 이미지 또는 텍스트 미리보기 -->
-                    <div v-if="!isHtmlType(content)" class="max-h-[600px] overflow-hidden" @click="goToContent(content.id)">
+                    <!-- 내용: 이미지 또는 텍스트 미리보기 (뉴스 타입은 이미지 제외) -->
+                    <div v-if="!isHtmlType(content) && !isNewsType(content)" class="max-h-[600px] overflow-hidden" @click="goToContent(content.id)">
                         <img
                             v-if="content.thumbnail_url"
                             :src="content.thumbnail_url"
