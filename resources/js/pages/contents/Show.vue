@@ -124,6 +124,10 @@ const displayBody = computed(() => {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = props.contents.body;
 
+    // 저작권 보호: 모든 이미지 제거
+    const images = tempDiv.querySelectorAll('img, picture, figure');
+    images.forEach(img => img.remove());
+
     const fullText = tempDiv.textContent || tempDiv.innerText || '';
     const textLength = fullText.length;
 
