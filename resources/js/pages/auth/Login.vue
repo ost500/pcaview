@@ -55,6 +55,17 @@ onMounted(() => {
 
 // Kakao 로그인 핸들러
 const handleKakaoLogin = () => {
+    // 먼저 KakaoLogin.kakaoLogin() 시도
+    try {
+        if (window.KakaoLogin && typeof window.KakaoLogin.kakaoLogin === 'function') {
+            window.KakaoLogin.kakaoLogin();
+            return;
+        }
+    } catch (error) {
+        console.log('KakaoLogin.kakaoLogin() 실패, 폴백 실행:', error);
+    }
+
+    // 폴백: 기존 방식
     if (!window.Kakao) {
         alert('Kakao SDK가 로드되지 않았습니다. 페이지를 새로고침해주세요.');
         return;
@@ -153,7 +164,7 @@ const handleKakaoLogin = () => {
             </div>
 
             <button
-                onclick="KakaoLogin.kakaoLogin()"
+                @click="handleKakaoLogin"
                 type="button"
                 class="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#FEE500] text-base font-semibold text-[#000000] opacity-85 transition-all hover:opacity-100 hover:shadow-lg"
                 :tabindex="6"
