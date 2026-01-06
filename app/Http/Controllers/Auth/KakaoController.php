@@ -26,7 +26,12 @@ class KakaoController extends Controller
     public function callback(Request $request)
     {
         try {
-            // JavaScript SDK를 사용하므로 Socialite를 통해 인증 코드 처리
+            // 모바일에서 직접 파라미터로 전달된 경우 처리
+            if ($request->has('access_token') && $request->has('user_id')) {
+                return $this->handleMobileCallback($request);
+            }
+
+            // 웹에서 Socialite를 통한 일반 OAuth 처리
             $kakaoUser = Socialite::driver('kakao')->stateless()->user();
 
             // 카카오 이메일이 없으면 임시 이메일 생성
@@ -78,6 +83,110 @@ class KakaoController extends Controller
             \Log::error('Kakao login error trace: ' . $e->getTraceAsString());
             return redirect()->route('login')
                 ->with('error', 'Kakao login failed. Please try again.');
+        }
+    }
+
+    /**
+     * Handle mobile app Kakao login callback
+     */
+    private function handleMobileCallback(Request $request)
+    {
+        try {
+            $accessToken = $request->input('access_token');
+            $userId = $request->input('user_id');
+            $nickname = $request->input('nickname');
+
+            // 카카오 토큰 검증 (선택사항)
+            $kakaoUserData = $this->verifyKakaoToken($accessToken);
+
+            if (!$kakaoUserData) {
+                \Log::error('Kakao token verification failed');
+                return redirect()->route('login')
+                    ->with('error', 'Invalid Kakao token');
+            }
+
+            // user_id 검증
+            if ($kakaoUserData['id'] != $userId) {
+                \Log::error('User ID mismatch: expected ' . $userId . ', got ' . $kakaoUserData['id']);
+                return redirect()->route('login')
+                    ->with('error', 'User ID verification failed');
+            }
+
+            // 카카오 이메일이 없으면 임시 이메일 생성
+            $email = $kakaoUserData['kakao_account']['email'] ?? $userId . '@kakao.pcaview.com';
+            $profileImage = $kakaoUserData['kakao_account']['profile']['profile_image_url'] ?? null;
+            $displayName = $nickname ?? $kakaoUserData['kakao_account']['profile']['nickname'] ?? 'Kakao User';
+
+            // Find user by kakao_id first
+            $user = User::where('kakao_id', $userId)->first();
+
+            if (!$user) {
+                // Then check if email already exists
+                $user = User::where('email', $email)->first();
+
+                if ($user) {
+                    // Update existing user with Kakao ID and profile photo
+                    $user->update([
+                        'kakao_id' => $userId,
+                        'profile_photo_url' => $profileImage,
+                    ]);
+                } else {
+                    // Create new user
+                    $user = User::create([
+                        'name' => $displayName,
+                        'email' => $email,
+                        'kakao_id' => $userId,
+                        'profile_photo_url' => $profileImage,
+                        'password' => Hash::make(Str::random(32)),
+                        'email_verified_at' => now(),
+                    ]);
+                }
+            } else {
+                // Update profile photo and name for existing kakao user
+                $user->update([
+                    'name' => $displayName,
+                    'profile_photo_url' => $profileImage,
+                ]);
+            }
+
+            // Login user
+            Auth::login($user, true);
+
+            // 모바일 스크린으로 리다이렉트
+            $hideHeader = $request->input('hideHeader', 'true');
+            $mobileScreen = $request->input('mobilescreen', 'true');
+
+            return redirect()->route('profile', [
+                'hideHeader' => $hideHeader,
+                'mobilescreen' => $mobileScreen,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Mobile Kakao login error: ' . $e->getMessage());
+            \Log::error('Mobile Kakao login error trace: ' . $e->getTraceAsString());
+            return redirect()->route('login')
+                ->with('error', 'Mobile Kakao login failed. Please try again.');
+        }
+    }
+
+    /**
+     * Verify Kakao access token
+     */
+    private function verifyKakaoToken(string $accessToken): ?array
+    {
+        try {
+            $response = \Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
+            ])->get('https://kapi.kakao.com/v2/user/me');
+
+            if ($response->successful()) {
+                return $response->json();
+            }
+
+            \Log::error('Kakao token verification failed: ' . $response->body());
+            return null;
+        } catch (\Exception $e) {
+            \Log::error('Kakao token verification request error: ' . $e->getMessage());
+            return null;
         }
     }
 }
