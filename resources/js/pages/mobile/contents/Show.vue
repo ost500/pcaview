@@ -100,7 +100,7 @@ function goToDepartment(id: number) {
     }
 }
 
-// 전체 뉴스 본문 절반으로 자르기 (저작권 보호)
+// 뉴스 본문 1-2줄만 표시 (저작권 보호)
 const displayBody = computed(() => {
     const newsTypes = ['nate_news', 'news', 'naver_news'];
     if (!newsTypes.includes(props.contents.type) || !props.contents.body) {
@@ -112,7 +112,7 @@ const displayBody = computed(() => {
         return props.contents.body;
     }
 
-    // 임시 div를 만들어서 텍스트 길이 계산
+    // 임시 div를 만들어서 텍스트 추출
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = props.contents.body;
 
@@ -123,8 +123,8 @@ const displayBody = computed(() => {
         return props.contents.body;
     }
 
-    // 절반 지점 계산
-    const halfLength = Math.ceil(textLength / 2);
+    // 최대 100자로 제한 (1-2줄 정도)
+    const maxLength = 100;
 
     // HTML 요소들을 순회하면서 텍스트 길이 누적
     let currentLength = 0;
@@ -138,7 +138,7 @@ const displayBody = computed(() => {
             const textContent = currentNode.textContent || '';
             currentLength += textContent.length;
 
-            if (currentLength >= halfLength) {
+            if (currentLength >= maxLength) {
                 truncatePoint = currentNode;
                 break;
             }
