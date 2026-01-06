@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -37,6 +38,13 @@ class KakaoController extends Controller
             // 카카오 이메일이 없으면 임시 이메일 생성
             $email = $kakaoUser->email ?? $kakaoUser->id . '@kakao.pcaview.com';
 
+            // 프로필 이미지를 S3에 저장
+            $profileImageUrl = $kakaoUser->avatar ?? $kakaoUser->avatar_original ?? null;
+            $profileImage = null;
+            if ($profileImageUrl) {
+                $profileImage = $this->uploadProfileImageToS3($profileImageUrl, $kakaoUser->id);
+            }
+
             // Find user by kakao_id first
             $user = User::where('kakao_id', $kakaoUser->id)->first();
 
@@ -48,7 +56,7 @@ class KakaoController extends Controller
                     // Update existing user with Kakao ID and profile photo
                     $user->update([
                         'kakao_id' => $kakaoUser->id,
-                        'profile_photo_url' => $kakaoUser->avatar ?? $kakaoUser->avatar_original ?? null,
+                        'profile_photo_url' => $profileImage,
                     ]);
                 } else {
                     // Create new user only if no user with this email exists
@@ -56,7 +64,7 @@ class KakaoController extends Controller
                         'name' => $kakaoUser->name ?? $kakaoUser->nickname ?? 'Kakao User',
                         'email' => $email,
                         'kakao_id' => $kakaoUser->id,
-                        'profile_photo_url' => $kakaoUser->avatar ?? $kakaoUser->avatar_original ?? null,
+                        'profile_photo_url' => $profileImage,
                         'password' => Hash::make(Str::random(32)), // Random password for social login users
                         'email_verified_at' => now(), // Auto-verify social login users
                     ]);
@@ -65,7 +73,7 @@ class KakaoController extends Controller
                 // Update profile photo and name for existing kakao user
                 $user->update([
                     'name' => $kakaoUser->name ?? $kakaoUser->nickname ?? $user->name,
-                    'profile_photo_url' => $kakaoUser->avatar ?? $kakaoUser->avatar_original ?? null,
+                    'profile_photo_url' => $profileImage,
                 ]);
             }
 
@@ -114,8 +122,14 @@ class KakaoController extends Controller
 
             // 카카오 이메일이 없으면 임시 이메일 생성
             $email = $kakaoUserData['kakao_account']['email'] ?? $userId . '@kakao.pcaview.com';
-            $profileImage = $kakaoUserData['kakao_account']['profile']['profile_image_url'] ?? null;
+            $profileImageUrl = $kakaoUserData['kakao_account']['profile']['profile_image_url'] ?? null;
             $displayName = $nickname ?? $kakaoUserData['kakao_account']['profile']['nickname'] ?? 'Kakao User';
+
+            // 프로필 이미지를 S3에 저장
+            $profileImage = null;
+            if ($profileImageUrl) {
+                $profileImage = $this->uploadProfileImageToS3($profileImageUrl, $userId);
+            }
 
             // Find user by kakao_id first
             $user = User::where('kakao_id', $userId)->first();
@@ -186,6 +200,55 @@ class KakaoController extends Controller
             return null;
         } catch (\Exception $e) {
             \Log::error('Kakao token verification request error: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Upload Kakao profile image to S3
+     */
+    private function uploadProfileImageToS3(string $imageUrl, string $userId): ?string
+    {
+        try {
+            // 이미지 다운로드
+            $imageContent = \Http::get($imageUrl)->body();
+
+            if (empty($imageContent)) {
+                \Log::error('Failed to download Kakao profile image: ' . $imageUrl);
+                return null;
+            }
+
+            // 파일 확장자 추출 (기본값: jpg)
+            $extension = 'jpg';
+            $parsedUrl = parse_url($imageUrl);
+            if (isset($parsedUrl['path'])) {
+                $pathInfo = pathinfo($parsedUrl['path']);
+                if (isset($pathInfo['extension'])) {
+                    $extension = strtolower($pathInfo['extension']);
+                }
+            }
+
+            // S3에 저장할 파일명 생성
+            $filename = 'profile-images/kakao/' . $userId . '_' . time() . '.' . $extension;
+
+            // S3에 업로드
+            $disk = Storage::disk('s3');
+            $uploaded = $disk->put($filename, $imageContent, 'public');
+
+            if (!$uploaded) {
+                \Log::error('Failed to upload Kakao profile image to S3');
+                return null;
+            }
+
+            // S3 URL 반환
+            $s3Url = $disk->url($filename);
+            \Log::info('Kakao profile image uploaded to S3: ' . $s3Url);
+
+            return $s3Url;
+        } catch (\Exception $e) {
+            \Log::error('Error uploading Kakao profile image to S3: ' . $e->getMessage());
+            \Log::error('Error trace: ' . $e->getTraceAsString());
+            // 실패해도 null 반환 (프로필 이미지 없이 로그인 진행)
             return null;
         }
     }
