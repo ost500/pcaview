@@ -83,29 +83,8 @@ class NateNewsContentService
                 // Attach to department via pivot table
                 $contents->departments()->attach($department->id);
 
-                // 본문에서 추출한 이미지 저장
-                if (!empty($newsData['images']) && is_array($newsData['images'])) {
-                    foreach ($newsData['images'] as $index => $imageUrl) {
-                        try {
-                            // 이미지 URL을 S3에 업로드
-                            $uploadedUrl = $this->uploadImageToS3($imageUrl, $department->id);
-
-                            if ($uploadedUrl) {
-                                // ContentsImage 레코드 생성
-                                $contents->images()->create([
-                                    'file_url' => $uploadedUrl,
-                                    'page' => $index,
-                                ]);
-                            }
-                        } catch (\Exception $e) {
-                            Log::warning('Failed to save image for content', [
-                                'content_id' => $contents->id,
-                                'image_url' => $imageUrl,
-                                'error' => $e->getMessage(),
-                            ]);
-                        }
-                    }
-                }
+                // 네이버/네이트 뉴스는 이미지를 ContentsImage에 저장하지 않음
+                // 본문 HTML에 이미 이미지가 포함되어 있으므로 별도 저장 불필요
 
                 $savedCount++;
             } catch (\Exception $e) {
