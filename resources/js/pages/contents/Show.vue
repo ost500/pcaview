@@ -284,7 +284,7 @@ onMounted(() => {
 
         <div class="mx-auto w-full max-w-2xl" :class="{ 'pt-3': hideHeader }">
             <div class="space-y-4 pb-20">
-                <div class="page-content py-10">
+                <div class="page-content">
                     <div class="container pt-0 pb-0">
                         <div class="rounded-lg bg-white shadow">
                             <!-- User 정보 (user_id가 있는 경우) 또는 Church 정보 (없는 경우) -->
