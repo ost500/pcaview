@@ -64,15 +64,8 @@ class NaverNewsContentService
                 $body = $newsData['body'] ?? $newsItem->snippet ?? null;
                 $publishedAt = $newsData['published_at'] ?? $newsItem->publishedAt ?? now();
 
-                // 썸네일 이미지 결정 (우선순위: 본문 첫 이미지 > 검색 결과 이미지)
+                // 저작권 문제로 뉴스 이미지는 저장하지 않음
                 $thumbnailUrl = null;
-                if (!empty($newsData['images']) && is_array($newsData['images']) && isset($newsData['images'][0])) {
-                    // 본문에서 추출한 첫 번째 이미지를 썸네일로 사용
-                    $thumbnailUrl = $this->uploadImageToS3($newsData['images'][0], $department->id, true);
-                } elseif (!empty($newsItem->picture)) {
-                    // 검색 결과의 picture를 썸네일로 사용
-                    $thumbnailUrl = $this->uploadImageToS3($newsItem->picture, $department->id, true);
-                }
 
                 // Contents 생성 (이미 NaverNewsService에서 UTF-8 변환됨)
                 $contents = Contents::create([
@@ -296,7 +289,7 @@ class NaverNewsContentService
     }
 
     /**
-     * HTML 정리 (광고, 스크립트 등 제거)
+     * HTML 정리 (광고, 스크립트, 이미지 등 제거)
      *
      * @param string $html 원본 HTML (UTF-8 인코딩)
      * @return string 정리된 HTML
@@ -312,8 +305,12 @@ class NaverNewsContentService
 
         $xpath = new DOMXPath($dom);
 
-        // 제거할 요소들 (네이트 뉴스 광고 패턴 포함)
+        // 제거할 요소들 (네이트 뉴스 광고 패턴 + 이미지 포함)
         $removeSelectors = [
+            // 저작권 보호를 위한 이미지 제거
+            "//img",                             // 모든 이미지 태그
+            "//picture",                         // picture 태그
+            "//figure",                          // figure 태그 (이미지 포함)
             // 네이트 뉴스 광고
             "//*[@id='ad_innerView']",           // 네이트 광고 div
             "//*[@id='adDiv']",                  // 네이트 광고 div
