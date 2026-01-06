@@ -22,6 +22,7 @@ const imagePreviewUrls = ref<string[]>([]);
 const selectedDepartmentId = ref<number | null>(
     props.department?.id ?? (props.departments && props.departments.length > 0 ? props.departments[0].id : null),
 );
+const isExpanded = ref(false);
 
 // 로그인 체크 및 리다이렉트
 const checkAuth = () => {
@@ -64,6 +65,11 @@ const removeImage = (index: number) => {
     }
 };
 
+const expandTextarea = () => {
+    if (!checkAuth()) return;
+    isExpanded.value = true;
+};
+
 const submitPost = () => {
     if (!checkAuth()) return;
 
@@ -103,6 +109,7 @@ const submitPost = () => {
             imagePreviewUrls.value.forEach((url) => URL.revokeObjectURL(url));
             imagePreviewUrls.value = [];
             showImagePreview.value = false;
+            isExpanded.value = false;
         },
         onFinish: () => {
             isSubmitting.value = false;
@@ -140,24 +147,25 @@ const submitPost = () => {
                     </div>
                 </div>
 
-                <!-- 타이틀 및 자세히 버튼 -->
-                <div class="bg-white/60 px-4 py-3 backdrop-blur-sm">
+                <!-- Textarea 영역 -->
+                <div class="bg-white/60 px-4 py-2 backdrop-blur-sm">
+                <div class="bg-white/60 px-4 py-2 backdrop-blur-sm">
                     <textarea
                         ref="contentInput"
                         v-model="content"
                         placeholder="무슨 생각을 하고 계신가요?"
-                        rows="4"
+                        :rows="isExpanded ? 4 : 2"
                         maxlength="5000"
                         class="w-full resize-none rounded-lg border border-gray-300 px-4 py-3 text-sm transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
                         :disabled="isSubmitting"
-                        @click="checkAuth"
+                        @click="expandTextarea"
                     ></textarea>
                 </div>
             </div>
         </div>
 
-        <!-- 입력 영역 (포커스 시 확장) -->
-        <div class="p-4">
+        <!-- 입력 영역 (확장 시에만 표시) -->
+        <div v-if="isExpanded" class="px-4 py-2">
             <!-- 이미지 미리보기 -->
             <div v-if="showImagePreview && imagePreviewUrls.length > 0" class="mt-3 grid grid-cols-2 gap-2">
                 <div v-for="(url, index) in imagePreviewUrls" :key="index" class="relative">
@@ -173,7 +181,7 @@ const submitPost = () => {
                 </div>
             </div>
 
-            <div class="mt-3 flex items-center justify-between">
+            <div class="flex items-center justify-between">
                 <span class="text-xs text-gray-500">{{ content.length }} / 5000</span>
                 <div class="flex items-center gap-2">
                     <!-- 사진 버튼 -->
