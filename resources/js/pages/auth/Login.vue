@@ -153,7 +153,7 @@ const handleKakaoLogin = () => {
             </div>
 
             <button
-                @click="handleKakaoLogin"
+                onclick="KakaoLogin.kakaoLogin()"
                 type="button"
                 class="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#FEE500] text-base font-semibold text-[#000000] opacity-85 transition-all hover:opacity-100 hover:shadow-lg"
                 :tabindex="6"
