@@ -146,7 +146,7 @@ onUnmounted(() => {
                         class="flex items-center justify-between gap-3 border-b border-sky-100 bg-white/50 px-4 py-3 backdrop-blur-sm"
                     >
                         <div class="flex items-center gap-3">
-                            <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
+                            <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
                                 <img
                                     v-if="content.user"
                                     :src="content.user.profile_photo"
