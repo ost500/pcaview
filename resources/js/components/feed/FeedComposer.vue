@@ -127,23 +127,42 @@ const submitPost = () => {
                 class="cursor-pointer overflow-hidden rounded-lg bg-gradient-to-br from-sky-50 to-blue-50 shadow-sm transition-all hover:from-sky-100 hover:to-blue-100 hover:shadow-md"
             >
                 <!-- Department/Church 정보 -->
-                <div class="flex items-center gap-3 border-b border-sky-100 bg-white/50 px-4 py-3 backdrop-blur-sm">
-                    <!-- Church mode: show church info only (no dropdown) -->
-                    <div v-if="church" class="flex items-center gap-3">
-                        <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
-                            <img :src="church.icon_url || '/pcaview_icon.png'" :alt="church.name" class="h-full w-full object-cover" />
+                <div class="flex items-center justify-between gap-3 border-b border-sky-100 bg-white/50 px-4 py-3 backdrop-blur-sm">
+                    <!-- 유저 정보 (왼쪽) - 로그인 시에만 표시 -->
+                    <div v-if="user" class="flex items-center gap-2">
+                        <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-blue-100 to-purple-100">
+                            <img
+                                v-if="user.profile_photo_url"
+                                :src="user.profile_photo_url"
+                                :alt="user.name"
+                                class="h-full w-full object-cover"
+                            />
+                            <svg v-else class="h-5 w-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                            </svg>
                         </div>
-                        <div class="flex flex-col">
-                            <span class="text-sm font-semibold text-sky-900">{{ church.name }}</span>
-                            <span class="text-xs text-gray-600">모든 채널에 게시됩니다</span>
-                        </div>
+                        <span class="text-sm font-medium text-gray-700">{{ user.name }}</span>
                     </div>
-                    <!-- Department mode: fixed department -->
-                    <div v-else-if="department" class="flex items-center gap-3">
-                        <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
-                            <img :src="department.icon_image || '/pcaview_icon.png'" :alt="department.name" class="h-full w-full object-cover" />
+
+                    <!-- Church/Department 정보 (오른쪽) -->
+                    <div class="flex items-center gap-3">
+                        <!-- Church mode: show church info only (no dropdown) -->
+                        <div v-if="church" class="flex items-center gap-3">
+                            <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
+                                <img :src="church.icon_url || '/pcaview_icon.png'" :alt="church.name" class="h-full w-full object-cover" />
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-semibold text-sky-900">{{ church.name }}</span>
+                                <span class="text-xs text-gray-600">모든 채널에 게시됩니다</span>
+                            </div>
                         </div>
-                        <span class="text-sm font-semibold text-sky-900">{{ department.name }}</span>
+                        <!-- Department mode: fixed department -->
+                        <div v-else-if="department" class="flex items-center gap-3">
+                            <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
+                                <img :src="department.icon_image || '/pcaview_icon.png'" :alt="department.name" class="h-full w-full object-cover" />
+                            </div>
+                            <span class="text-sm font-semibold text-sky-900">{{ department.name }}</span>
+                        </div>
                     </div>
                 </div>
 
