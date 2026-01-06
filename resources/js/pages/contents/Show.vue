@@ -131,8 +131,8 @@ const displayBody = computed(() => {
         return props.contents.body;
     }
 
-    // 최대 100자로 제한 (1-2줄 정도)
-    const maxLength = 100;
+    // 최대 200자로 제한 (2-3줄 정도)
+    const maxLength = 200;
 
     // HTML 요소들을 순회하면서 텍스트 길이 누적
     let currentLength = 0;
