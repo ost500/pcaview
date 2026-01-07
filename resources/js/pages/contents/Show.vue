@@ -75,6 +75,20 @@ const deleteComment = (commentId: number) => {
     });
 };
 
+const deleteContents = () => {
+    if (!confirm('정말로 이 콘텐츠를 삭제하시겠습니까?')) return;
+
+    router.post(`/contents/${props.contents.id}/delete`, {}, {
+        onSuccess: () => {
+            window.location.href = safeRoute('home');
+        },
+    });
+};
+
+const canDeleteContents = computed(() => {
+    return user.value && props.contents.user_id === user.value.id;
+});
+
 const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -311,10 +325,28 @@ onMounted(() => {
                                         {{ contents.user ? contents.user.name : contents.church ? contents.church.name : '' }}
                                     </span>
                                 </div>
-                                <!-- 작성 시간 -->
-                                <span v-if="contents.published_at" class="text-xs text-gray-500">
-                                    {{ formatDate(contents.published_at) }}
-                                </span>
+                                <div class="flex items-center gap-3">
+                                    <!-- 작성 시간 -->
+                                    <span v-if="contents.published_at" class="text-xs text-gray-500">
+                                        {{ formatDate(contents.published_at) }}
+                                    </span>
+                                    <!-- 삭제 버튼 (작성자만) -->
+                                    <button
+                                        v-if="canDeleteContents"
+                                        @click="deleteContents"
+                                        class="text-xs text-red-600 hover:text-red-700 transition-colors"
+                                        title="삭제"
+                                    >
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                            />
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
 
                             <!-- Department 정보 -->

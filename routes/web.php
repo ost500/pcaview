@@ -31,6 +31,7 @@ Route::get('dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('contents/{id}', [ContentsController::class, 'show'])->name('contents.show');
+Route::post('contents/{id}/delete', [ContentsController::class, 'destroy'])->middleware('auth')->name('contents.destroy');
 
 // 모바일 전용 라우트 (헤더 없음)
 Route::prefix('m')->name('mobile.')->group(function () {

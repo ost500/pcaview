@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Contents;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ContentsController extends Controller
@@ -93,5 +94,38 @@ class ContentsController extends Controller
             'contents' => $contents,
             'relatedContents' => $relatedContents,
         ]);
+    }
+
+    /**
+     * 콘텐츠 삭제
+     */
+    public function destroy(Request $request, int $id)
+    {
+        $contents = Contents::findOrFail($id);
+
+        // 권한 확인: 콘텐츠 작성자만 삭제 가능
+        if ($contents->user_id !== $request->user()->id) {
+            return back()->with('error', '삭제 권한이 없습니다.');
+        }
+
+        // 관련 이미지 삭제
+        if ($contents->images) {
+            foreach ($contents->images as $image) {
+                // S3에서 이미지 삭제
+                if ($image->url) {
+                    $path = parse_url($image->url, PHP_URL_PATH);
+                    if ($path && Storage::disk('s3')->exists(ltrim($path, '/'))) {
+                        Storage::disk('s3')->delete(ltrim($path, '/'));
+                    }
+                }
+                // 이미지 레코드 삭제
+                $image->delete();
+            }
+        }
+
+        // 콘텐츠 삭제 (연관된 댓글, 태그 등은 모델의 cascade 설정에 따라 처리)
+        $contents->delete();
+
+        return redirect('/')->with('success', '콘텐츠가 삭제되었습니다.');
     }
 }
