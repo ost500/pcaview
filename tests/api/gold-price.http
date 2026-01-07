@@ -1,0 +1,86 @@
+### Gold Price API Tests
+
+@baseUrl = https://pcaview.com
+# @baseUrl = http://localhost:8000
+
+### 1. Get Latest Gold Price
+GET {{baseUrl}}/api/gold/latest
+Accept: application/json
+
+### 2. Get Gold Price History - Default (1 month, pure gold, domestic)
+GET {{baseUrl}}/api/gold/history
+Accept: application/json
+
+### 3. Get Gold Price History - 7 days, pure gold, domestic
+GET {{baseUrl}}/api/gold/history?period=7d&type=pure&market=domestic
+Accept: application/json
+
+### 4. Get Gold Price History - 1 month, 18k gold, domestic
+GET {{baseUrl}}/api/gold/history?period=1m&type=18k&market=domestic
+Accept: application/json
+
+### 5. Get Gold Price History - 3 months, 14k gold, domestic
+GET {{baseUrl}}/api/gold/history?period=3m&type=14k&market=domestic
+Accept: application/json
+
+### 6. Get Gold Price History - 6 months, white gold (platinum), domestic
+GET {{baseUrl}}/api/gold/history?period=6m&type=white&market=domestic
+Accept: application/json
+
+### 7. Get Gold Price History - 1 year, silver, domestic
+GET {{baseUrl}}/api/gold/history?period=1y&type=silver&market=domestic
+Accept: application/json
+
+### 8. Get Gold Price History - All time, pure gold, domestic
+GET {{baseUrl}}/api/gold/history?period=all&type=pure&market=domestic
+Accept: application/json
+
+### 9. Get International Gold Price History - 1 month, gold
+GET {{baseUrl}}/api/gold/history?period=1m&type=gold&market=international
+Accept: application/json
+
+### 10. Get International Silver Price History - 1 month
+GET {{baseUrl}}/api/gold/history?period=1m&type=silver&market=international
+Accept: application/json
+
+### 11. Get International Platinum Price History - 1 month
+GET {{baseUrl}}/api/gold/history?period=1m&type=platinum&market=international
+Accept: application/json
+
+### 12. Get International Palladium Price History - 1 month
+GET {{baseUrl}}/api/gold/history?period=1m&type=palladium&market=international
+Accept: application/json
+
+### 13. Get Statistics - Default (1 month, pure gold)
+GET {{baseUrl}}/api/gold/statistics
+Accept: application/json
+
+### 14. Get Statistics - 7 days, silver
+GET {{baseUrl}}/api/gold/statistics?period=7d&type=silver
+Accept: application/json
+
+### 15. Get Statistics - 1 year, 18k gold
+GET {{baseUrl}}/api/gold/statistics?period=1y&type=18k
+Accept: application/json
+
+### Test Silver vs Gold (should return different data)
+### 16. Gold data
+GET {{baseUrl}}/api/gold/history?period=1m&type=pure&market=domestic
+Accept: application/json
+
+### 17. Silver data (should be different from gold)
+GET {{baseUrl}}/api/gold/history?period=1m&type=silver&market=domestic
+Accept: application/json
+
+### Invalid requests (should return errors)
+### 18. Invalid period
+GET {{baseUrl}}/api/gold/history?period=invalid&type=pure&market=domestic
+Accept: application/json
+
+### 19. Invalid type
+GET {{baseUrl}}/api/gold/history?period=1m&type=invalid&market=domestic
+Accept: application/json
+
+### 20. Invalid market
+GET {{baseUrl}}/api/gold/history?period=1m&type=pure&market=invalid
+Accept: application/json
