@@ -22,7 +22,7 @@ class SymlinkController extends Controller
 
         // 홈으로 리다이렉트
         return [
-            'initial' => 10,
+            'initial' => 60,
             'interval' => 180,
         ];
     }
