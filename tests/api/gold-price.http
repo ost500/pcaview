@@ -1,6 +1,6 @@
 ### Gold Price API Tests
 
-@baseUrl = https://pcaview.com
+@baseUrl = https://pcaview.abc
 # @baseUrl = http://localhost:8000
 
 ### 1. Get Latest Gold Price

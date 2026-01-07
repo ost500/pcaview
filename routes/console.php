@@ -14,9 +14,6 @@ Schedule::command('church:fetch')->hourly();
 // 국내 금 시세 자동 업데이트 - 매일 오전 9시
 Schedule::command('gold:fetch')->dailyAt('09:00');
 
-// 국내 은 시세 자동 업데이트 - 매일 오전 9시 5분
-Schedule::command('silver:fetch')->dailyAt('09:05');
-
 // 국제 금 시세 자동 업데이트 - 매일 오전 9시 10분
 Schedule::command('international:gold')->dailyAt('09:10');
 
