@@ -52,7 +52,7 @@ class FetchChurchData extends Command
         foreach ($churches as $church) {
             $this->info("Processing church: {$church->name}");
 
-            $departments = $church->departments;
+            $departments = $church->departments->reverse();
 
             if ($departments->isEmpty()) {
                 $this->warn("  No departments found for {$church->name}");
@@ -68,8 +68,24 @@ class FetchChurchData extends Command
                     ->first();
 
                 if (!$latestTrend) {
-                    $this->warn("  No trends found for department: {$department->name}");
-                    continue;
+                    $this->info("  No trends found for department: {$department->name}, creating initial trend...");
+
+                    // 기본 Trend 생성
+                    $latestTrend = Trend::create([
+                        'department_id' => $department->id,
+                        'title' => $department->name . ' 초기 트렌드',
+                        'description' => $department->name . ' 부서의 첫 트렌드입니다.',
+                        'link' => $department->url ?? '#',
+                        'image_url' => $department->icon_image ?? '/pcaview_icon.png',
+                        'traffic_count' => 0,
+                        'pub_date' => now(),
+                        'picture' => null,
+                        'picture_source' => null,
+                        'news_items' => [],
+                        'last_fetched_at' => null,
+                    ]);
+
+                    $this->line("  ✓ Created initial trend for {$department->name}");
                 }
 
                 // Force 모드가 아니면 최근에 처리된 trend는 건너뛰기
