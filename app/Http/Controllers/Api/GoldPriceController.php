@@ -104,8 +104,17 @@ class GoldPriceController extends Controller
 
         $prices = $this->sampleData($prices);
 
-        $buyKey  = $type === 'pure' ? 'p_pure' : "p_{$type}";
-        $sellKey = $type === 'pure' ? 's_pure' : "s_{$type}";
+        // Map type to actual column names
+        $columnMap = [
+            'pure'   => ['buy' => 'p_pure', 'sell' => 's_pure'],
+            '18k'    => ['buy' => 'p_18k', 'sell' => 's_18k'],
+            '14k'    => ['buy' => 'p_14k', 'sell' => 's_14k'],
+            'white'  => ['buy' => 'p_platinum', 'sell' => 's_platinum'], // white는 platinum으로 매핑
+            'silver' => ['buy' => 'p_silver', 'sell' => 's_silver'],
+        ];
+
+        $buyKey  = $columnMap[$type]['buy'] ?? 'p_pure';
+        $sellKey = $columnMap[$type]['sell'] ?? 's_pure';
 
         $chartData = $prices->map(function ($price) use ($buyKey, $sellKey) {
             return [
