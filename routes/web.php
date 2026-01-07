@@ -22,7 +22,7 @@ Route::get('/department/{id}', [DepartmentController::class, 'show'])->where('id
 Route::get('/department/{keyword}', [DepartmentController::class, 'keyword'])->name('department.keyword');
 
 Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile')->middleware(['auth']);
-Route::delete('/profile', [App\Http\Controllers\ProfileController::class, 'destroy'])->middleware('auth')->name('profile.destroy');
+Route::post('/profile/delete', [App\Http\Controllers\ProfileController::class, 'destroy'])->middleware('auth')->name('profile.destroy');
 Route::post('/profile/subscribe', [App\Http\Controllers\ProfileController::class, 'toggleSubscription'])->middleware('auth')->name('profile.subscribe');
 Route::post('/profile/photo', [App\Http\Controllers\ProfileController::class, 'updateProfilePhoto'])->middleware('auth')->name('profile.photo.update');
 
