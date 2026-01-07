@@ -106,15 +106,15 @@ class ProfileController extends Controller
             }
         }
 
+        // 사용자 삭제 (로그아웃 전에 먼저 삭제)
+        $user->delete();
+
         // 로그아웃
         Auth::logout();
 
         // 세션 무효화 및 재생성
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
-        // 사용자 삭제
-        $user->delete();
 
         return redirect('/')->with('success', '계정이 삭제되었습니다.');
     }
