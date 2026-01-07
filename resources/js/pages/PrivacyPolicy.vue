@@ -79,7 +79,20 @@ import { Head } from '@inertiajs/vue3';
                     </section>
 
                     <section class="space-y-3">
-                        <h2 class="text-2xl font-semibold">5. 개인정보 처리의 위탁</h2>
+                        <h2 class="text-2xl font-semibold">5. 사용자 업로드 콘텐츠의 이용 및 보호</h2>
+                        <p class="text-muted-foreground">
+                            사용자가 커뮤니티 게시글에 업로드한 사진 및 기타 콘텐츠는 다음과 같이 관리됩니다:
+                        </p>
+                        <ul class="ml-6 list-disc space-y-2 text-muted-foreground">
+                            <li>업로드된 사진은 앱 내 콘텐츠 표시를 위해서만 사용됩니다</li>
+                            <li>광고 제공업체를 포함한 제3자에게 공유되지 않습니다</li>
+                            <li>사용자는 언제든지 자신이 업로드한 콘텐츠를 삭제할 수 있습니다</li>
+                            <li>콘텐츠 삭제 시 관련된 이미지 파일도 서버에서 영구 삭제됩니다</li>
+                        </ul>
+                    </section>
+
+                    <section class="space-y-3">
+                        <h2 class="text-2xl font-semibold">6. 개인정보 처리의 위탁</h2>
                         <p class="text-muted-foreground">서비스는 원활한 서비스 제공을 위해 다음과 같이 개인정보 처리업무를 위탁하고 있습니다:</p>
                         <div class="overflow-x-auto">
                             <table class="w-full border-collapse border border-sidebar-border">
@@ -100,7 +113,7 @@ import { Head } from '@inertiajs/vue3';
                     </section>
 
                     <section class="space-y-3">
-                        <h2 class="text-2xl font-semibold">6. 이용자의 권리와 행사 방법</h2>
+                        <h2 class="text-2xl font-semibold">7. 이용자의 권리와 행사 방법</h2>
                         <p class="text-muted-foreground">이용자는 언제든지 다음과 같은 권리를 행사할 수 있습니다:</p>
                         <ul class="ml-6 list-disc space-y-2 text-muted-foreground">
                             <li>개인정보 열람 요구</li>
@@ -112,7 +125,7 @@ import { Head } from '@inertiajs/vue3';
                     </section>
 
                     <section class="space-y-3">
-                        <h2 class="text-2xl font-semibold">7. 개인정보의 파기절차 및 방법</h2>
+                        <h2 class="text-2xl font-semibold">8. 개인정보의 파기절차 및 방법</h2>
                         <p class="text-muted-foreground">
                             서비스는 개인정보 보유기간의 경과, 처리목적 달성 등 개인정보가 불필요하게 되었을 때에는 지체없이 해당 개인정보를
                             파기합니다.
@@ -134,7 +147,7 @@ import { Head } from '@inertiajs/vue3';
                     </section>
 
                     <section class="space-y-3">
-                        <h2 class="text-2xl font-semibold">8. 개인정보 보호책임자</h2>
+                        <h2 class="text-2xl font-semibold">9. 개인정보 보호책임자</h2>
                         <p class="text-muted-foreground">
                             서비스는 개인정보 처리에 관한 업무를 총괄해서 책임지고, 개인정보 처리와 관련한 이용자의 불만처리 및 피해구제 등을 위하여
                             아래와 같이 개인정보 보호책임자를 지정하고 있습니다.
@@ -146,7 +159,7 @@ import { Head } from '@inertiajs/vue3';
                     </section>
 
                     <section class="space-y-3">
-                        <h2 class="text-2xl font-semibold">9. 개인정보 처리방침의 변경</h2>
+                        <h2 class="text-2xl font-semibold">10. 개인정보 처리방침의 변경</h2>
                         <p class="text-muted-foreground">
                             이 개인정보 처리방침은 시행일로부터 적용되며, 법령 및 방침에 따른 변경내용의 추가, 삭제 및 정정이 있는 경우에는 변경사항의
                             시행 7일 전부터 공지사항을 통하여 고지할 것입니다.
@@ -154,7 +167,7 @@ import { Head } from '@inertiajs/vue3';
                     </section>
 
                     <section class="space-y-3">
-                        <h2 class="text-2xl font-semibold">10. 쿠키의 운영</h2>
+                        <h2 class="text-2xl font-semibold">11. 쿠키의 운영</h2>
                         <p class="text-muted-foreground">서비스는 이용자에게 개별적인 맞춤서비스를 제공하기 위해 쿠키(Cookie)를 사용합니다.</p>
                         <div class="space-y-2">
                             <h3 class="text-lg font-medium">쿠키란?</h3>
