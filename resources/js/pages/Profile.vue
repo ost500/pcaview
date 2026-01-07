@@ -53,7 +53,7 @@ const handleLogout = () => {
 const handleDeleteAccount = () => {
     if (confirm('정말로 계정을 삭제하시겠습니까?\n\n계정을 삭제하면 모든 데이터가 영구적으로 삭제되며 복구할 수 없습니다.')) {
         if (confirm('한 번 더 확인합니다. 정말 계정을 삭제하시겠습니까?')) {
-            router.post(safeRoute('profile.destroy'), {}, {
+            router.post('/profile/delete', {}, {
                 onSuccess: () => {
                     window.location.href = safeRoute('home');
                 },
