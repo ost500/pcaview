@@ -50,6 +50,18 @@ const handleLogout = () => {
     }
 };
 
+const handleDeleteAccount = () => {
+    if (confirm('정말로 계정을 삭제하시겠습니까?\n\n계정을 삭제하면 모든 데이터가 영구적으로 삭제되며 복구할 수 없습니다.')) {
+        if (confirm('한 번 더 확인합니다. 정말 계정을 삭제하시겠습니까?')) {
+            router.delete(safeRoute('profile.destroy'), {
+                onSuccess: () => {
+                    window.location.href = safeRoute('home');
+                },
+            });
+        }
+    }
+};
+
 // Kakao 로그인 핸들러
 const handleKakaoLogin = () => {
     // 먼저 KakaoLogin.kakaoLogin() 시도
@@ -422,6 +434,25 @@ const updateName = () => {
 <!--                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />-->
 <!--                        </svg>-->
 <!--                    </div>-->
+                    <div
+                        @click="handleDeleteAccount"
+                        class="flex cursor-pointer items-center justify-between border-b border-gray-100 px-6 py-4 transition-colors hover:bg-red-50 active:bg-red-100"
+                    >
+                        <div class="flex items-center gap-3">
+                            <svg class="h-5 w-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                />
+                            </svg>
+                            <span class="font-medium text-red-600">계정 삭제</span>
+                        </div>
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </div>
                     <div
                         @click="handleLogout"
                         class="flex cursor-pointer items-center justify-between px-6 py-4 transition-colors hover:bg-red-50 active:bg-red-100"

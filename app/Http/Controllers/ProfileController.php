@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Department;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -88,5 +89,33 @@ class ProfileController extends Controller
         ]);
 
         return back()->with('success', '프로필 사진이 변경되었습니다.');
+    }
+
+    /**
+     * 계정 삭제
+     */
+    public function destroy(Request $request)
+    {
+        $user = $request->user();
+
+        // 프로필 사진이 S3에 있고 카카오 사진이 아니면 삭제
+        if ($user->profile_photo_url && !str_contains($user->profile_photo_url, 'kakaocdn.net')) {
+            $path = parse_url($user->profile_photo_url, PHP_URL_PATH);
+            if ($path && Storage::disk('s3')->exists(ltrim($path, '/'))) {
+                Storage::disk('s3')->delete(ltrim($path, '/'));
+            }
+        }
+
+        // 로그아웃
+        Auth::logout();
+
+        // 세션 무효화 및 재생성
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        // 사용자 삭제
+        $user->delete();
+
+        return redirect('/')->with('success', '계정이 삭제되었습니다.');
     }
 }
