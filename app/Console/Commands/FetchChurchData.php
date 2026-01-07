@@ -73,8 +73,8 @@ class FetchChurchData extends Command
                     // 기본 Trend 생성
                     $latestTrend = Trend::create([
                         'department_id' => $department->id,
-                        'title' => $department->name . ' 초기 트렌드',
-                        'description' => $department->name . ' 부서의 첫 트렌드입니다.',
+                        'title' => $department->name,
+                        'description' => $department->name,
                         'link' => $department->url ?? '#',
                         'image_url' => $department->icon_image ?? '/pcaview_icon.png',
                         'traffic_count' => 0,
