@@ -7,10 +7,12 @@ use App\Http\Controllers\ContentsController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SymlinkController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/symlink', [SymlinkController::class, 'track'])->name('symlink.track');
 Route::get('/c/{church}', [HomeController::class, 'church'])->name('church.home');
 
 Route::get('/church', [ChurchController::class, 'index'])->name('church');
