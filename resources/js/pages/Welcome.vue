@@ -59,9 +59,13 @@ const loadMore = () => {
     isLoading.value = true;
     const nextPage = currentPage.value + 1;
 
+    // Church 페이지인 경우 church.home 라우트 사용
+    const routeName = props.currentChurch ? 'church.home' : 'home';
+    const routeParams = props.currentChurch ? { church: props.currentChurch.slug, page: nextPage } : { page: nextPage };
+
     router.get(
-        safeRoute('home'),
-        { page: nextPage },
+        safeRoute(routeName, routeParams),
+        {},
         {
             preserveState: true,
             preserveScroll: true,
