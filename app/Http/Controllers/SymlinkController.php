@@ -21,6 +21,6 @@ class SymlinkController extends Controller
         ]);
 
         // 홈으로 리다이렉트
-        return redirect('/');
+        return redirect('https://link.coupang.com/a/dmWLqr');
     }
 }
