@@ -21,7 +21,7 @@ class FeedController extends Controller
             'church_id' => 'nullable|exists:churches,id',
             'department_id' => 'nullable|exists:departments,id',
             'images.*' => 'nullable|image|max:10240', // 10MB
-            'video' => 'nullable|mimetypes:video/mp4,video/mpeg,video/quicktime,video/x-msvideo,video/x-matroska|max:102400', // 100MB
+            'video' => 'nullable|mimetypes:video/mp4,video/mpeg,video/quicktime,video/x-msvideo,video/x-matroska|max:512000', // 500MB
         ]);
 
         // church_id와 department_id 중 하나는 반드시 있어야 함
