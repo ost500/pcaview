@@ -3,6 +3,7 @@ import type { Department } from './department';
 export type Church = {
     id: number;
     name: string;
+    display_name?: string | null;
     slug: string;
     icon_url: string;
     logo_url: string;

@@ -8,6 +8,7 @@ interface Church {
     name: string;
     slug: string;
     icon_image?: string | null;
+    display_name?: string | null;
 }
 
 interface Props {
@@ -28,7 +29,7 @@ const goBack = () => {
 <template>
     <!-- Fixed header with shadow -->
     <header class="fixed top-0 right-0 left-0 z-40 bg-white shadow-sm">
-        <div class="mx-auto max-w-screen-xl px-4">
+        <div class="mx-auto max-w-2xl px-4">
             <div class="flex h-14 items-center justify-between sm:h-16">
                 <!-- Left content -->
                 <div class="flex items-center gap-2 sm:gap-3">
@@ -50,7 +51,7 @@ const goBack = () => {
                             class="h-8 w-8 rounded-full object-cover sm:h-10 sm:w-10"
                         />
                         <div v-else class="h-8 w-8 rounded-full bg-gray-200 sm:h-10 sm:w-10"></div>
-                        <h1 class="truncate text-base font-semibold text-gray-900 sm:text-lg">{{ church.name }}</h1>
+                        <h1 class="truncate text-base font-semibold text-gray-900 sm:text-lg">{{ church.display_name }}</h1>
                     </template>
                     <template v-else>
                         <Logo />

@@ -3,14 +3,16 @@ import BusinessInfo from '@/components/BusinessInfo.vue';
 import ContentsList from '@/components/contents/ContentsList.vue';
 import FeedComposer from '@/components/feed/FeedComposer.vue';
 import Header from '@/components/template/Header.vue';
+import AddChannelModal from '@/components/department/AddChannelModal.vue';
 import { usePWA } from '@/composables/usePWA';
 import { safeRoute } from '@/composables/useSafeRoute';
 import { Church } from '@/types/church';
 import { Contents } from '@/types/contents';
 import { Department } from '@/types/department';
 import { Pagination } from '@/types/pagination';
-import { Head, router, useRemember } from '@inertiajs/vue3';
-import { onMounted, ref, watch } from 'vue';
+import { Head, router, useRemember, usePage } from '@inertiajs/vue3';
+import { Plus } from 'lucide-vue-next';
+import { computed, onMounted, ref, watch } from 'vue';
 
 // PWA 상태 관리
 const { showInstallPrompt, showIOSInstructions, isIOS, isAndroid, promptInstall, dismissPrompt, closeIOSInstructions, dismissPermanently } = usePWA();
@@ -33,6 +35,9 @@ if (typeof window !== 'undefined') {
 // 개발 환경 확인
 const isDev = import.meta.env.DEV;
 
+const page = usePage();
+const user = computed(() => page.props.auth.user);
+
 // 개발용: PWA 프롬프트 초기화 함수
 const debugResetPWA = () => {
     localStorage.removeItem('pwa-prompt-dismissed');
@@ -44,6 +49,22 @@ const debugResetPWA = () => {
 // 구독 여부 확인 함수
 const isSubscribed = (departmentId: number) => {
     return props.subscribedDepartmentIds?.includes(departmentId) ?? false;
+};
+
+// 채널 추가 모달 상태
+const showAddChannelModal = ref(false);
+
+// 채널 추가 핸들러
+const handleAddChannel = () => {
+    if (!user.value) {
+        alert('로그인이 필요합니다.');
+        return;
+    }
+    showAddChannelModal.value = true;
+};
+
+const closeAddChannelModal = () => {
+    showAddChannelModal.value = false;
 };
 
 // Infinite scroll state with persistence
@@ -203,11 +224,23 @@ onMounted(() => {
 
     <Header v-if="!hideHeader" title="홈" :church="currentChurch"></Header>
 
+    <!-- 채널 추가 모달 -->
+    <AddChannelModal :show="showAddChannelModal" :church-id="currentChurch?.id || 1" @close="closeAddChannelModal" />
+
     <div class="bg-white pt-3 pb-14 sm:pt-4 sm:pb-16" :class="{ 'pt-0': hideHeader }">
-        <div class="mx-auto max-w-screen-xl">
+        <div class="mx-auto max-w-2xl">
             <!-- 부서 목록 수평 스크롤 -->
             <div class="department-scroll-container max-w-none">
                 <div class="department-scroll-wrapper">
+                    <!-- 채널 추가 버튼 (로그인 시에만 표시) -->
+                    <div v-if="user" @click="handleAddChannel" class="department-item add-channel">
+                        <div class="department-icon add-icon">
+                            <Plus :size="32" class="text-gray-400" :stroke-width="2" />
+                        </div>
+                        <span class="department-name">채널 추가</span>
+                    </div>
+
+                    <!-- 기존 부서 목록 -->
                     <a
                         v-for="department in departments"
                         :key="department.id"
@@ -281,6 +314,7 @@ onMounted(() => {
     min-width: 70px;
     text-decoration: none;
     transition: transform 0.2s ease;
+    cursor: pointer;
 }
 
 .department-item:active {
@@ -303,6 +337,21 @@ onMounted(() => {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+/* 채널 추가 아이콘 */
+.add-icon {
+    border: 2px dashed #d1d5db;
+    background-color: #f9fafb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.department-item.add-channel:hover .add-icon {
+    border-color: #3b82f6;
+    background-color: #eff6ff;
 }
 
 /* 활성 상태 (구독한 부서) */

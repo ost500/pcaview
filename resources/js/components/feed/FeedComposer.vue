@@ -74,9 +74,9 @@ const handleVideoSelect = (event: Event) => {
     if (target.files && target.files.length > 0) {
         const file = target.files[0];
 
-        // 파일 크기 체크 (100MB)
-        if (file.size > 100 * 1024 * 1024) {
-            alert('동영상 파일은 100MB 이하만 업로드 가능합니다.');
+        // 파일 크기 체크 (500MB)
+        if (file.size > 500 * 1024 * 1024) {
+            alert('동영상 파일은 500MB 이하만 업로드 가능합니다.');
             return;
         }
 

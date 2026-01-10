@@ -8,7 +8,7 @@ import { Contents } from '@/types/contents';
 import { Department } from '@/types/department';
 import { Pagination } from '@/types/pagination';
 import { Head, router } from '@inertiajs/vue3';
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import VueEasyLightbox from 'vue-easy-lightbox';
 
 const props = defineProps<{
@@ -16,6 +16,9 @@ const props = defineProps<{
     contents: Pagination<Contents>;
     departments: Department[];
 }>();
+
+// display_name이 있으면 사용, 없으면 name 사용
+const churchDisplayName = computed(() => props.church.display_name || props.church.name);
 
 const allContents = ref<Contents[]>([...props.contents.data]);
 const currentPage = ref(props.contents.current_page);
@@ -77,24 +80,24 @@ watch(
 </script>
 
 <template>
-    <Head :title="church.name">
+    <Head :title="churchDisplayName">
         <!-- Basic Meta Tags -->
-        <meta name="description" :content="`${church.name}의 최신 소식과 트렌드를 실시간으로 확인하세요. 예배시간과 약도도 확인할 수 있습니다.`" />
-        <meta name="keywords" :content="`PCAview, 피카뷰, ${church.name}, 교회, 예배시간, 약도, 뉴스, 트렌드`" />
+        <meta name="description" :content="`${churchDisplayName}의 최신 소식과 트렌드를 실시간으로 확인하세요. 예배시간과 약도도 확인할 수 있습니다.`" />
+        <meta name="keywords" :content="`PCAview, 피카뷰, ${churchDisplayName}, 교회, 예배시간, 약도, 뉴스, 트렌드`" />
 
         <!-- Open Graph -->
         <meta property="og:type" content="website" />
         <meta property="og:url" :content="`https://pcaview.com/church/${church.id}`" />
-        <meta property="og:title" :content="`${church.name} - PCAview`" />
-        <meta property="og:description" :content="`${church.name}의 최신 소식과 트렌드를 실시간으로 확인하세요.`" />
+        <meta property="og:title" :content="`${churchDisplayName} - PCAview`" />
+        <meta property="og:description" :content="`${churchDisplayName}의 최신 소식과 트렌드를 실시간으로 확인하세요.`" />
         <meta property="og:image" :content="church.icon_url" />
         <meta property="og:site_name" content="PCAview" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:url" :content="`https://pcaview.com/church/${church.id}`" />
-        <meta name="twitter:title" :content="`${church.name} - PCAview`" />
-        <meta name="twitter:description" :content="`${church.name}의 최신 소식과 트렌드를 실시간으로 확인하세요.`" />
+        <meta name="twitter:title" :content="`${churchDisplayName} - PCAview`" />
+        <meta name="twitter:description" :content="`${churchDisplayName}의 최신 소식과 트렌드를 실시간으로 확인하세요.`" />
         <meta name="twitter:image" :content="church.icon_url" />
 
         <!-- Canonical URL -->
@@ -102,14 +105,14 @@ watch(
     </Head>
 
     <div class="bg-white pb-14 sm:pb-16">
-        <div class="mx-auto max-w-screen-xl px-4">
+        <div class="mx-auto max-w-2xl px-4">
             <!-- 교회 정보 -->
             <div class="mb-4 flex items-center gap-4 pt-3 sm:mb-6 sm:pt-4">
                 <div class="church-icon">
-                    <img :src="church.icon_url" :alt="church.name + ' 아이콘'" loading="lazy" />
+                    <img :src="church.icon_url" :alt="churchDisplayName + ' 아이콘'" loading="lazy" />
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">{{ church.name }}</h1>
+                    <h1 class="text-xl font-bold text-gray-900 sm:text-2xl">{{ churchDisplayName }}</h1>
                     <p class="mt-1 text-sm text-gray-600"><i class="icon feather icon-map-pin me-1"></i>{{ church.address }}</p>
                 </div>
             </div>
@@ -121,7 +124,7 @@ watch(
                     <img
                         :src="church.worship_time_image"
                         @click="open(0)"
-                        :alt="church.name + ' 예배 시간'"
+                        :alt="churchDisplayName + ' 예배 시간'"
                         loading="lazy"
                         class="cursor-pointer rounded"
                     />
@@ -134,7 +137,7 @@ watch(
                             <img
                                 :src="church.worship_time_image"
                                 @click="open(0)"
-                                :alt="church.name + ' 예배 시간'"
+                                :alt="churchDisplayName + ' 예배 시간'"
                                 loading="lazy"
                                 decoding="async"
                             />

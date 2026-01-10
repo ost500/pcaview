@@ -20,6 +20,7 @@ Route::get('/church/{id}', [ChurchController::class, 'show'])->name('church.show
 Route::get('/department', [DepartmentController::class, 'index'])->name('department');
 Route::get('/department/{id}', [DepartmentController::class, 'show'])->where('id', '[0-9]+')->name('department.show');
 Route::get('/department/{keyword}', [DepartmentController::class, 'keyword'])->name('department.keyword');
+Route::post('/department', [DepartmentController::class, 'store'])->middleware('auth')->name('department.store');
 
 Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile')->middleware(['auth']);
 Route::post('/profile/subscribe', [App\Http\Controllers\ProfileController::class, 'toggleSubscription'])->middleware('auth')->name('profile.subscribe');

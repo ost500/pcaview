@@ -98,7 +98,7 @@ watch(
     <Header v-if="!hideHeader" :title="department.name" :backbutton="true"></Header>
 
     <div class="bg-white pt-3 pb-14 sm:pt-4 sm:pb-16" :class="{ 'pt-0': hideHeader }">
-        <div class="mx-auto max-w-screen-xl px-4">
+        <div class="mx-auto max-w-2xl px-4">
             <!-- 부서 정보 -->
             <div class="mb-4 flex items-center gap-4 sm:mb-6">
                 <div class="department-icon">

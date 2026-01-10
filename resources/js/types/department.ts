@@ -6,6 +6,7 @@ export type Department = {
     church?: {
         id: number;
         name: string;
+        display_name?: string | null;
         icon_url: string;
         logo_url: string;
         worship_time_image: string;

@@ -88,7 +88,7 @@ watch(
     </Head>
 
     <div class="bg-white pb-14 sm:pb-16">
-        <div class="mx-auto max-w-screen-xl px-4">
+        <div class="mx-auto max-w-2xl px-4">
             <!-- 부서 정보 -->
             <div class="mb-4 flex items-center gap-4 pt-3 sm:mb-6 sm:pt-4">
                 <div class="department-icon">

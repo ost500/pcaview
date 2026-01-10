@@ -109,7 +109,7 @@ watch(
     </Head>
 
     <div class="bg-white pb-14 sm:pb-16">
-        <div class="mx-auto max-w-screen-xl">
+        <div class="mx-auto max-w-2xl">
             <!-- 부서 목록 수평 스크롤 -->
             <div class="department-scroll-container max-w-none">
                 <div class="department-scroll-wrapper">

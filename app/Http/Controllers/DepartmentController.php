@@ -88,4 +88,25 @@ class DepartmentController extends Controller
 
         return Inertia::render('mobile/department/Show', ['department' => $department, 'contents' => $contents]);
     }
+
+    /**
+     * 새 채널(부서) 생성
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'church_id' => 'required|exists:churches,id',
+        ]);
+
+        $church = \App\Models\Church::findOrFail($request->church_id);
+
+        $department = Department::create([
+            'name' => $request->name,
+            'church_id' => $request->church_id,
+            'icon_image' => $church->icon_url, // 교회 아이콘 사용
+        ]);
+
+        return redirect()->back()->with('success', '채널이 생성되었습니다.');
+    }
 }

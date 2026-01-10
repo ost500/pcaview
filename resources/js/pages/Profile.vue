@@ -179,7 +179,7 @@ const updateName = () => {
     <Header v-if="!hideHeader" title="프로필"></Header>
 
     <div class="bg-white pt-3 pb-14 sm:pt-4 sm:pb-16" :class="{ 'pt-0': hideHeader }">
-        <div class="mx-auto max-w-screen-xl px-4">
+        <div class="mx-auto max-w-2xl px-4">
             <!-- 로그인 안 된 경우 - 인라인 로그인 폼 -->
             <div v-if="!user" class="mx-auto max-w-md">
                 <div class="overflow-hidden rounded-2xl bg-white shadow-lg">
