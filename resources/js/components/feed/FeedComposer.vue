@@ -16,9 +16,11 @@ const user = computed(() => page.props.auth.user);
 
 const content = ref('');
 const images = ref<File[]>([]);
+const video = ref<File | null>(null);
 const isSubmitting = ref(false);
 const showImagePreview = ref(false);
 const imagePreviewUrls = ref<string[]>([]);
+const videoPreviewUrl = ref<string | null>(null);
 const selectedDepartmentId = ref<number | null>(
     props.department?.id ?? (props.departments && props.departments.length > 0 ? props.departments[0].id : null),
 );
@@ -65,6 +67,37 @@ const removeImage = (index: number) => {
     }
 };
 
+const handleVideoSelect = (event: Event) => {
+    if (!checkAuth()) return;
+
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+        const file = target.files[0];
+
+        // 파일 크기 체크 (100MB)
+        if (file.size > 100 * 1024 * 1024) {
+            alert('동영상 파일은 100MB 이하만 업로드 가능합니다.');
+            return;
+        }
+
+        video.value = file;
+
+        // 미리보기 URL 생성
+        if (videoPreviewUrl.value) {
+            URL.revokeObjectURL(videoPreviewUrl.value);
+        }
+        videoPreviewUrl.value = URL.createObjectURL(file);
+    }
+};
+
+const removeVideo = () => {
+    if (videoPreviewUrl.value) {
+        URL.revokeObjectURL(videoPreviewUrl.value);
+    }
+    video.value = null;
+    videoPreviewUrl.value = null;
+};
+
 const expandTextarea = () => {
     if (!checkAuth()) return;
     isExpanded.value = true;
@@ -73,8 +106,8 @@ const expandTextarea = () => {
 const submitPost = () => {
     if (!checkAuth()) return;
 
-    if (!content.value.trim() && images.value.length === 0) {
-        alert('내용을 입력하거나 이미지를 추가해주세요.');
+    if (!content.value.trim() && images.value.length === 0 && !video.value) {
+        alert('내용을 입력하거나 이미지 또는 동영상을 추가해주세요.');
         return;
     }
 
@@ -101,6 +134,10 @@ const submitPost = () => {
         formData.append(`images[${index}]`, image);
     });
 
+    if (video.value) {
+        formData.append('video', video.value);
+    }
+
     router.post(feedStore.url(), formData, {
         preserveScroll: true,
         onSuccess: () => {
@@ -109,6 +146,11 @@ const submitPost = () => {
             imagePreviewUrls.value.forEach((url) => URL.revokeObjectURL(url));
             imagePreviewUrls.value = [];
             showImagePreview.value = false;
+            if (videoPreviewUrl.value) {
+                URL.revokeObjectURL(videoPreviewUrl.value);
+            }
+            video.value = null;
+            videoPreviewUrl.value = null;
             isExpanded.value = false;
         },
         onFinish: () => {
@@ -198,6 +240,21 @@ const submitPost = () => {
                     </div>
                 </div>
 
+                <!-- 동영상 미리보기 -->
+                <div v-if="videoPreviewUrl" class="mt-3">
+                    <div class="relative">
+                        <video :src="videoPreviewUrl" class="h-60 w-full rounded-lg object-cover" controls />
+                        <button
+                            @click="removeVideo"
+                            class="bg-opacity-75 hover:bg-opacity-90 absolute top-2 right-2 rounded-full bg-gray-900 p-1 text-white transition"
+                        >
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
                 <div class="flex items-center justify-between">
                     <span class="text-xs text-gray-500">{{ content.length }} / 5000</span>
                     <div class="flex items-center gap-2">
@@ -213,10 +270,18 @@ const submitPost = () => {
                             <span class="text-xs font-medium text-gray-700">사진</span>
                             <input type="file" accept="image/*" multiple class="hidden" @change="handleImageSelect" />
                         </label>
+                        <!-- 동영상 버튼 -->
+                        <label class="flex cursor-pointer items-center gap-1 rounded-lg px-3 py-2 transition hover:bg-gray-100">
+                            <svg class="h-4 w-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+                            </svg>
+                            <span class="text-xs font-medium text-gray-700">동영상</span>
+                            <input type="file" accept="video/*" class="hidden" @change="handleVideoSelect" />
+                        </label>
                         <!-- 게시 버튼 -->
                         <button
                             @click="submitPost"
-                            :disabled="isSubmitting || (!content.trim() && images.length === 0)"
+                            :disabled="isSubmitting || (!content.trim() && images.length === 0 && !video)"
                             class="rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-2 text-sm font-medium text-white transition-all hover:from-blue-700 hover:to-purple-700 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
                         >
                             {{ isSubmitting ? '게시 중...' : '게시' }}

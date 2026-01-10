@@ -382,8 +382,18 @@ onMounted(() => {
                                 </div>
                             </div>
 
-                            <!-- 이미지 또는 비디오 -->
+                            <!-- 동영상 또는 이미지 -->
                             <div v-if="contents.file_type != 'YOUTUBE' && contents.file_type != 'HTML'">
+                                <!-- 동영상이 있는 경우 -->
+                                <div v-if="contents.video_url" class="w-full">
+                                    <video
+                                        :src="contents.video_url"
+                                        class="w-full"
+                                        controls
+                                        preload="metadata"
+                                    />
+                                </div>
+                                <!-- 이미지가 있는 경우 -->
                                 <div v-for="(image, index) in contents.images" v-bind:key="image.id">
                                     <img
                                         :src="image.file_url"

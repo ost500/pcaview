@@ -175,10 +175,19 @@ onUnmounted(() => {
                         </span>
                     </div>
 
-                    <!-- 내용: 이미지 또는 텍스트 미리보기 (뉴스 타입은 이미지 제외) -->
+                    <!-- 내용: 동영상, 이미지 또는 텍스트 미리보기 (뉴스 타입은 이미지 제외) -->
                     <div v-if="!isHtmlType(content) && !isNewsType(content)" class="max-h-[600px] overflow-hidden" @click="goToContent(content.id)">
+                        <!-- 동영상이 있는 경우 -->
+                        <video
+                            v-if="content.video_url"
+                            :src="content.video_url"
+                            class="w-full object-cover"
+                            controls
+                            @click.stop
+                        />
+                        <!-- 이미지만 있는 경우 -->
                         <img
-                            v-if="content.thumbnail_url"
+                            v-else-if="content.thumbnail_url"
                             :src="content.thumbnail_url"
                             class="w-full object-cover"
                             alt="콘텐츠 이미지"

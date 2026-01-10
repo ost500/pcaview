@@ -5,6 +5,7 @@ export type Contents = {
     body: string;
     file_url: string;
     thumbnail_url: string;
+    video_url?: string | null;
     published_at: string;
     updated_at?: string;
     images: ContentsImage[] | null;

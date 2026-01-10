@@ -21,6 +21,7 @@ class FeedController extends Controller
             'church_id' => 'nullable|exists:churches,id',
             'department_id' => 'nullable|exists:departments,id',
             'images.*' => 'nullable|image|max:10240', // 10MB
+            'video' => 'nullable|mimetypes:video/mp4,video/mpeg,video/quicktime,video/x-msvideo,video/x-matroska|max:102400', // 100MB
         ]);
 
         // church_id와 department_id 중 하나는 반드시 있어야 함
@@ -39,12 +40,19 @@ class FeedController extends Controller
             }
         }
 
+        // 동영상 업로드 처리
+        $videoUrl = null;
+        if ($request->hasFile('video')) {
+            $path = $request->file('video')->store('feed-videos', 's3');
+            $videoUrl = Storage::disk('s3')->url($path);
+        }
+
         // Church mode: church에 content 생성하고 모든 department와 연결
         if ($request->church_id) {
             $church = \App\Models\Church::findOrFail($request->church_id);
             $departments = $church->departments;
 
-            DB::transaction(function () use ($church, $departments, $request, $imageUrls, $user) {
+            DB::transaction(function () use ($church, $departments, $request, $imageUrls, $videoUrl, $user) {
                 // 하나의 content만 생성 (church 모드에서는 department_id를 null로 설정)
                 $content = Contents::create([
                     'user_id' => $user->id,
@@ -55,6 +63,7 @@ class FeedController extends Controller
                     'body' => $request->get('content'),
                     'file_url' => null,
                     'thumbnail_url' => $imageUrls[0] ?? null,
+                    'video_url' => $videoUrl,
                     'published_at' => now(),
                 ]);
 
@@ -78,7 +87,7 @@ class FeedController extends Controller
         // Department mode: 선택된 department에만 content 생성
         $feedDepartment = Department::findOrFail($request->department_id);
 
-        DB::transaction(function () use ($feedDepartment, $request, $imageUrls, $user) {
+        DB::transaction(function () use ($feedDepartment, $request, $imageUrls, $videoUrl, $user) {
             $content = Contents::create([
                 'user_id' => $user->id,
                 'church_id' => $feedDepartment->church_id, // department의 church_id 사용
@@ -88,6 +97,7 @@ class FeedController extends Controller
                 'body' => $request->get('content'),
                 'file_url' => null,
                 'thumbnail_url' => $imageUrls[0] ?? null,
+                'video_url' => $videoUrl,
                 'published_at' => now(),
             ]);
 
