@@ -79,8 +79,8 @@ class ContentsController extends Controller
             $path = $request->file('thumbnail')->store('thumbnails', 's3');
             Storage::disk('s3')->setVisibility($path, 'public');
             $validated['thumbnail_url'] = Storage::disk('s3')->url($path);
-            unset($validated['thumbnail']);
         }
+        unset($validated['thumbnail']);
 
         // Video 업로드 (file_url로 저장)
         if ($request->hasFile('video')) {
