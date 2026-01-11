@@ -55,7 +55,6 @@ class ChurchController extends Controller
             'icon_image'            => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'logo_image'            => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'worship_time_image'    => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-            'address_image'         => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
         // 이미지 업로드 처리
@@ -79,14 +78,6 @@ class ChurchController extends Controller
             $path = $request->file('worship_time_image')->store('church-worship-times', 's3');
             Storage::disk('s3')->setVisibility($path, 'public');
             $validated['worship_time_image'] = Storage::disk('s3')->url($path);
-        }
-
-        if ($request->hasFile('address_image')) {
-            $path = $request->file('address_image')->store('church-addresses', 's3');
-            Storage::disk('s3')->setVisibility($path, 'public');
-            $url = Storage::disk('s3')->url($path);
-            $validated['address_image'] = $url;
-            $validated['address_url'] = $url; // address_url도 같이 저장
         }
 
         Church::create($validated);

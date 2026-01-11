@@ -24,13 +24,11 @@ const form = useForm({
     icon_image: null as File | null,
     logo_image: null as File | null,
     worship_time_image: null as File | null,
-    address_image: null as File | null,
 });
 
 const previewIcon = ref<string | null>(null);
 const previewLogo = ref<string | null>(null);
 const previewWorshipTime = ref<string | null>(null);
-const previewAddress = ref<string | null>(null);
 
 function handleIconChange(event: Event) {
     const target = event.target as HTMLInputElement;
@@ -53,14 +51,6 @@ function handleWorshipTimeChange(event: Event) {
     if (target.files && target.files[0]) {
         form.worship_time_image = target.files[0];
         previewWorshipTime.value = URL.createObjectURL(target.files[0]);
-    }
-}
-
-function handleAddressChange(event: Event) {
-    const target = event.target as HTMLInputElement;
-    if (target.files && target.files[0]) {
-        form.address_image = target.files[0];
-        previewAddress.value = URL.createObjectURL(target.files[0]);
     }
 }
 
@@ -203,19 +193,6 @@ function cancel() {
                                 <div v-if="form.errors.worship_time_image" class="mt-1 text-sm text-red-600">
                                     {{ form.errors.worship_time_image }}
                                 </div>
-                            </div>
-
-                            <!-- Address Image -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Address Image (Map)</label>
-                                <input type="file" @change="handleAddressChange" accept="image/*" class="mt-1 block w-full text-sm text-gray-500" />
-                                <img
-                                    v-if="previewAddress"
-                                    :src="previewAddress"
-                                    alt="Address preview"
-                                    class="mt-2 h-auto w-64 rounded-lg object-cover shadow"
-                                />
-                                <div v-if="form.errors.address_image" class="mt-1 text-sm text-red-600">{{ form.errors.address_image }}</div>
                             </div>
                         </div>
                     </div>
