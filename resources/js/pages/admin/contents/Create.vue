@@ -24,7 +24,6 @@ const props = defineProps<Props>();
 
 const form = useForm({
     title: '',
-    description: '',
     church_id: null as number | null,
     department_id: null as number | null,
     departments: [] as number[],
@@ -111,18 +110,6 @@ function getChurchDisplayName(church: Church): string {
                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                                 />
                                 <div v-if="form.errors.title" class="mt-1 text-sm text-red-600">{{ form.errors.title }}</div>
-                            </div>
-
-                            <!-- Description -->
-                            <div>
-                                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                                <textarea
-                                    id="description"
-                                    v-model="form.description"
-                                    rows="4"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                                ></textarea>
-                                <div v-if="form.errors.description" class="mt-1 text-sm text-red-600">{{ form.errors.description }}</div>
                             </div>
 
                             <!-- Church -->

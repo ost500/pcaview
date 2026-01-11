@@ -19,10 +19,7 @@ class ContentsController extends Controller
 
         // 검색 기능
         if ($search = $request->input('search')) {
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%");
-            });
+            $query->where('title', 'like', "%{$search}%");
         }
 
         // Church 필터
@@ -66,7 +63,6 @@ class ContentsController extends Controller
     {
         $validated = $request->validate([
             'title'         => 'required|string|max:255',
-            'description'   => 'nullable|string',
             'church_id'     => 'required|exists:churches,id',
             'department_id' => 'nullable|exists:departments,id',
             'departments'   => 'nullable|array',
@@ -142,7 +138,6 @@ class ContentsController extends Controller
     {
         $validated = $request->validate([
             'title'         => 'required|string|max:255',
-            'description'   => 'nullable|string',
             'church_id'     => 'required|exists:churches,id',
             'department_id' => 'nullable|exists:departments,id',
             'departments'   => 'nullable|array',
