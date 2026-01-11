@@ -34,6 +34,64 @@ class ChurchController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        $departments = Department::select('id', 'name')->orderBy('name')->get();
+
+        return Inertia::render('admin/churches/Create', [
+            'departments' => $departments,
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name'                  => 'required|string|max:255',
+            'display_name'          => 'nullable|string|max:255',
+            'slug'                  => 'required|string|max:255|unique:churches,slug',
+            'description'           => 'nullable|string',
+            'address'               => 'nullable|string|max:500',
+            'primary_department_id' => 'nullable|exists:departments,id',
+            'icon_image'            => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'logo_image'            => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'worship_time_image'    => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'address_image'         => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+        ]);
+
+        // 이미지 업로드 처리
+        if ($request->hasFile('icon_image')) {
+            $path = $request->file('icon_image')->store('church-icons', 's3');
+            Storage::disk('s3')->setVisibility($path, 'public');
+            $validated['icon_url'] = Storage::disk('s3')->url($path);
+            unset($validated['icon_image']);
+        }
+
+        if ($request->hasFile('logo_image')) {
+            $path = $request->file('logo_image')->store('church-logos', 's3');
+            Storage::disk('s3')->setVisibility($path, 'public');
+            $validated['logo_url'] = Storage::disk('s3')->url($path);
+            unset($validated['logo_image']);
+        }
+
+        if ($request->hasFile('worship_time_image')) {
+            $path = $request->file('worship_time_image')->store('church-worship-times', 's3');
+            Storage::disk('s3')->setVisibility($path, 'public');
+            $validated['worship_time_image'] = Storage::disk('s3')->url($path);
+        }
+
+        if ($request->hasFile('address_image')) {
+            $path = $request->file('address_image')->store('church-addresses', 's3');
+            Storage::disk('s3')->setVisibility($path, 'public');
+            $validated['address_url'] = Storage::disk('s3')->url($path);
+            unset($validated['address_image']);
+        }
+
+        Church::create($validated);
+
+        return redirect()->route('admin.churches.index')
+            ->with('success', 'Church created successfully');
+    }
+
     public function edit(Church $church)
     {
         $church->load('primaryDepartment');

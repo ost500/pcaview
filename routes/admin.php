@@ -10,6 +10,8 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function ()
     Route::put('/departments/{department}', [DepartmentController::class, 'update'])->name('departments.update');
 
     Route::get('/churches', [ChurchController::class, 'index'])->name('churches.index');
+    Route::get('/churches/create', [ChurchController::class, 'create'])->name('churches.create');
+    Route::post('/churches', [ChurchController::class, 'store'])->name('churches.store');
     Route::get('/churches/{church}/edit', [ChurchController::class, 'edit'])->name('churches.edit');
     Route::put('/churches/{church}', [ChurchController::class, 'update'])->name('churches.update');
 });

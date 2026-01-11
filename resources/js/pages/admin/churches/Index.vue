@@ -68,10 +68,24 @@ watch(search, (value) => {
 
     <AdminLayout>
         <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-            <div class="mb-6">
+            <div class="mb-6 flex items-center justify-between">
+                <div>
                 <h1 class="text-3xl font-bold text-gray-900">Manage Churches</h1>
                 <p class="mt-2 text-sm text-gray-600">Update church information and settings</p>
+                </div>
+                <Link
+                    href="/admin/churches/create"
+                    class="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                >
+                    <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Create Church
+                </Link>
             </div>
+
+            <!-- Search Bar -->
+            <div class="mb-6">            </div>
 
             <!-- Search Bar -->
             <div class="mb-6">
