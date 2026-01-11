@@ -82,24 +82,26 @@ class ContentsController extends Controller
             unset($validated['thumbnail']);
         }
 
-        // Video 업로드
+        // Video 업로드 (file_url로 저장)
         if ($request->hasFile('video')) {
             $path = $request->file('video')->store('feed-videos', 's3');
             Storage::disk('s3')->setVisibility($path, 'public');
-            $validated['video_url'] = Storage::disk('s3')->url($path);
+            $validated['file_url'] = Storage::disk('s3')->url($path);
+            $validated['file_type'] = 'video';
         }
         unset($validated['video']);
 
-        // Images 업로드
-        $imageUrls = [];
+        // Images 업로드 (body에 JSON으로 저장)
         if ($request->hasFile('images')) {
+            $imageUrls = [];
             foreach ($request->file('images') as $image) {
                 $path = $image->store('content-images', 's3');
                 Storage::disk('s3')->setVisibility($path, 'public');
                 $imageUrls[] = Storage::disk('s3')->url($path);
             }
-            $validated['images'] = json_encode($imageUrls);
+            $validated['body'] = json_encode(['images' => $imageUrls]);
         }
+        unset($validated['images']);
 
         $validated['user_id'] = auth()->id();
         $validated['published_at'] = $validated['published_at'] ?? now();
@@ -163,21 +165,22 @@ class ContentsController extends Controller
             unset($validated['thumbnail']);
         }
 
-        // Video 업로드
+        // Video 업로드 (file_url로 저장)
         if ($request->hasFile('video')) {
-            if ($content->video_url) {
-                $oldPath = parse_url($content->video_url, PHP_URL_PATH);
+            if ($content->file_url && $content->file_type === 'video') {
+                $oldPath = parse_url($content->file_url, PHP_URL_PATH);
                 if ($oldPath && Storage::disk('s3')->exists($oldPath)) {
                     Storage::disk('s3')->delete($oldPath);
                 }
             }
             $path = $request->file('video')->store('feed-videos', 's3');
             Storage::disk('s3')->setVisibility($path, 'public');
-            $validated['video_url'] = Storage::disk('s3')->url($path);
+            $validated['file_url'] = Storage::disk('s3')->url($path);
+            $validated['file_type'] = 'video';
             unset($validated['video']);
         }
 
-        // Images 업로드
+        // Images 업로드 (body에 JSON으로 저장)
         if ($request->hasFile('images')) {
             $imageUrls = [];
             foreach ($request->file('images') as $image) {
@@ -185,7 +188,8 @@ class ContentsController extends Controller
                 Storage::disk('s3')->setVisibility($path, 'public');
                 $imageUrls[] = Storage::disk('s3')->url($path);
             }
-            $validated['images'] = json_encode($imageUrls);
+            $validated['body'] = json_encode(['images' => $imageUrls]);
+            unset($validated['images']);
         }
 
         // departments 배열 분리
@@ -205,7 +209,7 @@ class ContentsController extends Controller
 
     public function destroy(Contents $content)
     {
-        // 이미지 삭제
+        // Thumbnail 삭제
         if ($content->thumbnail_url) {
             $oldPath = parse_url($content->thumbnail_url, PHP_URL_PATH);
             if ($oldPath && Storage::disk('s3')->exists($oldPath)) {
@@ -213,8 +217,9 @@ class ContentsController extends Controller
             }
         }
 
-        if ($content->video_url) {
-            $oldPath = parse_url($content->video_url, PHP_URL_PATH);
+        // Video 파일 삭제 (file_url)
+        if ($content->file_url && $content->file_type === 'video') {
+            $oldPath = parse_url($content->file_url, PHP_URL_PATH);
             if ($oldPath && Storage::disk('s3')->exists($oldPath)) {
                 Storage::disk('s3')->delete($oldPath);
             }

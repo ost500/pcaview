@@ -23,7 +23,8 @@ interface Content {
     id: number;
     title: string;
     thumbnail_url: string | null;
-    video_url: string | null;
+    file_url: string | null;
+    file_type: string | null;
     published_at: string;
     church: Church | null;
     department: Department | null;
@@ -180,7 +181,7 @@ function getChurchDisplayName(church: Church | null): string {
                                     :alt="content.title"
                                     class="h-16 w-16 rounded object-cover"
                                 />
-                                <div v-else-if="content.video_url" class="flex h-16 w-16 items-center justify-center rounded bg-gray-200">
+                                <div v-else-if="content.file_type === 'video'" class="flex h-16 w-16 items-center justify-center rounded bg-gray-200">
                                     <svg class="h-8 w-8 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" />
                                     </svg>
