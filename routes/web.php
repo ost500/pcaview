@@ -59,6 +59,12 @@ Route::prefix('api/gold')->group(function () {
     Route::get('/statistics', [GoldPriceController::class, 'statistics'])->name('api.gold.statistics');
 });
 
+// Church Contents API routes
+Route::prefix('api/church')->group(function () {
+    Route::get('/{churchSlug}/contents', [App\Http\Controllers\Api\ChurchContentsController::class, 'index'])->name('api.church.contents');
+    Route::get('/id/{churchId}/contents', [App\Http\Controllers\Api\ChurchContentsController::class, 'byId'])->name('api.church.contents.byId');
+});
+
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
 require __DIR__.'/admin.php';
