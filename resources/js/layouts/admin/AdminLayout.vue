@@ -55,6 +55,15 @@ function logout() {
                             >
                                 Departments
                             </a>
+                            <a
+                                href="/admin/contents"
+                                class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                                :class="{
+                                    'border-blue-500 text-gray-900': $page.url.startsWith('/admin/contents'),
+                                }"
+                            >
+                                Contents
+                            </a>
                         </div>
                     </div>
 
