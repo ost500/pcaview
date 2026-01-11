@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\ContentsType;
 use App\Http\Controllers\Controller;
+use App\Jobs\GenerateVideoThumbnail;
 use App\Models\Church;
 use App\Models\Contents;
 use App\Models\Department;
@@ -119,6 +120,11 @@ class ContentsController extends Controller
             $content->departments()->sync($departmentIds);
         }
 
+        // Video가 업로드된 경우 썸네일 생성 Job 디스패치
+        if ($content->file_type === 'video' && $content->file_url) {
+            GenerateVideoThumbnail::dispatch($content);
+        }
+
         return redirect()->route('admin.contents.index')
             ->with('success', 'Content created successfully');
     }
@@ -201,6 +207,11 @@ class ContentsController extends Controller
         // Many-to-many 관계 동기화
         if (!empty($departmentIds)) {
             $content->departments()->sync($departmentIds);
+        }
+
+        // Video가 업로드된 경우 썸네일 생성 Job 디스패치
+        if ($content->file_type === 'video' && $content->file_url && !$content->thumbnail_url) {
+            GenerateVideoThumbnail::dispatch($content);
         }
 
         return redirect()->route('admin.contents.index')
