@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\ContentsType;
 use App\Http\Controllers\Controller;
 use App\Models\Church;
 use App\Models\Contents;
@@ -90,8 +91,8 @@ class ContentsController extends Controller
             $path = $request->file('video')->store('feed-videos', 's3');
             Storage::disk('s3')->setVisibility($path, 'public');
             $validated['video_url'] = Storage::disk('s3')->url($path);
-            unset($validated['video']);
         }
+        unset($validated['video']);
 
         // Images 업로드
         $imageUrls = [];
@@ -110,6 +111,8 @@ class ContentsController extends Controller
         // departments 배열 분리
         $departmentIds = $validated['departments'] ?? [];
         unset($validated['departments']);
+
+        $validated['type'] = ContentsType::HTML;
 
         $content = Contents::create($validated);
 

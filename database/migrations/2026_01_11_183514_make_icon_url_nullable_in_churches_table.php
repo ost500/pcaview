@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::table('churches', function (Blueprint $table) {
             $table->string('icon_url')->nullable()->change();
             $table->string('logo_url')->nullable()->change();
+            $table->string('address_url')->nullable()->change();
+            $table->string('worship_time_image')->nullable()->change();
         });
     }
 
@@ -25,6 +27,8 @@ return new class extends Migration
         Schema::table('churches', function (Blueprint $table) {
             $table->string('icon_url')->nullable(false)->change();
             $table->string('logo_url')->nullable(false)->change();
+            $table->string('address_url')->nullable(false)->change();
+            $table->string('worship_time_image')->nullable(false)->change();
         });
     }
 };
