@@ -38,6 +38,17 @@ class SyncDekricaTrendData implements ShouldQueue
             $firstItem = $response['data'][0] ?? null;
             $department = $this->getDepartment($firstItem);
 
+            // is_crawl이 false이면 스킵
+            if (!$department->is_crawl) {
+                Log::info('Skipping trend sync for department with is_crawl=false', [
+                    'tag' => $this->tag,
+                    'department_id' => $department->id,
+                    'department_name' => $department->name,
+                ]);
+
+                return;
+            }
+
             // 데이터 저장
             foreach ($response['data'] as $item) {
                 $this->syncNewsItem($item, $department);
