@@ -14,6 +14,10 @@ class Department extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'is_crawl' => 'boolean',
+    ];
+
     /**
      * Get the church that owns the department.
      */

@@ -36,24 +36,54 @@ class BulletinCommand extends Command
      */
     public function handle()
     {
-        $bulletinCrawlService = app(JuboCrawlService::class);
+        // MschJubo (PCAview)
         $mschJubo = app(MschJubo::class);
-        $bulletinCrawlService->crawl($mschJubo);
+        if ($mschJubo->getModel()?->is_crawl) {
+            $bulletinCrawlService = app(JuboCrawlService::class);
+            $bulletinCrawlService->crawl($mschJubo);
+            $this->info('Crawled: PCAview');
+        } else {
+            $this->info('Skipped: PCAview (is_crawl=false)');
+        }
 
-        $brightSoriCrawlService = app(BrightSoriCrawlService::class);
+        // BrightSound
         $brightSound = app(BrightSound::class);
-        $brightSoriCrawlService->crawl($brightSound);
+        if ($brightSound->getModel()?->is_crawl) {
+            $brightSoriCrawlService = app(BrightSoriCrawlService::class);
+            $brightSoriCrawlService->crawl($brightSound);
+            $this->info('Crawled: BrightSound');
+        } else {
+            $this->info('Skipped: BrightSound (is_crawl=false)');
+        }
 
-        $newsongJCrawlService = app(NewsongJCrawlService::class);
+        // NewsongJ
         $newsongJ = app(NewsongJJubo::class);
-        $newsongJCrawlService->crawl($newsongJ);
+        if ($newsongJ->getModel()?->is_crawl) {
+            $newsongJCrawlService = app(NewsongJCrawlService::class);
+            $newsongJCrawlService->crawl($newsongJ);
+            $this->info('Crawled: NewsongJ');
+        } else {
+            $this->info('Skipped: NewsongJ (is_crawl=false)');
+        }
 
+        // MschYoutube
         $mschYoutube = app(MschYoutube::class);
-        $mschYoutubeCrawler = app(MschYoutubeCrawlService::class);
-        $mschYoutubeCrawler->crawl($mschYoutube);
+        if ($mschYoutube->getModel()?->is_crawl) {
+            $mschYoutubeCrawler = app(MschYoutubeCrawlService::class);
+            $mschYoutubeCrawler->crawl($mschYoutube);
+            $this->info('Crawled: MschYoutube');
+        } else {
+            $this->info('Skipped: MschYoutube (is_crawl=false)');
+        }
 
-        $nfriendsCrawlService = app(NFriendsCrawlService::class);
+        // NFriends
         $nfriends = app(NFriendsJubo::class);
-        $nfriendsCrawlService->crawl($nfriends);
+        if ($nfriends->getModel()?->is_crawl) {
+            $nfriendsCrawlService = app(NFriendsCrawlService::class);
+            $nfriendsCrawlService->crawl($nfriends);
+            $this->info('Crawled: NFriends');
+        } else {
+            $this->info('Skipped: NFriends (is_crawl=false)');
+        }
     }
 }

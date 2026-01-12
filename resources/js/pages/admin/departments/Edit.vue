@@ -7,6 +7,7 @@ interface Department {
     id: number;
     name: string;
     slug: string;
+    is_crawl: boolean;
     icon_image: string | null;
     church: {
         id: number;
@@ -22,6 +23,7 @@ const props = defineProps<Props>();
 
 const form = useForm({
     name: props.department.name,
+    is_crawl: props.department.is_crawl ?? true,
     icon_image: null as File | null,
 });
 
@@ -86,6 +88,23 @@ function cancel() {
                     />
                     <div v-if="form.errors.name" class="mt-1 text-sm text-red-600">
                         {{ form.errors.name }}
+                    </div>
+                </div>
+
+                <!-- Enable Crawling -->
+                <div>
+                    <div class="flex items-center">
+                        <input
+                            id="is_crawl"
+                            v-model="form.is_crawl"
+                            type="checkbox"
+                            class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                        />
+                        <label for="is_crawl" class="ml-2 block text-sm text-gray-700">Enable automatic crawling</label>
+                    </div>
+                    <p class="mt-1 text-xs text-gray-500">Uncheck to disable automatic bulletin crawling for this department</p>
+                    <div v-if="form.errors.is_crawl" class="mt-1 text-sm text-red-600">
+                        {{ form.errors.is_crawl }}
                     </div>
                 </div>
 

@@ -48,6 +48,7 @@ class DepartmentController extends Controller
     {
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
+            'is_crawl' => 'nullable|boolean',
             'icon_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
@@ -65,6 +66,7 @@ class DepartmentController extends Controller
             Storage::disk('s3')->setVisibility($path, 'public');
             $validated['icon_image'] = Storage::disk('s3')->url($path);
         }
+        unset($validated['icon_image']);
 
         $department->update($validated);
 
