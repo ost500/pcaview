@@ -62,6 +62,13 @@ class FetchChurchData extends Command
             foreach ($departments as $department) {
                 $totalDepartments++;
 
+                // is_crawl이 false이면 스킵
+                if (!$department->is_crawl) {
+                    $this->comment("  Skipping {$department->name} (is_crawl=false)");
+                    $skippedCount++;
+                    continue;
+                }
+
                 // 해당 department의 최신 trend 가져오기
                 $latestTrend = Trend::where('department_id', $department->id)
                     ->latest('pub_date')
