@@ -101,12 +101,17 @@ class ContentsController extends Controller
      */
     public function destroy(Request $request, int $id)
     {
-        $contents = Contents::findOrFail($id);
+        $contents = Contents::with('church')->findOrFail($id);
 
         // 권한 확인: 콘텐츠 작성자만 삭제 가능
         if ($contents->user_id !== $request->user()->id) {
             return back()->with('error', '삭제 권한이 없습니다.');
         }
+
+        // 삭제 후 돌아갈 URL 저장 (church 페이지)
+        $redirectUrl = $contents->church && $contents->church->slug
+            ? '/c/' . $contents->church->slug
+            : url()->previous();
 
         // 관련 이미지 삭제
         if ($contents->images) {
@@ -126,6 +131,6 @@ class ContentsController extends Controller
         // 콘텐츠 삭제 (연관된 댓글, 태그 등은 모델의 cascade 설정에 따라 처리)
         $contents->delete();
 
-        return redirect('/')->with('success', '콘텐츠가 삭제되었습니다.');
+        return redirect($redirectUrl)->with('success', '콘텐츠가 삭제되었습니다.');
     }
 }
