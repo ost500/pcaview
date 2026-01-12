@@ -32,6 +32,7 @@ class HomeController extends Controller
             $contents = Contents::with(['user', 'church', 'department', 'departments'])
                 ->withCount('comments')
                 ->whereIn('id', $uniqueContentsIds)
+                ->where('is_hide', false)
                 ->whereHas('departments', function ($query) use ($subscribedDepartmentIds) {
                     $query->whereIn('departments.id', $subscribedDepartmentIds);
                 })
@@ -42,6 +43,7 @@ class HomeController extends Controller
             $contents = Contents::with(['user', 'church', 'department', 'departments'])
                 ->withCount('comments')
                 ->whereIn('id', $uniqueContentsIds)
+                ->where('is_hide', false)
                 ->latest('published_at')
                 ->paginate(20);
             $subscribedDepartmentIds = collect();
@@ -101,6 +103,7 @@ class HomeController extends Controller
             ->withCount('comments')
             ->whereIn('id', $uniqueContentsIds)
             ->where('church_id', $church->id)
+            ->where('is_hide', false)
             ->latest('published_at')
             ->paginate(20);
 
@@ -138,6 +141,7 @@ class HomeController extends Controller
             $contents = Contents::with(['user', 'church', 'department', 'departments'])
                 ->withCount('comments')
                 ->whereIn('id', $uniqueContentsIds)
+                ->where('is_hide', false)
                 ->whereHas('departments', function ($query) use ($subscribedDepartmentIds) {
                     $query->whereIn('departments.id', $subscribedDepartmentIds);
                 })
@@ -148,6 +152,7 @@ class HomeController extends Controller
             $contents = Contents::with(['user', 'church', 'department', 'departments'])
                 ->withCount('comments')
                 ->whereIn('id', $uniqueContentsIds)
+                ->where('is_hide', false)
                 ->latest('published_at')
                 ->paginate(20);
             $subscribedDepartmentIds = collect();
@@ -198,6 +203,7 @@ class HomeController extends Controller
             ->withCount('comments')
             ->whereIn('id', $uniqueContentsIds)
             ->where('church_id', $church->id)
+            ->where('is_hide', false)
             ->latest('published_at')
             ->paginate(20);
 

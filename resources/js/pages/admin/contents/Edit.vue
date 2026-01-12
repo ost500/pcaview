@@ -26,6 +26,7 @@ interface Content {
     church_id: number;
     department_id: number | null;
     published_at: string;
+    is_hide: boolean;
     thumbnail_url: string | null;
     file_url: string | null;
     file_type: string | null;
@@ -51,6 +52,7 @@ const form = useForm({
     department_id: props.content.department_id as number | null,
     departments: props.content.departments?.map(d => d.id) || [] as number[],
     published_at: props.content.published_at ? new Date(props.content.published_at).toISOString().slice(0, 16) : '',
+    is_hide: props.content.is_hide || false,
     thumbnail: null as File | null,
     images: [] as File[],
     video: null as File | null,
@@ -198,6 +200,21 @@ function getChurchDisplayName(church: Church): string {
                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                                 />
                                 <div v-if="form.errors.published_at" class="mt-1 text-sm text-red-600">{{ form.errors.published_at }}</div>
+                            </div>
+
+                            <!-- Hide from Feed -->
+                            <div>
+                                <div class="flex items-center">
+                                    <input
+                                        id="is_hide"
+                                        v-model="form.is_hide"
+                                        type="checkbox"
+                                        class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                    />
+                                    <label for="is_hide" class="ml-2 block text-sm text-gray-700">Hide from feed</label>
+                                </div>
+                                <p class="mt-1 text-xs text-gray-500">Check this to hide the content from public feeds</p>
+                                <div v-if="form.errors.is_hide" class="mt-1 text-sm text-red-600">{{ form.errors.is_hide }}</div>
                             </div>
 
                             <!-- Thumbnail -->

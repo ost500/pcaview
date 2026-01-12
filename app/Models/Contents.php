@@ -13,6 +13,7 @@ class Contents extends Model
 
     protected $casts = [
         'published_at' => 'datetime',
+        'is_hide' => 'boolean',
     ];
 
     public function images(): HasMany

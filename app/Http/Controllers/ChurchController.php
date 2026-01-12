@@ -27,6 +27,7 @@ class ChurchController extends Controller
         $contents = Contents::with(['department', 'departments'])
             ->withCount('comments')
             ->where('church_id', $church->id)
+            ->where('is_hide', false)
             ->latest('published_at')
             ->paginate(20);
 
@@ -49,6 +50,7 @@ class ChurchController extends Controller
         $contents = Contents::with(['department', 'departments'])
             ->withCount('comments')
             ->where('church_id', $church->id)
+            ->where('is_hide', false)
             ->latest('published_at')
             ->paginate(20);
 

@@ -31,6 +31,7 @@ class DepartmentController extends Controller
         $contents = Contents::with(['user', 'church', 'department', 'departments'])
             ->withCount('comments')
             ->whereIn('id', $uniqueContentsIds)
+            ->where('is_hide', false)
             ->whereHas('departments', function ($query) use ($id) {
                 $query->where('departments.id', $id);
             })
@@ -55,6 +56,7 @@ class DepartmentController extends Controller
         $contents = Contents::with(['user', 'church', 'department', 'departments'])
             ->withCount('comments')
             ->whereIn('id', $uniqueContentsIds)
+            ->where('is_hide', false)
             ->whereHas('departments', function ($query) use ($department) {
                 $query->where('departments.id', $department->id);
             })
@@ -80,6 +82,7 @@ class DepartmentController extends Controller
         $contents = Contents::with(['user', 'church', 'department', 'departments'])
             ->withCount('comments')
             ->whereIn('id', $uniqueContentsIds)
+            ->where('is_hide', false)
             ->whereHas('departments', function ($query) use ($id) {
                 $query->where('departments.id', $id);
             })
