@@ -69,6 +69,7 @@ class ContentsController extends Controller
             'departments'   => 'nullable|array',
             'departments.*' => 'exists:departments,id',
             'published_at'  => 'nullable|date',
+            'is_hide'       => 'nullable|boolean',
             'thumbnail'     => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'images'        => 'nullable|array',
             'images.*'      => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
@@ -151,6 +152,7 @@ class ContentsController extends Controller
             'departments'   => 'nullable|array',
             'departments.*' => 'exists:departments,id',
             'published_at'  => 'nullable|date',
+            'is_hide'       => 'nullable|boolean',
             'thumbnail'     => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'images'        => 'nullable|array',
             'images.*'      => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
@@ -168,8 +170,8 @@ class ContentsController extends Controller
             $path = $request->file('thumbnail')->store('thumbnails', 's3');
             Storage::disk('s3')->setVisibility($path, 'public');
             $validated['thumbnail_url'] = Storage::disk('s3')->url($path);
-            unset($validated['thumbnail']);
         }
+        unset($validated['thumbnail']);
 
         // Video 업로드 (file_url로 저장)
         if ($request->hasFile('video')) {
@@ -183,8 +185,8 @@ class ContentsController extends Controller
             Storage::disk('s3')->setVisibility($path, 'public');
             $validated['file_url'] = Storage::disk('s3')->url($path);
             $validated['file_type'] = 'video';
-            unset($validated['video']);
         }
+        unset($validated['video']);
 
         // Images 업로드 (body에 JSON으로 저장)
         if ($request->hasFile('images')) {
@@ -195,8 +197,8 @@ class ContentsController extends Controller
                 $imageUrls[] = Storage::disk('s3')->url($path);
             }
             $validated['body'] = json_encode(['images' => $imageUrls]);
-            unset($validated['images']);
         }
+        unset($validated['images']);
 
         // departments 배열 분리
         $departmentIds = $validated['departments'] ?? [];
