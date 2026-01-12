@@ -177,7 +177,7 @@ onUnmounted(() => {
 
                     <!-- 내용: 동영상, 이미지 또는 텍스트 미리보기 (뉴스 타입은 이미지 제외) -->
                     <div v-if="!isHtmlType(content) && !isNewsType(content)" class="max-h-[600px] overflow-hidden" @click="goToContent(content.id)">
-                        <!-- 동영상이 있는 경우 -->
+                        <!-- 동영상이 있는 경우 (video_url 필드) -->
                         <video
                             v-if="content.video_url"
                             :src="content.video_url"
@@ -185,7 +185,15 @@ onUnmounted(() => {
                             controls
                             @click.stop
                         />
-                        <!-- 이미지만 있는 경우 -->
+                        <!-- video 타입 contents의 썸네일 표시 -->
+                        <img
+                            v-else-if="content.file_type === 'video' && content.thumbnail_url"
+                            :src="content.thumbnail_url"
+                            class="w-full object-cover"
+                            alt="비디오 썸네일"
+                            loading="lazy"
+                        />
+                        <!-- 일반 이미지가 있는 경우 -->
                         <img
                             v-else-if="content.thumbnail_url"
                             :src="content.thumbnail_url"
