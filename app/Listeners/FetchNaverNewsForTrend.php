@@ -39,29 +39,22 @@ class FetchNaverNewsForTrend implements ShouldQueue
                 return;
             }
 
-            // Trend의 news_items에서 title로 Naver 뉴스 검색
-            $naverNews = [];
-            $newsItems = $trend->news_items ?? [];
+            // Naver 뉴스 검색 (trend title 사용)
+            $naverNewsItems = $this->naverNewsService->searchNews($trend->title);
 
-            foreach ($newsItems as $newsItem) {
-                if (!empty($newsItem['title'])) {
-                    $naverResult = $this->naverNewsService->searchNews($newsItem['title']);
-                    if (!empty($naverResult)) {
-                        $naverNews = array_merge($naverNews, $naverResult);
-                    }
-                }
-            }
-
-            if (empty($naverNews)) {
+            if (empty($naverNewsItems)) {
                 Log::info('No Naver news found for trend', ['trend_title' => $trend->title]);
                 return;
             }
 
             // Naver 뉴스를 Contents로 저장
-            $savedCount = $this->naverNewsContentService->saveNewsAsContents($naverNews, $department);
+            $savedCount = $this->naverNewsContentService->saveNewsAsContents($naverNewsItems, $department);
+
+            // NaverNewsItem 객체들을 배열로 변환
+            $naverNewsArray = array_map(fn($item) => $item->toArray(), $naverNewsItems);
 
             // Trend의 news_items 업데이트
-            $allNewsItems = array_merge($newsItems, $naverNews);
+            $allNewsItems = array_merge($trend->news_items ?? [], $naverNewsArray);
             $trend->update(['news_items' => $allNewsItems]);
 
             Log::info('Naver news fetched for trend', [
@@ -72,8 +65,15 @@ class FetchNaverNewsForTrend implements ShouldQueue
         } catch (\Exception $e) {
             Log::error('Failed to fetch Naver news for trend', [
                 'trend_id' => $event->trend->id,
+                'trend_title' => $event->trend->title,
                 'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
             ]);
+
+            // API 쿼터 초과 에러는 재시도하지 않음
+            if (str_contains($e->getMessage(), 'quota') || str_contains($e->getMessage(), 'limit exceeded')) {
+                $this->fail($e);
+            }
         }
     }
 }

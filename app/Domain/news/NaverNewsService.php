@@ -40,11 +40,25 @@ class NaverNewsService
                 ]);
 
             if (!$response->successful()) {
+                $responseBody = $response->json();
+                $isQuotaExceeded = $response->status() === 429 ||
+                                   (isset($responseBody['errorCode']) && $responseBody['errorCode'] === '010');
+
                 Log::error('Failed to fetch Naver news via API', [
                     'status' => $response->status(),
                     'keyword' => $keyword,
                     'response' => $response->body(),
+                    'quota_exceeded' => $isQuotaExceeded,
                 ]);
+
+                // API 쿼터 초과 시 명확한 경고
+                if ($isQuotaExceeded) {
+                    Log::warning('Naver API quota exceeded - Daily limit of 25,000 queries reached', [
+                        'keyword' => $keyword,
+                        'response' => $responseBody,
+                    ]);
+                }
+
                 return [];
             }
 
