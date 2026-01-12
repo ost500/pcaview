@@ -42,6 +42,17 @@ class GenerateVideoThumbnail implements ShouldQueue
                 return;
             }
 
+            // FFmpeg 설치 여부 확인
+            exec('which ffmpeg 2>&1', $ffmpegCheck, $ffmpegCheckCode);
+            if ($ffmpegCheckCode !== 0) {
+                Log::warning('FFmpeg not installed on server - skipping video thumbnail generation', [
+                    'content_id' => $this->content->id,
+                    'message' => 'Install FFmpeg to enable automatic video thumbnail generation',
+                ]);
+
+                return;
+            }
+
             // S3에서 비디오 파일 다운로드
             $videoPath = parse_url($this->content->file_url, PHP_URL_PATH);
             if (! $videoPath || ! Storage::disk('s3')->exists($videoPath)) {
