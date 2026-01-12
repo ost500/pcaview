@@ -7,7 +7,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Laravel\Facades\Image;
+use Intervention\Image\Drivers\Imagick\Driver;
+use Intervention\Image\ImageManager;
 
 class GenerateVideoThumbnail implements ShouldQueue
 {
@@ -62,7 +63,7 @@ class GenerateVideoThumbnail implements ShouldQueue
             $tempThumbnailPath = storage_path('app/temp/thumb_'.basename($videoPath, '.mp4').'.jpg');
 
             $ffmpegCommand = sprintf(
-                'ffmpeg -i %s -ss 00:00:01.000 -vframes 1 -q:v 2 %s 2>&1',
+                'ffmpeg -y -i %s -ss 00:00:01.000 -vframes 1 -q:v 2 %s 2>&1',
                 escapeshellarg($tempVideoPath),
                 escapeshellarg($tempThumbnailPath)
             );
@@ -85,13 +86,13 @@ class GenerateVideoThumbnail implements ShouldQueue
             }
 
             // 썸네일 리사이즈 및 최적화 (Intervention Image)
-            $image = Image::read($tempThumbnailPath);
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($tempThumbnailPath);
             $image->scale(width: 1280); // 너비 1280px로 리사이즈
-            $image->toJpeg(quality: 85);
 
             // S3에 업로드
             $thumbnailFilename = 'thumbnails/video_'.uniqid().'_'.basename($videoPath, '.mp4').'.jpg';
-            Storage::disk('s3')->put($thumbnailFilename, (string) $image->encode());
+            Storage::disk('s3')->put($thumbnailFilename, (string) $image->encodeByPath($tempThumbnailPath, quality: 85));
             Storage::disk('s3')->setVisibility($thumbnailFilename, 'public');
 
             $thumbnailUrl = Storage::disk('s3')->url($thumbnailFilename);
