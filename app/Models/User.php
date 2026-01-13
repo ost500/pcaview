@@ -66,6 +66,22 @@ class User extends Authenticatable
     }
 
     /**
+     * Convert HTTP to HTTPS for profile_photo_url.
+     */
+    public function getProfilePhotoUrlAttribute($value): ?string
+    {
+        if (! $value) {
+            return null;
+        }
+
+        if (str_starts_with($value, 'http://')) {
+            return str_replace('http://', 'https://', $value);
+        }
+
+        return $value;
+    }
+
+    /**
      * 프로필 사진 URL을 가져옵니다. 없으면 Gravatar를 반환합니다.
      */
     public function getProfilePhotoAttribute(): string

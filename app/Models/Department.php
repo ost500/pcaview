@@ -44,4 +44,20 @@ class Department extends Model
             ->withTimestamps()
             ->orderByDesc('published_at');
     }
+
+    /**
+     * Convert HTTP to HTTPS for icon_image.
+     */
+    public function getIconImageAttribute($value): ?string
+    {
+        if (! $value) {
+            return null;
+        }
+
+        if (str_starts_with($value, 'http://')) {
+            return str_replace('http://', 'https://', $value);
+        }
+
+        return $value;
+    }
 }

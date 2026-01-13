@@ -79,4 +79,36 @@ class Trend extends Model
         return $this->belongsToMany(Tag::class, 'trend_tag')
             ->withTimestamps();
     }
+
+    /**
+     * Convert HTTP to HTTPS for image_url.
+     */
+    public function getImageUrlAttribute($value): ?string
+    {
+        if (! $value) {
+            return null;
+        }
+
+        if (str_starts_with($value, 'http://')) {
+            return str_replace('http://', 'https://', $value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * Convert HTTP to HTTPS for picture.
+     */
+    public function getPictureAttribute($value): ?string
+    {
+        if (! $value) {
+            return null;
+        }
+
+        if (str_starts_with($value, 'http://')) {
+            return str_replace('http://', 'https://', $value);
+        }
+
+        return $value;
+    }
 }

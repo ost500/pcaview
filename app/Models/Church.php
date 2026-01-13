@@ -36,4 +36,68 @@ class Church extends Model
     {
         return $this->hasMany(Department::class);
     }
+
+    /**
+     * Convert HTTP to HTTPS for icon_url.
+     */
+    public function getIconUrlAttribute($value): ?string
+    {
+        if (! $value) {
+            return null;
+        }
+
+        if (str_starts_with($value, 'http://')) {
+            return str_replace('http://', 'https://', $value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * Convert HTTP to HTTPS for icon_image.
+     */
+    public function getIconImageAttribute($value): ?string
+    {
+        if (! $value) {
+            return null;
+        }
+
+        if (str_starts_with($value, 'http://')) {
+            return str_replace('http://', 'https://', $value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * Convert HTTP to HTTPS for logo_image.
+     */
+    public function getLogoImageAttribute($value): ?string
+    {
+        if (! $value) {
+            return null;
+        }
+
+        if (str_starts_with($value, 'http://')) {
+            return str_replace('http://', 'https://', $value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * Convert HTTP to HTTPS for worship_time_image.
+     */
+    public function getWorshipTimeImageAttribute($value): ?string
+    {
+        if (! $value) {
+            return null;
+        }
+
+        if (str_starts_with($value, 'http://')) {
+            return str_replace('http://', 'https://', $value);
+        }
+
+        return $value;
+    }
 }
