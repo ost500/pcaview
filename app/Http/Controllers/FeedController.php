@@ -17,7 +17,7 @@ class FeedController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'content' => 'required|string|max:5000',
+            'content' => 'nullable|string|max:5000',
             'church_id' => 'nullable|exists:churches,id',
             'department_id' => 'nullable|exists:departments,id',
             'images.*' => 'nullable|image|max:10240', // 10MB
@@ -27,6 +27,11 @@ class FeedController extends Controller
         // church_id와 department_id 중 하나는 반드시 있어야 함
         if (!$request->church_id && !$request->department_id) {
             return redirect()->back()->withErrors(['error' => '교회 또는 부서를 선택해주세요.']);
+        }
+
+        // content, 이미지, 동영상 중 최소 하나는 있어야 함
+        if (!$request->filled('content') && !$request->hasFile('images') && !$request->hasFile('video')) {
+            return redirect()->back()->withErrors(['error' => '내용, 사진, 또는 동영상 중 하나는 필수입니다.']);
         }
 
         $user = Auth::user();
@@ -59,8 +64,8 @@ class FeedController extends Controller
                     'church_id' => $church->id,
                     'department_id' => null, // church에서 작성한 경우 null
                     'type' => 'html',
-                    'title' => $request->get('content'),
-                    'body' => $request->get('content'),
+                    'title' => $request->get('content', ''),
+                    'body' => $request->get('content', ''),
                     'file_url' => null,
                     'thumbnail_url' => $imageUrls[0] ?? null,
                     'video_url' => $videoUrl,
@@ -93,8 +98,8 @@ class FeedController extends Controller
                 'church_id' => $feedDepartment->church_id, // department의 church_id 사용
                 'department_id' => $feedDepartment->id, // 대표 department 설정
                 'type' => 'html',
-                'title' => $request->get('content'),
-                'body' => $request->get('content'),
+                'title' => $request->get('content', ''),
+                'body' => $request->get('content', ''),
                 'file_url' => null,
                 'thumbnail_url' => $imageUrls[0] ?? null,
                 'video_url' => $videoUrl,

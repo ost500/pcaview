@@ -104,6 +104,9 @@ class ChurchContentsController extends Controller
 
         // Query 시작 - file_type이 video인 것만
         $query = Contents::where('church_id', $church->id)
+            ->where('file_type', 'video')
+            ->where('is_hide', false)
+            ->whereNotNull('file_url')
             ->with(['department', 'user', 'departments']);
 
         // Department 필터 (옵션)
