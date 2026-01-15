@@ -103,7 +103,7 @@ class GenerateVideoThumbnail implements ShouldQueue
 
             // S3에 업로드
             $thumbnailFilename = 'thumbnails/video_'.uniqid().'_'.basename($videoPath, '.mp4').'.jpg';
-            Storage::disk('s3')->put($thumbnailFilename, (string) $image->encodeByPath($tempThumbnailPath, quality: 85), 'public');
+            Storage::disk('s3')->put($thumbnailFilename, (string) $image->encodeByPath($tempThumbnailPath, quality: 85));
 
             $thumbnailUrl = Storage::disk('s3')->url($thumbnailFilename);
 

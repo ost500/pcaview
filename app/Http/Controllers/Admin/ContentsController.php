@@ -78,15 +78,27 @@ class ContentsController extends Controller
 
         // Thumbnail 업로드
         if ($request->hasFile('thumbnail')) {
-            $file = $request->file('thumbnail');
-            $filename = 'thumbnails/' . uniqid() . '_' . $file->hashName();
+            try {
+                $file = $request->file('thumbnail');
+                $filename = 'thumbnails/' . uniqid() . '_' . $file->hashName();
 
-            $uploaded = Storage::disk('s3')->put($filename, file_get_contents($file->getRealPath()), 'public');
+                $uploaded = Storage::disk('s3')->put($filename, file_get_contents($file->getRealPath()));
 
-            if ($uploaded) {
-                $validated['thumbnail_url'] = Storage::disk('s3')->url($filename);
-            } else {
-                return redirect()->back()->withErrors(['thumbnail' => '썸네일 업로드에 실패했습니다.']);
+                if ($uploaded) {
+                    $validated['thumbnail_url'] = Storage::disk('s3')->url($filename);
+                } else {
+                    \Log::error('Thumbnail upload failed - Storage::put returned false', [
+                        'filename' => $filename,
+                        'filesize' => $file->getSize(),
+                    ]);
+                    return redirect()->back()->withErrors(['thumbnail' => '썸네일 업로드에 실패했습니다.']);
+                }
+            } catch (\Exception $e) {
+                \Log::error('Thumbnail upload exception', [
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
+                return redirect()->back()->withErrors(['thumbnail' => '썸네일 업로드 중 오류가 발생했습니다: ' . $e->getMessage()]);
             }
         }
         unset($validated['thumbnail']);
@@ -94,7 +106,6 @@ class ContentsController extends Controller
         // Video 업로드 (file_url로 저장)
         if ($request->hasFile('video')) {
             $path = $request->file('video')->store('feed-videos', 's3');
-            Storage::disk('s3')->setVisibility($path, 'public');
             $validated['file_url'] = Storage::disk('s3')->url($path);
             $validated['file_type'] = 'video';
         }
@@ -105,7 +116,6 @@ class ContentsController extends Controller
             $imageUrls = [];
             foreach ($request->file('images') as $image) {
                 $path = $image->store('content-images', 's3');
-                Storage::disk('s3')->setVisibility($path, 'public');
                 $imageUrls[] = Storage::disk('s3')->url($path);
             }
             $validated['body'] = json_encode(['images' => $imageUrls]);
@@ -168,25 +178,39 @@ class ContentsController extends Controller
 
         // Thumbnail 업로드
         if ($request->hasFile('thumbnail')) {
-            // 기존 썸네일 삭제
-            if ($content->thumbnail_url) {
-                $oldPath = parse_url($content->thumbnail_url, PHP_URL_PATH);
-                $oldPath = ltrim($oldPath, '/'); // URL path에서 leading slash 제거
-                if ($oldPath && Storage::disk('s3')->exists($oldPath)) {
-                    Storage::disk('s3')->delete($oldPath);
+            try {
+                // 기존 썸네일 삭제
+                if ($content->thumbnail_url) {
+                    $oldPath = parse_url($content->thumbnail_url, PHP_URL_PATH);
+                    $oldPath = ltrim($oldPath, '/'); // URL path에서 leading slash 제거
+                    if ($oldPath && Storage::disk('s3')->exists($oldPath)) {
+                        Storage::disk('s3')->delete($oldPath);
+                    }
                 }
-            }
 
-            // 새 썸네일 업로드
-            $file = $request->file('thumbnail');
-            $filename = 'thumbnails/' . uniqid() . '_' . $file->hashName();
+                // 새 썸네일 업로드
+                $file = $request->file('thumbnail');
+                $filename = 'thumbnails/' . uniqid() . '_' . $file->hashName();
 
-            $uploaded = Storage::disk('s3')->put($filename, file_get_contents($file->getRealPath()), 'public');
+                $uploaded = Storage::disk('s3')->put($filename, file_get_contents($file->getRealPath()));
 
-            if ($uploaded) {
-                $validated['thumbnail_url'] = Storage::disk('s3')->url($filename);
-            } else {
-                return redirect()->back()->withErrors(['thumbnail' => '썸네일 업로드에 실패했습니다.']);
+                if ($uploaded) {
+                    $validated['thumbnail_url'] = Storage::disk('s3')->url($filename);
+                } else {
+                    \Log::error('Thumbnail update failed - Storage::put returned false', [
+                        'content_id' => $content->id,
+                        'filename' => $filename,
+                        'filesize' => $file->getSize(),
+                    ]);
+                    return redirect()->back()->withErrors(['thumbnail' => '썸네일 업로드에 실패했습니다.']);
+                }
+            } catch (\Exception $e) {
+                \Log::error('Thumbnail update exception', [
+                    'content_id' => $content->id,
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
+                return redirect()->back()->withErrors(['thumbnail' => '썸네일 업로드 중 오류가 발생했습니다: ' . $e->getMessage()]);
             }
         }
         unset($validated['thumbnail']);
@@ -200,7 +224,6 @@ class ContentsController extends Controller
                 }
             }
             $path = $request->file('video')->store('feed-videos', 's3');
-            Storage::disk('s3')->setVisibility($path, 'public');
             $validated['file_url'] = Storage::disk('s3')->url($path);
             $validated['file_type'] = 'video';
         }
@@ -211,7 +234,6 @@ class ContentsController extends Controller
             $imageUrls = [];
             foreach ($request->file('images') as $image) {
                 $path = $image->store('content-images', 's3');
-                Storage::disk('s3')->setVisibility($path, 'public');
                 $imageUrls[] = Storage::disk('s3')->url($path);
             }
             $validated['body'] = json_encode(['images' => $imageUrls]);

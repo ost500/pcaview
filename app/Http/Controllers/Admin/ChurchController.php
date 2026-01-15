@@ -60,7 +60,6 @@ class ChurchController extends Controller
         // 이미지 업로드 처리
         if ($request->hasFile('icon_image')) {
             $path = $request->file('icon_image')->store('church-icons', 's3');
-            Storage::disk('s3')->setVisibility($path, 'public');
             $url = Storage::disk('s3')->url($path);
             $validated['icon_image'] = $url;
             $validated['icon_url'] = $url; // icon_url도 같이 저장
@@ -68,7 +67,6 @@ class ChurchController extends Controller
 
         if ($request->hasFile('logo_image')) {
             $path = $request->file('logo_image')->store('church-logos', 's3');
-            Storage::disk('s3')->setVisibility($path, 'public');
             $url = Storage::disk('s3')->url($path);
             $validated['logo_image'] = $url;
             $validated['logo_url'] = $url; // logo_url도 같이 저장
@@ -76,7 +74,6 @@ class ChurchController extends Controller
 
         if ($request->hasFile('worship_time_image')) {
             $path = $request->file('worship_time_image')->store('church-worship-times', 's3');
-            Storage::disk('s3')->setVisibility($path, 'public');
             $validated['worship_time_image'] = Storage::disk('s3')->url($path);
         }
 
@@ -118,7 +115,6 @@ class ChurchController extends Controller
 
             // 새 이미지 저장 (S3)
             $path = $request->file('icon_image')->store('church-icons', 's3');
-            Storage::disk('s3')->setVisibility($path, 'public');
             $validated['icon_image'] = Storage::disk('s3')->url($path);
         }
 

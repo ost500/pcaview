@@ -63,7 +63,6 @@ class DepartmentController extends Controller
 
             // 새 이미지 저장 (S3)
             $path = $request->file('icon_image')->store('department-icons', 's3');
-            Storage::disk('s3')->setVisibility($path, 'public');
             $validated['icon_image'] = Storage::disk('s3')->url($path);
         }
         unset($validated['icon_image']);

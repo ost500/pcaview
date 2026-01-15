@@ -80,7 +80,6 @@ class ProfileController extends Controller
 
         // 새 프로필 사진 업로드
         $path = $request->file('profile_photo')->store('profile-photos', 's3');
-        Storage::disk('s3')->setVisibility($path, 'public');
         $url = Storage::disk('s3')->url($path);
 
         // 사용자 프로필 사진 업데이트
