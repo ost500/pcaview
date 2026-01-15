@@ -78,9 +78,16 @@ class ContentsController extends Controller
 
         // Thumbnail 업로드
         if ($request->hasFile('thumbnail')) {
-            $path = $request->file('thumbnail')->store('thumbnails', 's3');
-            Storage::disk('s3')->setVisibility($path, 'public');
-            $validated['thumbnail_url'] = Storage::disk('s3')->url($path);
+            $file = $request->file('thumbnail');
+            $filename = 'thumbnails/' . uniqid() . '_' . $file->hashName();
+
+            $uploaded = Storage::disk('s3')->put($filename, file_get_contents($file->getRealPath()), 'public');
+
+            if ($uploaded) {
+                $validated['thumbnail_url'] = Storage::disk('s3')->url($filename);
+            } else {
+                return redirect()->back()->withErrors(['thumbnail' => '썸네일 업로드에 실패했습니다.']);
+            }
         }
         unset($validated['thumbnail']);
 
@@ -161,15 +168,26 @@ class ContentsController extends Controller
 
         // Thumbnail 업로드
         if ($request->hasFile('thumbnail')) {
+            // 기존 썸네일 삭제
             if ($content->thumbnail_url) {
                 $oldPath = parse_url($content->thumbnail_url, PHP_URL_PATH);
+                $oldPath = ltrim($oldPath, '/'); // URL path에서 leading slash 제거
                 if ($oldPath && Storage::disk('s3')->exists($oldPath)) {
                     Storage::disk('s3')->delete($oldPath);
                 }
             }
-            $path = $request->file('thumbnail')->store('thumbnails', 's3');
-            Storage::disk('s3')->setVisibility($path, 'public');
-            $validated['thumbnail_url'] = Storage::disk('s3')->url($path);
+
+            // 새 썸네일 업로드
+            $file = $request->file('thumbnail');
+            $filename = 'thumbnails/' . uniqid() . '_' . $file->hashName();
+
+            $uploaded = Storage::disk('s3')->put($filename, file_get_contents($file->getRealPath()), 'public');
+
+            if ($uploaded) {
+                $validated['thumbnail_url'] = Storage::disk('s3')->url($filename);
+            } else {
+                return redirect()->back()->withErrors(['thumbnail' => '썸네일 업로드에 실패했습니다.']);
+            }
         }
         unset($validated['thumbnail']);
 
