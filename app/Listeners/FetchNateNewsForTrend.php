@@ -2,9 +2,9 @@
 
 namespace App\Listeners;
 
-use App\Events\TrendFetched;
 use App\Domain\news\NateNewsContentService;
 use App\Domain\news\NateNewsService;
+use App\Events\TrendFetched;
 use App\Models\Department;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -32,18 +32,26 @@ class FetchNateNewsForTrend implements ShouldQueue
         try {
             $trend = $event->trend;
 
-            // Department 찾기
-            $department = Department::find($trend->department_id);
-            if (!$department) {
-                Log::warning('Department not found for trend', ['trend_id' => $trend->id]);
+            // Department와 Church 정보 가져오기
+            $department = Department::with('church')->find($trend->department_id);
+            if (! $department || ! $department->church) {
+                Log::warning('Department or Church not found for trend', ['trend_id' => $trend->id]);
+
                 return;
             }
 
+            // 검색 키워드 생성: church.name과 department.name이 같으면 department.name만, 다르면 합침
+            $churchName = $department->church->name;
+            $keyword    = $churchName === $department->name
+                ? $department->name
+                : $churchName.' '.$department->name;
+
             // Nate 뉴스 검색
-            $nateNews = $this->nateNewsService->searchNews($trend->title);
+            $nateNews = $this->nateNewsService->searchNews($keyword);
 
             if (empty($nateNews)) {
-                Log::info('No Nate news found for trend', ['trend_title' => $trend->title]);
+                Log::info('No Nate news found for trend', ['keyword' => $keyword]);
+
                 return;
             }
 
@@ -55,14 +63,14 @@ class FetchNateNewsForTrend implements ShouldQueue
             $trend->update(['news_items' => $allNewsItems]);
 
             Log::info('Nate news fetched for trend', [
-                'trend_id' => $trend->id,
-                'trend_title' => $trend->title,
+                'trend_id'    => $trend->id,
+                'keyword'     => $keyword,
                 'saved_count' => $savedCount,
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to fetch Nate news for trend', [
                 'trend_id' => $event->trend->id,
-                'error' => $e->getMessage(),
+                'error'    => $e->getMessage(),
             ]);
         }
     }

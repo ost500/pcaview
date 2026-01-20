@@ -46,8 +46,8 @@ class FetchChurchData extends Command
         $churches = Church::with('departments')->get();
 
         $totalDepartments = 0;
-        $totalEvents = 0;
-        $skippedCount = 0;
+        $totalEvents      = 0;
+        $skippedCount     = 0;
 
         foreach ($churches as $church) {
             $this->info("Processing church: {$church->name}");
@@ -56,6 +56,7 @@ class FetchChurchData extends Command
 
             if ($departments->isEmpty()) {
                 $this->warn("  No departments found for {$church->name}");
+
                 continue;
             }
 
@@ -63,9 +64,10 @@ class FetchChurchData extends Command
                 $totalDepartments++;
 
                 // is_crawl이 false이면 스킵
-                if (!$department->is_crawl) {
+                if (! $department->is_crawl) {
                     $this->comment("  Skipping {$department->name} (is_crawl=false)");
                     $skippedCount++;
+
                     continue;
                 }
 
@@ -74,34 +76,40 @@ class FetchChurchData extends Command
                     ->latest('pub_date')
                     ->first();
 
-                if (!$latestTrend) {
+                if (! $latestTrend) {
                     $this->info("  No trends found for department: {$department->name}, creating initial trend...");
+
+                    // 검색 키워드 생성: church.name과 department.name이 같으면 department.name만, 다르면 합침
+                    $keyword = $church->name === $department->name
+                        ? $department->name
+                        : $church->name.' '.$department->name;
 
                     // 기본 Trend 생성
                     $latestTrend = Trend::create([
-                        'department_id' => $department->id,
-                        'title' => $department->name,
-                        'description' => $department->name,
-                        'link' => $department->url ?? '#',
-                        'image_url' => $department->icon_image ?? '/pcaview_icon.png',
-                        'traffic_count' => 0,
-                        'pub_date' => now(),
-                        'picture' => null,
-                        'picture_source' => null,
-                        'news_items' => [],
+                        'department_id'   => $department->id,
+                        'title'           => $keyword,
+                        'description'     => $department->name,
+                        'link'            => $department->url ?? '#',
+                        'image_url'       => $department->icon_image ?? '/pcaview_icon.png',
+                        'traffic_count'   => 0,
+                        'pub_date'        => now(),
+                        'picture'         => null,
+                        'picture_source'  => null,
+                        'news_items'      => [],
                         'last_fetched_at' => null,
                     ]);
 
-                    $this->line("  ✓ Created initial trend for {$department->name}");
+                    $this->line("  ✓ Created initial trend for {$department->name} with keyword: {$keyword}");
                 }
 
                 // Force 모드가 아니면 최근에 처리된 trend는 건너뛰기
-                if (!$force && $latestTrend->last_fetched_at) {
+                if (! $force && $latestTrend->last_fetched_at) {
                     $hoursSinceLastFetch = $latestTrend->last_fetched_at->diffInHours(now());
 
                     if ($hoursSinceLastFetch < $hours) {
                         $this->comment("  Skipping {$department->name} (last fetched {$hoursSinceLastFetch}h ago)");
                         $skippedCount++;
+
                         continue;
                     }
                 }
@@ -117,7 +125,7 @@ class FetchChurchData extends Command
         }
 
         $this->newLine();
-        $this->info("✓ Completed!");
+        $this->info('✓ Completed!');
         $this->info("  Total churches processed: {$churches->count()}");
         $this->info("  Total departments processed: {$totalDepartments}");
         $this->info("  TrendFetched events dispatched: {$totalEvents}");
