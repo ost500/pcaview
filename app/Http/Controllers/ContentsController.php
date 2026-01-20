@@ -38,10 +38,11 @@ class ContentsController extends Controller
                 ->pluck('id');
         }
 
-        // 같은 department의 다른 콘텐츠 가져오기 (최대 10개)
+        // 같은 department의 다른 콘텐츠 가져오기 (최대 10개, hidden 제외)
         $relatedContents = Contents::with(['user', 'church', 'department', 'departments'])
             ->withCount('comments')
             ->whereIn('id', $uniqueContentsIds)
+            ->where('is_hide', false)
             ->latest('published_at')
             ->take(10)
             ->get();
@@ -82,10 +83,11 @@ class ContentsController extends Controller
                 ->pluck('id');
         }
 
-        // 같은 department의 다른 콘텐츠 가져오기 (최대 10개)
+        // 같은 department의 다른 콘텐츠 가져오기 (최대 10개, hidden 제외)
         $relatedContents = Contents::with(['user', 'church', 'department', 'departments'])
             ->withCount('comments')
             ->whereIn('id', $uniqueContentsIds)
+            ->where('is_hide', false)
             ->latest('published_at')
             ->take(10)
             ->get();
