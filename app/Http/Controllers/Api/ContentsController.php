@@ -33,7 +33,7 @@ class ContentsController extends Controller
         // 해당 church의 모든 contents 가져오기 (숨김 제외, 최신순)
         $contentsQuery = Contents::where('church_id', $churchModel->id)
             ->where('is_hide', false)
-            ->with(['images', 'departments', 'tags'])
+            ->with(['user', 'images', 'departments', 'tags'])
             ->orderBy('published_at', 'desc')
             ->orderBy('created_at', 'desc');
 
