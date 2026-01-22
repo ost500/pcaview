@@ -17,8 +17,8 @@ class ContentsController extends Controller
      */
     public function getByChurch(Request $request, string $church): JsonResponse
     {
-        // Church를 name으로 찾기
-        $churchModel = Church::where('name', $church)->first();
+        // Church를 slug으로 찾기
+        $churchModel = Church::where('slug', $church)->first();
 
         if (! $churchModel) {
             return response()->json([
@@ -67,8 +67,8 @@ class ContentsController extends Controller
      */
     public function getDepartments(string $church): JsonResponse
     {
-        // Church를 name으로 찾기
-        $churchModel = Church::where('name', $church)->first();
+        // Church를 slug으로 찾기
+        $churchModel = Church::where('slug', $church)->first();
 
         if (! $churchModel) {
             return response()->json([
