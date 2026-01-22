@@ -49,11 +49,7 @@ class ContentsController extends Controller
             'success' => true,
             'message' => 'Contents retrieved successfully',
             'data'    => [
-                'church' => [
-                    'id'   => $churchModel->id,
-                    'name' => $churchModel->name,
-                    'slug' => $churchModel->slug,
-                ],
+                'church' => $churchModel,
                 'contents' => $contents,
                 'total'    => $contents->count(),
             ],
@@ -87,14 +83,34 @@ class ContentsController extends Controller
             'success' => true,
             'message' => 'Departments retrieved successfully',
             'data'    => [
-                'church' => [
-                    'id'   => $churchModel->id,
-                    'name' => $churchModel->name,
-                    'slug' => $churchModel->slug,
-                ],
+                'church' => $churchModel,
                 'departments' => $departments,
                 'total'       => $departments->count(),
             ],
+        ]);
+    }
+
+    /**
+     * Get a single content by its ID.
+     *
+     * @param int $id The ID of the content.
+     */
+    public function show(int $id): JsonResponse
+    {
+        $content = Contents::with(['user', 'church', 'departments', 'images', 'tags', 'comments'])
+            ->find($id);
+
+        if (! $content) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Content not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Content retrieved successfully',
+            'data'    => $content,
         ]);
     }
 }
