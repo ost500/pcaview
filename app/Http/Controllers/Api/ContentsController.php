@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Church;
 use App\Models\Contents;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class ContentsController extends Controller
 {
@@ -14,7 +15,7 @@ class ContentsController extends Controller
      *
      * @param string $church Church name parameter
      */
-    public function getByChurch(string $church): JsonResponse
+    public function getByChurch(Request $request, string $church): JsonResponse
     {
         // Church를 name으로 찾기
         $churchModel = Church::where('name', $church)->first();
@@ -27,13 +28,22 @@ class ContentsController extends Controller
             ], 404);
         }
 
+        $departmentId = $request->input('department_id');
+
         // 해당 church의 모든 contents 가져오기 (숨김 제외, 최신순)
-        $contents = Contents::where('church_id', $churchModel->id)
+        $contentsQuery = Contents::where('church_id', $churchModel->id)
             ->where('is_hide', false)
             ->with(['images', 'departments', 'tags'])
             ->orderBy('published_at', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->get();
+            ->orderBy('created_at', 'desc');
+
+        if ($departmentId) {
+            $contentsQuery->whereHas('departments', function ($query) use ($departmentId) {
+                $query->where('departments.id', $departmentId);
+            });
+        }
+
+        $contents = $contentsQuery->get();
 
         return response()->json([
             'success' => true,
