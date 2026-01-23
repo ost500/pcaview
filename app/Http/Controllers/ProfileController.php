@@ -17,10 +17,10 @@ class ProfileController extends Controller
      */
     public function index(Request $request)
     {
-        // API 토큰으로 인증 처리
-        if ($request->has('token')) {
-            $token = $request->input('token');
+        // API 토큰으로 인증 처리 (헤더 우선, 쿼리 파라미터 폴백)
+        $token = $request->bearerToken() ?? $request->input('token');
 
+        if ($token) {
             // 토큰 검증
             $accessToken = PersonalAccessToken::findToken($token);
 
@@ -33,9 +33,12 @@ class ProfileController extends Controller
                 // 토큰으로 사용자 로그인 (세션 생성)
                 Auth::login($accessToken->tokenable, true);
 
-                // 토큰 파라미터 제거하고 리다이렉트 (보안)
-                $queryParams = $request->except('token');
-                return redirect()->route('profile', $queryParams);
+                // 쿼리 파라미터에 토큰이 있으면 제거하고 리다이렉트 (보안)
+                if ($request->has('token')) {
+                    $queryParams = $request->except('token');
+                    return redirect()->route('profile', $queryParams);
+                }
+                // 헤더로 전달된 경우 리다이렉트 없이 바로 진행
             } else {
                 return redirect()->route('login')->with('error', '유효하지 않은 토큰입니다.');
             }

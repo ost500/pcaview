@@ -46,7 +46,8 @@ class Contents extends Model
 
     public function comments(): HasMany
     {
-        return $this->hasMany(Comment::class, 'content_id');
+        return $this->hasMany(Comment::class, 'content_id')
+            ->orderBy('created_at', 'desc');
     }
 
     public function platformComments(): HasMany
