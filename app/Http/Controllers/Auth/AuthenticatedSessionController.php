@@ -49,6 +49,9 @@ class AuthenticatedSessionController extends Controller
             $user = Auth::user();
             $token = $user->createToken('webview-' . now()->timestamp)->plainTextToken;
 
+            // 세션에서 mobilescreen 제거
+            $request->session()->forget('login.mobilescreen');
+
             // 토큰 브릿지 페이지로 리다이렉트
             return redirect()->route('auth.token-bridge', ['token' => $token]);
         }

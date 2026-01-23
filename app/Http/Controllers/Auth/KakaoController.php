@@ -16,8 +16,13 @@ class KakaoController extends Controller
     /**
      * Redirect to Kakao OAuth
      */
-    public function redirect()
+    public function redirect(Request $request)
     {
+        // mobilescreen 파라미터가 있으면 세션에 저장
+        if ($request->has('mobilescreen')) {
+            $request->session()->put('login.mobilescreen', $request->input('mobilescreen'));
+        }
+
         return Socialite::driver('kakao')->redirect();
     }
 
@@ -80,9 +85,16 @@ class KakaoController extends Controller
             // Login user
             Auth::login($user, true);
 
-            // mobilescreen=true 파라미터가 있으면 프로필로 리다이렉트
+            // mobilescreen=true 파라미터가 있으면 웹뷰용 토큰 브릿지로 이동
             if ($request->session()->get('login.mobilescreen') === 'true') {
-                return redirect()->route('profile');
+                // 웹뷰용 API 토큰 생성
+                $token = $user->createToken('webview-kakao-' . now()->timestamp)->plainTextToken;
+
+                // 세션에서 mobilescreen 제거
+                $request->session()->forget('login.mobilescreen');
+
+                // 토큰 브릿지 페이지로 리다이렉트
+                return redirect()->route('auth.token-bridge', ['token' => $token]);
             }
 
             return redirect()->intended('/');
