@@ -13,6 +13,23 @@ declare global {
                 }) => void;
             };
         };
+
+        // WebView Bridges
+        webkit?: {
+            messageHandlers?: {
+                tokenReceiver?: {
+                    postMessage: (data: any) => void;
+                };
+            };
+        };
+
+        AndroidBridge?: {
+            receiveToken: (jsonString: string) => void;
+        };
+
+        ReactNativeWebView?: {
+            postMessage: (data: string) => void;
+        };
     }
 }
 

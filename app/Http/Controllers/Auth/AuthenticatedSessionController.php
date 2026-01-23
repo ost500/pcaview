@@ -43,12 +43,31 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        // mobilescreen=true 파라미터가 있으면 프로필로 리다이렉트
+        // mobilescreen=true 파라미터가 있으면 웹뷰용 토큰 브릿지로 이동
         if ($request->input('mobilescreen') === 'true' || $request->session()->get('login.mobilescreen') === 'true') {
-            return redirect()->route('profile');
+            // 웹뷰용 API 토큰 생성
+            $user = Auth::user();
+            $token = $user->createToken('webview-' . now()->timestamp)->plainTextToken;
+
+            // 토큰 브릿지 페이지로 리다이렉트
+            return redirect()->route('auth.token-bridge', ['token' => $token]);
         }
 
         return redirect()->intended('/');
+    }
+
+    /**
+     * Show token bridge page for webview
+     */
+    public function tokenBridge(Request $request): Response
+    {
+        $token = $request->input('token');
+        $user = Auth::user();
+
+        return Inertia::render('auth/TokenBridge', [
+            'token' => $token,
+            'user' => $user,
+        ]);
     }
 
     /**
