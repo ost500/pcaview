@@ -34,6 +34,7 @@ class ContentsController extends Controller
         $contentsQuery = Contents::where('church_id', $churchModel->id)
             ->where('is_hide', false)
             ->with(['user', 'images', 'departments', 'tags'])
+            ->withCount('comments')
             ->orderBy('published_at', 'desc')
             ->orderBy('created_at', 'desc');
 
