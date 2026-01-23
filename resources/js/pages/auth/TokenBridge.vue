@@ -13,6 +13,7 @@ const props = defineProps<{
 
 const status = ref<'sending' | 'sent' | 'error'>('sending')
 const message = ref('')
+const isDev = import.meta.env.DEV
 
 const sendTokenToApp = () => {
   try {
@@ -165,7 +166,7 @@ onMounted(() => {
           </div>
 
           <!-- Debug Info (개발 환경에서만) -->
-          <div v-if="import.meta.env.DEV" class="mt-6 pt-6 border-t border-gray-200">
+          <div v-if="isDev" class="mt-6 pt-6 border-t border-gray-200">
             <details class="text-left">
               <summary class="text-xs text-gray-500 cursor-pointer">디버그 정보</summary>
               <pre class="mt-2 text-xs text-left bg-gray-100 p-2 rounded overflow-auto">{{
