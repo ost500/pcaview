@@ -32,9 +32,6 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => AdminAuth::class,
         ]);
-
-        // 로그인된 사용자가 로그인/회원가입 페이지 접근 시 profile로 리다이렉트
-        $middleware->redirectUsersTo('/profile');
     })
     ->withEvents(discover: [
         __DIR__.'/../app/Domain/*/*/event',
