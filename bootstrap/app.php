@@ -3,6 +3,7 @@
 use App\Http\Middleware\AdminAuth;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -38,5 +39,18 @@ return Application::configure(basePath: dirname(__DIR__))
         __DIR__.'/../app/Domain/*/*/Events',
         __DIR__.'/../app/Domain/*/Events'])
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        // API 라우트에서 인증 실패 시 JSON 응답 반환
+        $exceptions->shouldRenderJsonWhen(function ($request, Throwable $e) {
+            return $request->is('api/*');
+        });
+
+        // API에서 인증되지 않은 요청 처리
+        $exceptions->renderable(function (AuthenticationException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthenticated.',
+                ], 401);
+            }
+        });
     })->create();
