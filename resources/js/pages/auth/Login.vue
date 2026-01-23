@@ -21,9 +21,11 @@ defineProps<{
 
 // URL 파라미터로 헤더 숨김 여부 확인
 const hideHeader = ref(false);
+const mobilescreen = ref(false);
 if (typeof window !== 'undefined') {
     const urlParams = new URLSearchParams(window.location.search);
     hideHeader.value = urlParams.get('hideHeader') === 'true';
+    mobilescreen.value = urlParams.get('mobilescreen') === 'true';
 }
 
 // Kakao SDK 초기화

@@ -64,10 +64,10 @@ onMounted(() => {
     sendTokenToApp()
   }, 500)
 
-  // 3초 후 자동으로 프로필 페이지로 이동
+  // 3초 후 자동으로 프로필 페이지로 이동 (모바일 파라미터 포함)
   setTimeout(() => {
     if (status.value === 'sent') {
-      window.location.href = '/profile'
+      window.location.href = '/profile?mobilescreen=true&hideHeader=true'
     }
   }, 3000)
 })
