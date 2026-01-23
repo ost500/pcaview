@@ -32,17 +32,31 @@ class CommentController extends Controller
     {
         $content = Contents::findOrFail($contentId);
 
+        // 인증 사용자 확인 (선택적)
+        $user = Auth::guard('sanctum')->user();
+
         $validatedData = $request->validate([
             'body' => 'required|string|max:1000',
-            'guest_name' => 'required_without:user_id|nullable|string|max:50',
+            'guest_name' => 'nullable|string|max:50',
         ]);
 
-        $user = Auth::user();
+        // 게스트 이름 처리: 없으면 IP 기반 자동 생성
+        $guestName = null;
+        if (!$user) {
+            if (!empty($validatedData['guest_name'])) {
+                $guestName = $validatedData['guest_name'];
+            } else {
+                // IP 주소 기반 게스트 이름 생성 (예: 192.168.1.1 -> 게스트_192168)
+                $ip = $request->ip();
+                $ipHash = str_replace('.', '', substr($ip, 0, 10)); // 점 제거 후 최대 10자
+                $guestName = '게스트_' . $ipHash;
+            }
+        }
 
         $comment = Comment::create([
             'content_id' => $contentId,
             'user_id' => $user?->id,
-            'guest_name' => $user ? null : $validatedData['guest_name'],
+            'guest_name' => $guestName,
             'ip_address' => $request->ip(),
             'body' => $validatedData['body'],
         ]);
@@ -65,7 +79,7 @@ class CommentController extends Controller
             ->where('id', $commentId)
             ->firstOrFail();
 
-        $user = Auth::user();
+        $user = Auth::guard('sanctum')->user();
 
         // 권한 체크: 로그인 사용자는 본인 댓글만, 게스트는 같은 IP + 같은 이름
         if ($comment->user_id) {

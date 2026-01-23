@@ -107,7 +107,105 @@ class KakaoController extends Controller
     }
 
     /**
-     * Handle mobile app Kakao login callback
+     * Handle API Kakao login callback (for mobile app)
+     * Returns JSON response with API token
+     */
+    public function apiCallback(Request $request)
+    {
+        try {
+            $accessToken = $request->input('access_token');
+            $userId = $request->input('user_id');
+            $nickname = $request->input('nickname');
+
+            // 카카오 토큰 검증
+            $kakaoUserData = $this->verifyKakaoToken($accessToken);
+
+            if (!$kakaoUserData) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid Kakao token',
+                ], 401);
+            }
+
+            // user_id 검증
+            if ($kakaoUserData['id'] != $userId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User ID verification failed',
+                ], 401);
+            }
+
+            // 카카오 이메일이 없으면 임시 이메일 생성
+            $email = $kakaoUserData['kakao_account']['email'] ?? $userId . '@kakao.pcaview.com';
+            $profileImageUrl = $kakaoUserData['kakao_account']['profile']['profile_image_url'] ?? null;
+            $displayName = $nickname ?? $kakaoUserData['kakao_account']['profile']['nickname'] ?? 'Kakao User';
+
+            // 프로필 이미지를 S3에 저장
+            $profileImage = null;
+            if ($profileImageUrl) {
+                $profileImage = $this->uploadProfileImageToS3($profileImageUrl, $userId);
+            }
+
+            // Find user by kakao_id first
+            $user = User::where('kakao_id', $userId)->first();
+
+            if (!$user) {
+                // Then check if email already exists
+                $user = User::where('email', $email)->first();
+
+                if ($user) {
+                    // Update existing user with Kakao ID and profile photo
+                    $user->update([
+                        'kakao_id' => $userId,
+                        'profile_photo_url' => $profileImage,
+                    ]);
+                } else {
+                    // Create new user
+                    $user = User::create([
+                        'name' => $displayName,
+                        'email' => $email,
+                        'kakao_id' => $userId,
+                        'profile_photo_url' => $profileImage,
+                        'password' => Hash::make(Str::random(32)),
+                        'email_verified_at' => now(),
+                    ]);
+                }
+            } else {
+                // Update profile photo and name for existing kakao user
+                $user->update([
+                    'name' => $displayName,
+                    'profile_photo_url' => $profileImage,
+                ]);
+            }
+
+            // Generate API token
+            $token = $user->createToken('mobile-kakao-' . now()->timestamp)->plainTextToken;
+
+            // Return JSON response with token and user info
+            return response()->json([
+                'success' => true,
+                'token' => $token,
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'profile_photo_url' => $user->profile_photo_url,
+                ],
+            ], 200);
+        } catch (\Exception $e) {
+            \Log::error('API Kakao login error: ' . $e->getMessage());
+            \Log::error('API Kakao login error trace: ' . $e->getTraceAsString());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Kakao login failed. Please try again.',
+            ], 500);
+        }
+    }
+
+    /**
+     * Handle mobile app Kakao login callback (legacy web redirect)
+     * @deprecated Use apiCallback for mobile apps
      */
     private function handleMobileCallback(Request $request)
     {
