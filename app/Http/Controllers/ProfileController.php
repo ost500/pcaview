@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class ProfileController extends Controller
 {
@@ -16,6 +17,35 @@ class ProfileController extends Controller
      */
     public function index(Request $request)
     {
+        // API 토큰으로 인증 처리
+        if ($request->has('token')) {
+            $token = $request->input('token');
+
+            // 토큰 검증
+            $accessToken = PersonalAccessToken::findToken($token);
+
+            if ($accessToken && !$accessToken->tokenable) {
+                // 토큰은 존재하지만 사용자가 삭제된 경우
+                return redirect()->route('login')->with('error', '유효하지 않은 토큰입니다.');
+            }
+
+            if ($accessToken) {
+                // 토큰으로 사용자 로그인 (세션 생성)
+                Auth::login($accessToken->tokenable, true);
+
+                // 토큰 파라미터 제거하고 리다이렉트 (보안)
+                $queryParams = $request->except('token');
+                return redirect()->route('profile', $queryParams);
+            } else {
+                return redirect()->route('login')->with('error', '유효하지 않은 토큰입니다.');
+            }
+        }
+
+        // 세션 인증 확인
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
         $user = $request->user();
         $allDepartments = Department::all();
 
