@@ -53,6 +53,15 @@ class ProfileController extends Controller
         $user           = $request->user();
         $allDepartments = Department::all();
 
+        // mobilescreen 파라미터가 있고 토큰이 없으면 새로 생성
+        if (! $token && ($request->input('mobilescreen') === 'true' || $request->input('hideHeader') === 'true')) {
+            $token = $user->createToken('webview-profile-'.now()->timestamp)->plainTextToken;
+            \Log::info('Token generated for webview profile', [
+                'user_id'      => $user->id,
+                'token_length' => strlen($token),
+            ]);
+        }
+
         // 사용자가 구독 안 하는 부서 ID 목록
         $unsubscribedDepartmentIds = $user ? $user->departments()->pluck('departments.id')->toArray() : [];
 
