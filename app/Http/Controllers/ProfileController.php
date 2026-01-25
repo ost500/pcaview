@@ -20,6 +20,12 @@ class ProfileController extends Controller
         // API 토큰으로 인증 처리 (헤더 우선, 쿼리 파라미터 폴백)
         $token = $request->bearerToken() ?? $request->input('token');
 
+        \Log::info('ProfileController index', [
+            'has_token'    => (bool) $token,
+            'token_length' => $token ? strlen($token) : 0,
+            'query_params' => $request->query(),
+        ]);
+
         if ($token) {
             // 토큰 검증
             $accessToken = PersonalAccessToken::findToken($token);
@@ -33,6 +39,7 @@ class ProfileController extends Controller
                 // 토큰으로 사용자 로그인 (세션 생성)
                 Auth::login($accessToken->tokenable, true);
                 // 토큰은 앱으로 전송하기 위해 유지 (리다이렉트하지 않음)
+                \Log::info('User logged in via token', ['user_id' => $accessToken->tokenable->id]);
             } else {
                 return redirect()->route('login')->with('error', '유효하지 않은 토큰입니다.');
             }
@@ -51,6 +58,11 @@ class ProfileController extends Controller
 
         // 구독하는 부서 = 전체 - 구독 안 하는 부서
         $subscribedDepartmentIds = $allDepartments->pluck('id')->diff($unsubscribedDepartmentIds)->values()->toArray();
+
+        \Log::info('Rendering Profile page', [
+            'has_token' => (bool) $token,
+            'user_id'   => $user->id,
+        ]);
 
         return Inertia::render('Profile', [
             'allDepartments'          => $allDepartments,
