@@ -76,6 +76,12 @@ const sendTokenToApp = () => {
 // 컴포넌트 마운트 시 토큰 전송
 onMounted(() => {
     console.log('Profile mounted, token:', props.token ? 'present' : 'absent');
+
+    // sendTokenToApp 함수를 전역으로 노출 (앱에서 호출 가능하도록)
+    if (typeof window !== 'undefined') {
+        (window as any).sendTokenToApp = sendTokenToApp;
+    }
+
     if (props.token) {
         setTimeout(() => {
             sendTokenToApp();

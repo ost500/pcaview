@@ -43,7 +43,11 @@ declare global {
         // Kakao Login Bridge
         KakaoLogin?: {
             kakaoLogin: () => void;
+            receiveToken?: (jsonString: string) => void;
         };
+
+        // Profile page function (exposed globally)
+        sendTokenToApp?: () => void;
     }
 }
 
