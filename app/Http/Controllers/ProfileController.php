@@ -24,7 +24,7 @@ class ProfileController extends Controller
             // 토큰 검증
             $accessToken = PersonalAccessToken::findToken($token);
 
-            if ($accessToken && !$accessToken->tokenable) {
+            if ($accessToken && ! $accessToken->tokenable) {
                 // 토큰은 존재하지만 사용자가 삭제된 경우
                 return redirect()->route('login')->with('error', '유효하지 않은 토큰입니다.');
             }
@@ -36,6 +36,7 @@ class ProfileController extends Controller
                 // 쿼리 파라미터에 토큰이 있으면 제거하고 리다이렉트 (보안)
                 if ($request->has('token')) {
                     $queryParams = $request->except('token');
+
                     return redirect()->route('profile', $queryParams);
                 }
                 // 헤더로 전달된 경우 리다이렉트 없이 바로 진행
@@ -45,11 +46,11 @@ class ProfileController extends Controller
         }
 
         // 세션 인증 확인
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return redirect()->route('login');
         }
 
-        $user = $request->user();
+        $user           = $request->user();
         $allDepartments = Department::all();
 
         // 사용자가 구독 안 하는 부서 ID 목록
@@ -59,9 +60,10 @@ class ProfileController extends Controller
         $subscribedDepartmentIds = $allDepartments->pluck('id')->diff($unsubscribedDepartmentIds)->values()->toArray();
 
         return Inertia::render('Profile', [
-            'allDepartments' => $allDepartments,
+            'allDepartments'          => $allDepartments,
             'subscribedDepartmentIds' => $subscribedDepartmentIds,
-            'canResetPassword' => Route::has('password.request'),
+            'canResetPassword'        => Route::has('password.request'),
+            'token'                   => $token, // 앱으로 전송할 토큰 (있는 경우에만)
         ]);
     }
 
@@ -74,7 +76,7 @@ class ProfileController extends Controller
             'department_id' => 'required|exists:departments,id',
         ]);
 
-        $user = $request->user();
+        $user         = $request->user();
         $departmentId = $request->input('department_id');
 
         // user_departments는 구독 안 하는 부서를 저장
@@ -104,7 +106,7 @@ class ProfileController extends Controller
         $user = $request->user();
 
         // 기존 프로필 사진이 S3에 있고 카카오 사진이 아니면 삭제
-        if ($user->profile_photo_url && !str_contains($user->profile_photo_url, 'kakaocdn.net')) {
+        if ($user->profile_photo_url && ! str_contains($user->profile_photo_url, 'kakaocdn.net')) {
             $path = parse_url($user->profile_photo_url, PHP_URL_PATH);
             if ($path && Storage::disk('s3')->exists(ltrim($path, '/'))) {
                 Storage::disk('s3')->delete(ltrim($path, '/'));
@@ -113,7 +115,7 @@ class ProfileController extends Controller
 
         // 새 프로필 사진 업로드
         $path = $request->file('profile_photo')->store('profile-photos', 's3');
-        $url = Storage::disk('s3')->url($path);
+        $url  = Storage::disk('s3')->url($path);
 
         // 사용자 프로필 사진 업데이트
         $user->update([
@@ -131,7 +133,7 @@ class ProfileController extends Controller
         $user = $request->user();
 
         // 프로필 사진이 S3에 있고 카카오 사진이 아니면 삭제
-        if ($user->profile_photo_url && !str_contains($user->profile_photo_url, 'kakaocdn.net')) {
+        if ($user->profile_photo_url && ! str_contains($user->profile_photo_url, 'kakaocdn.net')) {
             $path = parse_url($user->profile_photo_url, PHP_URL_PATH);
             if ($path && Storage::disk('s3')->exists(ltrim($path, '/'))) {
                 Storage::disk('s3')->delete(ltrim($path, '/'));

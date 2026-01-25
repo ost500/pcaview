@@ -41,9 +41,6 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('token-bridge', [AuthenticatedSessionController::class, 'tokenBridge'])
-        ->name('auth.token-bridge');
-
     Route::get('verify-email', EmailVerificationPromptController::class)
         ->name('verification.notice');
 

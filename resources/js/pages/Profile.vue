@@ -3,10 +3,11 @@ import BusinessInfo from '@/components/BusinessInfo.vue';
 import Header from '@/components/template/Header.vue';
 import { safeRoute } from '@/composables/useSafeRoute';
 import { router, useForm, usePage } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 interface Props {
     canResetPassword?: boolean;
+    token?: string;
 }
 
 const props = defineProps<Props>();
@@ -19,6 +20,55 @@ if (typeof window !== 'undefined') {
     const urlParams = new URLSearchParams(window.location.search);
     hideHeader.value = urlParams.get('hideHeader') === 'true';
 }
+
+// 앱으로 토큰 전송 (TokenBridge 통합)
+const sendTokenToApp = () => {
+    if (!props.token || !user.value) return;
+
+    try {
+        const tokenData = {
+            token: props.token,
+            user: user.value,
+            timestamp: new Date().toISOString(),
+        };
+
+        // iOS WebView (WKWebView)
+        if (window.webkit?.messageHandlers?.tokenReceiver) {
+            window.webkit.messageHandlers.tokenReceiver.postMessage(tokenData);
+            console.log('iOS 앱으로 토큰 전송 완료');
+            return;
+        }
+
+        // Android WebView
+        if (window.AndroidBridge?.receiveToken) {
+            window.AndroidBridge.receiveToken(JSON.stringify(tokenData));
+            console.log('Android 앱으로 토큰 전송 완료');
+            return;
+        }
+
+        // React Native WebView
+        if (window.ReactNativeWebView) {
+            window.ReactNativeWebView.postMessage(JSON.stringify(tokenData));
+            console.log('앱으로 토큰 전송 완료');
+            return;
+        }
+
+        // 일반 postMessage (fallback)
+        window.parent.postMessage(tokenData, '*');
+        console.log('토큰 전송 완료');
+    } catch (error) {
+        console.error('Token transfer error:', error);
+    }
+};
+
+// 컴포넌트 마운트 시 토큰 전송
+onMounted(() => {
+    if (props.token) {
+        setTimeout(() => {
+            sendTokenToApp();
+        }, 500);
+    }
+});
 
 // 로그인 폼
 const loginForm = useForm({
