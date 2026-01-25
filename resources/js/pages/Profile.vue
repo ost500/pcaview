@@ -3,7 +3,7 @@ import BusinessInfo from '@/components/BusinessInfo.vue';
 import Header from '@/components/template/Header.vue';
 import { safeRoute } from '@/composables/useSafeRoute';
 import { router, useForm, usePage } from '@inertiajs/vue3';
-import { computed, onMounted, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 interface Props {
     canResetPassword?: boolean;
@@ -43,6 +43,21 @@ const handleLogout = () => {
             {},
             {
                 onSuccess: () => {
+                    // 앱에 로그아웃 신호 보내기 (JavaScript Bridge)
+                    try {
+                        if (window.AppBridge && typeof window.AppBridge.logout === 'function') {
+                            window.AppBridge.logout();
+                        } else if (window.webkit?.messageHandlers?.logout) {
+                            // iOS WebKit
+                            window.webkit.messageHandlers.logout.postMessage({});
+                        } else if (window.Android && typeof window.Android.logout === 'function') {
+                            // Android
+                            window.Android.logout();
+                        }
+                    } catch (error) {
+                        console.error('앱 로그아웃 신호 전송 실패:', error);
+                    }
+
                     window.location.href = safeRoute('home');
                 },
             },
@@ -53,11 +68,30 @@ const handleLogout = () => {
 const handleDeleteAccount = () => {
     if (confirm('정말로 계정을 삭제하시겠습니까?\n\n계정을 삭제하면 모든 데이터가 영구적으로 삭제되며 복구할 수 없습니다.')) {
         if (confirm('한 번 더 확인합니다. 정말 계정을 삭제하시겠습니까?')) {
-            router.post('/profile/delete', {}, {
-                onSuccess: () => {
-                    window.location.href = safeRoute('home');
+            router.post(
+                '/profile/delete',
+                {},
+                {
+                    onSuccess: () => {
+                        // 앱에 로그아웃 신호 보내기 (JavaScript Bridge)
+                        try {
+                            if (window.AppBridge && typeof window.AppBridge.logout === 'function') {
+                                window.AppBridge.logout();
+                            } else if (window.webkit?.messageHandlers?.logout) {
+                                // iOS WebKit
+                                window.webkit.messageHandlers.logout.postMessage({});
+                            } else if (window.Android && typeof window.Android.logout === 'function') {
+                                // Android
+                                window.Android.logout();
+                            }
+                        } catch (error) {
+                            console.error('앱 로그아웃 신호 전송 실패:', error);
+                        }
+
+                        window.location.href = safeRoute('home');
+                    },
                 },
-            });
+            );
         }
     }
 };
@@ -279,7 +313,9 @@ const updateName = () => {
                             class="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#FEE500] text-base font-semibold text-[#000000] transition-all hover:bg-[#FDD835] hover:shadow-lg"
                         >
                             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 3C6.5 3 2 6.6 2 11c0 2.8 1.9 5.3 4.7 6.7-.2.8-.7 2.8-.8 3.2-.1.5.2.5.4.4.3-.1 3.7-2.4 4.3-2.8.5.1 1 .1 1.5.1 5.5 0 10-3.6 10-8S17.5 3 12 3z"/>
+                                <path
+                                    d="M12 3C6.5 3 2 6.6 2 11c0 2.8 1.9 5.3 4.7 6.7-.2.8-.7 2.8-.8 3.2-.1.5.2.5.4.4.3-.1 3.7-2.4 4.3-2.8.5.1 1 .1 1.5.1 5.5 0 10-3.6 10-8S17.5 3 12 3z"
+                                />
                             </svg>
                             카카오 로그인
                         </button>
@@ -298,10 +334,7 @@ const updateName = () => {
                                 class="group relative h-24 w-24 cursor-pointer overflow-hidden rounded-full bg-white/20 backdrop-blur-sm transition-all hover:bg-white/30"
                             >
                                 <!-- 업로드 중 오버레이 -->
-                                <div
-                                    v-if="uploadingPhoto"
-                                    class="absolute inset-0 z-10 flex items-center justify-center bg-black/50"
-                                >
+                                <div v-if="uploadingPhoto" class="absolute inset-0 z-10 flex items-center justify-center bg-black/50">
                                     <div class="h-8 w-8 animate-spin rounded-full border-4 border-white border-t-transparent"></div>
                                 </div>
 
@@ -321,21 +354,11 @@ const updateName = () => {
                                 </div>
 
                                 <!-- 프로필 사진 -->
-                                <img
-                                    :src="user.profile_photo"
-                                    :alt="user.name"
-                                    class="h-full w-full object-cover"
-                                />
+                                <img :src="user.profile_photo" :alt="user.name" class="h-full w-full object-cover" />
                             </div>
 
                             <!-- 숨겨진 파일 입력 -->
-                            <input
-                                ref="fileInput"
-                                type="file"
-                                accept="image/*"
-                                class="hidden"
-                                @change="handleFileChange"
-                            />
+                            <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleFileChange" />
                         </div>
                     </div>
                     <div class="bg-white px-6 py-6 text-center">
@@ -415,25 +438,25 @@ const updateName = () => {
 
                 <!-- 메뉴 리스트 -->
                 <div class="overflow-hidden rounded-2xl bg-white shadow-lg">
-<!--                    <div-->
-<!--                        @click="goToSettings"-->
-<!--                        class="flex cursor-pointer items-center justify-between border-b border-gray-100 px-6 py-4 transition-colors hover:bg-gray-50 active:bg-gray-100"-->
-<!--                    >-->
-<!--                        <div class="flex items-center gap-3">-->
-<!--                            <svg class="h-5 w-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
-<!--                                <path-->
-<!--                                    stroke-linecap="round"-->
-<!--                                    stroke-linejoin="round"-->
-<!--                                    stroke-width="2"-->
-<!--                                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"-->
-<!--                                />-->
-<!--                            </svg>-->
-<!--                            <span class="font-medium text-gray-900">프로필 수정</span>-->
-<!--                        </div>-->
-<!--                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
-<!--                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />-->
-<!--                        </svg>-->
-<!--                    </div>-->
+                    <!--                    <div-->
+                    <!--                        @click="goToSettings"-->
+                    <!--                        class="flex cursor-pointer items-center justify-between border-b border-gray-100 px-6 py-4 transition-colors hover:bg-gray-50 active:bg-gray-100"-->
+                    <!--                    >-->
+                    <!--                        <div class="flex items-center gap-3">-->
+                    <!--                            <svg class="h-5 w-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
+                    <!--                                <path-->
+                    <!--                                    stroke-linecap="round"-->
+                    <!--                                    stroke-linejoin="round"-->
+                    <!--                                    stroke-width="2"-->
+                    <!--                                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"-->
+                    <!--                                />-->
+                    <!--                            </svg>-->
+                    <!--                            <span class="font-medium text-gray-900">프로필 수정</span>-->
+                    <!--                        </div>-->
+                    <!--                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
+                    <!--                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />-->
+                    <!--                        </svg>-->
+                    <!--                    </div>-->
                     <div
                         @click="handleLogout"
                         class="flex cursor-pointer items-center justify-between px-6 py-4 transition-colors hover:bg-red-50 active:bg-red-100"

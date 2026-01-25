@@ -7,10 +7,7 @@ declare global {
             init: (appKey: string) => void;
             isInitialized: () => boolean;
             Auth: {
-                authorize: (options: {
-                    redirectUri: string;
-                    scope?: string;
-                }) => void;
+                authorize: (options: { redirectUri: string; scope?: string }) => void;
             };
         };
 
@@ -18,6 +15,9 @@ declare global {
         webkit?: {
             messageHandlers?: {
                 tokenReceiver?: {
+                    postMessage: (data: any) => void;
+                };
+                logout?: {
                     postMessage: (data: any) => void;
                 };
             };
@@ -29,6 +29,20 @@ declare global {
 
         ReactNativeWebView?: {
             postMessage: (data: string) => void;
+        };
+
+        // App Bridge for logout
+        AppBridge?: {
+            logout: () => void;
+        };
+
+        Android?: {
+            logout: () => void;
+        };
+
+        // Kakao Login Bridge
+        KakaoLogin?: {
+            kakaoLogin: () => void;
         };
     }
 }

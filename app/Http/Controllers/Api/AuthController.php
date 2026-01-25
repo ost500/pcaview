@@ -16,26 +16,26 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+            'email'       => 'required|email',
+            'password'    => 'required',
             'device_name' => 'string|max:255',
         ]);
 
         $user = User::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (! $user || ! Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
 
         $deviceName = $request->device_name ?? $request->userAgent() ?? 'unknown';
-        $token = $user->createToken($deviceName)->plainTextToken;
+        $token      = $user->createToken($deviceName)->plainTextToken;
 
         return response()->json([
             'success' => true,
-            'token' => $token,
-            'user' => $user,
+            'token'   => $token,
+            'user'    => $user,
         ]);
     }
 
@@ -47,8 +47,9 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
-            'success' => true,
-            'message' => '로그아웃되었습니다.',
+            'success'         => true,
+            'message'         => '로그아웃되었습니다.',
+            'logout_required' => true,
         ]);
     }
 
@@ -59,7 +60,7 @@ class AuthController extends Controller
     {
         return response()->json([
             'success' => true,
-            'user' => $request->user(),
+            'user'    => $request->user(),
         ]);
     }
 
@@ -71,8 +72,9 @@ class AuthController extends Controller
         $request->user()->tokens()->delete();
 
         return response()->json([
-            'success' => true,
-            'message' => '모든 기기에서 로그아웃되었습니다.',
+            'success'         => true,
+            'message'         => '모든 기기에서 로그아웃되었습니다.',
+            'logout_required' => true,
         ]);
     }
 }
