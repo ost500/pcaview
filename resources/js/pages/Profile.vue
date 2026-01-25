@@ -23,7 +23,10 @@ if (typeof window !== 'undefined') {
 
 // 앱으로 토큰 전송 (TokenBridge 통합)
 const sendTokenToApp = () => {
-    if (!props.token || !user.value) return;
+    if (!props.token || !user.value) {
+        console.log('No token or user to send');
+        return;
+    }
 
     try {
         const tokenData = {
@@ -32,30 +35,39 @@ const sendTokenToApp = () => {
             timestamp: new Date().toISOString(),
         };
 
-        // iOS WebView (WKWebView)
-        if (window.webkit?.messageHandlers?.tokenReceiver) {
-            window.webkit.messageHandlers.tokenReceiver.postMessage(tokenData);
-            console.log('iOS 앱으로 토큰 전송 완료');
+        console.log('Sending token to app...', { hasToken: !!props.token, hasUser: !!user.value });
+
+        // Android - KakaoLogin.receiveToken (로그에서 확인됨)
+        if (window.KakaoLogin?.receiveToken) {
+            window.KakaoLogin.receiveToken(JSON.stringify(tokenData));
+            console.log('Token sent via KakaoLogin.receiveToken');
             return;
         }
 
-        // Android WebView
+        // Android - AndroidBridge.receiveToken
         if (window.AndroidBridge?.receiveToken) {
             window.AndroidBridge.receiveToken(JSON.stringify(tokenData));
-            console.log('Android 앱으로 토큰 전송 완료');
+            console.log('Token sent via AndroidBridge.receiveToken');
+            return;
+        }
+
+        // iOS WebView (WKWebView)
+        if (window.webkit?.messageHandlers?.tokenReceiver) {
+            window.webkit.messageHandlers.tokenReceiver.postMessage(tokenData);
+            console.log('Token sent via webkit.messageHandlers.tokenReceiver');
             return;
         }
 
         // React Native WebView
         if (window.ReactNativeWebView) {
             window.ReactNativeWebView.postMessage(JSON.stringify(tokenData));
-            console.log('앱으로 토큰 전송 완료');
+            console.log('Token sent via ReactNativeWebView');
             return;
         }
 
         // 일반 postMessage (fallback)
         window.parent.postMessage(tokenData, '*');
-        console.log('토큰 전송 완료');
+        console.log('Token sent via window.postMessage');
     } catch (error) {
         console.error('Token transfer error:', error);
     }
@@ -63,6 +75,7 @@ const sendTokenToApp = () => {
 
 // 컴포넌트 마운트 시 토큰 전송
 onMounted(() => {
+    console.log('Profile mounted, token:', props.token ? 'present' : 'absent');
     if (props.token) {
         setTimeout(() => {
             sendTokenToApp();

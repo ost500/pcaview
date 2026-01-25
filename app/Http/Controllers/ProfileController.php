@@ -32,14 +32,7 @@ class ProfileController extends Controller
             if ($accessToken) {
                 // 토큰으로 사용자 로그인 (세션 생성)
                 Auth::login($accessToken->tokenable, true);
-
-                // 쿼리 파라미터에 토큰이 있으면 제거하고 리다이렉트 (보안)
-                if ($request->has('token')) {
-                    $queryParams = $request->except('token');
-
-                    return redirect()->route('profile', $queryParams);
-                }
-                // 헤더로 전달된 경우 리다이렉트 없이 바로 진행
+                // 토큰은 앱으로 전송하기 위해 유지 (리다이렉트하지 않음)
             } else {
                 return redirect()->route('login')->with('error', '유효하지 않은 토큰입니다.');
             }
