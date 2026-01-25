@@ -43,11 +43,24 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        $mobilescreen = $request->input('mobilescreen') === 'true' || $request->session()->get('login.mobilescreen') === 'true';
+
+        \Log::info('Login completed', [
+            'mobilescreen_param'   => $request->input('mobilescreen'),
+            'mobilescreen_session' => $request->session()->get('login.mobilescreen'),
+            'is_mobilescreen'      => $mobilescreen,
+        ]);
+
         // mobilescreen=true 파라미터가 있으면 웹뷰용 토큰과 함께 프로필로 이동
-        if ($request->input('mobilescreen') === 'true' || $request->session()->get('login.mobilescreen') === 'true') {
+        if ($mobilescreen) {
             // 웹뷰용 API 토큰 생성
             $user  = Auth::user();
             $token = $user->createToken('webview-'.now()->timestamp)->plainTextToken;
+
+            \Log::info('Redirecting to profile with token', [
+                'token_length' => strlen($token),
+                'user_id'      => $user->id,
+            ]);
 
             // 세션에서 mobilescreen 제거
             $request->session()->forget('login.mobilescreen');
