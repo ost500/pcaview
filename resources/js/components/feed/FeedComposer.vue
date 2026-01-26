@@ -172,13 +172,10 @@ const submitPost = () => {
                 <div class="flex items-center justify-between gap-3 border-b border-sky-100 bg-white/50 px-4 py-3 backdrop-blur-sm">
                     <!-- 유저 정보 (왼쪽) - 로그인 시에만 표시 -->
                     <div v-if="user" class="flex items-center gap-2">
-                        <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-blue-100 to-purple-100">
-                            <img
-                                v-if="user.profile_photo_url"
-                                :src="user.profile_photo_url"
-                                :alt="user.name"
-                                class="h-full w-full object-cover"
-                            />
+                        <div
+                            class="flex h-8 w-8 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-blue-100 to-purple-100"
+                        >
+                            <img v-if="user.profile_photo_url" :src="user.profile_photo_url" :alt="user.name" class="h-full w-full object-cover" />
                             <svg v-else class="h-5 w-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                             </svg>
@@ -273,7 +270,9 @@ const submitPost = () => {
                         <!-- 동영상 버튼 -->
                         <label class="flex cursor-pointer items-center gap-1 rounded-lg px-3 py-2 transition hover:bg-gray-100">
                             <svg class="h-4 w-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+                                <path
+                                    d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"
+                                />
                             </svg>
                             <span class="text-xs font-medium text-gray-700">동영상</span>
                             <input type="file" accept="video/*" class="hidden" @change="handleVideoSelect" />

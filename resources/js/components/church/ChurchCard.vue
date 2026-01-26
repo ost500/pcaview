@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import { Church } from '@/types/church';
+import { computed } from 'vue';
 
 const props = defineProps<{
     church: Church;

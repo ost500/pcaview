@@ -77,7 +77,7 @@ class FeedController extends Controller
                     'church_id' => $church->id,
                     'department_id' => null, // church에서 작성한 경우 null
                     'type' => 'html',
-                    'title' => $request->get('content', ''),
+                    'title' => null,
                     'body' => $request->get('content', ''),
                     'file_url' => null,
                     'thumbnail_url' => $imageUrls[0] ?? null,

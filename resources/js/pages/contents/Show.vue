@@ -78,11 +78,15 @@ const deleteComment = (commentId: number) => {
 const deleteContents = () => {
     if (!confirm('정말로 이 콘텐츠를 삭제하시겠습니까?')) return;
 
-    router.post(`/contents/${props.contents.id}/delete`, {}, {
-        onSuccess: () => {
-            window.location.href = safeRoute('home');
+    router.post(
+        `/contents/${props.contents.id}/delete`,
+        {},
+        {
+            onSuccess: () => {
+                window.location.href = safeRoute('home');
+            },
         },
-    });
+    );
 };
 
 const canDeleteContents = computed(() => {
@@ -140,7 +144,7 @@ const displayBody = computed(() => {
 
     // 저작권 보호: 모든 이미지 제거
     const images = tempDiv.querySelectorAll('img, picture, figure');
-    images.forEach(img => img.remove());
+    images.forEach((img) => img.remove());
 
     const fullText = tempDiv.textContent || tempDiv.innerText || '';
     const textLength = fullText.length;
@@ -334,7 +338,7 @@ onMounted(() => {
                                     <button
                                         v-if="canDeleteContents"
                                         @click="deleteContents"
-                                        class="text-xs text-red-600 hover:text-red-700 transition-colors"
+                                        class="text-xs text-red-600 transition-colors hover:text-red-700"
                                         title="삭제"
                                     >
                                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -386,12 +390,7 @@ onMounted(() => {
                             <div v-if="contents.file_type != 'YOUTUBE' && contents.file_type != 'HTML'">
                                 <!-- 동영상이 있는 경우 -->
                                 <div v-if="contents.video_url" class="w-full">
-                                    <video
-                                        :src="contents.video_url"
-                                        class="w-full"
-                                        controls
-                                        preload="metadata"
-                                    />
+                                    <video :src="contents.video_url" class="w-full" controls preload="metadata" />
                                 </div>
                                 <!-- 이미지가 있는 경우 -->
                                 <div v-for="(image, index) in contents.images" v-bind:key="image.id">

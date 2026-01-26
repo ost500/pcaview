@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
 import { X } from 'lucide-vue-next';
-import { ref, watch } from 'vue';
+import { watch } from 'vue';
 
 const props = defineProps<{
     show: boolean;
@@ -88,7 +88,7 @@ const closeModal = () => {
                                 v-model="form.name"
                                 type="text"
                                 placeholder="예: 청년부, 어린이부"
-                                class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                                class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
                                 :disabled="form.processing"
                                 required
                             />

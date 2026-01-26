@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AdminLayout from '@/layouts/admin/AdminLayout.vue';
 import { Head, router, useForm } from '@inertiajs/vue3';
-import { ref, computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 interface Church {
     id: number;
@@ -50,7 +50,7 @@ const form = useForm({
     title: props.content.title,
     church_id: props.content.church_id as number | null,
     department_id: props.content.department_id as number | null,
-    departments: props.content.departments?.map(d => d.id) || [] as number[],
+    departments: props.content.departments?.map((d) => d.id) || ([] as number[]),
     published_at: props.content.published_at ? new Date(props.content.published_at).toISOString().slice(0, 16) : '',
     is_hide: props.content.is_hide || false,
     thumbnail: null as File | null,
@@ -65,7 +65,7 @@ const previewImages = ref<string[]>([]);
 // Church에 속한 Departments만 필터링
 const filteredDepartments = computed(() => {
     if (!form.church_id) return [];
-    return props.departments.filter(dept => dept.church_id === form.church_id);
+    return props.departments.filter((dept) => dept.church_id === form.church_id);
 });
 
 // 기존 이미지 파싱
@@ -94,7 +94,7 @@ function handleImagesChange(event: Event) {
     const target = event.target as HTMLInputElement;
     if (target.files) {
         form.images = Array.from(target.files);
-        previewImages.value = Array.from(target.files).map(file => URL.createObjectURL(file));
+        previewImages.value = Array.from(target.files).map((file) => URL.createObjectURL(file));
     }
 }
 
@@ -114,7 +114,7 @@ function submit() {
         },
         // Laravel의 _method spoofing을 위해
         headers: {
-            'X-HTTP-Method-Override': 'PUT'
+            'X-HTTP-Method-Override': 'PUT',
         },
     });
 }
@@ -221,16 +221,33 @@ function getChurchDisplayName(church: Church): string {
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Thumbnail Image</label>
                                 <input type="file" @change="handleThumbnailChange" accept="image/*" class="mt-1 block w-full text-sm text-gray-500" />
-                                <img v-if="previewThumbnail" :src="previewThumbnail" alt="Thumbnail preview" class="mt-2 h-32 w-auto rounded-lg object-cover shadow" />
+                                <img
+                                    v-if="previewThumbnail"
+                                    :src="previewThumbnail"
+                                    alt="Thumbnail preview"
+                                    class="mt-2 h-32 w-auto rounded-lg object-cover shadow"
+                                />
                                 <div v-if="form.errors.thumbnail" class="mt-1 text-sm text-red-600">{{ form.errors.thumbnail }}</div>
                             </div>
 
                             <!-- Images -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Content Images</label>
-                                <input type="file" @change="handleImagesChange" accept="image/*" multiple class="mt-1 block w-full text-sm text-gray-500" />
+                                <input
+                                    type="file"
+                                    @change="handleImagesChange"
+                                    accept="image/*"
+                                    multiple
+                                    class="mt-1 block w-full text-sm text-gray-500"
+                                />
                                 <div v-if="previewImages.length > 0" class="mt-2 grid grid-cols-4 gap-2">
-                                    <img v-for="(img, idx) in previewImages" :key="idx" :src="img" alt="Image preview" class="h-24 w-auto rounded-lg object-cover shadow" />
+                                    <img
+                                        v-for="(img, idx) in previewImages"
+                                        :key="idx"
+                                        :src="img"
+                                        alt="Image preview"
+                                        class="h-24 w-auto rounded-lg object-cover shadow"
+                                    />
                                 </div>
                                 <p v-if="previewImages.length > 0" class="mt-1 text-xs text-gray-500">Upload new images to replace existing ones</p>
                                 <div v-if="form.errors.images" class="mt-1 text-sm text-red-600">{{ form.errors.images }}</div>
@@ -251,14 +268,14 @@ function getChurchDisplayName(church: Church): string {
                         <button
                             type="button"
                             @click="cancel"
-                            class="mr-3 inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            class="mr-3 inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
                             :disabled="form.processing"
-                            class="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+                            class="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
                         >
                             {{ form.processing ? 'Updating...' : 'Update Content' }}
                         </button>

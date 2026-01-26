@@ -82,7 +82,10 @@ watch(
 <template>
     <Head :title="churchDisplayName">
         <!-- Basic Meta Tags -->
-        <meta name="description" :content="`${churchDisplayName}의 최신 소식과 트렌드를 실시간으로 확인하세요. 예배시간과 약도도 확인할 수 있습니다.`" />
+        <meta
+            name="description"
+            :content="`${churchDisplayName}의 최신 소식과 트렌드를 실시간으로 확인하세요. 예배시간과 약도도 확인할 수 있습니다.`"
+        />
         <meta name="keywords" :content="`PCAview, 피카뷰, ${churchDisplayName}, 교회, 예배시간, 약도, 뉴스, 트렌드`" />
 
         <!-- Open Graph -->

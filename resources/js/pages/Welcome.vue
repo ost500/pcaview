@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import BusinessInfo from '@/components/BusinessInfo.vue';
 import ContentsList from '@/components/contents/ContentsList.vue';
+import AddChannelModal from '@/components/department/AddChannelModal.vue';
 import FeedComposer from '@/components/feed/FeedComposer.vue';
 import Header from '@/components/template/Header.vue';
-import AddChannelModal from '@/components/department/AddChannelModal.vue';
 import { usePWA } from '@/composables/usePWA';
 import { safeRoute } from '@/composables/useSafeRoute';
 import { Church } from '@/types/church';
 import { Contents } from '@/types/contents';
 import { Department } from '@/types/department';
 import { Pagination } from '@/types/pagination';
-import { Head, router, useRemember, usePage } from '@inertiajs/vue3';
+import { Head, router, usePage, useRemember } from '@inertiajs/vue3';
 import { Plus } from 'lucide-vue-next';
 import { computed, onMounted, ref, watch } from 'vue';
 

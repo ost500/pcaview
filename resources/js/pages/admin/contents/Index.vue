@@ -112,9 +112,9 @@ function getChurchDisplayName(church: Church | null): string {
                 </div>
                 <Link
                     href="/admin/contents/create"
-                    class="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    class="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
                 >
-                    <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="mr-2 -ml-1 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
                     Create Content
@@ -129,7 +129,7 @@ function getChurchDisplayName(church: Church | null): string {
                         v-model="search"
                         type="text"
                         placeholder="Search by title..."
-                        class="w-full rounded-lg border border-gray-300 px-4 py-2 pl-10 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2 pl-10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                     />
                     <svg class="absolute top-2.5 left-3 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -139,7 +139,7 @@ function getChurchDisplayName(church: Church | null): string {
                 <!-- Church Filter -->
                 <select
                     v-model="churchId"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                 >
                     <option value="">All Churches</option>
                     <option v-for="church in churches" :key="church.id" :value="church.id">
@@ -150,7 +150,7 @@ function getChurchDisplayName(church: Church | null): string {
                 <!-- Department Filter -->
                 <select
                     v-model="departmentId"
-                    class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                 >
                     <option value="">All Departments</option>
                     <option v-for="department in departments" :key="department.id" :value="department.id">
@@ -163,13 +163,13 @@ function getChurchDisplayName(church: Church | null): string {
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Thumbnail</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Title</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Church</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Department</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Author</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Published</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Actions</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Thumbnail</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Title</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Church</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Department</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Author</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Published</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 bg-white">
@@ -183,7 +183,9 @@ function getChurchDisplayName(church: Church | null): string {
                                 />
                                 <div v-else-if="content.file_type === 'video'" class="flex h-16 w-16 items-center justify-center rounded bg-gray-200">
                                     <svg class="h-8 w-8 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" />
+                                        <path
+                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                                        />
                                     </svg>
                                 </div>
                                 <div v-else class="h-16 w-16 rounded bg-gray-200"></div>
@@ -203,7 +205,7 @@ function getChurchDisplayName(church: Church | null): string {
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm text-gray-900">{{ new Date(content.published_at).toLocaleDateString() }}</div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <td class="px-6 py-4 text-sm font-medium whitespace-nowrap">
                                 <button @click="editContent(content.id)" class="mr-3 text-blue-600 hover:text-blue-900">Edit</button>
                                 <button @click="deleteContent(content.id)" class="text-red-600 hover:text-red-900">Delete</button>
                             </td>

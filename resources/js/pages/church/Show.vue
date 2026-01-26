@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import BusinessInfo from '@/components/BusinessInfo.vue';
 import ContentsList from '@/components/contents/ContentsList.vue';
-import DepartmentCard from '@/components/department/DepartmentCard.vue';
+import AddChannelModal from '@/components/department/AddChannelModal.vue';
 import FeedComposer from '@/components/feed/FeedComposer.vue';
 import Header from '@/components/template/Header.vue';
-import AddChannelModal from '@/components/department/AddChannelModal.vue';
 import { safeRoute } from '@/composables/useSafeRoute';
 import { Church } from '@/types/church';
 import { Contents } from '@/types/contents';
@@ -115,7 +114,10 @@ watch(
 <template>
     <Head :title="churchDisplayName">
         <!-- Basic Meta Tags -->
-        <meta name="description" :content="`${churchDisplayName}의 최신 소식과 트렌드를 실시간으로 확인하세요. 예배시간과 약도도 확인할 수 있습니다.`" />
+        <meta
+            name="description"
+            :content="`${churchDisplayName}의 최신 소식과 트렌드를 실시간으로 확인하세요. 예배시간과 약도도 확인할 수 있습니다.`"
+        />
         <meta name="keywords" :content="`PCAview, 피카뷰, ${churchDisplayName}, 교회, 예배시간, 약도, 뉴스, 트렌드`" />
 
         <!-- Open Graph -->
@@ -195,16 +197,16 @@ watch(
                         class="flex-shrink-0 cursor-pointer transition-transform active:scale-95"
                         style="width: 120px"
                     >
-                        <div class="overflow-hidden rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 shadow-md transition-colors hover:border-blue-500 hover:bg-blue-50">
+                        <div
+                            class="overflow-hidden rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 shadow-md transition-colors hover:border-blue-500 hover:bg-blue-50"
+                        >
                             <!-- Plus Icon -->
                             <div class="flex aspect-square w-full items-center justify-center bg-gray-100">
                                 <Plus :size="40" class="text-gray-400" :stroke-width="2" />
                             </div>
                             <!-- Label -->
                             <div class="p-2">
-                                <h3 class="text-center text-xs font-medium text-gray-600">
-                                    채널 추가
-                                </h3>
+                                <h3 class="text-center text-xs font-medium text-gray-600">채널 추가</h3>
                             </div>
                         </div>
                     </div>

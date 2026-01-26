@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import { register } from '@/routes';
 import { request } from '@/routes/password';
-import { Form, Head, router } from '@inertiajs/vue3';
+import { Form, Head } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
 import { onMounted, ref } from 'vue';
 
@@ -96,7 +96,12 @@ const handleKakaoLogin = () => {
             {{ status }}
         </div>
 
-        <Form v-bind="AuthenticatedSessionController.store.form()" :reset-on-success="['password']" v-slot="{ errors, processing }" class="space-y-4 sm:space-y-5">
+        <Form
+            v-bind="AuthenticatedSessionController.store.form()"
+            :reset-on-success="['password']"
+            v-slot="{ errors, processing }"
+            class="space-y-4 sm:space-y-5"
+        >
             <div class="space-y-3 sm:space-y-4">
                 <div class="space-y-1.5 sm:space-y-2">
                     <Label for="email" class="text-xs font-medium text-gray-700 sm:text-sm">이메일</Label>
@@ -181,7 +186,11 @@ const handleKakaoLogin = () => {
 
             <div class="text-center">
                 <span class="text-xs text-gray-600 sm:text-sm">계정이 없으신가요?</span>
-                <TextLink :href="register()" :tabindex="7" class="ml-1 text-xs font-semibold text-blue-600 hover:text-blue-700 hover:underline sm:text-sm">
+                <TextLink
+                    :href="register()"
+                    :tabindex="7"
+                    class="ml-1 text-xs font-semibold text-blue-600 hover:text-blue-700 hover:underline sm:text-sm"
+                >
                     가입하기
                 </TextLink>
             </div>

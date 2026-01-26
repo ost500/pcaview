@@ -176,14 +176,24 @@ function cancel() {
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Logo Image</label>
                                 <input type="file" @change="handleLogoChange" accept="image/*" class="mt-1 block w-full text-sm text-gray-500" />
-                                <img v-if="previewLogo" :src="previewLogo" alt="Logo preview" class="mt-2 h-24 w-auto rounded-lg object-cover shadow" />
+                                <img
+                                    v-if="previewLogo"
+                                    :src="previewLogo"
+                                    alt="Logo preview"
+                                    class="mt-2 h-24 w-auto rounded-lg object-cover shadow"
+                                />
                                 <div v-if="form.errors.logo_image" class="mt-1 text-sm text-red-600">{{ form.errors.logo_image }}</div>
                             </div>
 
                             <!-- Worship Time Image -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Worship Time Image</label>
-                                <input type="file" @change="handleWorshipTimeChange" accept="image/*" class="mt-1 block w-full text-sm text-gray-500" />
+                                <input
+                                    type="file"
+                                    @change="handleWorshipTimeChange"
+                                    accept="image/*"
+                                    class="mt-1 block w-full text-sm text-gray-500"
+                                />
                                 <img
                                     v-if="previewWorshipTime"
                                     :src="previewWorshipTime"
@@ -201,14 +211,14 @@ function cancel() {
                         <button
                             type="button"
                             @click="cancel"
-                            class="mr-3 inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            class="mr-3 inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
                             :disabled="form.processing"
-                            class="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+                            class="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none disabled:opacity-50"
                         >
                             {{ form.processing ? 'Creating...' : 'Create Church' }}
                         </button>
