@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
+use App\Services\ProfilePhotoService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Laravel\Sanctum\PersonalAccessToken;
 
@@ -111,7 +111,7 @@ class ProfileController extends Controller
     /**
      * 프로필 사진 업데이트
      */
-    public function updateProfilePhoto(Request $request)
+    public function updateProfilePhoto(Request $request, ProfilePhotoService $profilePhotoService)
     {
         $request->validate([
             'profile_photo' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // 5MB max
@@ -119,22 +119,7 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
-        // 기존 프로필 사진이 S3에 있고 카카오 사진이 아니면 삭제
-        if ($user->profile_photo_url && ! str_contains($user->profile_photo_url, 'kakaocdn.net')) {
-            $path = parse_url($user->profile_photo_url, PHP_URL_PATH);
-            if ($path && Storage::disk('s3')->exists(ltrim($path, '/'))) {
-                Storage::disk('s3')->delete(ltrim($path, '/'));
-            }
-        }
-
-        // 새 프로필 사진 업로드
-        $path = $request->file('profile_photo')->store('profile-photos', 's3');
-        $url  = Storage::disk('s3')->url($path);
-
-        // 사용자 프로필 사진 업데이트
-        $user->update([
-            'profile_photo_url' => $url,
-        ]);
+        $profilePhotoService->updateProfilePhoto($user, $request->file('profile_photo'));
 
         return back()->with('success', '프로필 사진이 변경되었습니다.');
     }
@@ -142,17 +127,12 @@ class ProfileController extends Controller
     /**
      * 계정 삭제
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request, ProfilePhotoService $profilePhotoService)
     {
         $user = $request->user();
 
-        // 프로필 사진이 S3에 있고 카카오 사진이 아니면 삭제
-        if ($user->profile_photo_url && ! str_contains($user->profile_photo_url, 'kakaocdn.net')) {
-            $path = parse_url($user->profile_photo_url, PHP_URL_PATH);
-            if ($path && Storage::disk('s3')->exists(ltrim($path, '/'))) {
-                Storage::disk('s3')->delete(ltrim($path, '/'));
-            }
-        }
+        // 프로필 사진 정리
+        $profilePhotoService->cleanupOnAccountDeletion($user);
 
         // 사용자 삭제 (로그아웃 전에 먼저 삭제)
         $user->delete();

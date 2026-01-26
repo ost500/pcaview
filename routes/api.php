@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\ContentsController;
 use App\Http\Controllers\Api\FeedController;
+use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Auth\KakaoController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,3 +33,11 @@ Route::post('/feed', [FeedController::class, 'store'])->middleware('auth:sanctum
 Route::get('/contents/{contentId}/comments', [CommentController::class, 'index']);
 Route::post('/contents/{contentId}/comments', [CommentController::class, 'store']);
 Route::delete('/contents/{contentId}/comments/{commentId}', [CommentController::class, 'destroy']);
+
+// Profile routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'index']);
+    Route::post('/profile/subscribe', [ProfileController::class, 'toggleSubscription']);
+    Route::post('/profile/photo', [ProfileController::class, 'updateProfilePhoto']);
+    Route::post('/profile/delete', [ProfileController::class, 'destroy']);
+});
