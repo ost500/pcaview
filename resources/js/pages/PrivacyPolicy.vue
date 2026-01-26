@@ -80,9 +80,7 @@ import { Head } from '@inertiajs/vue3';
 
                     <section class="space-y-3">
                         <h2 class="text-2xl font-semibold">5. 사용자 업로드 콘텐츠의 이용 및 보호</h2>
-                        <p class="text-muted-foreground">
-                            사용자가 커뮤니티 게시글에 업로드한 사진 및 기타 콘텐츠는 다음과 같이 관리됩니다:
-                        </p>
+                        <p class="text-muted-foreground">사용자가 커뮤니티 게시글에 업로드한 사진 및 기타 콘텐츠는 다음과 같이 관리됩니다:</p>
                         <ul class="ml-6 list-disc space-y-2 text-muted-foreground">
                             <li>업로드된 사진은 앱 내 콘텐츠 표시를 위해서만 사용됩니다</li>
                             <li>광고 제공업체를 포함한 제3자에게 공유되지 않습니다</li>
@@ -183,6 +181,55 @@ import { Head } from '@inertiajs/vue3';
                                 <li>이용자 맞춤 서비스 제공</li>
                                 <li>서비스 이용 통계 분석</li>
                             </ul>
+                        </div>
+                    </section>
+
+                    <section class="space-y-3">
+                        <h2 class="text-2xl font-semibold">12. 아동 보호 및 안전 정책</h2>
+                        <p class="text-muted-foreground">
+                            주보고는 아동의 온라인 안전과 보호를 최우선으로 생각하며, 아동 성적 학대 및 착취(CSAE) 근절을 위해 다음과 같은 정책을
+                            시행하고 있습니다.
+                        </p>
+                        <div class="space-y-3">
+                            <div>
+                                <h3 class="mb-2 text-lg font-medium">아동 보호 원칙</h3>
+                                <ul class="ml-6 list-disc space-y-2 text-muted-foreground">
+                                    <li>서비스는 만 14세 미만 아동의 개인정보를 수집하지 않습니다</li>
+                                    <li>아동 성적 학대 및 착취(CSAE) 콘텐츠를 엄격히 금지합니다</li>
+                                    <li>부적절한 콘텐츠 발견 시 즉시 삭제 및 관계 기관에 신고합니다</li>
+                                    <li>사용자가 업로드한 모든 콘텐츠를 모니터링하고 관리합니다</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 class="mb-2 text-lg font-medium">신고 및 대응</h3>
+                                <p class="text-muted-foreground">
+                                    아동 성적 학대 및 착취(CSAE) 관련 콘텐츠를 발견하신 경우, 즉시 아래 연락처로 신고해 주시기 바랍니다:
+                                </p>
+                                <div class="mt-2 rounded-lg border border-sidebar-border bg-muted/30 p-4">
+                                    <p class="font-medium">아동 보호 신고 센터</p>
+                                    <p class="text-muted-foreground">이메일: safety@pcaview.com</p>
+                                    <p class="text-muted-foreground">
+                                        또는
+                                        <a
+                                            href="https://www.safe182.go.kr/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="text-primary hover:underline"
+                                        >
+                                            아동·청소년 대상 성범죄 신고센터
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="mb-2 text-lg font-medium">콘텐츠 관리</h3>
+                                <ul class="ml-6 list-disc space-y-2 text-muted-foreground">
+                                    <li>모든 사용자 업로드 콘텐츠는 자동화된 시스템과 인력을 통해 검토됩니다</li>
+                                    <li>CSAE 관련 의심 콘텐츠 발견 시 즉시 차단 및 조사를 진행합니다</li>
+                                    <li>위반 사용자는 즉시 계정 정지 및 법적 조치가 취해집니다</li>
+                                    <li>관련 법령에 따라 수사기관에 적극 협조합니다</li>
+                                </ul>
+                            </div>
                         </div>
                     </section>
                 </div>
