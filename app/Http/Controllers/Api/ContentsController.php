@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Church;
 use App\Models\Contents;
+use App\Services\ContentsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -113,5 +114,39 @@ class ContentsController extends Controller
             'message' => 'Content retrieved successfully',
             'data'    => $content,
         ]);
+    }
+
+    /**
+     * Delete a content by its ID.
+     *
+     * @param  Request  $request
+     * @param  int  $id  The ID of the content.
+     * @param  ContentsService  $contentsService
+     */
+    public function destroy(Request $request, int $id, ContentsService $contentsService): JsonResponse
+    {
+        $contents = Contents::with('church', 'images')->find($id);
+
+        if (! $contents) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Content not found',
+            ], 404);
+        }
+
+        try {
+            // 콘텐츠 삭제
+            $contentsService->deleteContents($contents, $request->user());
+
+            return response()->json([
+                'success' => true,
+                'message' => '콘텐츠가 삭제되었습니다.',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 403);
+        }
     }
 }

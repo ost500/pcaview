@@ -26,6 +26,7 @@ Route::get('/feed', [FeedController::class, 'index']);
 Route::get('/c/{church}', [ContentsController::class, 'getByChurch']);
 Route::get('/c/{church}/departments', [ContentsController::class, 'getDepartments']);
 Route::get('/contents/{id}', [ContentsController::class, 'show']);
+Route::delete('/contents/{id}', [ContentsController::class, 'destroy'])->middleware('auth:sanctum');
 
 Route::post('/feed', [FeedController::class, 'store'])->middleware('auth:sanctum');
 

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contents;
+use App\Services\ContentsService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ContentsController extends Controller
@@ -101,38 +101,20 @@ class ContentsController extends Controller
     /**
      * 콘텐츠 삭제
      */
-    public function destroy(Request $request, int $id)
+    public function destroy(Request $request, int $id, ContentsService $contentsService)
     {
-        $contents = Contents::with('church')->findOrFail($id);
+        $contents = Contents::with('church', 'images')->findOrFail($id);
 
-        // 권한 확인: 콘텐츠 작성자만 삭제 가능
-        if ($contents->user_id !== $request->user()->id) {
-            return back()->with('error', '삭제 권한이 없습니다.');
+        try {
+            // 삭제 후 돌아갈 URL 저장 (church 페이지)
+            $redirectUrl = $contentsService->getRedirectUrlAfterDelete($contents, url()->previous());
+
+            // 콘텐츠 삭제
+            $contentsService->deleteContents($contents, $request->user());
+
+            return redirect($redirectUrl)->with('success', '콘텐츠가 삭제되었습니다.');
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
         }
-
-        // 삭제 후 돌아갈 URL 저장 (church 페이지)
-        $redirectUrl = $contents->church && $contents->church->slug
-            ? '/c/' . $contents->church->slug
-            : url()->previous();
-
-        // 관련 이미지 삭제
-        if ($contents->images) {
-            foreach ($contents->images as $image) {
-                // S3에서 이미지 삭제
-                if ($image->url) {
-                    $path = parse_url($image->url, PHP_URL_PATH);
-                    if ($path && Storage::disk('s3')->exists(ltrim($path, '/'))) {
-                        Storage::disk('s3')->delete(ltrim($path, '/'));
-                    }
-                }
-                // 이미지 레코드 삭제
-                $image->delete();
-            }
-        }
-
-        // 콘텐츠 삭제 (연관된 댓글, 태그 등은 모델의 cascade 설정에 따라 처리)
-        $contents->delete();
-
-        return redirect($redirectUrl)->with('success', '콘텐츠가 삭제되었습니다.');
     }
 }
