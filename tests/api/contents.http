@@ -1,0 +1,126 @@
+### Contents API Tests
+### Base URL
+@baseUrl = http://pcaview.abc/api
+@token = YOUR_AUTH_TOKEN_HERE
+
+### ============================================
+### 1. GET Contents by Church
+### ============================================
+
+### Get all contents for a church
+GET {{baseUrl}}/c/msch
+Accept: application/json
+
+### Get contents with department filter
+GET {{baseUrl}}/c/msch?department_id=1
+Accept: application/json
+
+### Get contents for non-existent church (should return 404)
+GET {{baseUrl}}/c/non-existent-church
+Accept: application/json
+
+
+### ============================================
+### 2. GET Departments by Church
+### ============================================
+
+### Get all departments for a church
+GET {{baseUrl}}/c/msch/departments
+Accept: application/json
+
+### Get departments for non-existent church (should return 404)
+GET {{baseUrl}}/c/non-existent-church/departments
+Accept: application/json
+
+
+### ============================================
+### 3. GET Single Content
+### ============================================
+
+### Get a single content by ID
+GET {{baseUrl}}/contents/1
+Accept: application/json
+
+### Get non-existent content (should return 404)
+GET {{baseUrl}}/contents/99999
+Accept: application/json
+
+
+### ============================================
+### 4. DELETE Content (requires authentication)
+### ============================================
+
+### Delete content with DELETE method
+DELETE {{baseUrl}}/contents/1
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### Delete content with POST method (mobile compatible)
+POST {{baseUrl}}/contents/1/delete
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### Try to delete without authentication (should return 401)
+DELETE {{baseUrl}}/contents/1
+Accept: application/json
+
+### Try to delete non-existent content (should return 404)
+DELETE {{baseUrl}}/contents/99999
+Authorization: Bearer {{token}}
+Accept: application/json
+
+
+### ============================================
+### 5. Test News Content Filtering
+### ============================================
+
+### Create a test news content with long body (for testing 1/3 truncation)
+# First, you need to create a news content in the database
+# Then get it via the church endpoint to verify body is truncated
+
+### Get contents - verify news body is truncated to 1/3
+GET {{baseUrl}}/c/msch
+Accept: application/json
+
+### Expected Response Structure:
+# {
+#   "success": true,
+#   "message": "Contents retrieved successfully",
+#   "data": {
+#     "church": { ... },
+#     "contents": [
+#       {
+#         "id": 1,
+#         "type": "news",
+#         "body": "뉴스 본문 일부...",  // Should be 1/3 of original + "..."
+#         ...
+#       },
+#       {
+#         "id": 2,
+#         "type": "bulletin",
+#         "body": "전체 본문",  // Should be full body (not truncated)
+#         ...
+#       }
+#     ],
+#     "total": 2
+#   }
+# }
+
+
+### ============================================
+### 6. Authentication Test
+### ============================================
+
+### Login to get token (if you have auth endpoint)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password",
+  "device_name": "http-client"
+}
+
+### Use the token from login response for authenticated requests
+# Copy the token from the response and update @token variable above
