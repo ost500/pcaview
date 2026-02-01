@@ -100,7 +100,7 @@ class ContentsController extends Controller
      *
      * @param int $id The ID of the content.
      */
-    public function show(int $id): JsonResponse
+    public function show(int $id, ContentsService $contentsService): JsonResponse
     {
         $content = Contents::with(['user', 'church', 'departments', 'images', 'tags', 'comments'])
             ->find($id);
@@ -112,10 +112,13 @@ class ContentsController extends Controller
             ], 404);
         }
 
+        // news 타입 본문 필터링 (저작권 보호를 위해 body의 1/3만 표시)
+        $filteredContent = $contentsService->filterNewsContents(collect([$content]))->first();
+
         return response()->json([
             'success' => true,
             'message' => 'Content retrieved successfully',
-            'data'    => $content,
+            'data'    => $filteredContent,
         ]);
     }
 
