@@ -85,7 +85,10 @@ class ContentsService
     public function filterNewsContents(Collection $contents): Collection
     {
         return $contents->map(function ($content) {
-            if ($content->type === 'news' && $content->body) {
+            // news 또는 naver_news 타입 필터링
+            $isNewsType = $content->type === 'news' || $content->type === 'naver_news';
+
+            if ($isNewsType && $content->body) {
                 // body 텍스트를 1/3로 줄임
                 $originalLength = mb_strlen($content->body);
                 $truncatedLength = (int) ($originalLength / 3);
