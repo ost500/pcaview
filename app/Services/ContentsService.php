@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\ContentsType;
 use App\Models\Contents;
 use App\Models\User;
 use Illuminate\Support\Collection;
@@ -85,10 +86,8 @@ class ContentsService
     public function filterNewsContents(Collection $contents): Collection
     {
         return $contents->map(function ($content) {
-            // news 또는 naver_news 타입 필터링
-            $isNewsType = $content->type === 'news' || $content->type === 'naver_news';
-
-            if ($isNewsType && $content->body) {
+            // news 관련 타입 필터링 (news, nate_news, naver_news)
+            if (ContentsType::isNews($content->type) && $content->body) {
                 // body 텍스트를 1/3로 줄임
                 $originalLength = mb_strlen($content->body);
                 $truncatedLength = (int) ($originalLength / 3);
