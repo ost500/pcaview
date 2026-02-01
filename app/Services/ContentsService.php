@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Contents;
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 
 class ContentsService
@@ -72,5 +73,29 @@ class ContentsService
         }
 
         return $fallbackUrl ?? '/';
+    }
+
+    /**
+     * news 타입 콘텐츠의 body 텍스트를 1/3만 표시
+     * 저작권 보호를 위해 news 타입은 본문의 일부만 표시
+     *
+     * @param  Collection  $contents
+     * @return Collection
+     */
+    public function filterNewsContents(Collection $contents): Collection
+    {
+        return $contents->map(function ($content) {
+            if ($content->type === 'news' && $content->body) {
+                // body 텍스트를 1/3로 줄임
+                $originalLength = mb_strlen($content->body);
+                $truncatedLength = (int) ($originalLength / 3);
+
+                if ($truncatedLength > 0) {
+                    $content->body = mb_substr($content->body, 0, $truncatedLength).'...';
+                }
+            }
+
+            return $content;
+        });
     }
 }

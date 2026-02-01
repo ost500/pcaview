@@ -16,7 +16,7 @@ class ContentsController extends Controller
      *
      * @param string $church Church name parameter
      */
-    public function getByChurch(Request $request, string $church): JsonResponse
+    public function getByChurch(Request $request, string $church, ContentsService $contentsService): JsonResponse
     {
         // Church를 slug으로 찾기
         $churchModel = Church::where('slug', $church)->first();
@@ -47,13 +47,16 @@ class ContentsController extends Controller
 
         $contents = $contentsQuery->get();
 
+        // news 타입 본문 필터링 (저작권 보호를 위해 body의 1/3만 표시)
+        $filteredContents = $contentsService->filterNewsContents($contents);
+
         return response()->json([
             'success' => true,
             'message' => 'Contents retrieved successfully',
             'data'    => [
                 'church' => $churchModel,
-                'contents' => $contents,
-                'total'    => $contents->count(),
+                'contents' => $filteredContents,
+                'total'    => $filteredContents->count(),
             ],
         ]);
     }
