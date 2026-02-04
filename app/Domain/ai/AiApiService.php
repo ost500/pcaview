@@ -118,8 +118,10 @@ class AiApiService
 4. 자연스럽고 세련된 문체로 작성
 5. 원문과 30% 이상 다른 표현 사용
 6. 불필요한 설명이나 추가 내용 없이 본문만 출력
+7. **중요: 반드시 순수한 한글(현대 한국어)로만 작성하세요. 한자나 중국어 문자는 절대 사용하지 마세요**
+8. 모든 단어와 문장을 한글로만 표현하세요
 
-리라이팅된 본문만 출력하세요:
+리라이팅된 본문만 순수 한글로 출력하세요:
 PROMPT;
 
         // Rate limit 체크
@@ -169,11 +171,11 @@ PROMPT;
     /**
      * 뉴스 제목과 내용을 바탕으로 이미지 생성
      *
-     * OpenRouter의 /chat/completions 엔드포인트에 modalities 파라미터 사용
+     * OpenRouter의 /chat/completions 엔드포인트에 modalities 사용
      *
      * @param  string      $title 뉴스 제목
      * @param  string      $body  뉴스 본문
-     * @return string|null 생성된 이미지 URL 또는 null
+     * @return string|null 생성된 이미지 URL (Base64 data URL) 또는 null
      */
     public function generateNewsImage(string $title, string $body): ?string
     {
@@ -193,9 +195,7 @@ PROMPT;
         // Rate limit 체크
         $this->checkRateLimit();
 
-        // 이미지 생성 모델: Gemini 3 Pro Image Preview
-        // 지원 기능: text rendering, multi-image blending, 2K/4K output
-        // Output modalities: image, text
+        // Gemini 3 Pro Image Preview 모델 사용 (현재 OpenRouter에서 사용 가능한 이미지 생성 모델)
         $model    = 'google/gemini-3-pro-image-preview';
         $siteUrl  = 'https://nalameter.com';
         $siteName = env('APP_NAME', 'Your Site Name');
@@ -208,13 +208,14 @@ PROMPT;
                 'X-Title'       => $siteName,
             ])->timeout(120)->post('https://openrouter.ai/api/v1/chat/completions', [
                 'model'      => $model,
-                'modalities' => ['image', 'text'],
                 'messages'   => [
                     [
                         'role'    => 'user',
                         'content' => $prompt,
                     ],
                 ],
+                'modalities' => ['image', 'text'],
+                'stream'     => false,
             ]);
 
             $json = $response->json();
@@ -227,64 +228,27 @@ PROMPT;
                 return null;
             }
 
-            // 응답 전체 구조 로깅
-            \Log::info('Full API response structure', [
-                'has_choices' => isset($json['choices']),
-                'has_message' => isset($json['choices'][0]['message']),
-                'message_keys' => isset($json['choices'][0]['message']) ? array_keys($json['choices'][0]['message']) : [],
-            ]);
-
-            // 응답에서 이미지 추출 (여러 형식 지원)
+            // OpenRouter 문서에 따른 응답 형식: choices[0].message.images[0].imageUrl.url
             $message = $json['choices'][0]['message'] ?? null;
 
-            if ($message) {
-                // 형식 1: images 배열
-                if (isset($message['images']) && is_array($message['images']) && ! empty($message['images'])) {
-                    $imageData = $message['images'][0];
+            if ($message && isset($message['images']) && is_array($message['images']) && ! empty($message['images'])) {
+                // imageUrl.url 또는 image_url.url 형식 둘 다 시도
+                $imageUrl = $message['images'][0]['imageUrl']['url'] ?? $message['images'][0]['image_url']['url'] ?? null;
 
-                    if (is_string($imageData) && str_starts_with($imageData, 'data:image/')) {
-                        \Log::info('AI 이미지 생성 성공 (images array, base64)', [
-                            'title' => $title,
-                            'length' => strlen($imageData),
-                        ]);
+                if ($imageUrl) {
+                    \Log::info('AI 이미지 생성 성공', [
+                        'title'  => $title,
+                        'length' => strlen($imageUrl),
+                    ]);
 
-                        return $imageData;
-                    }
-                }
-
-                // 형식 2: content 배열 (multipart)
-                if (isset($message['content']) && is_array($message['content'])) {
-                    foreach ($message['content'] as $item) {
-                        if (isset($item['type']) && $item['type'] === 'image_url') {
-                            $imageUrl = $item['image_url']['url'] ?? null;
-                            if ($imageUrl) {
-                                \Log::info('AI 이미지 생성 성공 (content array, url)', ['url' => $imageUrl]);
-
-                                return $imageUrl;
-                            }
-                        }
-
-                        // Base64 inline 이미지
-                        if (isset($item['type']) && $item['type'] === 'image' && isset($item['source'])) {
-                            $imageData = $item['source']['data'] ?? null;
-                            if ($imageData) {
-                                $mimeType = $item['source']['media_type'] ?? 'image/png';
-                                $fullData = "data:{$mimeType};base64,{$imageData}";
-                                \Log::info('AI 이미지 생성 성공 (content array, inline)', ['length' => strlen($fullData)]);
-
-                                return $fullData;
-                            }
-                        }
-                    }
+                    return $imageUrl;
                 }
             }
 
-            \Log::warning('AI 이미지 생성 응답 형식 불일치', [
-                'has_images' => isset($message['images']),
-                'images_count' => isset($message['images']) ? count($message['images']) : 0,
-                'content_type' => isset($message['content']) ? gettype($message['content']) : 'null',
-                'message_keys' => $message ? array_keys($message) : [],
-                'full_response_sample' => substr(json_encode($json), 0, 500),
+            \Log::warning('AI 이미지 생성 응답에서 이미지를 찾을 수 없음', [
+                'has_message' => isset($message),
+                'has_images'  => isset($message['images']),
+                'message'     => $message,
             ]);
 
             return null;
