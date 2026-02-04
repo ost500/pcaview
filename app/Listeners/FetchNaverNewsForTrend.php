@@ -32,7 +32,7 @@ class FetchNaverNewsForTrend implements ShouldQueue
         try {
             $trend = $event->trend;
 
-            // Department와 Church 정보 가져오기
+            // Department 정보 가져오기
             $department = Department::with('church')->find($trend->department_id);
             if (! $department) {
                 Log::warning('Department not found for trend', ['trend_id' => $trend->id]);
@@ -40,33 +40,15 @@ class FetchNaverNewsForTrend implements ShouldQueue
                 return;
             }
 
-            // Department에 church_id가 없으면 기본 church (maple) 할당
-            if (! $department->church_id) {
-                $defaultChurch = \App\Models\Church::where('slug', 'maple')->first();
-                if ($defaultChurch) {
-                    $department->update(['church_id' => $defaultChurch->id]);
-                    $department->load('church'); // Relationship 새로고침
-                    Log::info('Assigned default church to department', [
-                        'department_id' => $department->id,
-                        'church_id'     => $defaultChurch->id,
-                    ]);
-                }
+            // 검색 키워드 생성: church가 있으면 church.name과 department.name 조합, 없으면 department.name만
+            if ($department->church) {
+                $churchName = $department->church->name;
+                $keyword    = $churchName === $department->name
+                    ? $department->name
+                    : $churchName.' '.$department->name;
+            } else {
+                $keyword = $department->name;
             }
-
-            if (! $department->church) {
-                Log::warning('Church not found for department', [
-                    'trend_id'      => $trend->id,
-                    'department_id' => $department->id,
-                ]);
-
-                return;
-            }
-
-            // 검색 키워드 생성: church.name과 department.name이 같으면 department.name만, 다르면 합침
-            $churchName = $department->church->name;
-            $keyword    = $churchName === $department->name
-                ? $department->name
-                : $churchName.' '.$department->name;
 
             // Naver 뉴스 검색
             $naverNewsItems = $this->naverNewsService->searchNews($keyword);
@@ -96,11 +78,15 @@ class FetchNaverNewsForTrend implements ShouldQueue
             $trend      = $event->trend;
             $department = Department::with('church')->find($trend->department_id);
 
-            if ($department && $department->church) {
-                $churchName = $department->church->name;
-                $keyword    = $churchName === $department->name
-                    ? $department->name
-                    : $churchName.' '.$department->name;
+            if ($department) {
+                if ($department->church) {
+                    $churchName = $department->church->name;
+                    $keyword    = $churchName === $department->name
+                        ? $department->name
+                        : $churchName.' '.$department->name;
+                } else {
+                    $keyword = $department->name;
+                }
             } else {
                 $keyword = 'unknown';
             }
