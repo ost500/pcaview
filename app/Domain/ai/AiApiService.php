@@ -286,8 +286,8 @@ PROMPT;
         // Rate limit 체크
         $this->checkRateLimit();
 
-        // Riverflow V2 Fast 모델 (빠른 생성 속도)
-        $model    = 'sourceful/riverflow-v2-fast';
+        // Gemini 3 Pro Image Preview (OpenRouter에서 유일하게 작동하는 모델)
+        $model    = 'google/gemini-3-pro-image-preview';
         $siteUrl  = 'https://pcaview.com';
         $siteName = env('APP_NAME', 'Your Site Name');
 
