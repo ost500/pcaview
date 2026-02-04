@@ -227,15 +227,23 @@ PROMPT;
                 return null;
             }
 
-            // 응답에서 이미지 추출
-            if (isset($json['choices'][0]['message']['images']) && is_array($json['choices'][0]['message']['images'])) {
-                $images = $json['choices'][0]['message']['images'];
-                if (! empty($images)) {
-                    $imageData = $images[0]; // 첫 번째 이미지 사용
+            // 응답 전체 구조 로깅
+            \Log::info('Full API response structure', [
+                'has_choices' => isset($json['choices']),
+                'has_message' => isset($json['choices'][0]['message']),
+                'message_keys' => isset($json['choices'][0]['message']) ? array_keys($json['choices'][0]['message']) : [],
+            ]);
 
-                    // Base64 데이터 URL인 경우 (data:image/png;base64,...)
+            // 응답에서 이미지 추출 (여러 형식 지원)
+            $message = $json['choices'][0]['message'] ?? null;
+
+            if ($message) {
+                // 형식 1: images 배열
+                if (isset($message['images']) && is_array($message['images']) && ! empty($message['images'])) {
+                    $imageData = $message['images'][0];
+
                     if (is_string($imageData) && str_starts_with($imageData, 'data:image/')) {
-                        \Log::info('AI 이미지 생성 성공 (base64)', [
+                        \Log::info('AI 이미지 생성 성공 (images array, base64)', [
                             'title' => $title,
                             'length' => strlen($imageData),
                         ]);
@@ -243,20 +251,28 @@ PROMPT;
                         return $imageData;
                     }
                 }
-            }
 
-            // Content에서 이미지 URL 찾기 (대체 형식)
-            if (isset($json['choices'][0]['message']['content'])) {
-                $content = $json['choices'][0]['message']['content'];
-
-                if (is_array($content)) {
-                    foreach ($content as $item) {
+                // 형식 2: content 배열 (multipart)
+                if (isset($message['content']) && is_array($message['content'])) {
+                    foreach ($message['content'] as $item) {
                         if (isset($item['type']) && $item['type'] === 'image_url') {
                             $imageUrl = $item['image_url']['url'] ?? null;
                             if ($imageUrl) {
-                                \Log::info('AI 이미지 생성 성공 (url)', ['url' => $imageUrl]);
+                                \Log::info('AI 이미지 생성 성공 (content array, url)', ['url' => $imageUrl]);
 
                                 return $imageUrl;
+                            }
+                        }
+
+                        // Base64 inline 이미지
+                        if (isset($item['type']) && $item['type'] === 'image' && isset($item['source'])) {
+                            $imageData = $item['source']['data'] ?? null;
+                            if ($imageData) {
+                                $mimeType = $item['source']['media_type'] ?? 'image/png';
+                                $fullData = "data:{$mimeType};base64,{$imageData}";
+                                \Log::info('AI 이미지 생성 성공 (content array, inline)', ['length' => strlen($fullData)]);
+
+                                return $fullData;
                             }
                         }
                     }
@@ -264,8 +280,11 @@ PROMPT;
             }
 
             \Log::warning('AI 이미지 생성 응답 형식 불일치', [
-                'has_images' => isset($json['choices'][0]['message']['images']),
-                'response' => json_encode($json),
+                'has_images' => isset($message['images']),
+                'images_count' => isset($message['images']) ? count($message['images']) : 0,
+                'content_type' => isset($message['content']) ? gettype($message['content']) : 'null',
+                'message_keys' => $message ? array_keys($message) : [],
+                'full_response_sample' => substr(json_encode($json), 0, 500),
             ]);
 
             return null;
