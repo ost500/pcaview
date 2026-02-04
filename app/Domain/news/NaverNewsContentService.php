@@ -146,8 +146,18 @@ class NaverNewsContentService
                 // Attach to department via pivot table
                 $contents->departments()->attach($department->id);
 
-                // 네이버/네이트 뉴스는 이미지를 ContentsImage에 저장하지 않음
-                // 본문 HTML에 이미 이미지가 포함되어 있으므로 별도 저장 불필요
+                // AI 생성 이미지가 있으면 ContentsImage에도 저장
+                if ($aiGeneratedImageUrl) {
+                    $contents->images()->create([
+                        'file_url' => $aiGeneratedImageUrl,
+                        'order' => 1,
+                    ]);
+
+                    Log::info('AI generated image saved to ContentsImage', [
+                        'content_id' => $contents->id,
+                        'image_url' => $aiGeneratedImageUrl,
+                    ]);
+                }
 
                 $savedCount++;
             } catch (\Exception $e) {
