@@ -34,8 +34,30 @@ class FetchNaverNewsForTrend implements ShouldQueue
 
             // Department와 Church 정보 가져오기
             $department = Department::with('church')->find($trend->department_id);
-            if (! $department || ! $department->church) {
-                Log::warning('Department or Church not found for trend', ['trend_id' => $trend->id]);
+            if (! $department) {
+                Log::warning('Department not found for trend', ['trend_id' => $trend->id]);
+
+                return;
+            }
+
+            // Department에 church_id가 없으면 기본 church (maple) 할당
+            if (! $department->church_id) {
+                $defaultChurch = \App\Models\Church::where('slug', 'maple')->first();
+                if ($defaultChurch) {
+                    $department->update(['church_id' => $defaultChurch->id]);
+                    $department->load('church'); // Relationship 새로고침
+                    Log::info('Assigned default church to department', [
+                        'department_id' => $department->id,
+                        'church_id'     => $defaultChurch->id,
+                    ]);
+                }
+            }
+
+            if (! $department->church) {
+                Log::warning('Church not found for department', [
+                    'trend_id'      => $trend->id,
+                    'department_id' => $department->id,
+                ]);
 
                 return;
             }
