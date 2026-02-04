@@ -55,4 +55,9 @@ return [
         'redirect' => env('KAKAO_REDIRECT_URI'),
     ],
 
+    'openrouter' => [
+        'api_key' => env('OPENROUTER_API_KEY'),
+        'base_url' => env('OPENROUTER_BASE_URL', 'https://openrouter.ai/api/v1'),
+    ],
+
 ];
