@@ -15,6 +15,16 @@ class AiApiService
     private const RATE_LIMIT_MAX    = 20;
     private const RATE_LIMIT_WINDOW = 60; // 초
 
+    // API 설정
+    private const API_BASE_URL = 'https://openrouter.ai/api/v1';
+    private const SITE_URL = 'https://pcaview.com';
+
+    // 모델 설정
+    private const MODEL_TEXT_FAST = 'google/gemini-2.5-flash-lite';
+    private const MODEL_IMAGE_PREMIUM = 'google/gemini-3-pro-image-preview';
+    private const MODEL_IMAGE_FAST = 'sourceful/riverflow-v2-fast-preview';
+    private const MODEL_TAG_FREE = 'xiaomi/mimo-v2-flash:free';
+
     public function __construct()
     {
         $this->apiToken = config('services.openrouter.api_key');
@@ -46,50 +56,157 @@ class AiApiService
         Cache::put($cacheKey, $requests, self::RATE_LIMIT_WINDOW);
     }
 
-    public function request($question): ?Ai
+    /**
+     * 공통 HTTP 헤더 생성
+     */
+    private function getHttpHeaders(): array
     {
-        // Rate limit 체크
+        return [
+            'Authorization' => 'Bearer ' . $this->apiToken,
+            'Content-Type'  => 'application/json',
+            'HTTP-Referer'  => self::SITE_URL,
+            'X-Title'       => env('APP_NAME', 'PCAView'),
+        ];
+    }
+
+    /**
+     * OpenRouter API 호출 (텍스트 생성)
+     */
+    private function callTextApi(string $model, string $prompt, int $timeout = 100): ?array
+    {
         $this->checkRateLimit();
 
-        // Gemini 2.5 Flash-Lite: 초고속 저지연 모델
-        $model    = 'google/gemini-2.5-flash-lite';
-        $siteUrl  = 'https://pcaview.com';
-        $siteName = env('APP_NAME', 'Your Site Name');
-        $role     = 'user';
+        try {
+            $response = Http::withHeaders($this->getHttpHeaders())
+                ->timeout($timeout)
+                ->post(self::API_BASE_URL . '/chat/completions', [
+                    'model'    => $model,
+                    'messages' => [
+                        [
+                            'role'    => 'user',
+                            'content' => $prompt,
+                        ],
+                    ],
+                ]);
 
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.$this->apiToken,
-            'Content-Type'  => 'application/json',
-            'HTTP-Referer'  => $siteUrl, // Optional. Site URL for rankings on openrouter.ai
-            'X-Title'       => $siteName, // Optional. Site title for rankings on openrouter.ai
-        ])->timeout(100)->post('https://openrouter.ai/api/v1/chat/completions', [
-            'model'    => $model,
-            'messages' => [
-                [
-                    'role'    => $role,
-                    'content' => $question,
+            return $response->json();
+        } catch (\Exception $e) {
+            \Log::error('OpenRouter API 호출 실패', [
+                'model' => $model,
+                'error' => $e->getMessage(),
+            ]);
+            return null;
+        }
+    }
+
+    /**
+     * OpenRouter API 호출 (이미지 생성)
+     */
+    private function callImageApi(string $model, string $prompt, array $modalities = ['image']): ?array
+    {
+        $this->checkRateLimit();
+
+        try {
+            $response = Http::withHeaders($this->getHttpHeaders())
+                ->timeout(120)
+                ->post(self::API_BASE_URL . '/chat/completions', [
+                    'model'      => $model,
+                    'messages'   => [
+                        [
+                            'role'    => 'user',
+                            'content' => $prompt,
+                        ],
+                    ],
+                    'modalities' => $modalities,
+                ]);
+
+            $json = $response->json();
+
+            // 디버깅용 상세 로깅
+            \Log::info('AI 이미지 생성 API 응답', [
+                'status' => $response->status(),
+                'model' => $model,
+                'response_keys' => array_keys($json ?? []),
+            ]);
+
+            return [
+                'success' => $response->successful(),
+                'status' => $response->status(),
+                'data' => $json,
+            ];
+        } catch (\Exception $e) {
+            \Log::error('이미지 생성 API 호출 실패', [
+                'model' => $model,
+                'error' => $e->getMessage(),
+            ]);
+            return null;
+        }
+    }
+
+    /**
+     * 이미지 URL 추출 (여러 응답 형식 지원)
+     */
+    private function extractImageUrl(array $response): ?string
+    {
+        $message = $response['data']['choices'][0]['message'] ?? null;
+
+        if (!$message || !isset($message['images']) || !is_array($message['images']) || empty($message['images'])) {
+            \Log::warning('응답에 이미지 없음', [
+                'has_message' => isset($message),
+                'message_structure' => $message,
+            ]);
+            return null;
+        }
+
+        // imageUrl.url 또는 image_url.url 형식 둘 다 시도
+        $imageUrl = $message['images'][0]['imageUrl']['url']
+                 ?? $message['images'][0]['image_url']['url']
+                 ?? null;
+
+        if ($imageUrl) {
+            \Log::info('이미지 URL 추출 성공', [
+                'length' => strlen($imageUrl),
+                'is_base64' => str_starts_with($imageUrl, 'data:image/'),
+            ]);
+        }
+
+        return $imageUrl;
+    }
+
+    /**
+     * 일반 AI 요청
+     */
+    public function request($question): ?Ai
+    {
+        $response = Http::withHeaders($this->getHttpHeaders())
+            ->timeout(100)
+            ->post(self::API_BASE_URL . '/chat/completions', [
+                'model'    => self::MODEL_TEXT_FAST,
+                'messages' => [
+                    [
+                        'role'    => 'user',
+                        'content' => $question,
+                    ],
                 ],
-            ],
-        ]);
+            ]);
+
         $json = $response->json();
 
         if ($response->successful()) {
-
             return Ai::create([
                 'ai_id'         => $json['id'],
                 'provider'      => $json['provider'],
                 'model'         => $json['model'],
                 'created'       => Carbon::parse($json['created']),
-                'question_role' => $role,
+                'question_role' => 'user',
                 'question'      => $question,
                 'answer_role'   => $json['choices'][0]['message']['role'] ?? null,
                 'answer'        => $json['choices'][0]['message']['content'] ?? null,
             ]);
-
         }
 
         Ai::create([
-            'model'   => $model,
+            'model'   => self::MODEL_TEXT_FAST,
             'created' => Carbon::now(),
             'answer'  => json_encode($json),
         ]);
@@ -98,10 +215,7 @@ class AiApiService
     }
 
     /**
-     * 뉴스 본문을 AI로 리라이팅하여 저작권 문제 해결
-     *
-     * @param  string      $originalBody 원본 뉴스 본문
-     * @return string|null 리라이팅된 본문 또는 null
+     * 뉴스 본문 AI 리라이팅
      */
     public function rewriteNewsContent(string $originalBody): ?string
     {
@@ -125,154 +239,42 @@ class AiApiService
 리라이팅된 본문만 순수 한글로 출력하세요:
 PROMPT;
 
-        // Rate limit 체크
-        $this->checkRateLimit();
+        $json = $this->callTextApi(self::MODEL_TEXT_FAST, $prompt);
 
-        // Gemini 2.5 Flash-Lite: 초고속 저지연 모델
-        $model    = 'google/gemini-2.5-flash-lite';
-        $siteUrl  = 'https://pcaview.com';
-        $siteName = env('APP_NAME', 'Your Site Name');
-
-        try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer '.$this->apiToken,
-                'Content-Type'  => 'application/json',
-                'HTTP-Referer'  => $siteUrl,
-                'X-Title'       => $siteName,
-            ])->timeout(100)->post('https://openrouter.ai/api/v1/chat/completions', [
-                'model'    => $model,
-                'messages' => [
-                    [
-                        'role'    => 'user',
-                        'content' => $prompt,
-                    ],
-                ],
+        if ($json && isset($json['choices'][0]['message']['content'])) {
+            $rewrittenContent = trim($json['choices'][0]['message']['content']);
+            \Log::info('AI 리라이팅 성공', [
+                'original_length' => mb_strlen($originalBody),
+                'rewritten_length' => mb_strlen($rewrittenContent),
             ]);
-
-            $json = $response->json();
-
-            \Log::info('AI 리라이팅 응답 상태: '.$response->status());
-
-            if ($response->successful() && isset($json['choices'][0]['message']['content'])) {
-                $rewrittenContent = $json['choices'][0]['message']['content'];
-                \Log::info("AI 리라이팅 성공. 원본 길이: ".mb_strlen($originalBody).", 결과 길이: ".mb_strlen($rewrittenContent));
-
-                return trim($rewrittenContent);
-            }
-
-            \Log::warning('AI 리라이팅 실패. 상태: '.$response->status());
-
-            return null;
-        } catch (\Exception $e) {
-            \Log::error('AI 리라이팅 예외 발생: '.$e->getMessage());
-
-            return null;
+            return $rewrittenContent;
         }
+
+        \Log::warning('AI 리라이팅 실패');
+        return null;
     }
 
     /**
-     * 뉴스 제목과 내용을 바탕으로 이미지 생성 (고품질, 비쌈)
-     *
-     * OpenRouter의 /chat/completions 엔드포인트에 modalities 사용
-     *
-     * @param  string      $title 뉴스 제목
-     * @param  string      $body  뉴스 본문
-     * @return string|null 생성된 이미지 URL (Base64 data URL) 또는 null
+     * 뉴스 이미지 생성 (고품질)
      */
     public function generateNewsImage(string $title, string $body): ?string
     {
-        // 본문에서 핵심 내용 추출 (처음 100자)
-        $summary = mb_substr(strip_tags($body), 0, 100);
-
-        $prompt = <<<PROMPT
-Create a professional, high-quality news article thumbnail image.
-
-Title: {$title}
-Summary: {$summary}
-
-Style: Professional news editorial, modern, clean design, photorealistic
-Aspect ratio: 16:9 for web thumbnail
-PROMPT;
-
-        // Rate limit 체크
-        $this->checkRateLimit();
-
-        // Gemini 3 Pro Image Preview 모델 사용 (현재 OpenRouter에서 사용 가능한 이미지 생성 모델)
-        $model    = 'google/gemini-3-pro-image-preview';
-        $siteUrl  = 'https://pcaview.com';
-        $siteName = env('APP_NAME', 'Your Site Name');
-
-        try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer '.$this->apiToken,
-                'Content-Type'  => 'application/json',
-                'HTTP-Referer'  => $siteUrl,
-                'X-Title'       => $siteName,
-            ])->timeout(120)->post('https://openrouter.ai/api/v1/chat/completions', [
-                'model'      => $model,
-                'messages'   => [
-                    [
-                        'role'    => 'user',
-                        'content' => $prompt,
-                    ],
-                ],
-                'modalities' => ['image', 'text'],
-                'stream'     => false,
-            ]);
-
-            $json = $response->json();
-
-            \Log::info('AI 이미지 생성 응답 상태: '.$response->status());
-
-            if (! $response->successful()) {
-                \Log::warning('AI 이미지 생성 실패. 상태: '.$response->status(), ['response' => $json]);
-
-                return null;
-            }
-
-            // OpenRouter 문서에 따른 응답 형식: choices[0].message.images[0].imageUrl.url
-            $message = $json['choices'][0]['message'] ?? null;
-
-            if ($message && isset($message['images']) && is_array($message['images']) && ! empty($message['images'])) {
-                // imageUrl.url 또는 image_url.url 형식 둘 다 시도
-                $imageUrl = $message['images'][0]['imageUrl']['url'] ?? $message['images'][0]['image_url']['url'] ?? null;
-
-                if ($imageUrl) {
-                    \Log::info('AI 이미지 생성 성공', [
-                        'title'  => $title,
-                        'length' => strlen($imageUrl),
-                    ]);
-
-                    return $imageUrl;
-                }
-            }
-
-            \Log::warning('AI 이미지 생성 응답에서 이미지를 찾을 수 없음', [
-                'has_message' => isset($message),
-                'has_images'  => isset($message['images']),
-                'message'     => $message,
-            ]);
-
-            return null;
-        } catch (\Exception $e) {
-            \Log::error('AI 이미지 생성 예외 발생: '.$e->getMessage());
-
-            return null;
-        }
+        return $this->generateImage($title, $body, self::MODEL_IMAGE_PREMIUM, ['image', 'text']);
     }
 
     /**
-     * 뉴스 제목과 내용을 바탕으로 저렴한 이미지 생성
-     *
-     * Gemini 3 Pro 모델 사용 (OpenRouter에서 확실히 작동하는 모델)
-     *
-     * @param  string      $title 뉴스 제목
-     * @param  string      $body  뉴스 본문
-     * @return string|null 생성된 이미지 URL 또는 null
+     * 뉴스 이미지 생성 (저렴하고 빠름)
      */
     public function generateCheapNewsImage(string $title, string $body): ?string
     {
-        // 본문에서 핵심 내용 추출 (처음 100자)
+        return $this->generateImage($title, $body, self::MODEL_IMAGE_FAST, ['image']);
+    }
+
+    /**
+     * 이미지 생성 공통 로직
+     */
+    private function generateImage(string $title, string $body, string $model, array $modalities): ?string
+    {
         $summary = mb_substr(strip_tags($body), 0, 100);
 
         $prompt = <<<PROMPT
@@ -285,101 +287,25 @@ Style: Professional news editorial, modern, clean design, photorealistic
 Aspect ratio: 16:9 for web thumbnail
 PROMPT;
 
-        // Rate limit 체크
-        $this->checkRateLimit();
+        $response = $this->callImageApi($model, $prompt, $modalities);
 
-        // Riverflow V2 Fast 모델 (빠르고 저렴)
-        $model    = 'sourceful/riverflow-v2-fast-preview';
-        $siteUrl  = 'https://pcaview.com';
-        $siteName = env('APP_NAME', 'Your Site Name');
-
-        try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer '.$this->apiToken,
-                'Content-Type'  => 'application/json',
-                'HTTP-Referer'  => $siteUrl,
-                'X-Title'       => $siteName,
-            ])->timeout(120)->post('https://openrouter.ai/api/v1/chat/completions', [
-                'model'      => $model,
-                'messages'   => [
-                    [
-                        'role'    => 'user',
-                        'content' => $prompt,
-                    ],
-                ],
-                'modalities' => ['image'],
-            ]);
-
-            $json = $response->json();
-
-            // 전체 응답 구조 로깅 (디버깅용)
-            \Log::info('AI 이미지 생성 API 응답 전체', [
-                'status' => $response->status(),
+        if (!$response || !$response['success']) {
+            \Log::warning('이미지 생성 실패', [
                 'model' => $model,
-                'response_keys' => array_keys($json ?? []),
-                'full_response' => $json,
+                'status' => $response['status'] ?? 'unknown',
             ]);
-
-            if (! $response->successful()) {
-                \Log::warning('AI 이미지 생성 실패. 상태: '.$response->status(), [
-                    'model' => $model,
-                    'response' => $json,
-                ]);
-
-                return null;
-            }
-
-            // 응답 구조 분석
-            $message = $json['choices'][0]['message'] ?? null;
-
-            \Log::info('Message 구조 분석', [
-                'message_keys' => $message ? array_keys($message) : null,
-                'has_images' => isset($message['images']),
-                'has_content' => isset($message['content']),
-                'content_type' => isset($message['content']) ? gettype($message['content']) : null,
-            ]);
-
-            // 여러 가능한 응답 형식 시도
-            if ($message && isset($message['images']) && is_array($message['images']) && ! empty($message['images'])) {
-                $imageUrl = $message['images'][0]['imageUrl']['url'] ?? $message['images'][0]['image_url']['url'] ?? null;
-
-                if ($imageUrl) {
-                    \Log::info('AI 이미지 생성 성공 (images 배열)', [
-                        'title'  => $title,
-                        'model'  => $model,
-                        'length' => strlen($imageUrl),
-                    ]);
-
-                    return $imageUrl;
-                }
-            }
-
-            \Log::warning('AI 이미지 생성 응답에서 이미지를 찾을 수 없음', [
-                'model' => $model,
-                'has_message' => isset($message),
-                'message_structure' => $message,
-            ]);
-
-            return null;
-        } catch (\Exception $e) {
-            \Log::error('AI 이미지 생성 예외 발생: '.$e->getMessage());
-
             return null;
         }
+
+        return $this->extractImageUrl($response);
     }
 
     /**
-     * 뉴스 내용을 분석하여 태그 10개 생성
-     *
-     * @param  string     $title       뉴스 제목
-     * @param  string     $description 뉴스 요약
-     * @param  string     $content     뉴스 본문
-     * @param  array      $comments    댓글 배열
-     * @return array|null 태그 배열 또는 null
+     * 뉴스 태그 생성
      */
     public function generateNewsTags(string $title, ?string $description, ?string $content, array $comments = []): ?array
     {
-        // 댓글을 텍스트로 변환 (최대 50개만 사용)
+        // 댓글을 텍스트로 변환 (최대 50개)
         $commentTexts = array_slice(array_map(fn ($c) => $c['content'] ?? '', $comments), 0, 50);
         $commentsText = implode("\n", $commentTexts);
 
@@ -412,60 +338,25 @@ PROMPT;
 위 형식으로 정확히 10개의 태그만 쉼표로 구분하여 출력하세요.
 PROMPT;
 
-        // Rate limit 체크
-        $this->checkRateLimit();
+        $json = $this->callTextApi(self::MODEL_TAG_FREE, $prompt);
 
-        $model    = 'xiaomi/mimo-v2-flash:free';
-        $siteUrl  = 'https://pcaview.com';
-        $siteName = env('APP_NAME', 'Your Site Name');
+        if ($json && isset($json['choices'][0]['message']['content'])) {
+            $tagsText = $json['choices'][0]['message']['content'];
 
-        try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer '.$this->apiToken,
-                'Content-Type'  => 'application/json',
-                'HTTP-Referer'  => $siteUrl,
-                'X-Title'       => $siteName,
-            ])->timeout(100)->post('https://openrouter.ai/api/v1/chat/completions', [
-                'model'    => $model,
-                'messages' => [
-                    [
-                        'role'    => 'user',
-                        'content' => $prompt,
-                    ],
-                ],
+            // 쉼표로 분리하고 공백 제거
+            $tags = array_map('trim', explode(',', $tagsText));
+            $tags = array_slice($tags, 0, 10);
+            $tags = array_filter($tags);
+
+            \Log::info('AI 태그 생성 성공', [
+                'count' => count($tags),
+                'tags' => $tags,
             ]);
 
-            $json = $response->json();
-
-            \Log::info('AI 태그 생성 응답 상태: '.$response->status());
-            \Log::info('AI 태그 생성 응답 전체: '.json_encode($json));
-
-            if ($response->successful() && isset($json['choices'][0]['message']['content'])) {
-                $tagsText = $json['choices'][0]['message']['content'];
-                \Log::info("AI 태그 응답 텍스트: {$tagsText}");
-
-                // 쉼표로 분리하고 공백 제거
-                $tags = array_map('trim', explode(',', $tagsText));
-
-                // 정확히 10개로 조정
-                $tags = array_slice($tags, 0, 10);
-
-                // 빈 태그 제거
-                $tags = array_filter($tags);
-
-                \Log::info('파싱된 태그 개수: '.count($tags).', 태그: '.json_encode($tags));
-
-                return array_values($tags);
-            }
-
-            \Log::warning('AI 응답 실패 또는 형식 불일치. 상태: '.$response->status());
-
-            return null;
-        } catch (\Exception $e) {
-            \Log::error('AI 태그 생성 예외 발생: '.$e->getMessage());
-            \Log::error('스택 트레이스: '.$e->getTraceAsString());
-
-            return null;
+            return array_values($tags);
         }
+
+        \Log::warning('AI 태그 생성 실패');
+        return null;
     }
 }

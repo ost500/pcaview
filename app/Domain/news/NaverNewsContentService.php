@@ -33,6 +33,11 @@ class NaverNewsContentService
         $this->aiApiService = $aiApiService;
     }
 
+    // AI 처리 설정
+    private const MAX_BODY_LENGTH_FOR_AI = 5000;
+    private const IMAGE_GENERATION_PROBABILITY_DEV = 100;
+    private const IMAGE_GENERATION_PROBABILITY_PROD = 30;
+
     /**
      * Naver 뉴스 배열을 Contents로 변환하여 저장
      *
@@ -46,143 +51,23 @@ class NaverNewsContentService
 
         foreach ($newsItems as $newsItem) {
             try {
-                // NaverNewsItem 타입 확인
-                if (!$newsItem instanceof NaverNewsItem) {
-                    Log::warning('Invalid news item type', ['type' => get_class($newsItem)]);
+                if (!$this->validateNewsItem($newsItem)) {
                     continue;
                 }
 
-                // 필수 필드 확인
-                if (empty($newsItem->title) || empty($newsItem->url)) {
+                if ($this->isDuplicateNews($newsItem->url, $department->id)) {
                     continue;
                 }
 
-                // URL 기반으로 중복 체크
-                $existingContent = Contents::where('file_url', $newsItem->url)
-                    ->where('department_id', $department->id)
-                    ->first();
+                $processedNews = $this->processNewsItem($newsItem, $department);
+                $contents = $this->createContents($processedNews, $department);
 
-                if ($existingContent) {
-                    continue; // 이미 존재하면 스킵
-                }
-
-                // 뉴스 URL에서 본문 내용 및 제목 크롤링
-                $this->currentNewsUrl = $newsItem->url;
-                $newsData = $this->fetchNewsBody($newsItem->url);
-
-                // 제목, 본문, 발행일시 추출 (크롤링한 데이터가 있으면 사용, 없으면 원본 사용)
-                $title = $newsData['title'] ?? $newsItem->title;
-                $body = $newsData['body'] ?? $newsItem->snippet ?? null;
-                $publishedAt = $newsData['published_at'] ?? $newsItem->publishedAt ?? now();
-
-                // AI로 본문 리라이팅 (저작권 보호)
-                $isAiRewritten = false;
-                $aiGeneratedImageUrl = null;
-                if ($body) {
-                    try {
-                        // 본문이 너무 길면 리라이팅하지 않음 (메모리 절약)
-                        $bodyLength = mb_strlen($body);
-                        if ($bodyLength > 5000) {
-                            Log::info('Body too long for AI rewriting, skipping', [
-                                'length' => $bodyLength,
-                                'url' => $newsItem->url,
-                            ]);
-                        } else {
-                            $rewrittenBody = $this->aiApiService->rewriteNewsContent($body);
-                            if ($rewrittenBody) {
-                                $body = $rewrittenBody;
-                                $isAiRewritten = true;
-                                Log::info('News content rewritten by AI', [
-                                    'original_length' => mb_strlen($newsData['body'] ?? ''),
-                                    'rewritten_length' => mb_strlen($rewrittenBody),
-                                ]);
-
-                                // AI 리라이팅 성공 시 이미지 생성 (환경별 확률)
-                                try {
-                                    // dev 환경: 100%, production: 30%
-                                    $imageGenerationProbability = app()->environment('local', 'development') ? 100 : 30;
-                                    $shouldGenerateImage = rand(1, 100) <= $imageGenerationProbability;
-
-                                    if ($shouldGenerateImage) {
-                                        $aiGeneratedImageUrl = $this->aiApiService->generateCheapNewsImage($title, $body);
-                                        if ($aiGeneratedImageUrl) {
-                                            Log::info('AI 이미지 생성 성공', [
-                                                'url' => $newsItem->url,
-                                                'environment' => app()->environment(),
-                                                'probability' => $imageGenerationProbability.'%',
-                                            ]);
-
-                                            // AI 생성 이미지를 S3에 업로드
-                                            $s3Url = $this->uploadImageToS3($aiGeneratedImageUrl, $department->id, true);
-                                            if ($s3Url) {
-                                                $aiGeneratedImageUrl = $s3Url;
-                                                Log::info('AI image uploaded to S3', [
-                                                    's3_url' => $s3Url,
-                                                ]);
-                                            }
-                                        }
-                                    } else {
-                                        Log::info('AI 이미지 생성 스킵 (확률)', [
-                                            'url' => $newsItem->url,
-                                            'probability' => $imageGenerationProbability.'%',
-                                        ]);
-                                    }
-                                } catch (\Exception $imageException) {
-                                    Log::warning('Failed to generate AI image', [
-                                        'error' => $imageException->getMessage(),
-                                        'url' => $newsItem->url,
-                                    ]);
-                                    // 이미지 생성 실패해도 계속 진행
-                                }
-                            } else {
-                                Log::warning('Failed to rewrite news content, using original');
-                            }
-                        }
-                    } catch (\Exception $e) {
-                        Log::error('AI rewriting exception', [
-                            'error' => $e->getMessage(),
-                            'url' => $newsItem->url,
-                        ]);
-                        // 예외 발생 시 원본 사용
-                    }
-                }
-
-                // 저작권 문제로 원본 뉴스 이미지는 저장하지 않음
-                // AI 생성 이미지가 있으면 사용
-                $thumbnailUrl = $aiGeneratedImageUrl;
-
-                // Contents 생성 (이미 NaverNewsService에서 UTF-8 변환됨)
-                $contents = Contents::create([
-                    'church_id' => $department->church_id,
-                    'department_id' => $department->id, // 대표 department 설정
-                    'type' => ContentsType::NAVER_NEWS, // Naver 뉴스 타입
-                    'title' => $title,
-                    'body' => $body,
-                    'file_url' => $newsItem->url,
-                    'thumbnail_url' => $thumbnailUrl,
-                    'published_at' => $publishedAt, // 크롤링한 발행일시 우선 사용
-                    'is_ai_rewritten' => $isAiRewritten, // AI 리라이팅 여부
-                ]);
-
-                // Attach to department via pivot table
-                $contents->departments()->attach($department->id);
-
-                // AI 생성 이미지가 있으면 ContentsImage에도 저장
-                if ($aiGeneratedImageUrl) {
-                    $contents->images()->create([
-                        'file_url' => $aiGeneratedImageUrl,
-                        'order' => 1,
-                    ]);
-
-                    Log::info('AI generated image saved to ContentsImage', [
-                        'content_id' => $contents->id,
-                        'image_url' => $aiGeneratedImageUrl,
-                    ]);
-                }
+                $this->attachDepartment($contents, $department);
+                $this->saveAiGeneratedImage($contents, $processedNews['aiImageUrl']);
 
                 $savedCount++;
             } catch (\Exception $e) {
-                Log::error('Failed to save Nate news as Contents', [
+                Log::error('Failed to save Naver news as Contents', [
                     'error' => $e->getMessage(),
                     'news_item' => $newsItem,
                 ]);
@@ -190,6 +75,216 @@ class NaverNewsContentService
         }
 
         return $savedCount;
+    }
+
+    /**
+     * 뉴스 아이템 유효성 검증
+     */
+    private function validateNewsItem($newsItem): bool
+    {
+        if (!$newsItem instanceof NaverNewsItem) {
+            Log::warning('Invalid news item type', ['type' => get_class($newsItem)]);
+            return false;
+        }
+
+        if (empty($newsItem->title) || empty($newsItem->url)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 중복 뉴스 확인
+     */
+    private function isDuplicateNews(string $url, int $departmentId): bool
+    {
+        return Contents::where('file_url', $url)
+            ->where('department_id', $departmentId)
+            ->exists();
+    }
+
+    /**
+     * 뉴스 아이템 처리 (크롤링, AI 리라이팅, 이미지 생성)
+     */
+    private function processNewsItem(NaverNewsItem $newsItem, Department $department): array
+    {
+        $this->currentNewsUrl = $newsItem->url;
+        $newsData = $this->fetchNewsBody($newsItem->url);
+
+        // 기본 데이터 추출
+        $title = $newsData['title'] ?? $newsItem->title;
+        $body = $newsData['body'] ?? $newsItem->snippet ?? null;
+        $publishedAt = $newsData['published_at'] ?? $newsItem->publishedAt ?? now();
+
+        // AI 처리
+        $aiResult = $this->processWithAI($title, $body, $newsItem->url, $department->id);
+
+        return [
+            'title' => $title,
+            'body' => $aiResult['body'],
+            'publishedAt' => $publishedAt,
+            'isAiRewritten' => $aiResult['isRewritten'],
+            'aiImageUrl' => $aiResult['imageUrl'],
+        ];
+    }
+
+    /**
+     * AI 리라이팅 및 이미지 생성 처리
+     */
+    private function processWithAI(string $title, ?string $body, string $url, int $departmentId): array
+    {
+        $result = [
+            'body' => $body,
+            'isRewritten' => false,
+            'imageUrl' => null,
+        ];
+
+        if (!$body) {
+            return $result;
+        }
+
+        // 본문 길이 확인
+        if (mb_strlen($body) > self::MAX_BODY_LENGTH_FOR_AI) {
+            Log::info('Body too long for AI processing, skipping', [
+                'length' => mb_strlen($body),
+                'url' => $url,
+            ]);
+            return $result;
+        }
+
+        // AI 리라이팅
+        try {
+            $rewrittenBody = $this->aiApiService->rewriteNewsContent($body);
+            if ($rewrittenBody) {
+                $result['body'] = $rewrittenBody;
+                $result['isRewritten'] = true;
+
+                Log::info('News content rewritten by AI', [
+                    'original_length' => mb_strlen($body),
+                    'rewritten_length' => mb_strlen($rewrittenBody),
+                ]);
+
+                // AI 이미지 생성
+                $result['imageUrl'] = $this->generateAndUploadAiImage($title, $rewrittenBody, $url, $departmentId);
+            } else {
+                Log::warning('Failed to rewrite news content, using original');
+            }
+        } catch (\Exception $e) {
+            Log::error('AI processing exception', [
+                'error' => $e->getMessage(),
+                'url' => $url,
+            ]);
+        }
+
+        return $result;
+    }
+
+    /**
+     * AI 이미지 생성 및 S3 업로드
+     */
+    private function generateAndUploadAiImage(string $title, string $body, string $url, int $departmentId): ?string
+    {
+        try {
+            if (!$this->shouldGenerateImage()) {
+                Log::info('AI 이미지 생성 스킵 (확률)', [
+                    'url' => $url,
+                    'probability' => $this->getImageGenerationProbability().'%',
+                ]);
+                return null;
+            }
+
+            $aiImageUrl = $this->aiApiService->generateCheapNewsImage($title, $body);
+            if (!$aiImageUrl) {
+                return null;
+            }
+
+            Log::info('AI 이미지 생성 성공', [
+                'url' => $url,
+                'environment' => app()->environment(),
+                'probability' => $this->getImageGenerationProbability().'%',
+            ]);
+
+            // S3 업로드
+            $s3Url = $this->uploadImageToS3($aiImageUrl, $departmentId, true);
+            if ($s3Url) {
+                Log::info('AI image uploaded to S3', ['s3_url' => $s3Url]);
+                return $s3Url;
+            }
+
+            return $aiImageUrl;
+        } catch (\Exception $e) {
+            Log::warning('Failed to generate AI image', [
+                'error' => $e->getMessage(),
+                'url' => $url,
+            ]);
+            return null;
+        }
+    }
+
+    /**
+     * 이미지 생성 확률 결정
+     */
+    private function shouldGenerateImage(): bool
+    {
+        $probability = $this->getImageGenerationProbability();
+        return rand(1, 100) <= $probability;
+    }
+
+    /**
+     * 환경별 이미지 생성 확률 반환
+     */
+    private function getImageGenerationProbability(): int
+    {
+        return app()->environment('local', 'development')
+            ? self::IMAGE_GENERATION_PROBABILITY_DEV
+            : self::IMAGE_GENERATION_PROBABILITY_PROD;
+    }
+
+    /**
+     * Contents 모델 생성
+     */
+    private function createContents(array $processedNews, Department $department): Contents
+    {
+        return Contents::create([
+            'church_id' => $department->church_id,
+            'department_id' => $department->id,
+            'type' => ContentsType::NAVER_NEWS,
+            'title' => $processedNews['title'],
+            'body' => $processedNews['body'],
+            'file_url' => $this->currentNewsUrl,
+            'thumbnail_url' => $processedNews['aiImageUrl'],
+            'published_at' => $processedNews['publishedAt'],
+            'is_ai_rewritten' => $processedNews['isAiRewritten'],
+        ]);
+    }
+
+    /**
+     * Department 연결
+     */
+    private function attachDepartment(Contents $contents, Department $department): void
+    {
+        $contents->departments()->attach($department->id);
+    }
+
+    /**
+     * AI 생성 이미지를 ContentsImage에 저장
+     */
+    private function saveAiGeneratedImage(Contents $contents, ?string $imageUrl): void
+    {
+        if (!$imageUrl) {
+            return;
+        }
+
+        $contents->images()->create([
+            'file_url' => $imageUrl,
+            'order' => 1,
+        ]);
+
+        Log::info('AI generated image saved to ContentsImage', [
+            'content_id' => $contents->id,
+            'image_url' => $imageUrl,
+        ]);
     }
 
     /**
