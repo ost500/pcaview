@@ -278,7 +278,7 @@ class NaverNewsContentService
 
         $contents->images()->create([
             'file_url' => $imageUrl,
-            'order' => 1,
+            'page' => 1,
         ]);
 
         Log::info('AI generated image saved to ContentsImage', [

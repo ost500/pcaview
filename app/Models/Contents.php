@@ -19,7 +19,7 @@ class Contents extends Model
 
     public function images(): HasMany
     {
-        return $this->hasMany(ContentsImage::class);
+        return $this->hasMany(ContentsImage::class, 'contents_id');
     }
 
     public function user(): BelongsTo

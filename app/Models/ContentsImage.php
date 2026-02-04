@@ -3,10 +3,19 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ContentsImage extends Model
 {
     protected $guarded = [];
+
+    /**
+     * Contents 관계 (외래키: contents_id)
+     */
+    public function contents(): BelongsTo
+    {
+        return $this->belongsTo(Contents::class, 'contents_id');
+    }
 
     /**
      * Get the file URL attribute.
