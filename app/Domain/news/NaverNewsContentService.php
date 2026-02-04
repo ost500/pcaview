@@ -97,24 +97,35 @@ class NaverNewsContentService
                                     'rewritten_length' => mb_strlen($rewrittenBody),
                                 ]);
 
-                                // AI 리라이팅 성공 시 저렴한 모델로만 이미지 생성
+                                // AI 리라이팅 성공 시 이미지 생성 (환경별 확률)
                                 try {
-                                    // Gemini 3 Pro 저렴한 모델 사용 (확실히 작동)
-                                    $aiGeneratedImageUrl = $this->aiApiService->generateCheapNewsImage($title, $body);
-                                    if ($aiGeneratedImageUrl) {
-                                        Log::info('AI 이미지 생성 성공', [
-                                            'url' => $newsItem->url,
-                                            'model' => 'gemini-3-pro',
-                                        ]);
+                                    // dev 환경: 100%, production: 30%
+                                    $imageGenerationProbability = app()->environment('local', 'development') ? 100 : 30;
+                                    $shouldGenerateImage = rand(1, 100) <= $imageGenerationProbability;
 
-                                        // AI 생성 이미지를 S3에 업로드
-                                        $s3Url = $this->uploadImageToS3($aiGeneratedImageUrl, $department->id, true);
-                                        if ($s3Url) {
-                                            $aiGeneratedImageUrl = $s3Url;
-                                            Log::info('AI image uploaded to S3', [
-                                                's3_url' => $s3Url,
+                                    if ($shouldGenerateImage) {
+                                        $aiGeneratedImageUrl = $this->aiApiService->generateCheapNewsImage($title, $body);
+                                        if ($aiGeneratedImageUrl) {
+                                            Log::info('AI 이미지 생성 성공', [
+                                                'url' => $newsItem->url,
+                                                'environment' => app()->environment(),
+                                                'probability' => $imageGenerationProbability.'%',
                                             ]);
+
+                                            // AI 생성 이미지를 S3에 업로드
+                                            $s3Url = $this->uploadImageToS3($aiGeneratedImageUrl, $department->id, true);
+                                            if ($s3Url) {
+                                                $aiGeneratedImageUrl = $s3Url;
+                                                Log::info('AI image uploaded to S3', [
+                                                    's3_url' => $s3Url,
+                                                ]);
+                                            }
                                         }
+                                    } else {
+                                        Log::info('AI 이미지 생성 스킵 (확률)', [
+                                            'url' => $newsItem->url,
+                                            'probability' => $imageGenerationProbability.'%',
+                                        ]);
                                     }
                                 } catch (\Exception $imageException) {
                                     Log::warning('Failed to generate AI image', [

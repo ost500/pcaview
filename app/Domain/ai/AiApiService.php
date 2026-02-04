@@ -286,8 +286,8 @@ PROMPT;
         // Rate limit 체크
         $this->checkRateLimit();
 
-        // Gemini 3 Pro 모델 (OpenRouter에서 확실히 작동)
-        $model    = 'google/gemini-3-pro-image-preview';
+        // Riverflow V2 Standard Preview 모델 (문서에 명시된 정확한 ID)
+        $model    = 'sourceful/riverflow-v2-standard-preview';
         $siteUrl  = 'https://pcaview.com';
         $siteName = env('APP_NAME', 'Your Site Name');
 
