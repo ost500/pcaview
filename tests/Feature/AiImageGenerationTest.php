@@ -30,6 +30,14 @@ class AiImageGenerationTest extends TestCase
         // 이미지 생성 실행
         $imageUrl = $this->aiService->generateCheapNewsImage($title, $body);
 
+        // $imageUrl 로그 출력
+        Log::info('테스트 - AI 이미지 생성 결과', [
+            'imageUrl' => $imageUrl,
+            'is_null' => is_null($imageUrl),
+            'type' => gettype($imageUrl),
+            'length' => $imageUrl ? strlen($imageUrl) : 0,
+        ]);
+
         // 결과 출력
         if ($imageUrl) {
             $this->assertNotNull($imageUrl);
@@ -40,9 +48,17 @@ class AiImageGenerationTest extends TestCase
                 echo "\n✅ AI 이미지 생성 성공 (Base64)\n";
                 echo "길이: ".strlen($imageUrl)." bytes\n";
                 echo "형식: ".substr($imageUrl, 0, 30)."...\n";
+
+                Log::info('테스트 - Base64 이미지 감지', [
+                    'prefix' => substr($imageUrl, 0, 50),
+                ]);
             } else {
                 echo "\n✅ AI 이미지 생성 성공 (URL)\n";
                 echo "URL: ".$imageUrl."\n";
+
+                Log::info('테스트 - URL 이미지 감지', [
+                    'url' => $imageUrl,
+                ]);
             }
 
             // 이미지를 파일로 저장 (선택사항)
@@ -76,13 +92,29 @@ class AiImageGenerationTest extends TestCase
         // 로그 확인을 위해 실행
         $imageUrl = $this->aiService->generateCheapNewsImage($title, $body);
 
+        // $imageUrl 상세 로그
+        Log::info('테스트 - 응답 구조 분석 결과', [
+            'imageUrl_value' => $imageUrl,
+            'imageUrl_type' => gettype($imageUrl),
+            'imageUrl_length' => $imageUrl ? strlen($imageUrl) : 0,
+            'is_base64' => $imageUrl ? str_starts_with($imageUrl, 'data:image/') : false,
+            'first_100_chars' => $imageUrl ? substr($imageUrl, 0, 100) : null,
+        ]);
+
         echo "\n📊 로그 파일을 확인하세요:\n";
         echo "tail -f storage/logs/laravel.log\n\n";
         echo "다음 정보를 확인할 수 있습니다:\n";
         echo "1. AI 이미지 생성 API 응답 전체\n";
         echo "2. response_keys (응답 구조)\n";
         echo "3. full_response (전체 응답 데이터)\n";
-        echo "4. Message 구조 분석\n\n";
+        echo "4. Message 구조 분석\n";
+        echo "5. imageUrl 값 및 타입\n\n";
+
+        if ($imageUrl) {
+            echo "✅ imageUrl 반환됨: ".substr($imageUrl, 0, 50)."...\n";
+        } else {
+            echo "❌ imageUrl이 null입니다\n";
+        }
 
         // 테스트는 항상 통과 (로그 확인이 목적)
         $this->assertTrue(true);
