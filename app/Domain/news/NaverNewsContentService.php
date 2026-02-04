@@ -78,16 +78,33 @@ class NaverNewsContentService
                 // AI로 본문 리라이팅 (저작권 보호)
                 $isAiRewritten = false;
                 if ($body) {
-                    $rewrittenBody = $this->aiApiService->rewriteNewsContent($body);
-                    if ($rewrittenBody) {
-                        $body = $rewrittenBody;
-                        $isAiRewritten = true;
-                        Log::info('News content rewritten by AI', [
-                            'original_length' => mb_strlen($newsData['body'] ?? ''),
-                            'rewritten_length' => mb_strlen($rewrittenBody),
+                    try {
+                        // 본문이 너무 길면 리라이팅하지 않음 (메모리 절약)
+                        $bodyLength = mb_strlen($body);
+                        if ($bodyLength > 5000) {
+                            Log::info('Body too long for AI rewriting, skipping', [
+                                'length' => $bodyLength,
+                                'url' => $newsItem->url,
+                            ]);
+                        } else {
+                            $rewrittenBody = $this->aiApiService->rewriteNewsContent($body);
+                            if ($rewrittenBody) {
+                                $body = $rewrittenBody;
+                                $isAiRewritten = true;
+                                Log::info('News content rewritten by AI', [
+                                    'original_length' => mb_strlen($newsData['body'] ?? ''),
+                                    'rewritten_length' => mb_strlen($rewrittenBody),
+                                ]);
+                            } else {
+                                Log::warning('Failed to rewrite news content, using original');
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        Log::error('AI rewriting exception', [
+                            'error' => $e->getMessage(),
+                            'url' => $newsItem->url,
                         ]);
-                    } else {
-                        Log::warning('Failed to rewrite news content, using original');
+                        // 예외 발생 시 원본 사용
                     }
                 }
 

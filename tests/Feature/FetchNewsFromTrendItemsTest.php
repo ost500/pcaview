@@ -67,9 +67,9 @@ class FetchNewsFromTrendItemsTest extends TestCase
     {
         $mockNewsService = $this->mock(NaverNewsService::class);
 
-        // 각 news_item의 title로 검색 호출 예상
+        // 각 news_item의 title로 검색 호출 예상 (display: 2로 변경됨)
         $mockNewsService->shouldReceive('searchNews')
-            ->with('금값 급등', 3, 'sim')
+            ->with('금값 급등', 2, 'sim')
             ->once()
             ->andReturn([
                 new NaverNewsItem(
@@ -83,7 +83,7 @@ class FetchNewsFromTrendItemsTest extends TestCase
             ]);
 
         $mockNewsService->shouldReceive('searchNews')
-            ->with('달러 환율 변동', 3, 'sim')
+            ->with('달러 환율 변동', 2, 'sim')
             ->once()
             ->andReturn([
                 new NaverNewsItem(
@@ -369,10 +369,10 @@ class FetchNewsFromTrendItemsTest extends TestCase
     {
         $mockNewsService = $this->mock(NaverNewsService::class);
 
-        // 유사도순 정렬과 3개 제한 확인
+        // 유사도순 정렬과 2개 제한 확인 (메모리 절약을 위해 변경됨)
         $mockNewsService->shouldReceive('searchNews')
             ->withArgs(function ($keyword, $display, $sort) {
-                return $display === 3 && $sort === 'sim';
+                return $display === 2 && $sort === 'sim';
             })
             ->andReturn([]);
 

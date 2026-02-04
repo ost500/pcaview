@@ -15,6 +15,16 @@ class FetchNewsFromTrendItems implements ShouldQueue
     use InteractsWithQueue;
 
     /**
+     * 작업 타임아웃 (초)
+     */
+    public int $timeout = 300; // 5분
+
+    /**
+     * 최대 재시도 횟수
+     */
+    public int $tries = 1;
+
+    /**
      * Create the event listener.
      */
     public function __construct(
@@ -50,8 +60,11 @@ class FetchNewsFromTrendItems implements ShouldQueue
             $allFetchedNews = [];
             $totalSavedCount = 0;
 
+            // 메모리 관리: 최대 10개의 news_items만 처리
+            $newsItemsToProcess = array_slice($trend->news_items, 0, 10);
+
             // news_items의 각 뉴스 title로 검색
-            foreach ($trend->news_items as $newsItem) {
+            foreach ($newsItemsToProcess as $index => $newsItem) {
                 // news_item이 배열이고 title이 있는지 확인
                 if (! is_array($newsItem) || empty($newsItem['title'])) {
                     continue;
@@ -62,10 +75,12 @@ class FetchNewsFromTrendItems implements ShouldQueue
                 Log::info('Searching Naver news for trend news item', [
                     'trend_id' => $trend->id,
                     'news_title' => $newsTitle,
+                    'index' => $index + 1,
+                    'total' => count($newsItemsToProcess),
                 ]);
 
-                // Naver 뉴스 검색 (상위 3개만 가져오기)
-                $naverNewsItems = $this->naverNewsService->searchNews($newsTitle, display: 3, sort: 'sim');
+                // Naver 뉴스 검색 (상위 2개만 가져오기 - 메모리 절약)
+                $naverNewsItems = $this->naverNewsService->searchNews($newsTitle, display: 2, sort: 'sim');
 
                 if (empty($naverNewsItems)) {
                     Log::info('No Naver news found for news item title', [
@@ -90,6 +105,11 @@ class FetchNewsFromTrendItems implements ShouldQueue
                     'fetched_count' => count($naverNewsItems),
                     'saved_count' => $savedCount,
                 ]);
+
+                // 메모리 정리 (매 3개마다)
+                if (($index + 1) % 3 === 0) {
+                    gc_collect_cycles();
+                }
             }
 
             // 수집한 뉴스가 있으면 Trend 업데이트
