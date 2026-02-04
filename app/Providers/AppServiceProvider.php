@@ -28,22 +28,22 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // 이벤트-리스너 등록
-//        Event::listen(
-//            TrendFetched::class,
-//            FetchNateNewsForTrend::class
-//        );
-//
-//        // Dekrica API 연동
-//        Event::listen(
-//            TrendFetched::class,
-//            SyncDekricaTrendListener::class
-//        );
-//
-//        // Naver 뉴스 API 연동
-//        Event::listen(
-//            TrendFetched::class,
-//            FetchNaverNewsForTrend::class
-//        );
+        Event::listen(
+            TrendFetched::class,
+            FetchNateNewsForTrend::class
+        );
+
+        // Dekrica API 연동
+        Event::listen(
+            TrendFetched::class,
+            SyncDekricaTrendListener::class
+        );
+
+        // Naver 뉴스 API 연동
+        Event::listen(
+            TrendFetched::class,
+            FetchNaverNewsForTrend::class
+        );
 
         // Trend의 news_items에서 뉴스 검색
         Event::listen(
@@ -52,9 +52,9 @@ class AppServiceProvider extends ServiceProvider
         );
 
         // Kakao Socialite Provider
-//        Event::listen(
-//            SocialiteWasCalled::class,
-//            KakaoExtendSocialite::class.'@handle'
-//        );
+        Event::listen(
+            SocialiteWasCalled::class,
+            KakaoExtendSocialite::class.'@handle'
+        );
     }
 }
