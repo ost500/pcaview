@@ -52,7 +52,7 @@ class AiApiService
         $this->checkRateLimit();
 
         $model    = 'qwen/qwen-2.5-7b-instruct';
-        $siteUrl  = 'https://nalameter.com';
+        $siteUrl  = 'https://pcaview.com';
         $siteName = env('APP_NAME', 'Your Site Name');
         $role     = 'user';
 
@@ -128,7 +128,7 @@ PROMPT;
         $this->checkRateLimit();
 
         $model    = 'qwen/qwen-2.5-7b-instruct';
-        $siteUrl  = 'https://nalameter.com';
+        $siteUrl  = 'https://pcaview.com';
         $siteName = env('APP_NAME', 'Your Site Name');
 
         try {
@@ -288,7 +288,7 @@ PROMPT;
 
         // Gemini 3 Pro 모델 (OpenRouter에서 확실히 작동)
         $model    = 'google/gemini-3-pro-image-preview';
-        $siteUrl  = 'https://nalameter.com';
+        $siteUrl  = 'https://pcaview.com';
         $siteName = env('APP_NAME', 'Your Site Name');
 
         try {
@@ -399,7 +399,7 @@ PROMPT;
         $this->checkRateLimit();
 
         $model    = 'xiaomi/mimo-v2-flash:free';
-        $siteUrl  = 'https://nalameter.com';
+        $siteUrl  = 'https://pcaview.com';
         $siteName = env('APP_NAME', 'Your Site Name');
 
         try {
