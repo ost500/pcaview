@@ -193,8 +193,10 @@ PROMPT;
         // Rate limit 체크
         $this->checkRateLimit();
 
-        // 이미지 생성 모델 (Flux 또는 Gemini)
-        $model    = 'black-forest-labs/flux-1.1-pro';
+        // 이미지 생성 모델: Gemini 3 Pro Image Preview
+        // 지원 기능: text rendering, multi-image blending, 2K/4K output
+        // Output modalities: image, text
+        $model    = 'google/gemini-3-pro-image-preview';
         $siteUrl  = 'https://nalameter.com';
         $siteName = env('APP_NAME', 'Your Site Name');
 
