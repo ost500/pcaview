@@ -51,7 +51,8 @@ class AiApiService
         // Rate limit 체크
         $this->checkRateLimit();
 
-        $model    = 'qwen/qwen-2.5-7b-instruct';
+        // Gemini 2.5 Flash-Lite: 초고속 저지연 모델
+        $model    = 'google/gemini-2.5-flash-lite';
         $siteUrl  = 'https://pcaview.com';
         $siteName = env('APP_NAME', 'Your Site Name');
         $role     = 'user';
@@ -127,7 +128,8 @@ PROMPT;
         // Rate limit 체크
         $this->checkRateLimit();
 
-        $model    = 'qwen/qwen-2.5-7b-instruct';
+        // Gemini 2.5 Flash-Lite: 초고속 저지연 모델
+        $model    = 'google/gemini-2.5-flash-lite';
         $siteUrl  = 'https://pcaview.com';
         $siteName = env('APP_NAME', 'Your Site Name');
 
