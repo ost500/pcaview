@@ -286,8 +286,8 @@ PROMPT;
         // Rate limit 체크
         $this->checkRateLimit();
 
-        // Riverflow V2 Standard Preview 모델 (문서에 명시된 정확한 ID)
-        $model    = 'sourceful/riverflow-v2-standard-preview';
+        // Riverflow V2 Fast 모델 (빠른 생성 속도)
+        $model    = 'sourceful/riverflow-v2-fast';
         $siteUrl  = 'https://pcaview.com';
         $siteName = env('APP_NAME', 'Your Site Name');
 
