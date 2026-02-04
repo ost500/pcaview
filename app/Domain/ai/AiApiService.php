@@ -286,8 +286,8 @@ PROMPT;
         // Rate limit 체크
         $this->checkRateLimit();
 
-        // Gemini 3 Pro Image Preview (OpenRouter에서 유일하게 작동하는 모델)
-        $model    = 'google/gemini-3-pro-image-preview';
+        // Riverflow V2 Fast 모델 (빠르고 저렴)
+        $model    = 'sourceful/riverflow-v2-fast';
         $siteUrl  = 'https://pcaview.com';
         $siteName = env('APP_NAME', 'Your Site Name');
 
@@ -306,28 +306,43 @@ PROMPT;
                     ],
                 ],
                 'modalities' => ['image', 'text'],
-                'stream'     => false,
             ]);
 
             $json = $response->json();
 
-            \Log::info('AI 이미지 생성 응답 상태: '.$response->status());
+            // 전체 응답 구조 로깅 (디버깅용)
+            \Log::info('AI 이미지 생성 API 응답 전체', [
+                'status' => $response->status(),
+                'model' => $model,
+                'response_keys' => array_keys($json ?? []),
+                'full_response' => $json,
+            ]);
 
             if (! $response->successful()) {
-                \Log::warning('AI 이미지 생성 실패. 상태: '.$response->status(), ['response' => $json]);
+                \Log::warning('AI 이미지 생성 실패. 상태: '.$response->status(), [
+                    'model' => $model,
+                    'response' => $json,
+                ]);
 
                 return null;
             }
 
-            // OpenRouter 문서에 따른 응답 형식: choices[0].message.images[0].imageUrl.url
+            // 응답 구조 분석
             $message = $json['choices'][0]['message'] ?? null;
 
+            \Log::info('Message 구조 분석', [
+                'message_keys' => $message ? array_keys($message) : null,
+                'has_images' => isset($message['images']),
+                'has_content' => isset($message['content']),
+                'content_type' => isset($message['content']) ? gettype($message['content']) : null,
+            ]);
+
+            // 여러 가능한 응답 형식 시도
             if ($message && isset($message['images']) && is_array($message['images']) && ! empty($message['images'])) {
-                // imageUrl.url 또는 image_url.url 형식 둘 다 시도
                 $imageUrl = $message['images'][0]['imageUrl']['url'] ?? $message['images'][0]['image_url']['url'] ?? null;
 
                 if ($imageUrl) {
-                    \Log::info('AI 이미지 생성 성공', [
+                    \Log::info('AI 이미지 생성 성공 (images 배열)', [
                         'title'  => $title,
                         'model'  => $model,
                         'length' => strlen($imageUrl),
@@ -338,9 +353,9 @@ PROMPT;
             }
 
             \Log::warning('AI 이미지 생성 응답에서 이미지를 찾을 수 없음', [
+                'model' => $model,
                 'has_message' => isset($message),
-                'has_images'  => isset($message['images']),
-                'message'     => $message,
+                'message_structure' => $message,
             ]);
 
             return null;
