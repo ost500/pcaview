@@ -2,6 +2,7 @@
 
 namespace App\Domain\news;
 
+use App\Domain\ai\AiApiService;
 use App\Enums\ContentsType;
 use App\Models\Contents;
 use App\Models\Department;
@@ -21,6 +22,16 @@ class NaverNewsContentService
      * 현재 처리 중인 뉴스 URL (원문 링크용)
      */
     private ?string $currentNewsUrl = null;
+
+    /**
+     * AI API 서비스
+     */
+    private AiApiService $aiApiService;
+
+    public function __construct(AiApiService $aiApiService)
+    {
+        $this->aiApiService = $aiApiService;
+    }
 
     /**
      * Naver 뉴스 배열을 Contents로 변환하여 저장
@@ -63,6 +74,20 @@ class NaverNewsContentService
                 $title = $newsData['title'] ?? $newsItem->title;
                 $body = $newsData['body'] ?? $newsItem->snippet ?? null;
                 $publishedAt = $newsData['published_at'] ?? $newsItem->publishedAt ?? now();
+
+                // AI로 본문 리라이팅 (저작권 보호)
+                if ($body) {
+                    $rewrittenBody = $this->aiApiService->rewriteNewsContent($body);
+                    if ($rewrittenBody) {
+                        $body = $rewrittenBody;
+                        Log::info('News content rewritten by AI', [
+                            'original_length' => mb_strlen($newsData['body'] ?? ''),
+                            'rewritten_length' => mb_strlen($rewrittenBody),
+                        ]);
+                    } else {
+                        Log::warning('Failed to rewrite news content, using original');
+                    }
+                }
 
                 // 저작권 문제로 뉴스 이미지는 저장하지 않음
                 $thumbnailUrl = null;
