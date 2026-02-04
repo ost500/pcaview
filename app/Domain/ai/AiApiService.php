@@ -9,11 +9,16 @@ use Illuminate\Support\Facades\Http;
 
 class AiApiService
 {
-    private string $apiToken = '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';
+    private string $apiToken;
 
     // Rate limit: 분당 최대 20개 요청
     private const RATE_LIMIT_MAX    = 20;
     private const RATE_LIMIT_WINDOW = 60; // 초
+
+    public function __construct()
+    {
+        $this->apiToken = config('services.openrouter.api_key');
+    }
 
     /**
      * Rate limit 체크 및 대기
