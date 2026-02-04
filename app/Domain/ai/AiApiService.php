@@ -169,7 +169,7 @@ PROMPT;
     }
 
     /**
-     * 뉴스 제목과 내용을 바탕으로 이미지 생성
+     * 뉴스 제목과 내용을 바탕으로 이미지 생성 (고품질, 비쌈)
      *
      * OpenRouter의 /chat/completions 엔드포인트에 modalities 사용
      *
@@ -254,6 +254,98 @@ PROMPT;
             return null;
         } catch (\Exception $e) {
             \Log::error('AI 이미지 생성 예외 발생: '.$e->getMessage());
+
+            return null;
+        }
+    }
+
+    /**
+     * 뉴스 제목과 내용을 바탕으로 저렴한 이미지 생성
+     *
+     * Riverflow V2 Fast 모델 사용 ($0.02/1K image, 가장 저렴)
+     *
+     * @param  string      $title 뉴스 제목
+     * @param  string      $body  뉴스 본문
+     * @return string|null 생성된 이미지 URL 또는 null
+     */
+    public function generateCheapNewsImage(string $title, string $body): ?string
+    {
+        // 본문에서 핵심 내용 추출 (처음 100자)
+        $summary = mb_substr(strip_tags($body), 0, 100);
+
+        $prompt = <<<PROMPT
+Create a professional, high-quality news article thumbnail image.
+
+Title: {$title}
+Summary: {$summary}
+
+Style: Professional news editorial, modern, clean design, photorealistic
+Aspect ratio: 16:9 for web thumbnail
+PROMPT;
+
+        // Rate limit 체크
+        $this->checkRateLimit();
+
+        // Riverflow V2 Fast 모델 (가장 저렴: $0.02/1K image)
+        $model    = 'sourceful/riverflow-v2-fast-preview';
+        $siteUrl  = 'https://nalameter.com';
+        $siteName = env('APP_NAME', 'Your Site Name');
+
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer '.$this->apiToken,
+                'Content-Type'  => 'application/json',
+                'HTTP-Referer'  => $siteUrl,
+                'X-Title'       => $siteName,
+            ])->timeout(120)->post('https://openrouter.ai/api/v1/chat/completions', [
+                'model'      => $model,
+                'messages'   => [
+                    [
+                        'role'    => 'user',
+                        'content' => $prompt,
+                    ],
+                ],
+                'modalities' => ['image', 'text'],
+                'stream'     => false,
+            ]);
+
+            $json = $response->json();
+
+            \Log::info('저렴한 AI 이미지 생성 응답 상태: '.$response->status());
+
+            if (! $response->successful()) {
+                \Log::warning('저렴한 AI 이미지 생성 실패. 상태: '.$response->status(), ['response' => $json]);
+
+                return null;
+            }
+
+            // OpenRouter 문서에 따른 응답 형식: choices[0].message.images[0].imageUrl.url
+            $message = $json['choices'][0]['message'] ?? null;
+
+            if ($message && isset($message['images']) && is_array($message['images']) && ! empty($message['images'])) {
+                // imageUrl.url 또는 image_url.url 형식 둘 다 시도
+                $imageUrl = $message['images'][0]['imageUrl']['url'] ?? $message['images'][0]['image_url']['url'] ?? null;
+
+                if ($imageUrl) {
+                    \Log::info('저렴한 AI 이미지 생성 성공', [
+                        'title'  => $title,
+                        'model'  => $model,
+                        'length' => strlen($imageUrl),
+                    ]);
+
+                    return $imageUrl;
+                }
+            }
+
+            \Log::warning('저렴한 AI 이미지 생성 응답에서 이미지를 찾을 수 없음', [
+                'has_message' => isset($message),
+                'has_images'  => isset($message['images']),
+                'message'     => $message,
+            ]);
+
+            return null;
+        } catch (\Exception $e) {
+            \Log::error('저렴한 AI 이미지 생성 예외 발생: '.$e->getMessage());
 
             return null;
         }

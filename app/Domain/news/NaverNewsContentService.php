@@ -97,25 +97,45 @@ class NaverNewsContentService
                                     'rewritten_length' => mb_strlen($rewrittenBody),
                                 ]);
 
-                                // AI 리라이팅 성공 시 이미지도 생성
+                                // AI 리라이팅 성공 시 이미지 생성 (30% 고품질, 70% 저렴한 모델)
                                 try {
-                                    $aiGeneratedImageUrl = $this->aiApiService->generateNewsImage($title, $body);
-                                    if ($aiGeneratedImageUrl) {
-                                        Log::info('AI image generated for news', [
-                                            'url' => $newsItem->url,
-                                            'image_url' => $aiGeneratedImageUrl,
-                                        ]);
+                                    $shouldUseExpensiveModel = rand(1, 100) <= 30;
 
-                                        // AI 생성 이미지를 S3에 업로드
-                                        $s3Url = $this->uploadImageToS3($aiGeneratedImageUrl, $department->id, true);
-                                        if ($s3Url) {
-                                            $aiGeneratedImageUrl = $s3Url;
-                                            Log::info('AI image uploaded to S3', [
-                                                'original_url' => $aiGeneratedImageUrl,
-                                                's3_url' => $s3Url,
+                                    if ($shouldUseExpensiveModel) {
+                                        // 30% 확률로 고품질 AI 이미지 생성 (Gemini 3 Pro)
+                                        $aiGeneratedImageUrl = $this->aiApiService->generateNewsImage($title, $body);
+                                        if ($aiGeneratedImageUrl) {
+                                            Log::info('고품질 AI 이미지 생성 (30%)', [
+                                                'url' => $newsItem->url,
+                                                'model' => 'gemini-3-pro',
                                             ]);
-                                        } else {
-                                            Log::warning('Failed to upload AI image to S3, using original URL');
+
+                                            // AI 생성 이미지를 S3에 업로드
+                                            $s3Url = $this->uploadImageToS3($aiGeneratedImageUrl, $department->id, true);
+                                            if ($s3Url) {
+                                                $aiGeneratedImageUrl = $s3Url;
+                                                Log::info('AI image uploaded to S3', [
+                                                    's3_url' => $s3Url,
+                                                ]);
+                                            }
+                                        }
+                                    } else {
+                                        // 70% 확률로 저렴한 AI 이미지 생성 (Riverflow V2 Fast - $0.02/1K)
+                                        $aiGeneratedImageUrl = $this->aiApiService->generateCheapNewsImage($title, $body);
+                                        if ($aiGeneratedImageUrl) {
+                                            Log::info('저렴한 AI 이미지 생성 (70%)', [
+                                                'url' => $newsItem->url,
+                                                'model' => 'riverflow-v2-fast',
+                                            ]);
+
+                                            // AI 생성 이미지를 S3에 업로드
+                                            $s3Url = $this->uploadImageToS3($aiGeneratedImageUrl, $department->id, true);
+                                            if ($s3Url) {
+                                                $aiGeneratedImageUrl = $s3Url;
+                                                Log::info('AI image uploaded to S3', [
+                                                    's3_url' => $s3Url,
+                                                ]);
+                                            }
                                         }
                                     }
                                 } catch (\Exception $imageException) {
@@ -701,4 +721,5 @@ class NaverNewsContentService
             return null;
         }
     }
+
 }
