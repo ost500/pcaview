@@ -77,6 +77,7 @@ class NaverNewsContentService
 
                 // AI로 본문 리라이팅 (저작권 보호)
                 $isAiRewritten = false;
+                $aiGeneratedImageUrl = null;
                 if ($body) {
                     try {
                         // 본문이 너무 길면 리라이팅하지 않음 (메모리 절약)
@@ -95,6 +96,23 @@ class NaverNewsContentService
                                     'original_length' => mb_strlen($newsData['body'] ?? ''),
                                     'rewritten_length' => mb_strlen($rewrittenBody),
                                 ]);
+
+                                // AI 리라이팅 성공 시 이미지도 생성
+                                try {
+                                    $aiGeneratedImageUrl = $this->aiApiService->generateNewsImage($title, $body);
+                                    if ($aiGeneratedImageUrl) {
+                                        Log::info('AI image generated for news', [
+                                            'url' => $newsItem->url,
+                                            'image_url' => $aiGeneratedImageUrl,
+                                        ]);
+                                    }
+                                } catch (\Exception $imageException) {
+                                    Log::warning('Failed to generate AI image', [
+                                        'error' => $imageException->getMessage(),
+                                        'url' => $newsItem->url,
+                                    ]);
+                                    // 이미지 생성 실패해도 계속 진행
+                                }
                             } else {
                                 Log::warning('Failed to rewrite news content, using original');
                             }
@@ -108,8 +126,9 @@ class NaverNewsContentService
                     }
                 }
 
-                // 저작권 문제로 뉴스 이미지는 저장하지 않음
-                $thumbnailUrl = null;
+                // 저작권 문제로 원본 뉴스 이미지는 저장하지 않음
+                // AI 생성 이미지가 있으면 사용
+                $thumbnailUrl = $aiGeneratedImageUrl;
 
                 // Contents 생성 (이미 NaverNewsService에서 UTF-8 변환됨)
                 $contents = Contents::create([

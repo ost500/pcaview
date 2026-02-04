@@ -162,6 +162,102 @@ PROMPT;
     }
 
     /**
+     * 뉴스 제목과 내용을 바탕으로 이미지 생성
+     *
+     * @param  string      $title 뉴스 제목
+     * @param  string      $body  뉴스 본문
+     * @return string|null 생성된 이미지 URL 또는 null
+     */
+    public function generateNewsImage(string $title, string $body): ?string
+    {
+        // 본문에서 핵심 내용 추출 (처음 200자)
+        $summary = mb_substr(strip_tags($body), 0, 200);
+
+        $prompt = <<<PROMPT
+Create a professional, high-quality news article thumbnail image based on this Korean news story:
+
+Title: {$title}
+Summary: {$summary}
+
+Requirements:
+- Professional news article style
+- Clean, modern design
+- Relevant imagery that represents the news content
+- High contrast and good readability
+- No text overlay needed
+- 16:9 aspect ratio preferred
+- Photorealistic or editorial illustration style
+PROMPT;
+
+        // Rate limit 체크
+        $this->checkRateLimit();
+
+        // 무료 또는 저렴한 이미지 모델 사용
+        $model    = 'google/gemini-2.5-flash-image-preview:free';
+        $siteUrl  = 'https://nalameter.com';
+        $siteName = env('APP_NAME', 'Your Site Name');
+
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer '.$this->apiToken,
+                'Content-Type'  => 'application/json',
+                'HTTP-Referer'  => $siteUrl,
+                'X-Title'       => $siteName,
+            ])->timeout(120)->post('https://openrouter.ai/api/v1/chat/completions', [
+                'model'      => $model,
+                'modalities' => ['image', 'text'],
+                'messages'   => [
+                    [
+                        'role'    => 'user',
+                        'content' => $prompt,
+                    ],
+                ],
+            ]);
+
+            $json = $response->json();
+
+            \Log::info('AI 이미지 생성 응답 상태: '.$response->status());
+
+            if ($response->successful() && isset($json['choices'][0]['message']['content'])) {
+                $content = $json['choices'][0]['message']['content'];
+
+                // 이미지 URL 추출 (응답 형식에 따라 다를 수 있음)
+                if (is_array($content)) {
+                    foreach ($content as $item) {
+                        if (isset($item['type']) && $item['type'] === 'image_url') {
+                            $imageUrl = $item['image_url']['url'] ?? null;
+                            if ($imageUrl) {
+                                \Log::info('AI 이미지 생성 성공', ['url' => $imageUrl]);
+
+                                return $imageUrl;
+                            }
+                        }
+                    }
+                }
+
+                // 문자열로 URL이 반환되는 경우
+                if (is_string($content) && str_starts_with($content, 'http')) {
+                    \Log::info('AI 이미지 생성 성공', ['url' => $content]);
+
+                    return $content;
+                }
+
+                \Log::warning('AI 이미지 생성 응답 형식 불일치', ['content' => $content]);
+
+                return null;
+            }
+
+            \Log::warning('AI 이미지 생성 실패. 상태: '.$response->status(), ['response' => $json]);
+
+            return null;
+        } catch (\Exception $e) {
+            \Log::error('AI 이미지 생성 예외 발생: '.$e->getMessage());
+
+            return null;
+        }
+    }
+
+    /**
      * 뉴스 내용을 분석하여 태그 10개 생성
      *
      * @param  string     $title       뉴스 제목
