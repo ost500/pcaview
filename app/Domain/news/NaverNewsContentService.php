@@ -555,18 +555,54 @@ class NaverNewsContentService
     private function uploadImageToS3(string $imageUrl, int $departmentId, bool $isThumbnail = false): ?string
     {
         try {
-            // 외부 이미지 다운로드
-            $response = Http::timeout(10)->get($imageUrl);
+            $imageData = null;
+            $extension = 'png'; // 기본값
 
-            if (!$response->successful()) {
-                Log::warning('Failed to download image', ['url' => $imageUrl]);
-                return null;
+            // Base64 데이터 URL인 경우 (data:image/png;base64,...)
+            if (str_starts_with($imageUrl, 'data:image/')) {
+                // 형식: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...
+                preg_match('/^data:image\/(\w+);base64,(.+)$/', $imageUrl, $matches);
+
+                if (!empty($matches)) {
+                    $extension = $matches[1]; // png, jpeg, jpg, gif, webp 등
+                    $base64Data = $matches[2];
+                    $imageData = base64_decode($base64Data);
+
+                    if ($imageData === false) {
+                        Log::warning('Failed to decode base64 image');
+                        return null;
+                    }
+
+                    Log::info('Decoded base64 image', [
+                        'extension' => $extension,
+                        'size' => strlen($imageData),
+                    ]);
+                } else {
+                    Log::warning('Invalid base64 image format', ['url_prefix' => substr($imageUrl, 0, 100)]);
+                    return null;
+                }
+            } else {
+                // 외부 URL인 경우 다운로드
+                $response = Http::timeout(10)->get($imageUrl);
+
+                if (!$response->successful()) {
+                    Log::warning('Failed to download image', ['url' => $imageUrl]);
+                    return null;
+                }
+
+                $imageData = $response->body();
+
+                // 파일 확장자 추출 (기본값: jpg)
+                $extension = pathinfo(parse_url($imageUrl, PHP_URL_PATH), PATHINFO_EXTENSION);
+                if (empty($extension) || !in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                    $extension = 'jpg';
+                }
             }
 
-            // 파일 확장자 추출 (기본값: jpg)
-            $extension = pathinfo(parse_url($imageUrl, PHP_URL_PATH), PATHINFO_EXTENSION);
-            if (empty($extension) || !in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
-                $extension = 'jpg';
+            // 확장자 정규화
+            $extension = strtolower($extension);
+            if (!in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                $extension = 'png';
             }
 
             // S3 저장 경로 생성 (썸네일과 일반 이미지 구분)
@@ -575,14 +611,22 @@ class NaverNewsContentService
             $s3Path = "news/{$folder}/{$departmentId}/{$fileName}";
 
             // S3에 업로드
-            Storage::put($s3Path, $response->body());
+            Storage::put($s3Path, $imageData);
 
             // S3 URL 반환
-            return Storage::url($s3Path);
+            $s3Url = Storage::url($s3Path);
+
+            Log::info('Image uploaded to S3', [
+                'path' => $s3Path,
+                'url' => $s3Url,
+                'size' => strlen($imageData),
+            ]);
+
+            return $s3Url;
         } catch (\Exception $e) {
             Log::error('Failed to upload image to S3', [
                 'error' => $e->getMessage(),
-                'image_url' => $imageUrl,
+                'image_url' => substr($imageUrl, 0, 100),
             ]);
             return null;
         }

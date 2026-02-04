@@ -169,8 +169,7 @@ PROMPT;
     /**
      * 뉴스 제목과 내용을 바탕으로 이미지 생성
      *
-     * Note: OpenRouter는 실제 이미지 생성을 지원하지 않으므로
-     * placeholder 이미지를 반환합니다.
+     * OpenRouter의 /chat/completions 엔드포인트에 modalities 파라미터 사용
      *
      * @param  string      $title 뉴스 제목
      * @param  string      $body  뉴스 본문
@@ -178,60 +177,101 @@ PROMPT;
      */
     public function generateNewsImage(string $title, string $body): ?string
     {
-        // OpenRouter는 실제 이미지 생성(DALL-E, Stable Diffusion 등)을 지원하지 않음
-        // 대신 Unsplash Source를 사용하여 랜덤 관련 이미지 제공
+        // 본문에서 핵심 내용 추출 (처음 100자)
+        $summary = mb_substr(strip_tags($body), 0, 100);
+
+        $prompt = <<<PROMPT
+Create a professional, high-quality news article thumbnail image.
+
+Title: {$title}
+Summary: {$summary}
+
+Style: Professional news editorial, modern, clean design, photorealistic
+Aspect ratio: 16:9 for web thumbnail
+PROMPT;
+
+        // Rate limit 체크
+        $this->checkRateLimit();
+
+        // 이미지 생성 모델 (Flux 또는 Gemini)
+        $model    = 'black-forest-labs/flux-1.1-pro';
+        $siteUrl  = 'https://nalameter.com';
+        $siteName = env('APP_NAME', 'Your Site Name');
 
         try {
-            // 제목에서 키워드 추출 (간단한 방식)
-            $keywords = $this->extractKeywords($title);
-            $keyword = !empty($keywords) ? $keywords[0] : 'news';
-
-            // Unsplash Source API: 무료이며 고품질 이미지 제공
-            // 1600x900 = 16:9 비율
-            $imageUrl = "https://source.unsplash.com/1600x900/?{$keyword},news";
-
-            \Log::info('Placeholder 이미지 생성', [
-                'keyword' => $keyword,
-                'url' => $imageUrl,
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer '.$this->apiToken,
+                'Content-Type'  => 'application/json',
+                'HTTP-Referer'  => $siteUrl,
+                'X-Title'       => $siteName,
+            ])->timeout(120)->post('https://openrouter.ai/api/v1/chat/completions', [
+                'model'      => $model,
+                'modalities' => ['image', 'text'],
+                'messages'   => [
+                    [
+                        'role'    => 'user',
+                        'content' => $prompt,
+                    ],
+                ],
             ]);
 
-            return $imageUrl;
+            $json = $response->json();
+
+            \Log::info('AI 이미지 생성 응답 상태: '.$response->status());
+
+            if (! $response->successful()) {
+                \Log::warning('AI 이미지 생성 실패. 상태: '.$response->status(), ['response' => $json]);
+
+                return null;
+            }
+
+            // 응답에서 이미지 추출
+            if (isset($json['choices'][0]['message']['images']) && is_array($json['choices'][0]['message']['images'])) {
+                $images = $json['choices'][0]['message']['images'];
+                if (! empty($images)) {
+                    $imageData = $images[0]; // 첫 번째 이미지 사용
+
+                    // Base64 데이터 URL인 경우 (data:image/png;base64,...)
+                    if (is_string($imageData) && str_starts_with($imageData, 'data:image/')) {
+                        \Log::info('AI 이미지 생성 성공 (base64)', [
+                            'title' => $title,
+                            'length' => strlen($imageData),
+                        ]);
+
+                        return $imageData;
+                    }
+                }
+            }
+
+            // Content에서 이미지 URL 찾기 (대체 형식)
+            if (isset($json['choices'][0]['message']['content'])) {
+                $content = $json['choices'][0]['message']['content'];
+
+                if (is_array($content)) {
+                    foreach ($content as $item) {
+                        if (isset($item['type']) && $item['type'] === 'image_url') {
+                            $imageUrl = $item['image_url']['url'] ?? null;
+                            if ($imageUrl) {
+                                \Log::info('AI 이미지 생성 성공 (url)', ['url' => $imageUrl]);
+
+                                return $imageUrl;
+                            }
+                        }
+                    }
+                }
+            }
+
+            \Log::warning('AI 이미지 생성 응답 형식 불일치', [
+                'has_images' => isset($json['choices'][0]['message']['images']),
+                'response' => json_encode($json),
+            ]);
+
+            return null;
         } catch (\Exception $e) {
-            \Log::error('이미지 생성 예외 발생: '.$e->getMessage());
+            \Log::error('AI 이미지 생성 예외 발생: '.$e->getMessage());
 
             return null;
         }
-    }
-
-    /**
-     * 제목에서 간단한 키워드 추출
-     *
-     * @param  string $title
-     * @return array
-     */
-    private function extractKeywords(string $title): array
-    {
-        // 한글 제목을 영어로 번역하는 대신 일반적인 카테고리 사용
-        $categoryMap = [
-            '정치' => 'politics',
-            '경제' => 'business',
-            '사회' => 'society',
-            '문화' => 'culture',
-            '스포츠' => 'sports',
-            '과학' => 'science',
-            '기술' => 'technology',
-            '건강' => 'health',
-            '환경' => 'environment',
-            '교육' => 'education',
-        ];
-
-        foreach ($categoryMap as $korean => $english) {
-            if (str_contains($title, $korean)) {
-                return [$english];
-            }
-        }
-
-        return ['news'];
     }
 
     /**
