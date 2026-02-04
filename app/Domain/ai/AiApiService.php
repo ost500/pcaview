@@ -197,7 +197,7 @@ PROMPT;
 
         // Gemini 3 Pro Image Preview 모델 사용 (현재 OpenRouter에서 사용 가능한 이미지 생성 모델)
         $model    = 'google/gemini-3-pro-image-preview';
-        $siteUrl  = 'https://nalameter.com';
+        $siteUrl  = 'https://pcaview.com';
         $siteName = env('APP_NAME', 'Your Site Name');
 
         try {
@@ -262,7 +262,7 @@ PROMPT;
     /**
      * 뉴스 제목과 내용을 바탕으로 저렴한 이미지 생성
      *
-     * Riverflow V2 Fast 모델 사용 ($0.02/1K image, 가장 저렴)
+     * Gemini 3 Pro 모델 사용 (OpenRouter에서 확실히 작동하는 모델)
      *
      * @param  string      $title 뉴스 제목
      * @param  string      $body  뉴스 본문
@@ -286,8 +286,8 @@ PROMPT;
         // Rate limit 체크
         $this->checkRateLimit();
 
-        // Riverflow V2 Fast 모델 (가장 저렴: $0.02/1K image)
-        $model    = 'sourceful/riverflow-v2-fast-preview';
+        // Gemini 3 Pro 모델 (OpenRouter에서 확실히 작동)
+        $model    = 'google/gemini-3-pro-image-preview';
         $siteUrl  = 'https://nalameter.com';
         $siteName = env('APP_NAME', 'Your Site Name');
 
@@ -311,10 +311,10 @@ PROMPT;
 
             $json = $response->json();
 
-            \Log::info('저렴한 AI 이미지 생성 응답 상태: '.$response->status());
+            \Log::info('AI 이미지 생성 응답 상태: '.$response->status());
 
             if (! $response->successful()) {
-                \Log::warning('저렴한 AI 이미지 생성 실패. 상태: '.$response->status(), ['response' => $json]);
+                \Log::warning('AI 이미지 생성 실패. 상태: '.$response->status(), ['response' => $json]);
 
                 return null;
             }
@@ -327,7 +327,7 @@ PROMPT;
                 $imageUrl = $message['images'][0]['imageUrl']['url'] ?? $message['images'][0]['image_url']['url'] ?? null;
 
                 if ($imageUrl) {
-                    \Log::info('저렴한 AI 이미지 생성 성공', [
+                    \Log::info('AI 이미지 생성 성공', [
                         'title'  => $title,
                         'model'  => $model,
                         'length' => strlen($imageUrl),
@@ -337,7 +337,7 @@ PROMPT;
                 }
             }
 
-            \Log::warning('저렴한 AI 이미지 생성 응답에서 이미지를 찾을 수 없음', [
+            \Log::warning('AI 이미지 생성 응답에서 이미지를 찾을 수 없음', [
                 'has_message' => isset($message),
                 'has_images'  => isset($message['images']),
                 'message'     => $message,
@@ -345,7 +345,7 @@ PROMPT;
 
             return null;
         } catch (\Exception $e) {
-            \Log::error('저렴한 AI 이미지 생성 예외 발생: '.$e->getMessage());
+            \Log::error('AI 이미지 생성 예외 발생: '.$e->getMessage());
 
             return null;
         }
