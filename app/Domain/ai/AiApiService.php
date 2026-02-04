@@ -289,7 +289,7 @@ PROMPT;
         $this->checkRateLimit();
 
         // Riverflow V2 Fast 모델 (빠르고 저렴)
-        $model    = 'sourceful/riverflow-v2-fast';
+        $model    = 'bytedance-seed/seedream-4.5';
         $siteUrl  = 'https://pcaview.com';
         $siteName = env('APP_NAME', 'Your Site Name');
 

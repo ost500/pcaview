@@ -67,6 +67,49 @@ Route::prefix('api/church')->group(function () {
     Route::get('/id/{churchId}/videos', [App\Http\Controllers\Api\ChurchContentsController::class, 'videosByChurchId'])->name('api.church.videos.byId');
 });
 
+// AI 이미지 생성 테스트 라우트 (dev only)
+if (app()->environment('local', 'development')) {
+    Route::get('/test/ai-image', function () {
+        $aiService = app(\App\Domain\ai\AiApiService::class);
+
+        $title = '테스트 뉴스: 한국의 아름다운 봄 풍경';
+        $body = '오늘 서울에서는 벚꽃이 만개하여 많은 시민들이 봄나들이를 즐겼습니다. 여의도 윤중로에는 벚꽃축제가 열려 가족 단위 방문객들로 붐볐습니다.';
+
+        try {
+            $imageUrl = $aiService->generateCheapNewsImage($title, $body);
+
+            if ($imageUrl) {
+                // Base64 이미지인 경우 직접 표시
+                if (str_starts_with($imageUrl, 'data:image/')) {
+                    return response()->make(base64_decode(explode(',', $imageUrl)[1]), 200, [
+                        'Content-Type' => 'image/png',
+                    ]);
+                }
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'AI 이미지 생성 성공',
+                    'image_url' => $imageUrl,
+                    'image_length' => strlen($imageUrl),
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'AI 이미지 생성 실패 - null 반환',
+            ], 500);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'AI 이미지 생성 예외 발생',
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ], 500);
+        }
+    })->name('test.ai.image');
+}
+
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
 require __DIR__.'/admin.php';
