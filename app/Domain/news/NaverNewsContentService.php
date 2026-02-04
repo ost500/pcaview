@@ -105,6 +105,18 @@ class NaverNewsContentService
                                             'url' => $newsItem->url,
                                             'image_url' => $aiGeneratedImageUrl,
                                         ]);
+
+                                        // AI 생성 이미지를 S3에 업로드
+                                        $s3Url = $this->uploadImageToS3($aiGeneratedImageUrl, $department->id, true);
+                                        if ($s3Url) {
+                                            $aiGeneratedImageUrl = $s3Url;
+                                            Log::info('AI image uploaded to S3', [
+                                                'original_url' => $aiGeneratedImageUrl,
+                                                's3_url' => $s3Url,
+                                            ]);
+                                        } else {
+                                            Log::warning('Failed to upload AI image to S3, using original URL');
+                                        }
                                     }
                                 } catch (\Exception $imageException) {
                                     Log::warning('Failed to generate AI image', [
