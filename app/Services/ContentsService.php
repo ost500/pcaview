@@ -79,6 +79,7 @@ class ContentsService
     /**
      * news 타입 콘텐츠의 body 텍스트를 1/3만 표시
      * 저작권 보호를 위해 news 타입은 본문의 일부만 표시
+     * 단, AI로 리라이팅된 콘텐츠는 전문 표시 (저작권 문제 없음)
      *
      * @param  Collection  $contents
      * @return Collection
@@ -86,6 +87,11 @@ class ContentsService
     public function filterNewsContents(Collection $contents): Collection
     {
         return $contents->map(function ($content) {
+            // AI 리라이팅된 콘텐츠는 전문 표시
+            if ($content->is_ai_rewritten) {
+                return $content;
+            }
+
             // news 관련 타입 필터링 (news, nate_news, naver_news)
             if (ContentsType::isNews($content->type) && $content->body) {
                 // body 텍스트를 1/3로 줄임

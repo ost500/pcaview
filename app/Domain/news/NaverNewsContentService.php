@@ -76,10 +76,12 @@ class NaverNewsContentService
                 $publishedAt = $newsData['published_at'] ?? $newsItem->publishedAt ?? now();
 
                 // AI로 본문 리라이팅 (저작권 보호)
+                $isAiRewritten = false;
                 if ($body) {
                     $rewrittenBody = $this->aiApiService->rewriteNewsContent($body);
                     if ($rewrittenBody) {
                         $body = $rewrittenBody;
+                        $isAiRewritten = true;
                         Log::info('News content rewritten by AI', [
                             'original_length' => mb_strlen($newsData['body'] ?? ''),
                             'rewritten_length' => mb_strlen($rewrittenBody),
@@ -102,6 +104,7 @@ class NaverNewsContentService
                     'file_url' => $newsItem->url,
                     'thumbnail_url' => $thumbnailUrl,
                     'published_at' => $publishedAt, // 크롤링한 발행일시 우선 사용
+                    'is_ai_rewritten' => $isAiRewritten, // AI 리라이팅 여부
                 ]);
 
                 // Attach to department via pivot table
