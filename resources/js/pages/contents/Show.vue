@@ -126,10 +126,15 @@ function goToDepartment(id: number) {
     }
 }
 
-// 뉴스 본문 1-2줄만 표시 (저작권 보호)
+// 뉴스 본문 표시 (AI 리라이팅된 경우 전체, 아니면 일부만 표시)
 const displayBody = computed(() => {
     const newsTypes = ['nate_news', 'news', 'naver_news'];
     if (!newsTypes.includes(props.contents.type) || !props.contents.body) {
+        return props.contents.body;
+    }
+
+    // AI 리라이팅된 콘텐츠는 전체 본문 표시
+    if (props.contents.is_ai_rewritten) {
         return props.contents.body;
     }
 
@@ -138,6 +143,7 @@ const displayBody = computed(() => {
         return props.contents.body;
     }
 
+    // 저작권 보호: AI 리라이팅되지 않은 뉴스는 일부만 표시
     // 임시 div를 만들어서 텍스트 추출
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = props.contents.body;
@@ -421,9 +427,9 @@ onMounted(() => {
                             <div class="p-4" v-if="contents.body">
                                 <div class="content-body" v-html="displayBody"></div>
 
-                                <!-- 뉴스 저작권 안내 -->
+                                <!-- 뉴스 저작권 안내 (AI 리라이팅되지 않은 경우만) -->
                                 <div
-                                    v-if="['nate_news', 'news', 'naver_news'].includes(contents.type) && contents.file_url"
+                                    v-if="['nate_news', 'news', 'naver_news'].includes(contents.type) && contents.file_url && !contents.is_ai_rewritten"
                                     class="mt-5 rounded border-l-4 border-blue-500 bg-gray-50 p-4"
                                 >
                                     <p class="mb-0 text-sm text-gray-600">저작권 보호를 위해 본문의 일부만 표시됩니다.</p>
