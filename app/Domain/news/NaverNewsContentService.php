@@ -36,7 +36,7 @@ class NaverNewsContentService
     // AI 처리 설정
     private const MAX_BODY_LENGTH_FOR_AI = 5000;
     private const IMAGE_GENERATION_PROBABILITY_DEV = 100;
-    private const IMAGE_GENERATION_PROBABILITY_PROD = 100;
+    private const IMAGE_GENERATION_PROBABILITY_PROD = 50;
 
     /**
      * Naver 뉴스 배열을 Contents로 변환하여 저장
