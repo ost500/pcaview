@@ -37,6 +37,8 @@ class NaverNewsContentService
     private const MAX_BODY_LENGTH_FOR_AI = 5000;
     private const IMAGE_GENERATION_PROBABILITY_DEV = 100;
     private const IMAGE_GENERATION_PROBABILITY_PROD = 50;
+    private const COMMENT_GENERATION_COUNT = 3; // 생성할 댓글 개수
+    private const COMMENT_GENERATION_PROBABILITY = 30; // 댓글 생성 확률 (%)
 
     /**
      * Naver 뉴스 배열을 Contents로 변환하여 저장
@@ -64,6 +66,7 @@ class NaverNewsContentService
 
                 $this->attachDepartment($contents, $department);
                 $this->saveAiGeneratedImage($contents, $processedNews['aiImageUrl']);
+                $this->generateAndSaveComments($contents, $processedNews);
 
                 $savedCount++;
             } catch (\Exception $e) {
@@ -285,6 +288,60 @@ class NaverNewsContentService
             'content_id' => $contents->id,
             'image_url' => $imageUrl,
         ]);
+    }
+
+    /**
+     * AI 댓글 생성 및 저장 (확률 기반)
+     */
+    private function generateAndSaveComments(Contents $contents, array $processedNews): void
+    {
+        // AI 리라이팅된 뉴스만 댓글 생성
+        if (!$processedNews['isAiRewritten']) {
+            return;
+        }
+
+        // 확률 체크
+        if (rand(1, 100) > self::COMMENT_GENERATION_PROBABILITY) {
+            Log::info('AI 댓글 생성 스킵 (확률)', [
+                'content_id' => $contents->id,
+                'probability' => self::COMMENT_GENERATION_PROBABILITY.'%',
+            ]);
+            return;
+        }
+
+        try {
+            $comments = $this->aiApiService->generateNewsComments(
+                $processedNews['title'],
+                $processedNews['body'],
+                self::COMMENT_GENERATION_COUNT
+            );
+
+            if (!$comments || count($comments) === 0) {
+                Log::warning('AI 댓글 생성 실패 - 빈 결과', [
+                    'content_id' => $contents->id,
+                ]);
+                return;
+            }
+
+            // 댓글 저장
+            foreach ($comments as $comment) {
+                $contents->comments()->create([
+                    'body' => $comment['body'],
+                    'guest_name' => $comment['name'],
+                    'user_id' => null, // 게스트 댓글
+                ]);
+            }
+
+            Log::info('AI 댓글 저장 완료', [
+                'content_id' => $contents->id,
+                'count' => count($comments),
+            ]);
+        } catch (\Exception $e) {
+            Log::error('AI 댓글 생성/저장 실패', [
+                'content_id' => $contents->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**

@@ -359,4 +359,84 @@ PROMPT;
         \Log::warning('AI 태그 생성 실패');
         return null;
     }
+
+    /**
+     * 뉴스 기사 댓글 생성 (자연스러운 독자 반응)
+     *
+     * @param string $title 뉴스 제목
+     * @param string $body 뉴스 본문
+     * @param int $count 생성할 댓글 개수 (기본값: 3)
+     * @return array|null 생성된 댓글 배열 [['name' => '이름', 'body' => '댓글 내용'], ...]
+     */
+    public function generateNewsComments(string $title, string $body, int $count = 3): ?array
+    {
+        $bodyPreview = mb_substr(strip_tags($body), 0, 500);
+
+        $prompt = <<<PROMPT
+다음 뉴스 기사를 읽고, 실제 독자들이 작성할 법한 자연스러운 댓글을 {$count}개 생성해주세요.
+
+# 뉴스 제목
+{$title}
+
+# 뉴스 본문 요약
+{$bodyPreview}
+
+## 댓글 생성 규칙:
+1. 정확히 {$count}개의 댓글을 생성하세요
+2. 각 댓글은 실제 독자가 작성한 것처럼 자연스럽게
+3. 다양한 관점과 의견을 포함 (긍정적, 중립적, 비판적 등)
+4. 각 댓글은 20-100자 사이로 작성
+5. 존댓말과 반말을 섞어서 다양하게
+6. 이모티콘이나 특수문자는 사용하지 말 것
+7. 악플이나 비방은 절대 금지
+8. 건설적이고 예의 바른 댓글만 생성
+
+## 출력 형식 (JSON):
+[
+  {"name": "김철수", "body": "좋은 정보 감사합니다."},
+  {"name": "이영희", "body": "이런 내용이 더 널리 알려졌으면 좋겠네요"},
+  {"name": "박민수", "body": "유익한 기사네요"}
+]
+
+위 JSON 형식으로만 출력하세요. 다른 설명은 붙이지 마세요.
+PROMPT;
+
+        $json = $this->callTextApi(self::MODEL_TEXT_FAST, $prompt);
+
+        if ($json && isset($json['choices'][0]['message']['content'])) {
+            $content = trim($json['choices'][0]['message']['content']);
+
+            // JSON 파싱 시도
+            try {
+                // markdown 코드 블록 제거 (```json ... ``` 형식)
+                $content = preg_replace('/```json\s*|\s*```/', '', $content);
+                $content = trim($content);
+
+                $comments = json_decode($content, true);
+
+                if (is_array($comments) && count($comments) > 0) {
+                    // 유효성 검증
+                    $validComments = array_filter($comments, function ($comment) {
+                        return isset($comment['name']) && isset($comment['body']) &&
+                               !empty($comment['name']) && !empty($comment['body']);
+                    });
+
+                    if (count($validComments) > 0) {
+                        \Log::info('AI 댓글 생성 성공', [
+                            'count' => count($validComments),
+                        ]);
+                        return array_values($validComments);
+                    }
+                }
+            } catch (\Exception $e) {
+                \Log::error('AI 댓글 JSON 파싱 실패', [
+                    'error' => $e->getMessage(),
+                    'content' => $content,
+                ]);
+            }
+        }
+
+        \Log::warning('AI 댓글 생성 실패');
+        return null;
+    }
 }
