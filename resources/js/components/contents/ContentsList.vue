@@ -175,6 +175,16 @@ onUnmounted(() => {
                         </span>
                     </div>
 
+                    <!-- Department만 있는 경우 날짜 표시 -->
+                    <div
+                        v-else-if="content.department && content.published_at"
+                        class="flex items-center justify-end border-b border-sky-100 bg-white/50 px-4 py-3 backdrop-blur-sm"
+                    >
+                        <span class="text-xs text-gray-500">
+                            {{ formatDate(content.published_at) }}
+                        </span>
+                    </div>
+
                     <!-- 내용: 동영상, 이미지 또는 텍스트 미리보기 (뉴스 타입은 이미지 제외) -->
                     <div v-if="!isHtmlType(content) && !isNewsType(content)" class="max-h-[600px] overflow-hidden" @click="goToContent(content.id)">
                         <!-- 동영상이 있는 경우 (video_url 필드) -->
