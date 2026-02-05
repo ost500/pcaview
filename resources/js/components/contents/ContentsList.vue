@@ -175,16 +175,6 @@ onUnmounted(() => {
                         </span>
                     </div>
 
-                    <!-- Department만 있는 경우 날짜 표시 -->
-                    <div
-                        v-else-if="content.department && content.published_at"
-                        class="flex items-center justify-end border-b border-sky-100 bg-white/50 px-4 py-3 backdrop-blur-sm"
-                    >
-                        <span class="text-xs text-gray-500">
-                            {{ formatDate(content.published_at) }}
-                        </span>
-                    </div>
-
                     <!-- 내용: 동영상, 이미지 또는 텍스트 미리보기 (뉴스 타입은 이미지 제외) -->
                     <div v-if="!isHtmlType(content) && !isNewsType(content)" class="max-h-[600px] overflow-hidden" @click="goToContent(content.id)">
                         <!-- 동영상이 있는 경우 (video_url 필드) -->
@@ -214,21 +204,25 @@ onUnmounted(() => {
 
                     <!-- 타이틀 및 자세히 버튼 -->
                     <div class="bg-white/60 px-4 py-3 backdrop-blur-sm">
-                        <!-- Department 정보 (user_id가 있으면 오른쪽 정렬) -->
+                        <!-- Department 정보 -->
                         <div
                             v-if="content.department"
                             @click="goToContent(content.id)"
-                            class="mb-3 flex cursor-pointer items-center gap-2 transition-colors hover:text-sky-600"
-                            :class="{ 'justify-end': content.user_id }"
+                            class="mb-3 flex cursor-pointer items-center justify-between gap-2 transition-colors hover:text-sky-600"
                         >
-                            <div class="flex h-6 w-6 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
-                                <img
-                                    :src="content.department.icon_image || '/pcaview_icon.png'"
-                                    :alt="content.department.name"
-                                    class="h-full w-full object-cover"
-                                />
+                            <div class="flex items-center gap-2">
+                                <div class="flex h-6 w-6 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-sky-100">
+                                    <img
+                                        :src="content.department.icon_image || '/pcaview_icon.png'"
+                                        :alt="content.department.name"
+                                        class="h-full w-full object-cover"
+                                    />
+                                </div>
+                                <span class="text-xs font-medium text-sky-800">{{ content.department.name }}</span>
                             </div>
-                            <span class="text-xs font-medium text-sky-800">{{ content.department.name }}</span>
+                            <span v-if="content.published_at" class="text-xs text-gray-500">
+                                {{ formatDate(content.published_at) }}
+                            </span>
                         </div>
 
                         <h5 class="mb-3 text-base font-semibold text-sky-900" @click="goToContent(content.id)">
