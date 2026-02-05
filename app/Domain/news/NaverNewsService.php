@@ -15,26 +15,26 @@ class NaverNewsService
     private const TIMEOUT = 30;
 
     /**
-     * 오늘 일일 쿼터 초과 여부 확인
+     * 현재 시간의 쿼터 초과 여부 확인 (1시간 단위)
      */
     private function isQuotaExceededToday(): bool
     {
-        $cacheKey = 'naver_api_quota_exceeded_'.now()->format('Y-m-d');
+        $cacheKey = 'naver_api_quota_exceeded_'.now()->format('Y-m-d_H');
         return Cache::get($cacheKey, false);
     }
 
     /**
-     * 오늘 일일 쿼터 초과로 마크
+     * 현재 시간의 쿼터 초과로 마크 (1시간 동안 유지)
      */
     private function markQuotaExceededToday(): void
     {
-        $cacheKey = 'naver_api_quota_exceeded_'.now()->format('Y-m-d');
-        // 자정까지 캐시 유지
-        $expiresAt = now()->endOfDay();
+        $cacheKey = 'naver_api_quota_exceeded_'.now()->format('Y-m-d_H');
+        // 1시간 동안 캐시 유지
+        $expiresAt = now()->addHour();
         Cache::put($cacheKey, true, $expiresAt);
 
-        Log::warning('Naver API quota marked as exceeded for today', [
-            'date' => now()->format('Y-m-d'),
+        Log::warning('Naver API quota marked as exceeded for this hour', [
+            'hour' => now()->format('Y-m-d H:00'),
             'expires_at' => $expiresAt->toDateTimeString(),
         ]);
     }
@@ -45,11 +45,11 @@ class NaverNewsService
     public function searchNews(string $keyword, int $display = 10, string $sort = 'date'): array
     {
         try {
-            // 오늘 이미 쿼터 초과한 경우 즉시 리턴
+            // 이번 시간에 이미 쿼터 초과한 경우 즉시 리턴
             if ($this->isQuotaExceededToday()) {
-                Log::info('Naver API quota already exceeded today - skipping search', [
+                Log::info('Naver API quota already exceeded this hour - skipping search', [
                     'keyword' => $keyword,
-                    'date' => now()->format('Y-m-d'),
+                    'hour' => now()->format('Y-m-d H:00'),
                 ]);
                 return [];
             }
@@ -86,11 +86,12 @@ class NaverNewsService
                     'quota_exceeded' => $isQuotaExceeded,
                 ]);
 
-                // API 쿼터 초과 시 명확한 경고 및 오늘 더 이상 검색하지 않도록 마크
+                // API 쿼터 초과 시 명확한 경고 및 1시간 동안 검색하지 않도록 마크
                 if ($isQuotaExceeded) {
-                    Log::warning('Naver API quota exceeded - Daily limit of 25,000 queries reached', [
+                    Log::warning('Naver API quota exceeded - marking as exceeded for this hour', [
                         'keyword' => $keyword,
                         'response' => $responseBody,
+                        'hour' => now()->format('Y-m-d H:00'),
                     ]);
                     $this->markQuotaExceededToday();
                 }
