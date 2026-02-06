@@ -19,7 +19,7 @@ class AiNewsProcessingService
     // AI 처리 설정
     private const MAX_BODY_LENGTH_FOR_AI            = 5000;
     private const IMAGE_GENERATION_PROBABILITY_DEV  = 100;
-    private const IMAGE_GENERATION_PROBABILITY_PROD = 50;
+    private const IMAGE_GENERATION_PROBABILITY_PROD = 20;
     private const COMMENT_GENERATION_COUNT_MIN      = 1; // 최소 댓글 개수
     private const COMMENT_GENERATION_COUNT_MAX      = 5; // 최대 댓글 개수
     private const COMMENT_GENERATION_PROBABILITY    = 30; // 댓글 생성 확률 (%)
