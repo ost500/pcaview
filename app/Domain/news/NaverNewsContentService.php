@@ -37,7 +37,8 @@ class NaverNewsContentService
     private const MAX_BODY_LENGTH_FOR_AI            = 5000;
     private const IMAGE_GENERATION_PROBABILITY_DEV  = 100;
     private const IMAGE_GENERATION_PROBABILITY_PROD = 50;
-    private const COMMENT_GENERATION_COUNT          = 3; // 생성할 댓글 개수
+    private const COMMENT_GENERATION_COUNT_MIN      = 1; // 최소 댓글 개수
+    private const COMMENT_GENERATION_COUNT_MAX      = 5; // 최대 댓글 개수
     private const COMMENT_GENERATION_PROBABILITY    = 30; // 댓글 생성 확률 (%)
 
     /**
@@ -333,10 +334,13 @@ class NaverNewsContentService
         }
 
         try {
+            // 랜덤한 댓글 개수 생성 (1-5개)
+            $commentCount = rand(self::COMMENT_GENERATION_COUNT_MIN, self::COMMENT_GENERATION_COUNT_MAX);
+
             $comments = $this->aiApiService->generateNewsComments(
                 $processedNews['title'],
                 $processedNews['body'],
-                self::COMMENT_GENERATION_COUNT
+                $commentCount
             );
 
             if (! $comments || count($comments) === 0) {
@@ -357,8 +361,9 @@ class NaverNewsContentService
             }
 
             Log::info('AI 댓글 저장 완료', [
-                'content_id' => $contents->id,
-                'count'      => count($comments),
+                'content_id'     => $contents->id,
+                'requested'      => $commentCount,
+                'generated'      => count($comments),
             ]);
         } catch (\Exception $e) {
             Log::error('AI 댓글 생성/저장 실패', [
