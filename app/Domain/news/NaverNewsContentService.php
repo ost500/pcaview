@@ -34,26 +34,28 @@ class NaverNewsContentService
     }
 
     // AI 처리 설정
-    private const MAX_BODY_LENGTH_FOR_AI = 5000;
-    private const IMAGE_GENERATION_PROBABILITY_DEV = 100;
+    private const MAX_BODY_LENGTH_FOR_AI            = 5000;
+    private const IMAGE_GENERATION_PROBABILITY_DEV  = 100;
     private const IMAGE_GENERATION_PROBABILITY_PROD = 50;
-    private const COMMENT_GENERATION_COUNT = 3; // 생성할 댓글 개수
-    private const COMMENT_GENERATION_PROBABILITY = 30; // 댓글 생성 확률 (%)
+    private const COMMENT_GENERATION_COUNT          = 3; // 생성할 댓글 개수
+    private const COMMENT_GENERATION_PROBABILITY    = 30; // 댓글 생성 확률 (%)
 
     /**
      * Naver 뉴스 배열을 Contents로 변환하여 저장
      *
-     * @param NaverNewsItem[] $newsItems Naver 뉴스 아이템 배열
-     * @param Department $department 연결할 Department
-     * @return int 저장된 개수
+     * @param  NaverNewsItem[] $newsItems             Naver 뉴스 아이템 배열
+     * @param  Department      $department            연결할 Department
+     * @param  bool            $limitOneImagePerBatch Batch당 AI 이미지 1개만 생성할지 여부 (기본값: false)
+     * @return int             저장된 개수
      */
-    public function saveNewsAsContents(array $newsItems, Department $department): int
+    public function saveNewsAsContents(array $newsItems, Department $department, bool $limitOneImagePerBatch = false): int
     {
-        $savedCount = 0;
+        $savedCount            = 0;
+        $imageGeneratedInBatch = false; // Batch에서 이미지가 생성되었는지 추적
 
         foreach ($newsItems as $newsItem) {
             try {
-                if (!$this->validateNewsItem($newsItem)) {
+                if (! $this->validateNewsItem($newsItem)) {
                     continue;
                 }
 
@@ -61,17 +63,25 @@ class NaverNewsContentService
                     continue;
                 }
 
-                $processedNews = $this->processNewsItem($newsItem, $department);
-                $contents = $this->createContents($processedNews, $department);
+                // Batch당 1개 제한이 활성화되었고 이미 이미지가 생성되었다면 이미지 생성 스킵
+                $allowImageGeneration = ! $limitOneImagePerBatch || ! $imageGeneratedInBatch;
+
+                $processedNews = $this->processNewsItem($newsItem, $department, $allowImageGeneration);
+                $contents      = $this->createContents($processedNews, $department);
 
                 $this->attachDepartment($contents, $department);
                 $this->saveAiGeneratedImage($contents, $processedNews['aiImageUrl']);
                 $this->generateAndSaveComments($contents, $processedNews);
 
+                // 이미지가 생성되었다면 플래그 설정
+                if ($processedNews['aiImageUrl']) {
+                    $imageGeneratedInBatch = true;
+                }
+
                 $savedCount++;
             } catch (\Exception $e) {
                 Log::error('Failed to save Naver news as Contents', [
-                    'error' => $e->getMessage(),
+                    'error'     => $e->getMessage(),
                     'news_item' => $newsItem,
                 ]);
             }
@@ -85,8 +95,9 @@ class NaverNewsContentService
      */
     private function validateNewsItem($newsItem): bool
     {
-        if (!$newsItem instanceof NaverNewsItem) {
+        if (! $newsItem instanceof NaverNewsItem) {
             Log::warning('Invalid news item type', ['type' => get_class($newsItem)]);
+
             return false;
         }
 
@@ -110,40 +121,40 @@ class NaverNewsContentService
     /**
      * 뉴스 아이템 처리 (크롤링, AI 리라이팅, 이미지 생성)
      */
-    private function processNewsItem(NaverNewsItem $newsItem, Department $department): array
+    private function processNewsItem(NaverNewsItem $newsItem, Department $department, bool $allowImageGeneration = true): array
     {
         $this->currentNewsUrl = $newsItem->url;
-        $newsData = $this->fetchNewsBody($newsItem->url);
+        $newsData             = $this->fetchNewsBody($newsItem->url);
 
         // 기본 데이터 추출
-        $title = $newsData['title'] ?? $newsItem->title;
-        $body = $newsData['body'] ?? $newsItem->snippet ?? null;
+        $title       = $newsData['title'] ?? $newsItem->title;
+        $body        = $newsData['body'] ?? $newsItem->snippet ?? null;
         $publishedAt = $newsData['published_at'] ?? $newsItem->publishedAt ?? now();
 
         // AI 처리
-        $aiResult = $this->processWithAI($title, $body, $newsItem->url, $department->id);
+        $aiResult = $this->processWithAI($title, $body, $newsItem->url, $department->id, $allowImageGeneration);
 
         return [
-            'title' => $title,
-            'body' => $aiResult['body'],
-            'publishedAt' => $publishedAt,
+            'title'         => $title,
+            'body'          => $aiResult['body'],
+            'publishedAt'   => $publishedAt,
             'isAiRewritten' => $aiResult['isRewritten'],
-            'aiImageUrl' => $aiResult['imageUrl'],
+            'aiImageUrl'    => $aiResult['imageUrl'],
         ];
     }
 
     /**
      * AI 리라이팅 및 이미지 생성 처리
      */
-    private function processWithAI(string $title, ?string $body, string $url, int $departmentId): array
+    private function processWithAI(string $title, ?string $body, string $url, int $departmentId, bool $allowImageGeneration = true): array
     {
         $result = [
-            'body' => $body,
+            'body'        => $body,
             'isRewritten' => false,
-            'imageUrl' => null,
+            'imageUrl'    => null,
         ];
 
-        if (!$body) {
+        if (! $body) {
             return $result;
         }
 
@@ -151,8 +162,9 @@ class NaverNewsContentService
         if (mb_strlen($body) > self::MAX_BODY_LENGTH_FOR_AI) {
             Log::info('Body too long for AI processing, skipping', [
                 'length' => mb_strlen($body),
-                'url' => $url,
+                'url'    => $url,
             ]);
+
             return $result;
         }
 
@@ -160,23 +172,29 @@ class NaverNewsContentService
         try {
             $rewrittenBody = $this->aiApiService->rewriteNewsContent($body);
             if ($rewrittenBody) {
-                $result['body'] = $rewrittenBody;
+                $result['body']        = $rewrittenBody;
                 $result['isRewritten'] = true;
 
                 Log::info('News content rewritten by AI', [
-                    'original_length' => mb_strlen($body),
+                    'original_length'  => mb_strlen($body),
                     'rewritten_length' => mb_strlen($rewrittenBody),
                 ]);
 
-                // AI 이미지 생성
-                $result['imageUrl'] = $this->generateAndUploadAiImage($title, $rewrittenBody, $url, $departmentId);
+                // AI 이미지 생성 (허용된 경우에만)
+                if ($allowImageGeneration) {
+                    $result['imageUrl'] = $this->generateAndUploadAiImage($title, $rewrittenBody, $url, $departmentId);
+                } else {
+                    Log::info('AI 이미지 생성 스킵 (Batch당 1개 제한)', [
+                        'url' => $url,
+                    ]);
+                }
             } else {
                 Log::warning('Failed to rewrite news content, using original');
             }
         } catch (\Exception $e) {
             Log::error('AI processing exception', [
                 'error' => $e->getMessage(),
-                'url' => $url,
+                'url'   => $url,
             ]);
         }
 
@@ -189,21 +207,22 @@ class NaverNewsContentService
     private function generateAndUploadAiImage(string $title, string $body, string $url, int $departmentId): ?string
     {
         try {
-            if (!$this->shouldGenerateImage()) {
+            if (! $this->shouldGenerateImage()) {
                 Log::info('AI 이미지 생성 스킵 (확률)', [
-                    'url' => $url,
+                    'url'         => $url,
                     'probability' => $this->getImageGenerationProbability().'%',
                 ]);
+
                 return null;
             }
 
             $aiImageUrl = $this->aiApiService->generateCheapNewsImage($title, $body);
-            if (!$aiImageUrl) {
+            if (! $aiImageUrl) {
                 return null;
             }
 
             Log::info('AI 이미지 생성 성공', [
-                'url' => $url,
+                'url'         => $url,
                 'environment' => app()->environment(),
                 'probability' => $this->getImageGenerationProbability().'%',
             ]);
@@ -212,6 +231,7 @@ class NaverNewsContentService
             $s3Url = $this->uploadImageToS3($aiImageUrl, $departmentId, true);
             if ($s3Url) {
                 Log::info('AI image uploaded to S3', ['s3_url' => $s3Url]);
+
                 return $s3Url;
             }
 
@@ -219,8 +239,9 @@ class NaverNewsContentService
         } catch (\Exception $e) {
             Log::warning('Failed to generate AI image', [
                 'error' => $e->getMessage(),
-                'url' => $url,
+                'url'   => $url,
             ]);
+
             return null;
         }
     }
@@ -231,6 +252,7 @@ class NaverNewsContentService
     private function shouldGenerateImage(): bool
     {
         $probability = $this->getImageGenerationProbability();
+
         return rand(1, 100) <= $probability;
     }
 
@@ -250,14 +272,14 @@ class NaverNewsContentService
     private function createContents(array $processedNews, Department $department): Contents
     {
         return Contents::create([
-            'church_id' => $department->church_id,
-            'department_id' => $department->id,
-            'type' => ContentsType::NAVER_NEWS,
-            'title' => $processedNews['title'],
-            'body' => $processedNews['body'],
-            'file_url' => $this->currentNewsUrl,
-            'thumbnail_url' => $processedNews['aiImageUrl'],
-            'published_at' => $processedNews['publishedAt'],
+            'church_id'       => $department->church_id,
+            'department_id'   => $department->id,
+            'type'            => ContentsType::NAVER_NEWS,
+            'title'           => $processedNews['title'],
+            'body'            => $processedNews['body'],
+            'file_url'        => $this->currentNewsUrl,
+            'thumbnail_url'   => $processedNews['aiImageUrl'],
+            'published_at'    => $processedNews['publishedAt'],
             'is_ai_rewritten' => $processedNews['isAiRewritten'],
         ]);
     }
@@ -275,18 +297,18 @@ class NaverNewsContentService
      */
     private function saveAiGeneratedImage(Contents $contents, ?string $imageUrl): void
     {
-        if (!$imageUrl) {
+        if (! $imageUrl) {
             return;
         }
 
         $contents->images()->create([
             'file_url' => $imageUrl,
-            'page' => 1,
+            'page'     => 1,
         ]);
 
         Log::info('AI generated image saved to ContentsImage', [
             'content_id' => $contents->id,
-            'image_url' => $imageUrl,
+            'image_url'  => $imageUrl,
         ]);
     }
 
@@ -296,16 +318,17 @@ class NaverNewsContentService
     private function generateAndSaveComments(Contents $contents, array $processedNews): void
     {
         // AI 리라이팅된 뉴스만 댓글 생성
-        if (!$processedNews['isAiRewritten']) {
+        if (! $processedNews['isAiRewritten']) {
             return;
         }
 
         // 확률 체크
         if (rand(1, 100) > self::COMMENT_GENERATION_PROBABILITY) {
             Log::info('AI 댓글 생성 스킵 (확률)', [
-                'content_id' => $contents->id,
+                'content_id'  => $contents->id,
                 'probability' => self::COMMENT_GENERATION_PROBABILITY.'%',
             ]);
+
             return;
         }
 
@@ -316,30 +339,31 @@ class NaverNewsContentService
                 self::COMMENT_GENERATION_COUNT
             );
 
-            if (!$comments || count($comments) === 0) {
+            if (! $comments || count($comments) === 0) {
                 Log::warning('AI 댓글 생성 실패 - 빈 결과', [
                     'content_id' => $contents->id,
                 ]);
+
                 return;
             }
 
             // 댓글 저장
             foreach ($comments as $comment) {
                 $contents->comments()->create([
-                    'body' => $comment['body'],
+                    'body'       => $comment['body'],
                     'guest_name' => $comment['name'],
-                    'user_id' => null, // 게스트 댓글
+                    'user_id'    => null, // 게스트 댓글
                 ]);
             }
 
             Log::info('AI 댓글 저장 완료', [
                 'content_id' => $contents->id,
-                'count' => count($comments),
+                'count'      => count($comments),
             ]);
         } catch (\Exception $e) {
             Log::error('AI 댓글 생성/저장 실패', [
                 'content_id' => $contents->id,
-                'error' => $e->getMessage(),
+                'error'      => $e->getMessage(),
             ]);
         }
     }
@@ -347,7 +371,7 @@ class NaverNewsContentService
     /**
      * 뉴스 URL에서 제목, 본문, 발행일시, 이미지 크롤링
      *
-     * @param string $url 뉴스 URL
+     * @param  string                                                                                 $url 뉴스 URL
      * @return array{title: string|null, body: string|null, published_at: string|null, images: array} 제목, 본문, 발행일시, 이미지 배열
      */
     private function fetchNewsBody(string $url): array
@@ -355,15 +379,16 @@ class NaverNewsContentService
         try {
             $response = Http::timeout(30)
                 ->withHeaders([
-                    'User-Agent' => 'Mozilla/5.0 (compatible; LaravelApp/1.0)',
-                    'Accept' => 'text/html,application/xhtml+xml',
+                    'User-Agent'      => 'Mozilla/5.0 (compatible; LaravelApp/1.0)',
+                    'Accept'          => 'text/html,application/xhtml+xml',
                     'Accept-Language' => 'ko-KR,ko;q=0.9',
-                    'Accept-Charset' => 'UTF-8',
+                    'Accept-Charset'  => 'UTF-8',
                 ])
                 ->get($url);
 
-            if (!$response->successful()) {
+            if (! $response->successful()) {
                 Log::warning('Failed to fetch news body', ['url' => $url]);
+
                 return ['title' => null, 'body' => null, 'published_at' => null, 'images' => []];
             }
 
@@ -385,8 +410,9 @@ class NaverNewsContentService
         } catch (\Exception $e) {
             Log::error('Error fetching news body', [
                 'error' => $e->getMessage(),
-                'url' => $url,
+                'url'   => $url,
             ]);
+
             return ['title' => null, 'body' => null, 'published_at' => null, 'images' => []];
         }
     }
@@ -394,22 +420,22 @@ class NaverNewsContentService
     /**
      * HTML에서 제목, 본문, 발행일시, 이미지 추출
      *
-     * @param string $html HTML 내용 (UTF-8 인코딩)
+     * @param  string                                                                                 $html HTML 내용 (UTF-8 인코딩)
      * @return array{title: string|null, body: string|null, published_at: string|null, images: array} 제목, 본문, 발행일시, 이미지 배열
      */
     private function extractTitleAndBodyFromHtml(string $html): array
     {
         libxml_use_internal_errors(true);
-        $dom = new DOMDocument();
+        $dom = new DOMDocument;
         // HTML 로드 (meta charset으로 인코딩 지정)
-        $htmlWithCharset = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">' . $html;
+        $htmlWithCharset = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'.$html;
         @$dom->loadHTML($htmlWithCharset);
         libxml_clear_errors();
 
         $xpath = new DOMXPath($dom);
 
         // 제목 추출
-        $title = null;
+        $title          = null;
         $titleSelectors = [
             "//h1[@id='articleTitle']",        // 네이트 뉴스 제목
             "//h1[@class='articleTitle']",
@@ -419,8 +445,8 @@ class NaverNewsContentService
             "//meta[@name='title']/@content",
             "//h1[contains(@class, 'article-title')]",
             "//h1[contains(@class, 'news-title')]",
-            "//h1",                            // 일반 h1
-            "//title",                         // 페이지 타이틀
+            '//h1',                            // 일반 h1
+            '//title',                         // 페이지 타이틀
         ];
 
         foreach ($titleSelectors as $selector) {
@@ -429,7 +455,7 @@ class NaverNewsContentService
                 $titleNode = $nodes->item(0);
                 if ($titleNode) {
                     $title = trim($titleNode->nodeValue ?? $titleNode->textContent);
-                    if (!empty($title)) {
+                    if (! empty($title)) {
                         // 사이트명 및 카테고리 제거
                         // "뉴스 제목 - 네이트뉴스" -> "뉴스 제목"
                         // ":네이트 연예" -> ""
@@ -444,7 +470,7 @@ class NaverNewsContentService
         }
 
         // 본문 추출
-        $bodyHtml = null;
+        $bodyHtml      = null;
         $bodySelectors = [
             // 네이트 뉴스 전용
             "//div[@id='articleContents']",   // 네이트 뉴스 기사 내용 (최우선)
@@ -453,7 +479,7 @@ class NaverNewsContentService
             "//div[@id='newsBody']",
             "//div[@class='articleBody']",
             // 일반적인 뉴스 사이트
-            "//article",
+            '//article',
             "//div[contains(@class, 'article-body')]",
             "//div[contains(@class, 'article-content')]",
             "//div[contains(@class, 'news-body')]",
@@ -463,7 +489,7 @@ class NaverNewsContentService
             "//div[@id='article-body']",
             "//div[@id='article-content']",
             "//div[@id='news-content']",
-            "//main",
+            '//main',
         ];
 
         foreach ($bodySelectors as $selector) {
@@ -487,7 +513,7 @@ class NaverNewsContentService
         }
 
         // 발행일시 추출
-        $publishedAt = null;
+        $publishedAt   = null;
         $dateSelectors = [
             "//*[@id='articleView']/p/span[2]/em",                  // 네이트 뉴스 articleView 발행일 (최우선)
             "//meta[@property='article:published_time']/@content",  // OG article 발행일
@@ -506,7 +532,7 @@ class NaverNewsContentService
                 $dateNode = $nodes->item(0);
                 if ($dateNode) {
                     $dateText = trim($dateNode->nodeValue ?? $dateNode->textContent);
-                    if (!empty($dateText)) {
+                    if (! empty($dateText)) {
                         // 날짜 파싱 시도
                         $parsedDate = $this->parsePublishedDate($dateText);
                         if ($parsedDate) {
@@ -528,25 +554,25 @@ class NaverNewsContentService
         }
 
         return [
-            'title' => $title,
-            'body' => $bodyHtml,
+            'title'        => $title,
+            'body'         => $bodyHtml,
             'published_at' => $publishedAt,
-            'images' => $images,
+            'images'       => $images,
         ];
     }
 
     /**
      * HTML 정리 (광고, 스크립트, 이미지 등 제거)
      *
-     * @param string $html 원본 HTML (UTF-8 인코딩)
+     * @param  string $html 원본 HTML (UTF-8 인코딩)
      * @return string 정리된 HTML
      */
     private function cleanHtml(string $html): string
     {
         libxml_use_internal_errors(true);
-        $dom = new DOMDocument();
+        $dom = new DOMDocument;
         // HTML 로드 (meta charset으로 인코딩 지정)
-        $htmlWithCharset = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">' . $html;
+        $htmlWithCharset = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'.$html;
         @$dom->loadHTML($htmlWithCharset);
         libxml_clear_errors();
 
@@ -555,9 +581,9 @@ class NaverNewsContentService
         // 제거할 요소들 (네이트 뉴스 광고 패턴 + 이미지 포함)
         $removeSelectors = [
             // 저작권 보호를 위한 이미지 제거
-            "//img",                             // 모든 이미지 태그
-            "//picture",                         // picture 태그
-            "//figure",                          // figure 태그 (이미지 포함)
+            '//img',                             // 모든 이미지 태그
+            '//picture',                         // picture 태그
+            '//figure',                          // figure 태그 (이미지 포함)
             // 네이트 뉴스 광고
             "//*[@id='ad_innerView']",           // 네이트 광고 div
             "//*[@id='adDiv']",                  // 네이트 광고 div
@@ -570,13 +596,13 @@ class NaverNewsContentService
             "//*[contains(@class, 'advertisement')]", // 광고
             "//*[contains(@class, 'banner')]",   // 배너
             // 일반 광고 요소
-            "//iframe",                          // iframe (광고 또는 외부 컨텐츠)
-            "//script",                          // JavaScript
-            "//style",                           // CSS
-            "//ins",                             // 구글 애드센스
+            '//iframe',                          // iframe (광고 또는 외부 컨텐츠)
+            '//script',                          // JavaScript
+            '//style',                           // CSS
+            '//ins',                             // 구글 애드센스
             "//*[contains(@class, 'adsbygoogle')]", // 구글 애드센스
-            "//*[@data-ad-slot]",                // 광고 슬롯
-            "//noscript",                        // noscript 태그
+            '//*[@data-ad-slot]',                // 광고 슬롯
+            '//noscript',                        // noscript 태그
             // 기타 불필요한 요소
             "//*[@id='reactionDiv']",            // 리액션
             "//*[contains(@class, 'relation')]", // 관련 기사
@@ -622,14 +648,14 @@ class NaverNewsContentService
     /**
      * 본문을 절반으로 자르기 (저작권 보호)
      *
-     * @param string $html 원본 HTML
+     * @param  string $html 원본 HTML
      * @return string 절반으로 잘린 HTML
      */
     private function truncateToHalf(string $html): string
     {
         libxml_use_internal_errors(true);
-        $dom = new DOMDocument();
-        $dom->loadHTML('<?xml encoding="UTF-8">' . $html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        $dom = new DOMDocument;
+        $dom->loadHTML('<?xml encoding="UTF-8">'.$html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         libxml_clear_errors();
 
         $xpath = new DOMXPath($dom);
@@ -637,7 +663,7 @@ class NaverNewsContentService
         // 모든 텍스트 노드와 이미지 가져오기
         $allNodes = $xpath->query('.//text()[normalize-space()] | .//img');
 
-        if (!$allNodes || $allNodes->length === 0) {
+        if (! $allNodes || $allNodes->length === 0) {
             return $html;
         }
 
@@ -664,7 +690,7 @@ class NaverNewsContentService
         // "계속 읽기" 링크 추가
         $truncatedHtml .= '<div style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-left: 4px solid #007bff; border-radius: 4px;">';
         $truncatedHtml .= '<p style="margin: 0; color: #6c757d; font-size: 14px;">저작권 보호를 위해 본문의 일부만 표시됩니다.</p>';
-        $truncatedHtml .= '<a href="' . htmlspecialchars($this->currentNewsUrl ?? '') . '" target="_blank" rel="noopener noreferrer" style="display: inline-block; margin-top: 10px; color: #007bff; text-decoration: none; font-weight: 500;">';
+        $truncatedHtml .= '<a href="'.htmlspecialchars($this->currentNewsUrl ?? '').'" target="_blank" rel="noopener noreferrer" style="display: inline-block; margin-top: 10px; color: #007bff; text-decoration: none; font-weight: 500;">';
         $truncatedHtml .= '원문 보기 →</a>';
         $truncatedHtml .= '</div>';
 
@@ -674,7 +700,7 @@ class NaverNewsContentService
     /**
      * 이미지 URL에 https 프로토콜 추가 (네이트 뉴스 이미지 패턴 처리)
      *
-     * @param string $html 원본 HTML
+     * @param  string $html 원본 HTML
      * @return string 수정된 HTML
      */
     private function fixImageUrls(string $html): string
@@ -683,7 +709,7 @@ class NaverNewsContentService
         $html = preg_replace_callback(
             '/src=["\']\/\/thumbnews\.nateimg\.co\.kr\/[^\/]+\/\/\/([^"\']+)["\']/i',
             function ($matches) {
-                return 'src="https://' . $matches[1] . '"';
+                return 'src="https://'.$matches[1].'"';
             },
             $html
         );
@@ -708,9 +734,9 @@ class NaverNewsContentService
     /**
      * 외부 이미지 URL을 다운로드하여 S3에 업로드
      *
-     * @param string $imageUrl 원본 이미지 URL
-     * @param int $departmentId Department ID
-     * @param bool $isThumbnail 썸네일 여부 (기본값: false)
+     * @param  string      $imageUrl     원본 이미지 URL
+     * @param  int         $departmentId Department ID
+     * @param  bool        $isThumbnail  썸네일 여부 (기본값: false)
      * @return string|null S3 URL 또는 null (실패 시)
      */
     private function uploadImageToS3(string $imageUrl, int $departmentId, bool $isThumbnail = false): ?string
@@ -724,30 +750,33 @@ class NaverNewsContentService
                 // 형식: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...
                 preg_match('/^data:image\/(\w+);base64,(.+)$/', $imageUrl, $matches);
 
-                if (!empty($matches)) {
-                    $extension = $matches[1]; // png, jpeg, jpg, gif, webp 등
+                if (! empty($matches)) {
+                    $extension  = $matches[1]; // png, jpeg, jpg, gif, webp 등
                     $base64Data = $matches[2];
-                    $imageData = base64_decode($base64Data);
+                    $imageData  = base64_decode($base64Data);
 
                     if ($imageData === false) {
                         Log::warning('Failed to decode base64 image');
+
                         return null;
                     }
 
                     Log::info('Decoded base64 image', [
                         'extension' => $extension,
-                        'size' => strlen($imageData),
+                        'size'      => strlen($imageData),
                     ]);
                 } else {
                     Log::warning('Invalid base64 image format', ['url_prefix' => substr($imageUrl, 0, 100)]);
+
                     return null;
                 }
             } else {
                 // 외부 URL인 경우 다운로드
                 $response = Http::timeout(10)->get($imageUrl);
 
-                if (!$response->successful()) {
+                if (! $response->successful()) {
                     Log::warning('Failed to download image', ['url' => $imageUrl]);
+
                     return null;
                 }
 
@@ -755,21 +784,21 @@ class NaverNewsContentService
 
                 // 파일 확장자 추출 (기본값: jpg)
                 $extension = pathinfo(parse_url($imageUrl, PHP_URL_PATH), PATHINFO_EXTENSION);
-                if (empty($extension) || !in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                if (empty($extension) || ! in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
                     $extension = 'jpg';
                 }
             }
 
             // 확장자 정규화
             $extension = strtolower($extension);
-            if (!in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+            if (! in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
                 $extension = 'png';
             }
 
             // S3 저장 경로 생성 (썸네일과 일반 이미지 구분)
-            $fileName = Str::uuid() . '.' . $extension;
-            $folder = $isThumbnail ? 'thumbnails' : 'images';
-            $s3Path = "news/{$folder}/{$departmentId}/{$fileName}";
+            $fileName = Str::uuid().'.'.$extension;
+            $folder   = $isThumbnail ? 'thumbnails' : 'images';
+            $s3Path   = "news/{$folder}/{$departmentId}/{$fileName}";
 
             // S3에 업로드
             Storage::put($s3Path, $imageData);
@@ -779,16 +808,17 @@ class NaverNewsContentService
 
             Log::info('Image uploaded to S3', [
                 'path' => $s3Path,
-                'url' => $s3Url,
+                'url'  => $s3Url,
                 'size' => strlen($imageData),
             ]);
 
             return $s3Url;
         } catch (\Exception $e) {
             Log::error('Failed to upload image to S3', [
-                'error' => $e->getMessage(),
+                'error'     => $e->getMessage(),
                 'image_url' => substr($imageUrl, 0, 100),
             ]);
+
             return null;
         }
     }
@@ -796,7 +826,7 @@ class NaverNewsContentService
     /**
      * 발행 날짜 문자열 파싱
      *
-     * @param string $dateString 날짜 문자열 (예: "2025.12.23 14:30", "1시간전", "어제 20:15", ISO 8601)
+     * @param  string      $dateString 날짜 문자열 (예: "2025.12.23 14:30", "1시간전", "어제 20:15", ISO 8601)
      * @return string|null Carbon 날짜 문자열 또는 null
      */
     private function parsePublishedDate(string $dateString): ?string
@@ -805,6 +835,7 @@ class NaverNewsContentService
             // ISO 8601 형식 (예: 2025-12-23T14:30:00Z, 2025-12-23T14:30:00+09:00)
             if (preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/', $dateString)) {
                 $date = \Carbon\Carbon::parse($dateString);
+
                 return $date->toDateTimeString();
             }
 
@@ -814,6 +845,7 @@ class NaverNewsContentService
                     'Y-m-d H:i',
                     "{$matches[1]}-{$matches[2]}-{$matches[3]} {$matches[4]}:{$matches[5]}"
                 );
+
                 return $date->toDateTimeString();
             }
 
@@ -823,6 +855,7 @@ class NaverNewsContentService
                     'Y-m-d H:i',
                     "{$matches[1]}-{$matches[2]}-{$matches[3]} {$matches[4]}:{$matches[5]}"
                 );
+
                 return $date->toDateTimeString();
             }
 
@@ -832,6 +865,7 @@ class NaverNewsContentService
                     'Y-m-d H:i:s',
                     "{$matches[1]}-{$matches[2]}-{$matches[3]} {$matches[4]}:{$matches[5]}:{$matches[6]}"
                 );
+
                 return $date->toDateTimeString();
             }
 
@@ -857,10 +891,10 @@ class NaverNewsContentService
         } catch (\Exception $e) {
             Log::warning('Failed to parse published date', [
                 'date_string' => $dateString,
-                'error' => $e->getMessage(),
+                'error'       => $e->getMessage(),
             ]);
+
             return null;
         }
     }
-
 }

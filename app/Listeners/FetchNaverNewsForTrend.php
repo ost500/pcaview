@@ -59,8 +59,8 @@ class FetchNaverNewsForTrend implements ShouldQueue
                 return;
             }
 
-            // Naver 뉴스를 Contents로 저장
-            $savedCount = $this->naverNewsContentService->saveNewsAsContents($naverNewsItems, $department);
+            // Naver 뉴스를 Contents로 저장 (AI 이미지 생성 없음)
+            $savedCount = $this->naverNewsContentService->saveNewsAsContents($naverNewsItems, $department, false);
 
             // NaverNewsItem 객체들을 배열로 변환
             $naverNewsArray = array_map(fn ($item) => $item->toArray(), $naverNewsItems);

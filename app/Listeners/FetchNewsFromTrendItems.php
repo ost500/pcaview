@@ -57,8 +57,9 @@ class FetchNewsFromTrendItems implements ShouldQueue
                 return;
             }
 
-            $allFetchedNews = [];
-            $totalSavedCount = 0;
+            $allFetchedNews         = [];
+            $totalSavedCount        = 0;
+            $imageGeneratedForTrend = false; // Trend 전체에서 이미지가 생성되었는지 추적
 
             // 메모리 관리: 최대 10개의 news_items만 처리
             $newsItemsToProcess = array_slice($trend->news_items, 0, 10);
@@ -73,10 +74,10 @@ class FetchNewsFromTrendItems implements ShouldQueue
                 $newsTitle = $newsItem['title'];
 
                 Log::info('Searching Naver news for trend news item', [
-                    'trend_id' => $trend->id,
+                    'trend_id'   => $trend->id,
                     'news_title' => $newsTitle,
-                    'index' => $index + 1,
-                    'total' => count($newsItemsToProcess),
+                    'index'      => $index + 1,
+                    'total'      => count($newsItemsToProcess),
                 ]);
 
                 // Naver 뉴스 검색 (상위 2개만 가져오기 - 메모리 절약)
@@ -84,7 +85,7 @@ class FetchNewsFromTrendItems implements ShouldQueue
 
                 if (empty($naverNewsItems)) {
                     Log::info('No Naver news found for news item title', [
-                        'trend_id' => $trend->id,
+                        'trend_id'   => $trend->id,
                         'news_title' => $newsTitle,
                     ]);
 
@@ -92,18 +93,25 @@ class FetchNewsFromTrendItems implements ShouldQueue
                 }
 
                 // Naver 뉴스를 Contents로 저장
-                $savedCount = $this->naverNewsContentService->saveNewsAsContents($naverNewsItems, $department);
+                // Trend당 AI 이미지 1개만 생성: 첫 번째 batch에서만 이미지 생성 허용
+                $allowImageGeneration = ! $imageGeneratedForTrend;
+                $savedCount           = $this->naverNewsContentService->saveNewsAsContents($naverNewsItems, $department, $allowImageGeneration);
                 $totalSavedCount += $savedCount;
+
+                // 이미지 생성이 허용되었다면 플래그 설정 (실제 생성 여부와 관계없이)
+                if ($allowImageGeneration) {
+                    $imageGeneratedForTrend = true;
+                }
 
                 // 수집한 뉴스 누적
                 $naverNewsArray = array_map(fn ($item) => $item->toArray(), $naverNewsItems);
                 $allFetchedNews = array_merge($allFetchedNews, $naverNewsArray);
 
                 Log::info('Fetched Naver news for news item', [
-                    'trend_id' => $trend->id,
-                    'news_title' => $newsTitle,
+                    'trend_id'      => $trend->id,
+                    'news_title'    => $newsTitle,
                     'fetched_count' => count($naverNewsItems),
-                    'saved_count' => $savedCount,
+                    'saved_count'   => $savedCount,
                 ]);
 
                 // 메모리 정리 (매 3개마다)
@@ -118,16 +126,16 @@ class FetchNewsFromTrendItems implements ShouldQueue
                 $trend->update(['news_items' => $allNewsItems]);
 
                 Log::info('Updated trend with news from items search', [
-                    'trend_id' => $trend->id,
+                    'trend_id'      => $trend->id,
                     'total_fetched' => count($allFetchedNews),
-                    'total_saved' => $totalSavedCount,
+                    'total_saved'   => $totalSavedCount,
                 ]);
             }
         } catch (\Exception $e) {
             Log::error('Failed to fetch news from trend items', [
                 'trend_id' => $event->trend->id,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
+                'error'    => $e->getMessage(),
+                'trace'    => $e->getTraceAsString(),
             ]);
 
             // API 쿼터 초과 에러는 재시도하지 않음
