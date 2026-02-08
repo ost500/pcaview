@@ -61,17 +61,19 @@ class NateNewsContentService
                 // 저작권 문제로 뉴스 이미지는 저장하지 않음
                 $thumbnailUrl = null;
 
-                // Contents 생성 (이미 NateNewsService에서 UTF-8 변환됨)
-                $contents = Contents::create([
-                    'church_id' => $department->church_id,
-                    'department_id' => $department->id, // 대표 department 설정
-                    'type' => ContentsType::NATE_NEWS, // Nate 뉴스 타입
-                    'title' => $title,
-                    'body' => $body,
-                    'file_url' => $newsItem['url'],
-                    'thumbnail_url' => $thumbnailUrl,
-                    'published_at' => $publishedAt, // 크롤링한 발행일시 우선 사용
-                ]);
+                // Contents 생성 (title 중복 시 기존 것 반환)
+                $contents = Contents::firstOrCreate(
+                    ['title' => $title],
+                    [
+                        'church_id' => $department->church_id,
+                        'department_id' => $department->id, // 대표 department 설정
+                        'type' => ContentsType::NATE_NEWS, // Nate 뉴스 타입
+                        'body' => $body,
+                        'file_url' => $newsItem['url'],
+                        'thumbnail_url' => $thumbnailUrl,
+                        'published_at' => $publishedAt, // 크롤링한 발행일시 우선 사용
+                    ]
+                );
 
                 // Attach to department via pivot table
                 $contents->departments()->attach($department->id);

@@ -51,14 +51,17 @@ class BrightSoriCrawlService
 
                 $departmentModel = $department->getModel();
 
-                $newContents = Contents::create([
-                    'church_id' => $departmentModel->church_id,
-                    'department_id' => $departmentModel->id, // 대표 department 설정
-                    'title' => $this->getTitle($pdf),
-                    'type' => $type->name,
-                    'file_url' => $fileUrl,
-                    'published_at' => $this->getPublishedAt($pdf),
-                ]);
+                // title 중복 시 기존 것 반환
+                $newContents = Contents::firstOrCreate(
+                    ['title' => $this->getTitle($pdf)],
+                    [
+                        'church_id' => $departmentModel->church_id,
+                        'department_id' => $departmentModel->id, // 대표 department 설정
+                        'type' => $type->name,
+                        'file_url' => $fileUrl,
+                        'published_at' => $this->getPublishedAt($pdf),
+                    ]
+                );
 
                 // Attach to department via pivot table
                 $newContents->departments()->attach($departmentModel->id);

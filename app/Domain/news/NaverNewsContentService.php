@@ -147,21 +147,23 @@ class NaverNewsContentService
     }
 
     /**
-     * Contents 모델 생성
+     * Contents 모델 생성 (title 중복 시 기존 것 반환)
      */
     private function createContents(array $processedNews, Department $department): Contents
     {
-        return Contents::create([
-            'church_id'       => $department->church_id,
-            'department_id'   => $department->id,
-            'type'            => ContentsType::NAVER_NEWS,
-            'title'           => $processedNews['title'],
-            'body'            => $processedNews['body'],
-            'file_url'        => $this->currentNewsUrl,
-            'thumbnail_url'   => $processedNews['aiImageUrl'],
-            'published_at'    => $processedNews['publishedAt'],
-            'is_ai_rewritten' => $processedNews['isAiRewritten'],
-        ]);
+        return Contents::firstOrCreate(
+            ['title' => $processedNews['title']],
+            [
+                'church_id'       => $department->church_id,
+                'department_id'   => $department->id,
+                'type'            => ContentsType::NAVER_NEWS,
+                'body'            => $processedNews['body'],
+                'file_url'        => $this->currentNewsUrl,
+                'thumbnail_url'   => $processedNews['aiImageUrl'],
+                'published_at'    => $processedNews['publishedAt'],
+                'is_ai_rewritten' => $processedNews['isAiRewritten'],
+            ]
+        );
     }
 
     /**
