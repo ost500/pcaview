@@ -52,3 +52,13 @@ Route::prefix('parkgolf')->group(function () {
     Route::get('/statistics', [App\Http\Controllers\Api\ParkGolfCourseController::class, 'statistics']);
     Route::get('/{id}', [App\Http\Controllers\Api\ParkGolfCourseController::class, 'show']);
 });
+
+// Symlink Visit API routes
+Route::prefix('symlink-visits')->group(function () {
+    Route::get('/', [App\Http\Controllers\Api\SymlinkVisitController::class, 'index']);
+    Route::get('/statistics', [App\Http\Controllers\Api\SymlinkVisitController::class, 'statistics']);
+    Route::get('/count-by-ad', [App\Http\Controllers\Api\SymlinkVisitController::class, 'countByAdId']);
+    Route::post('/', [App\Http\Controllers\Api\SymlinkVisitController::class, 'store']);
+    Route::get('/{adId}', [App\Http\Controllers\Api\SymlinkVisitController::class, 'show']);
+    Route::delete('/{adId}', [App\Http\Controllers\Api\SymlinkVisitController::class, 'destroy']);
+});
