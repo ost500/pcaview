@@ -43,3 +43,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/profile/photo', [ProfileController::class, 'updateProfilePhoto']);
     Route::post('/profile/delete', [ProfileController::class, 'destroy']);
 });
+
+// Park Golf Course API routes
+Route::prefix('parkgolf')->group(function () {
+    Route::get('/search', [App\Http\Controllers\Api\ParkGolfCourseController::class, 'search']);
+    Route::get('/nearby', [App\Http\Controllers\Api\ParkGolfCourseController::class, 'nearby']);
+    Route::get('/regions', [App\Http\Controllers\Api\ParkGolfCourseController::class, 'regions']);
+    Route::get('/statistics', [App\Http\Controllers\Api\ParkGolfCourseController::class, 'statistics']);
+    Route::get('/{id}', [App\Http\Controllers\Api\ParkGolfCourseController::class, 'show']);
+});
