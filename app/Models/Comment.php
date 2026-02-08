@@ -13,6 +13,7 @@ class Comment extends Model
         'guest_name',
         'ip_address',
         'body',
+        'created_at',
     ];
 
     protected $appends = [
@@ -35,18 +36,20 @@ class Comment extends Model
         if ($this->user_id && $this->user) {
             return $this->user->name;
         }
+
         return $this->guest_name ?? '익명';
     }
 
     public function getIpLastDigitsAttribute(): string
     {
-        if (!$this->ip_address) {
+        if (! $this->ip_address) {
             return '';
         }
         $parts = explode('.', $this->ip_address);
         if (count($parts) >= 4) {
-            return $parts[2] . '.' . $parts[3];
+            return $parts[2].'.'.$parts[3];
         }
+
         return end($parts);
     }
 }
