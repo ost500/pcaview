@@ -53,8 +53,8 @@ Route::prefix('parkgolf')->group(function () {
     Route::get('/{id}', [App\Http\Controllers\Api\ParkGolfCourseController::class, 'show']);
 });
 
-// Symlink Visit API routes
-Route::prefix('symlink-visits')->group(function () {
+// Symlink Visit API routes (토큰 인증 필요)
+Route::prefix('symlink-visits')->middleware('api.token')->group(function () {
     Route::get('/', [App\Http\Controllers\Api\SymlinkVisitController::class, 'index']);
     Route::get('/statistics', [App\Http\Controllers\Api\SymlinkVisitController::class, 'statistics']);
     Route::get('/count-by-ad', [App\Http\Controllers\Api\SymlinkVisitController::class, 'countByAdId']);

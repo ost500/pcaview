@@ -3,6 +3,7 @@
 use App\Http\Middleware\AdminAuth;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
+use App\Http\Middleware\ValidateApiToken;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Middleware\RedirectIfAuthenticated;
 use Illuminate\Foundation\Application;
@@ -36,6 +37,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // 미들웨어 별칭 등록
         $middleware->alias([
             'admin' => AdminAuth::class,
+            'api.token' => ValidateApiToken::class,
         ]);
     })
     ->withEvents(discover: [
