@@ -1,139 +1,135 @@
-# Park Golf - API 연동 레퍼런스
+# PCAview 서버 API 명세서
 
-> Flutter 클라이언트 ↔ PCAview 서버 간 API 연동 가이드
->
-> **서버:** Laravel 12 (Sanctum 인증) | **클라이언트:** Flutter (Dio + Retrofit)
-> **Base URL:** `AppConfig.baseUrl` (현재 placeholder, 실제 URL 설정 필요)
+> **Base URL**: `https://{domain}/api`
+> **Framework**: Laravel 12
+> **인증**: Laravel Sanctum (Bearer Token)
+> **최종 업데이트**: 2026-02-10
 
 ---
 
 ## 목차
 
-1. [연동 현황 요약](#연동-현황-요약)
-2. [인증 (AuthService)](#1-인증-authservice)
-3. [코스 (CourseService)](#2-코스-courseservice)
-4. [라운드 (RoundService)](#3-라운드-roundservice)
-5. [기록 (RecordService)](#4-기록-recordservice)
-6. [클럽 (ClubService)](#5-클럽-clubservice)
-7. [서버 전용 API (앱 미사용)](#6-서버-전용-api-앱-미사용)
-8. [공통 사항](#7-공통-사항)
+1. [인증 (Auth)](#1-인증-auth)
+2. [카카오 소셜 로그인](#2-카카오-소셜-로그인)
+3. [파크골프 코스](#3-파크골프-코스)
+4. [피드 (Feed)](#4-피드-feed)
+5. [콘텐츠 (Contents)](#5-콘텐츠-contents)
+6. [댓글 (Comments)](#6-댓글-comments)
+7. [프로필 (Profile)](#7-프로필-profile)
+8. [금시세 (Gold Price)](#8-금시세-gold-price)
+9. [교회 콘텐츠 (Church Contents)](#9-교회-콘텐츠-church-contents)
+10. [심링크 방문 (Symlink Visits)](#10-심링크-방문-symlink-visits)
 
 ---
 
-## 연동 현황 요약
+## 공통 사항
 
-### Flutter Service ↔ Server 매핑 상태
+### 인증 방식
 
-| Flutter Service | 서버 상태 | 비고 |
-|----------------|----------|------|
-| `AuthService` | **부분 구현** | 로그인/로그아웃 있음, social-login/refresh 경로 다름 |
-| `CourseService` | **부분 구현** | 서버 경로 `/api/parkgolf/*`, 클라이언트 기대 `/courses/*` |
-| `RoundService` | **미구현** | 서버에 라운드 관련 API 없음 |
-| `RecordService` | **미구현** | 서버에 기록/통계 API 없음 |
-| `ClubService` | **미구현** | 서버에 클럽 관련 API 없음 |
-
-### 서버 경로 vs 클라이언트 경로 차이
+Sanctum Bearer Token을 사용합니다. 인증이 필요한 엔드포인트에는 다음 헤더를 포함해야 합니다:
 
 ```
-서버 실제 경로              Flutter 기대 경로          상태
-─────────────────────────────────────────────────────────
-POST /api/auth/login     → POST /auth/login          ✅ 매핑 가능
-POST /api/auth/logout    → POST /auth/logout         ✅ 매핑 가능
-POST /api/auth/kakao/cb  → POST /auth/social-login   ⚠️ 경로/방식 다름
-GET  /api/auth/user      → (AuthController에서 사용)  ✅ 활용 가능
-없음                     → POST /auth/refresh         ❌ 서버 구현 필요
-GET  /api/parkgolf/*     → GET  /courses/*            ⚠️ 경로 조정 필요
-없음                     → /rounds/*                  ❌ 서버 구현 필요
-없음                     → /records/*                 ❌ 서버 구현 필요
-없음                     → /clubs/*                   ❌ 서버 구현 필요
-GET  /api/profile        → (미연결)                   💡 활용 가능
-POST /api/feed           → (ClubService 피드와 유사)   💡 활용 가능
+Authorization: Bearer {token}
 ```
 
----
+토큰은 로그인 API 응답에서 발급됩니다. **토큰 갱신(refresh) 기능은 없습니다.** 토큰이 만료되면 재로그인이 필요합니다.
 
-## 1. 인증 (AuthService)
+### 페이지네이션
 
-> **파일:** `lib/infra/api/auth_service.dart`
-> **baseUrl:** `AppConfig.baseUrl + '/auth'` → 서버: `/api/auth`
+Laravel 기본 페이지네이션 형식을 사용합니다:
 
-### 1.1 로그인 — `POST /auth/login`
-
-```
-Flutter:  POST /auth/login
-서버:     POST /api/auth/login  ✅ 일치
-```
-
-**Flutter 호출:**
-```dart
-final response = await authService.login({
-  'email': 'user@example.com',
-  'password': 'password123',
-  'device_name': 'iPhone 15',  // 서버에서 optional
-});
-```
-
-**서버 Request:**
 ```json
 {
-  "email": "string (required, email 형식)",
-  "password": "string (required)",
-  "device_name": "string (optional, max:255)"
+  "current_page": 1,
+  "data": [],
+  "first_page_url": "...",
+  "from": 1,
+  "last_page": 5,
+  "last_page_url": "...",
+  "links": [],
+  "next_page_url": "...",
+  "path": "...",
+  "per_page": 20,
+  "prev_page_url": null,
+  "to": 20,
+  "total": 100
 }
 ```
 
-**서버 Response:** `200 OK`
+### 공통 에러 응답
+
+```json
+{
+  "success": false,
+  "message": "에러 메시지"
+}
+```
+
+| HTTP 상태 코드 | 설명 |
+|---|---|
+| 401 | 인증 실패 (토큰 없음/만료) |
+| 403 | 권한 없음 |
+| 404 | 리소스를 찾을 수 없음 |
+| 422 | 유효성 검증 실패 |
+
+---
+
+## 1. 인증 (Auth)
+
+### POST `/api/auth/login`
+
+이메일/비밀번호 로그인. Sanctum 토큰을 발급합니다.
+
+**인증**: 불필요
+
+**Request Body**:
+
+| 필드 | 타입 | 필수 | 설명 |
+|---|---|---|---|
+| `email` | string | O | 이메일 주소 |
+| `password` | string | O | 비밀번호 |
+| `device_name` | string | X | 디바이스명 (기본: User-Agent) |
+
+**Response** `200 OK`:
+
 ```json
 {
   "success": true,
-  "token": "1|abc123tokenstring...",
+  "token": "1|abcdef123456...",
   "user": {
     "id": 1,
     "name": "홍길동",
     "email": "user@example.com",
-    "profile_photo_url": "https://..."
+    "profile_photo_url": "https://...",
+    "profile_photo": "https://...",
+    "email_verified_at": "2025-01-01T00:00:00.000000Z",
+    "created_at": "2025-01-01T00:00:00.000000Z",
+    "updated_at": "2025-01-01T00:00:00.000000Z"
   }
 }
 ```
 
-> **주의:** 서버는 `success` + `token` + `user` 구조 반환.
-> Flutter `ApiResponse<T>` 구조와 다르므로 **AuthRepositoryImpl에서 변환 필요**.
+**Error** `422`:
+
+```json
+{
+  "message": "The given data was invalid.",
+  "errors": {
+    "email": ["The provided credentials are incorrect."]
+  }
+}
+```
 
 ---
 
-### 1.2 소셜 로그인 — `POST /auth/social-login`
+### POST `/api/auth/logout`
 
-```
-Flutter:  POST /auth/social-login
-서버:     POST /api/auth/kakao/callback  ⚠️ 경로/방식 다름
-```
+현재 토큰을 폐기합니다.
 
-**서버 실제 동작:**
-- 서버는 카카오 OAuth 콜백 전용 (`/api/auth/kakao/callback`)
-- 범용 소셜 로그인 엔드포인트는 없음
+**인증**: 필수 (`auth:sanctum`)
 
-**Flutter 호출 (기대):**
-```dart
-final response = await authService.socialLogin({
-  'provider': 'kakao',
-  'access_token': 'kakao_access_token',
-  'device_name': 'iPhone 15',
-});
-```
+**Response** `200 OK`:
 
-> **TODO:** 서버에서 범용 소셜 로그인 엔드포인트 구현하거나,
-> Flutter에서 카카오 전용 경로로 수정 필요.
-
----
-
-### 1.3 로그아웃 — `POST /auth/logout`
-
-```
-Flutter:  POST /auth/logout
-서버:     POST /api/auth/logout  ✅ 일치
-```
-
-**서버 Response:** `200 OK`
 ```json
 {
   "success": true,
@@ -142,310 +138,1032 @@ Flutter:  POST /auth/logout
 }
 ```
 
-> 서버에 전체 디바이스 로그아웃도 있음: `POST /api/auth/logout-all`
+---
+
+### POST `/api/auth/logout-all`
+
+사용자의 모든 디바이스 토큰을 폐기합니다.
+
+**인증**: 필수 (`auth:sanctum`)
+
+**Response** `200 OK`:
+
+```json
+{
+  "success": true,
+  "message": "모든 기기에서 로그아웃되었습니다.",
+  "logout_required": true
+}
+```
 
 ---
 
-### 1.4 토큰 갱신 — `POST /auth/refresh`
+### GET `/api/auth/user`
 
-```
-Flutter:  POST /auth/refresh
-서버:     ❌ 해당 엔드포인트 없음
-```
+현재 인증된 사용자 정보를 조회합니다.
 
-**Flutter 호출 (기대):**
-```dart
-final response = await authService.refreshToken({
-  'refresh_token': 'current_refresh_token',
-});
-```
+**인증**: 필수 (`auth:sanctum`)
 
-> **TODO:** 서버에서 토큰 갱신 엔드포인트 구현 필요.
-> 현재 서버는 Sanctum 토큰 방식이라 별도 refresh 없이 재로그인 필요.
-> `AuthInterceptor`의 자동 갱신 로직 조정 필요할 수 있음.
+**Response** `200 OK`:
 
----
-
-### 1.5 현재 사용자 조회 (추가 활용 가능)
-
-```
-서버:  GET /api/auth/user  💡 Flutter에서 활용 가능
-```
-
-**서버 Response:** `200 OK`
 ```json
 {
   "success": true,
   "user": {
     "id": 1,
     "name": "홍길동",
-    "email": "user@example.com"
+    "email": "user@example.com",
+    "kakao_id": "123456789",
+    "profile_photo_url": "https://...",
+    "profile_photo": "https://...",
+    "email_verified_at": "2025-01-01T00:00:00.000000Z",
+    "created_at": "2025-01-01T00:00:00.000000Z",
+    "updated_at": "2025-01-01T00:00:00.000000Z"
   }
 }
 ```
 
-> `AuthController`에서 사용자 정보 갱신 시 활용 가능.
-
 ---
 
-## 2. 코스 (CourseService)
+## 2. 카카오 소셜 로그인
 
-> **파일:** `lib/infra/api/course_service.dart`
-> **baseUrl:** `AppConfig.baseUrl` → 서버: `/api/parkgolf`
+### POST `/api/auth/kakao/callback`
 
-### 경로 매핑 정리
+모바일 앱용 카카오 로그인. 카카오 액세스 토큰을 검증하고 Sanctum 토큰을 발급합니다.
 
-```
-Flutter 경로                  서버 실제 경로                   상태
-────────────────────────────────────────────────────────────────
-GET /courses                → (없음, 검색으로 대체 가능)       ⚠️
-GET /courses/{id}           → GET /api/parkgolf/{id}          ✅ 경로만 다름
-GET /courses/search         → GET /api/parkgolf/search        ✅ 경로만 다름
-GET /courses/nearby         → GET /api/parkgolf/nearby        ✅ 경로만 다름
-GET /courses/popular        → (없음)                          ❌ 서버 구현 필요
-GET /courses/{id}/holes     → (없음)                          ❌ 서버 구현 필요
-```
+**인증**: 불필요
 
-### 2.1 코스 검색 — `GET /courses/search`
+**Request Body**:
 
-```
-Flutter:  GET /courses/search?query=...
-서버:     GET /api/parkgolf/search?name=...  ✅ 파라미터명 다름
-```
+| 필드 | 타입 | 필수 | 설명 |
+|---|---|---|---|
+| `access_token` | string | O | 카카오 SDK에서 받은 액세스 토큰 |
+| `user_id` | string | O | 카카오 사용자 ID |
+| `nickname` | string | X | 카카오 닉네임 |
 
-**Flutter 호출:**
-```dart
-final response = await courseService.searchCourses(
-  query: '서울',
-  page: 1,
-  limit: 20,
-);
-```
+**처리 흐름**:
+1. 카카오 API (`https://kapi.kakao.com/v2/user/me`)로 토큰 검증
+2. `user_id` 일치 여부 확인
+3. 기존 사용자 조회 (kakao_id → email 순서) 또는 신규 생성
+4. 카카오 프로필 이미지를 S3에 저장
+5. Sanctum 토큰 발급
 
-**서버 Query Parameters:**
+**Response** `200 OK`:
 
-| Flutter 파라미터 | 서버 파라미터 | 타입 | 설명 |
-|----------------|------------|------|------|
-| `query` | `name` | string | 코스명 검색 |
-| `page` | (없음) | int | 서버는 `per_page`로 페이지 크기 제어 |
-| `limit` | `per_page` | int | 기본 20, 최대 100 |
-| (없음) | `region` | string | 지역 필터 (서버 추가 기능) |
-| (없음) | `lat` | double | 위도 (반경 검색 시) |
-| (없음) | `lon` | double | 경도 (반경 검색 시) |
-| (없음) | `radius` | double | 반경 km (기본 10, 최대 100) |
-
-**서버 Response:** `200 OK` — 페이지네이션된 코스 목록
-
-**Flutter 모델 매핑 (`CourseSearchResultModel`):**
-```
-서버 필드           → Flutter 필드        비고
-───────────────────────────────────────────────
-id                → id                 타입 변환 필요 (int→String)
-name              → name               ✅
-address           → address            ✅ (서버 필드명 확인 필요)
-hole_count        → holeCount          ✅ (snake→camel)
-par               → par                ✅ (서버 필드 확인 필요)
-rating            → rating             ❌ 서버에 없을 수 있음
-review_count      → reviewCount        ❌ 서버에 없을 수 있음
-distance          → distance           ✅ (반경 검색 시 포함)
-image_url         → imageUrl           ❌ 서버에 없을 수 있음
-```
-
----
-
-### 2.2 주변 코스 조회 — `GET /courses/nearby`
-
-```
-Flutter:  GET /courses/nearby?latitude=...&longitude=...
-서버:     GET /api/parkgolf/nearby?lat=...&lon=...  ⚠️ 파라미터명 다름
-```
-
-**파라미터 매핑:**
-
-| Flutter | 서버 | 필수 | 설명 |
-|---------|------|------|------|
-| `latitude` | `lat` | O | 위도 (-90~90) |
-| `longitude` | `lon` | O | 경도 (-180~180) |
-| `radius` | `radius` | X | 반경 km (기본 10, 범위 0.1~100) |
-| `limit` | `limit` | X | 최대 결과 수 (기본 20, 최대 100) |
-
-**서버 Response:** `200 OK`
 ```json
 {
-  "center": { "lat": 37.5, "lon": 127.0 },
+  "success": true,
+  "token": "2|xyz789...",
+  "user": {
+    "id": 1,
+    "name": "카카오유저",
+    "email": "123456789@kakao.pcaview.com",
+    "profile_photo_url": "https://s3.../profile-images/kakao/..."
+  }
+}
+```
+
+**Error** `401`:
+
+```json
+{
+  "success": false,
+  "message": "Invalid Kakao token"
+}
+```
+
+---
+
+## 3. 파크골프 코스
+
+### GET `/api/parkgolf/search`
+
+파크골프장을 검색합니다. 이름, 지역, 좌표 기반 검색을 지원합니다.
+
+**인증**: 불필요
+
+**Query Parameters**:
+
+| 파라미터 | 타입 | 필수 | 설명 |
+|---|---|---|---|
+| `name` | string | X | 코스명 검색 (LIKE 검색) |
+| `region` | string | X | 지역 필터 (정확히 일치) |
+| `lat` | float | X | 위도 (좌표 검색 시 `lon`과 함께 필수) |
+| `lon` | float | X | 경도 (좌표 검색 시 `lat`과 함께 필수) |
+| `radius` | float | X | 검색 반경 km (기본: 10) |
+| `per_page` | int | X | 페이지당 항목 수 (기본: 20, 최대: 100) |
+
+**좌표 검색**: `lat`과 `lon`이 모두 제공되면 Haversine 공식으로 거리를 계산하고, `distance` 필드가 결과에 포함됩니다.
+
+**Response** `200 OK` (Laravel 페이지네이션):
+
+```json
+{
+  "current_page": 1,
+  "data": [
+    {
+      "id": 1,
+      "name": "서울 파크골프장",
+      "region": "서울",
+      "address": "서울특별시 강남구 ...",
+      "area": "12000",
+      "holes": 36,
+      "longitude": 127.0276,
+      "latitude": 37.4979,
+      "phone": "02-1234-5678",
+      "description": "설명 텍스트",
+      "detail_url": "https://...",
+      "created_at": "2025-01-01T00:00:00.000000Z",
+      "updated_at": "2025-01-01T00:00:00.000000Z",
+      "distance": 2.35
+    }
+  ],
+  "per_page": 20,
+  "total": 150,
+  "last_page": 8
+}
+```
+
+> `distance` 필드는 좌표 검색 시에만 포함됩니다 (단위: km).
+
+---
+
+### GET `/api/parkgolf/nearby`
+
+현재 위치 기준 주변 파크골프장을 조회합니다.
+
+**인증**: 불필요
+
+**Query Parameters**:
+
+| 파라미터 | 타입 | 필수 | 설명 |
+|---|---|---|---|
+| `lat` | float | O | 위도 (-90 ~ 90) |
+| `lon` | float | O | 경도 (-180 ~ 180) |
+| `radius` | float | X | 검색 반경 km (기본: 10, 최소: 0.1, 최대: 100) |
+| `limit` | int | X | 최대 결과 수 (기본: 20, 최소: 1, 최대: 100) |
+
+**Response** `200 OK`:
+
+```json
+{
+  "center": {
+    "lat": 37.4979,
+    "lon": 127.0276
+  },
   "radius": 10,
   "count": 5,
   "courses": [
     {
       "id": 1,
-      "name": "○○ 파크골프장",
+      "name": "서울 파크골프장",
       "region": "서울",
-      "lat": 37.51,
-      "lon": 127.01,
-      "distance": 1.2
+      "address": "서울특별시 ...",
+      "area": "12000",
+      "holes": 36,
+      "longitude": 127.0276,
+      "latitude": 37.4979,
+      "phone": "02-1234-5678",
+      "description": "...",
+      "detail_url": "https://...",
+      "distance": 1.23
     }
   ]
 }
 ```
 
-**Flutter 모델 매핑 (`CourseMarkerModel`):**
-```
-서버 필드    → Flutter 필드     비고
-──────────────────────────────────────
-id         → id              int→String 변환
-name       → name            ✅
-address    → address         서버: region만 있음
-lat        → latitude        ✅ 필드명 다름
-lon        → longitude       ✅ 필드명 다름
-hole_count → holeCount       서버에 없을 수 있음
-par        → par             서버에 없을 수 있음
-rating     → rating          서버에 없음
-distance   → distance        ✅
-image_url  → imageUrl        서버에 없음
-```
-
 ---
 
-### 2.3 코스 상세 — `GET /courses/{id}`
+### GET `/api/parkgolf/{id}`
 
-```
-Flutter:  GET /courses/{id}
-서버:     GET /api/parkgolf/{id}  ✅ 경로만 다름
-```
+특정 파크골프장의 상세 정보를 조회합니다.
 
-**서버 Response:** `200 OK` — 코스 상세 정보
+**인증**: 불필요
 
----
+**Path Parameters**:
 
-### 2.4 지역 목록 (서버 추가 기능)
+| 파라미터 | 타입 | 설명 |
+|---|---|---|
+| `id` | int | 코스 ID |
 
-```
-서버:  GET /api/parkgolf/regions  💡 Flutter에서 활용 가능
-```
+**Response** `200 OK` (코스 객체 직접 반환):
 
-**서버 Response:** `200 OK`
-```json
-["서울", "부산", "대구", "인천", ...]
-```
-
-> 코스 검색 필터 UI에서 활용 가능.
-
----
-
-### 2.5 파크골프 통계 (서버 추가 기능)
-
-```
-서버:  GET /api/parkgolf/statistics  💡 Flutter에서 활용 가능
-```
-
-**서버 Response:** `200 OK`
 ```json
 {
-  "total": 500,
-  "by_region": [{ "region": "서울", "count": 45 }],
-  "with_coordinates": 480,
+  "id": 1,
+  "name": "서울 파크골프장",
+  "region": "서울",
+  "address": "서울특별시 강남구 ...",
+  "area": "12000",
+  "holes": 36,
+  "longitude": 127.0276,
+  "latitude": 37.4979,
+  "phone": "02-1234-5678",
+  "description": "설명 텍스트",
+  "detail_url": "https://...",
+  "created_at": "2025-01-01T00:00:00.000000Z",
+  "updated_at": "2025-01-01T00:00:00.000000Z"
+}
+```
+
+**Error** `404`: 코스를 찾을 수 없음
+
+---
+
+### GET `/api/parkgolf/regions`
+
+전체 지역 목록을 조회합니다.
+
+**인증**: 불필요
+
+**Response** `200 OK` (문자열 배열):
+
+```json
+["강원", "경기", "경남", "경북", "광주", "대구", "대전", "부산", "서울", "울산", "인천", "전남", "전북", "제주", "충남", "충북"]
+```
+
+---
+
+### GET `/api/parkgolf/statistics`
+
+파크골프 코스 전체 통계를 조회합니다.
+
+**인증**: 불필요
+
+**Response** `200 OK`:
+
+```json
+{
+  "total": 450,
+  "by_region": [
+    { "region": "경기", "count": 85 },
+    { "region": "강원", "count": 62 },
+    { "region": "경남", "count": 55 }
+  ],
+  "with_coordinates": 420,
   "average_holes": 18.5
 }
 ```
 
 ---
 
-## 3. 라운드 (RoundService)
+### ParkGolfCourse 모델 필드
 
-> **파일:** `lib/infra/api/round_service.dart`
-> **서버 상태:** ❌ **전체 미구현** — 서버에서 구현 필요
+| 필드 | 타입 | 설명 |
+|---|---|---|
+| `id` | int | PK |
+| `name` | string | 코스명 |
+| `region` | string | 지역 |
+| `address` | string | 주소 |
+| `area` | string | 면적 |
+| `holes` | int | 홀 수 |
+| `longitude` | float (nullable) | 경도 |
+| `latitude` | float (nullable) | 위도 |
+| `phone` | string (nullable) | 전화번호 |
+| `description` | string (nullable) | 설명 |
+| `detail_url` | string (nullable) | 상세 페이지 URL |
+| `created_at` | datetime | 생성일 |
+| `updated_at` | datetime | 수정일 |
 
-### 서버에 구현 필요한 엔드포인트
+---
 
-| Method | 경로 | 설명 | Request 모델 | Response 모델 |
-|--------|------|------|-------------|--------------|
-| GET | `/rounds` | 라운드 목록 | `page`, `limit`, `status` | `List<RoundModel>` |
-| GET | `/rounds/{id}` | 라운드 상세 | - | `RoundModel` |
-| POST | `/rounds` | 라운드 생성 | `CreateRoundRequest` | `RoundModel` |
-| POST | `/rounds/{id}/start` | 라운드 시작 | - | `RoundModel` |
-| POST | `/rounds/{id}/complete` | 라운드 완료 | - | `RoundResultModel` |
-| DELETE | `/rounds/{id}` | 라운드 취소 | - | `void` |
-| POST | `/rounds/{roundId}/scores` | 스코어 입력 | `ScoreInputRequest` | `HoleScoreModel` |
-| PUT | `/rounds/{roundId}/scores/{hole}` | 스코어 수정 | `ScoreInputRequest` | `HoleScoreModel` |
-| GET | `/rounds/{id}/result` | 라운드 결과 | - | `RoundResultModel` |
-| GET | `/rounds/{id}/scorecard` | 스코어카드 | - | `List<ScorecardModel>` |
+## 4. 피드 (Feed)
 
-### Request/Response JSON 스펙
+### GET `/api/feed`
 
-**`CreateRoundRequest`:**
+전체 피드 목록을 조회합니다 (최신순, 페이지네이션).
+
+**인증**: 불필요
+
+**Response** `200 OK` (Laravel 페이지네이션):
+
 ```json
 {
-  "courseId": "string (required)",
-  "date": "2026-02-10T09:00:00Z (required, ISO 8601)",
-  "playerIds": ["player1", "player2"],
-  "memo": "string (optional)"
-}
-```
-
-**`RoundModel` Response:**
-```json
-{
-  "id": "string",
-  "courseId": "string",
-  "courseName": "string",
-  "date": "2026-02-10T09:00:00Z",
-  "holeCount": 18,
-  "holePars": [3, 4, 3, 4, 3, 3, 4, 3, 4, 3, 4, 3, 3, 4, 3, 4, 3, 3],
-  "players": [
+  "current_page": 1,
+  "data": [
     {
-      "oderId": "string",
-      "player": {
-        "id": "string",
-        "name": "홍길동",
-        "nickname": "null|string",
-        "profileImage": "null|string",
-        "isMe": true
-      },
-      "scores": [
-        { "holeNumber": 1, "par": 3, "score": 3, "memo": null }
-      ],
-      "rank": null,
-      "isWinner": false
+      "id": 1,
+      "user_id": 1,
+      "church_id": 1,
+      "department_id": null,
+      "type": "html",
+      "title": null,
+      "body": "게시물 내용",
+      "file_url": null,
+      "thumbnail_url": "https://s3.../...",
+      "video_url": null,
+      "published_at": "2025-01-01T00:00:00.000000Z",
+      "user": { "id": 1, "name": "..." },
+      "church": { "id": 1, "name": "..." },
+      "departments": [],
+      "images": []
     }
   ],
-  "status": "draft|in_progress|completed|cancelled",
-  "memo": "null|string",
-  "startedAt": "null|datetime",
-  "completedAt": "null|datetime",
-  "createdAt": "datetime",
-  "updatedAt": "datetime"
+  "per_page": 15,
+  "total": 100
 }
 ```
 
-**`ScoreInputRequest`:**
+---
+
+### POST `/api/feed`
+
+피드 게시물을 작성합니다. 이미지/동영상 업로드를 지원합니다 (S3 저장).
+
+**인증**: 필수 (`auth:sanctum`)
+
+**Content-Type**: `multipart/form-data`
+
+**Request Body**:
+
+| 필드 | 타입 | 필수 | 설명 |
+|---|---|---|---|
+| `content` | string | 조건부 | 게시물 내용 (최대 5000자). content, images, video 중 하나 필수 |
+| `church_id` | int | 조건부 | 교회 ID. `church_id` 또는 `department_id` 중 하나 필수 |
+| `department_id` | int | 조건부 | 부서 ID. `church_id` 또는 `department_id` 중 하나 필수 |
+| `images.*` | file | X | 이미지 파일 (각 최대 10MB) |
+| `video` | file | X | 동영상 파일 (최대 500MB, mp4/mpeg/quicktime/avi/mkv) |
+
+**동작 방식**:
+- `church_id` 지정: 교회의 모든 부서에 게시물이 연결됩니다.
+- `department_id` 지정: 해당 부서에만 게시물이 연결됩니다.
+
+**Response** `201 Created`:
+
 ```json
 {
-  "roundId": "string (required)",
-  "playerId": "string (required)",
-  "holeNumber": 1,
-  "score": 3,
-  "memo": "null|string"
+  "success": true,
+  "message": "모든 부서에 게시물이 작성되었습니다.",
+  "content": { "id": 1, "..." : "..." }
 }
 ```
 
-**`RoundResultModel` Response:**
+**Error** `400`:
+
 ```json
 {
-  "id": "string",
-  "courseName": "string",
-  "date": "datetime",
-  "totalHoles": 18,
-  "holePars": [3, 4, 3, ...],
-  "players": [
+  "success": false,
+  "message": "교회 또는 부서를 선택해주세요."
+}
+```
+
+---
+
+## 5. 콘텐츠 (Contents)
+
+### GET `/api/c/{church}`
+
+특정 교회의 콘텐츠 목록을 조회합니다.
+
+**인증**: 불필요
+
+**Path Parameters**:
+
+| 파라미터 | 타입 | 설명 |
+|---|---|---|
+| `church` | string | 교회 slug (예: `maple`, `goldang`) |
+
+**Query Parameters**:
+
+| 파라미터 | 타입 | 필수 | 설명 |
+|---|---|---|---|
+| `department_id` | int | X | 부서 ID로 필터링 |
+
+**Response** `200 OK`:
+
+```json
+{
+  "success": true,
+  "message": "Contents retrieved successfully",
+  "data": {
+    "church": { "id": 1, "name": "...", "slug": "maple" },
+    "contents": [
+      {
+        "id": 1,
+        "type": "html",
+        "title": "...",
+        "body": "...",
+        "published_at": "...",
+        "user": { "id": 1, "name": "..." },
+        "images": [],
+        "departments": [],
+        "tags": [],
+        "comments_count": 5
+      }
+    ],
+    "total": 25
+  }
+}
+```
+
+> `news` 타입 콘텐츠는 저작권 보호를 위해 본문의 1/3만 반환됩니다.
+
+---
+
+### GET `/api/c/{church}/departments`
+
+특정 교회의 부서 목록을 조회합니다.
+
+**인증**: 불필요
+
+**Path Parameters**:
+
+| 파라미터 | 타입 | 설명 |
+|---|---|---|
+| `church` | string | 교회 slug |
+
+**Response** `200 OK`:
+
+```json
+{
+  "success": true,
+  "message": "Departments retrieved successfully",
+  "data": {
+    "church": { "id": 1, "name": "...", "slug": "maple" },
+    "departments": [
+      { "id": 1, "name": "청년부", "church_id": 1, "created_at": "..." }
+    ],
+    "total": 5
+  }
+}
+```
+
+---
+
+### GET `/api/contents/{id}`
+
+특정 콘텐츠 상세 정보를 조회합니다.
+
+**인증**: 불필요
+
+**Path Parameters**:
+
+| 파라미터 | 타입 | 설명 |
+|---|---|---|
+| `id` | int | 콘텐츠 ID |
+
+**Response** `200 OK`:
+
+```json
+{
+  "success": true,
+  "message": "Content retrieved successfully",
+  "data": {
+    "id": 1,
+    "type": "html",
+    "title": "...",
+    "body": "...",
+    "user": { "id": 1, "name": "..." },
+    "church": { "id": 1, "name": "..." },
+    "departments": [],
+    "images": [],
+    "tags": [],
+    "comments": []
+  }
+}
+```
+
+---
+
+### DELETE `/api/contents/{id}`
+
+콘텐츠를 삭제합니다. `POST /api/contents/{id}/delete`로도 호출 가능합니다.
+
+**인증**: 필수 (`auth:sanctum`)
+
+**Path Parameters**:
+
+| 파라미터 | 타입 | 설명 |
+|---|---|---|
+| `id` | int | 콘텐츠 ID |
+
+**Response** `200 OK`:
+
+```json
+{
+  "success": true,
+  "message": "콘텐츠가 삭제되었습니다."
+}
+```
+
+**Error** `403`:
+
+```json
+{
+  "success": false,
+  "message": "삭제 권한이 없습니다."
+}
+```
+
+---
+
+## 6. 댓글 (Comments)
+
+### GET `/api/contents/{contentId}/comments`
+
+특정 콘텐츠의 댓글 목록을 조회합니다 (최신순, 페이지네이션).
+
+**인증**: 불필요
+
+**Path Parameters**:
+
+| 파라미터 | 타입 | 설명 |
+|---|---|---|
+| `contentId` | int | 콘텐츠 ID |
+
+**Response** `200 OK` (Laravel 페이지네이션):
+
+```json
+{
+  "current_page": 1,
+  "data": [
     {
-      "playerId": "string",
-      "playerName": "홍길동",
-      "profileImage": "null|string",
-      "scores": [3, 4, 2, ...],
-      "totalScore": 54,
-      "scoreVsPar": -2,
-      "isWinner": true,
-      "rank": 1
+      "id": 1,
+      "content_id": 1,
+      "user_id": 1,
+      "guest_name": null,
+      "body": "댓글 내용",
+      "ip_address": "...",
+      "created_at": "...",
+      "user": { "id": 1, "name": "..." }
+    }
+  ],
+  "per_page": 20,
+  "total": 10
+}
+```
+
+---
+
+### POST `/api/contents/{contentId}/comments`
+
+댓글을 작성합니다. 인증 사용자와 게스트 모두 작성 가능합니다.
+
+**인증**: 선택적 (Sanctum guard 사용, 비인증 시 게스트로 처리)
+
+**Path Parameters**:
+
+| 파라미터 | 타입 | 설명 |
+|---|---|---|
+| `contentId` | int | 콘텐츠 ID |
+
+**Request Body**:
+
+| 필드 | 타입 | 필수 | 설명 |
+|---|---|---|---|
+| `body` | string | O | 댓글 내용 (최대 1000자) |
+| `guest_name` | string | X | 게스트 이름 (최대 50자). 미입력 시 IP 기반 자동 생성 |
+
+**Response** `201 Created`:
+
+```json
+{
+  "success": true,
+  "message": "댓글이 작성되었습니다.",
+  "comment": {
+    "id": 1,
+    "content_id": 1,
+    "user_id": null,
+    "guest_name": "게스트_192168",
+    "body": "댓글 내용",
+    "ip_address": "192.168.1.1",
+    "created_at": "...",
+    "user": null
+  }
+}
+```
+
+---
+
+### DELETE `/api/contents/{contentId}/comments/{commentId}`
+
+댓글을 삭제합니다.
+
+**인증**: 선택적
+
+**권한 규칙**:
+- **인증 사용자**: 본인이 작성한 댓글만 삭제 가능
+- **게스트**: 같은 IP + 같은 게스트 이름인 경우만 삭제 가능
+
+**Path Parameters**:
+
+| 파라미터 | 타입 | 설명 |
+|---|---|---|
+| `contentId` | int | 콘텐츠 ID |
+| `commentId` | int | 댓글 ID |
+
+**Request Body** (게스트 삭제 시):
+
+| 필드 | 타입 | 필수 | 설명 |
+|---|---|---|---|
+| `guest_name` | string | 조건부 | 게스트 댓글 삭제 시 필요 |
+
+**Response** `200 OK`:
+
+```json
+{
+  "success": true,
+  "message": "댓글이 삭제되었습니다."
+}
+```
+
+---
+
+## 7. 프로필 (Profile)
+
+> 모든 프로필 API는 인증이 필수입니다 (`auth:sanctum`).
+
+### GET `/api/profile`
+
+현재 사용자의 프로필 및 부서 구독 정보를 조회합니다.
+
+**Response** `200 OK`:
+
+```json
+{
+  "success": true,
+  "user": { "id": 1, "name": "...", "email": "..." },
+  "allDepartments": [
+    { "id": 1, "name": "청년부", "church_id": 1 }
+  ],
+  "subscribedDepartmentIds": [1, 3, 5],
+  "unsubscribedDepartmentIds": [2, 4]
+}
+```
+
+> `subscribedDepartmentIds`: 사용자가 구독 중인 부서 ID 목록
+> `unsubscribedDepartmentIds`: 사용자가 구독 해제한 부서 ID 목록
+
+---
+
+### POST `/api/profile/subscribe`
+
+부서 구독/구독 취소를 토글합니다.
+
+**Request Body**:
+
+| 필드 | 타입 | 필수 | 설명 |
+|---|---|---|---|
+| `department_id` | int | O | 부서 ID |
+
+**Response** `200 OK`:
+
+```json
+{
+  "success": true,
+  "message": "구독되었습니다.",
+  "isSubscribed": true
+}
+```
+
+---
+
+### POST `/api/profile/photo`
+
+프로필 사진을 업데이트합니다 (S3 저장).
+
+**Content-Type**: `multipart/form-data`
+
+**Request Body**:
+
+| 필드 | 타입 | 필수 | 설명 |
+|---|---|---|---|
+| `profile_photo` | file | O | 이미지 파일 (jpeg/png/jpg/gif/webp, 최대 5MB) |
+
+**Response** `200 OK`:
+
+```json
+{
+  "success": true,
+  "message": "프로필 사진이 변경되었습니다.",
+  "profile_photo_url": "https://s3.../...",
+  "user": { "id": 1, "name": "..." }
+}
+```
+
+---
+
+### POST `/api/profile/delete`
+
+계정을 삭제합니다. 프로필 사진, 모든 토큰, 사용자 데이터가 삭제됩니다.
+
+**Response** `200 OK`:
+
+```json
+{
+  "success": true,
+  "message": "계정이 삭제되었습니다.",
+  "logout_required": true
+}
+```
+
+---
+
+## 8. 금시세 (Gold Price)
+
+> **참고**: 이 API는 `web.php`에 `api/gold` prefix로 정의되어 있습니다.
+> 실제 경로는 `/api/gold/*`이지만 API 미들웨어가 아닌 웹 미들웨어를 사용합니다.
+
+### GET `/api/gold/latest`
+
+최신 국내 금시세를 조회합니다.
+
+**인증**: 불필요
+
+**Response** `200 OK`:
+
+```json
+{
+  "data": {
+    "price_date": "2025-06-15T00:00:00.000000Z",
+    "pure_gold": { "buy": 95000, "sell": 92000 },
+    "18k": { "buy": 71000, "sell": 68000 },
+    "14k": { "buy": 55000, "sell": 52000 },
+    "white_gold": { "buy": 48000, "sell": 45000 },
+    "silver": { "buy": 1200, "sell": 1100 }
+  }
+}
+```
+
+> 가격 단위: 원/g
+
+---
+
+### GET `/api/gold/history`
+
+금속 가격 차트 데이터를 조회합니다.
+
+**인증**: 불필요
+
+**Query Parameters**:
+
+| 파라미터 | 타입 | 필수 | 설명 |
+|---|---|---|---|
+| `period` | string | X | 기간 (기본: `1m`). `7d`, `1m`, `3m`, `6m`, `1y`, `all` |
+| `type` | string | X | 금속 종류 (기본: `pure`). 국내: `pure`, `18k`, `14k`, `white`, `silver` / 국제: `gold`, `platinum`, `palladium`, `silver` |
+| `market` | string | X | 시장 (기본: `domestic`). `domestic`, `international` |
+
+**Response** `200 OK` (국내):
+
+```json
+{
+  "market": "domestic",
+  "period": "1m",
+  "type": "pure",
+  "total_points": 30,
+  "data": [
+    {
+      "date": "2025-05-15",
+      "timestamp": 1747267200000,
+      "price": 95000,
+      "buy": 95000,
+      "sell": 92000
+    }
+  ]
+}
+```
+
+**Response** `200 OK` (국제):
+
+```json
+{
+  "market": "international",
+  "period": "1m",
+  "type": "gold",
+  "total_points": 30,
+  "data": [
+    {
+      "date": "2025-05-15",
+      "timestamp": 1747267200000,
+      "price": 2350.50
+    }
+  ]
+}
+```
+
+> 차트 데이터는 최대 500 포인트로 샘플링됩니다.
+
+---
+
+### GET `/api/gold/statistics`
+
+특정 기간의 금시세 통계를 조회합니다.
+
+**인증**: 불필요
+
+**Query Parameters**:
+
+| 파라미터 | 타입 | 필수 | 설명 |
+|---|---|---|---|
+| `period` | string | X | 기간 (기본: `1m`). `7d`, `1m`, `3m`, `6m`, `1y`, `all` |
+| `type` | string | X | 금속 종류 (기본: `pure`). `pure`, `18k`, `14k`, `white`, `silver` |
+
+**Response** `200 OK`:
+
+```json
+{
+  "data": {
+    "period": "1m",
+    "type": "pure",
+    "current": 95000,
+    "highest": 98000,
+    "lowest": 90000,
+    "average": 93500,
+    "change": {
+      "value": 3000,
+      "percentage": 3.26
+    },
+    "date_range": {
+      "start": "2025-05-15T00:00:00.000000Z",
+      "end": "2025-06-15T00:00:00.000000Z"
+    }
+  }
+}
+```
+
+---
+
+## 9. 교회 콘텐츠 (Church Contents)
+
+> **참고**: 이 API는 `web.php`에 `api/church` prefix로 정의되어 있습니다.
+> 실제 경로는 `/api/church/*`이지만 API 미들웨어가 아닌 웹 미들웨어를 사용합니다.
+
+### GET `/api/church/{churchSlug}/contents`
+
+교회 slug 기준 콘텐츠 목록을 조회합니다.
+
+**인증**: 불필요
+
+**Path Parameters**:
+
+| 파라미터 | 타입 | 설명 |
+|---|---|---|
+| `churchSlug` | string | 교회 slug (예: `maple`) |
+
+**Query Parameters**:
+
+| 파라미터 | 타입 | 필수 | 설명 |
+|---|---|---|---|
+| `department_id` | int | X | 부서 ID 필터 |
+| `sort_by` | string | X | 정렬 기준 (기본: `published_at`) |
+| `sort_order` | string | X | 정렬 방향 (기본: `desc`) |
+| `per_page` | int | X | 페이지당 항목 수 (기본: 20) |
+
+**Response** `200 OK`:
+
+```json
+{
+  "church": {
+    "id": 1,
+    "name": "...",
+    "display_name": "...",
+    "slug": "maple"
+  },
+  "contents": {
+    "current_page": 1,
+    "data": [],
+    "per_page": 20,
+    "total": 50
+  }
+}
+```
+
+---
+
+### GET `/api/church/{churchSlug}/videos`
+
+교회 slug 기준 동영상 콘텐츠만 조회합니다.
+
+**인증**: 불필요
+
+**Path/Query Parameters**: `/api/church/{churchSlug}/contents`와 동일
+
+---
+
+### GET `/api/church/id/{churchId}/contents`
+
+교회 ID 기준 콘텐츠 목록을 조회합니다.
+
+**인증**: 불필요
+
+**Path Parameters**:
+
+| 파라미터 | 타입 | 설명 |
+|---|---|---|
+| `churchId` | int | 교회 ID |
+
+**Query Parameters**: `/api/church/{churchSlug}/contents`와 동일
+
+---
+
+### GET `/api/church/id/{churchId}/videos`
+
+교회 ID 기준 동영상 콘텐츠만 조회합니다.
+
+**인증**: 불필요
+
+**Path/Query Parameters**: `/api/church/id/{churchId}/contents`와 동일
+
+---
+
+## 10. 심링크 방문 (Symlink Visits)
+
+> 모든 엔드포인트에 `api.token` 미들웨어가 적용됩니다 (별도 토큰 인증).
+
+### GET `/api/symlink-visits`
+
+방문 기록 목록을 조회합니다.
+
+**인증**: 필수 (`api.token`)
+
+**Query Parameters**:
+
+| 파라미터 | 타입 | 필수 | 설명 |
+|---|---|---|---|
+| `ad_id` | string | X | 광고 ID 필터 |
+| `start_date` | datetime | X | 시작 날짜 필터 |
+| `end_date` | datetime | X | 종료 날짜 필터 |
+| `per_page` | int | X | 페이지당 항목 수 (기본: 50, 최대: 100) |
+
+**Response** `200 OK` (Laravel 페이지네이션):
+
+```json
+{
+  "current_page": 1,
+  "data": [
+    {
+      "id": 1,
+      "ad_id": "coupang_001",
+      "ip": "192.168.1.1",
+      "user_agent": "...",
+      "referer": "https://...",
+      "created_at": "...",
+      "updated_at": "..."
+    }
+  ],
+  "per_page": 50,
+  "total": 200
+}
+```
+
+---
+
+### GET `/api/symlink-visits/statistics`
+
+방문 통계를 조회합니다.
+
+**인증**: 필수 (`api.token`)
+
+**Query Parameters**:
+
+| 파라미터 | 타입 | 필수 | 설명 |
+|---|---|---|---|
+| `start_date` | datetime | X | 시작 날짜 필터 |
+| `end_date` | datetime | X | 종료 날짜 필터 |
+| `include_hourly` | bool | X | 시간대별 통계 포함 (최근 24시간) |
+| `include_daily` | bool | X | 일별 통계 포함 (최근 30일) |
+
+**Response** `200 OK`:
+
+```json
+{
+  "total_visits": 500,
+  "unique_ads": 15,
+  "recent_visits": [],
+  "hourly_visits": [
+    { "hour": "2025-06-15 14:00:00", "count": 12 }
+  ],
+  "daily_visits": [
+    { "date": "2025-06-15", "count": 45 }
+  ]
+}
+```
+
+---
+
+### GET `/api/symlink-visits/count-by-ad`
+
+광고 ID별 방문 횟수를 집계합니다.
+
+**인증**: 필수 (`api.token`)
+
+**Query Parameters**:
+
+| 파라미터 | 타입 | 필수 | 설명 |
+|---|---|---|---|
+| `start_date` | datetime | X | 시작 날짜 필터 |
+| `end_date` | datetime | X | 종료 날짜 필터 |
+
+**Response** `200 OK`:
+
+```json
+{
+  "total_ads": 15,
+  "ads": [
+    {
+      "ad_id": "coupang_001",
+      "visit_count": 120,
+      "last_visit": "2025-06-15T14:30:00.000000Z"
     }
   ]
 }
@@ -453,376 +1171,95 @@ Flutter:  GET /courses/{id}
 
 ---
 
-## 4. 기록 (RecordService)
+### POST `/api/symlink-visits`
 
-> **파일:** `lib/infra/api/record_service.dart`
-> **서버 상태:** ❌ **전체 미구현** — 서버에서 구현 필요
+방문 기록을 생성합니다 (`updateOrCreate` - 같은 `ad_id`면 업데이트).
 
-### 서버에 구현 필요한 엔드포인트
+**인증**: 필수 (`api.token`)
 
-| Method | 경로 | 설명 | Response 모델 |
-|--------|------|------|--------------|
-| GET | `/records/statistics` | 내 기록 통계 | `RecordStatisticsModel` |
-| GET | `/records/rounds` | 라운드 기록 목록 | `List<RoundRecordModel>` |
-| GET | `/records/rounds/{id}` | 라운드 기록 상세 | `RoundRecordModel` |
-| GET | `/records/monthly` | 월별 요약 | `List<MonthlyRecordSummaryModel>` |
-| GET | `/records/courses/{courseId}` | 코스별 기록 | `CourseRecordModel` |
-| GET | `/records/courses` | 코스별 기록 목록 | `List<CourseRecordModel>` |
+**Request Body**:
 
-### Response JSON 스펙
+| 필드 | 타입 | 필수 | 설명 |
+|---|---|---|---|
+| `ad_id` | string | O | 광고 ID (최대 255자) |
+| `ip` | string | X | IP 주소 (기본: 요청 IP) |
+| `user_agent` | string | X | User-Agent (기본: 요청 UA) |
+| `referer` | string | X | Referer (기본: 요청 Referer) |
 
-**`RecordStatisticsModel`:**
-```json
-{
-  "totalRounds": 42,
-  "averageScore": 68.5,
-  "bestScore": 58,
-  "worstScore": 82,
-  "totalHolesPlayed": 756,
-  "eagleOrBetterCount": 5,
-  "birdieCount": 45,
-  "parCount": 320,
-  "bogeyCount": 180,
-  "doubleOrWorseCount": 30,
-  "winRate": 0.35,
-  "winCount": 15,
-  "lossCount": 27,
-  "mostPlayedCourseId": "string",
-  "mostPlayedCourseName": "○○ 파크골프장",
-  "lastPlayedAt": "datetime"
-}
-```
+**Response** `201 Created`:
 
-**`RoundRecordModel`:**
-```json
-{
-  "id": "string",
-  "courseId": "string",
-  "courseName": "○○ 파크골프장",
-  "date": "datetime",
-  "totalScore": 68,
-  "scoreVsPar": -4,
-  "rank": 1,
-  "playerCount": 4,
-  "courseThumbnail": "null|string",
-  "playerNames": ["홍길동", "김철수"]
-}
-```
-
-**`MonthlyRecordSummaryModel`:**
-```json
-{
-  "year": 2026,
-  "month": 2,
-  "roundCount": 5,
-  "averageScore": 70.2,
-  "bestScore": 65,
-  "winCount": 2
-}
-```
-
-**`CourseRecordModel`:**
-```json
-{
-  "courseId": "string",
-  "courseName": "○○ 파크골프장",
-  "playCount": 8,
-  "averageScore": 69.3,
-  "bestScore": 62,
-  "lastPlayedAt": "datetime"
-}
-```
-
----
-
-## 5. 클럽 (ClubService)
-
-> **파일:** `lib/infra/api/club_service.dart`
-> **서버 상태:** ❌ **전체 미구현** — 서버에서 구현 필요
-
-### 서버에 구현 필요한 엔드포인트
-
-| Method | 경로 | 설명 | Response 모델 |
-|--------|------|------|--------------|
-| GET | `/clubs/my` | 내 클럽 목록 | `List<ClubModel>` |
-| GET | `/clubs/{id}` | 클럽 상세 | `ClubModel` |
-| GET | `/clubs/search` | 클럽 검색 | `List<ClubSearchResultModel>` |
-| GET | `/clubs/{id}/feed` | 클럽 피드 | `List<FeedItemModel>` |
-| GET | `/clubs/{id}/feed/{fid}` | 피드 상세 | `FeedItemModel` |
-| POST | `/clubs/{id}/feed` | 피드 작성 | `FeedItemModel` |
-| POST | `/clubs/{id}/feed/{fid}/like` | 좋아요 | `void` |
-| DELETE | `/clubs/{id}/feed/{fid}/like` | 좋아요 취소 | `void` |
-| GET | `/clubs/{id}/feed/{fid}/comments` | 댓글 목록 | `List<FeedCommentModel>` |
-| POST | `/clubs/{id}/feed/{fid}/comments` | 댓글 작성 | `FeedCommentModel` |
-| GET | `/clubs/{id}/members` | 멤버 목록 | `List<ClubMemberModel>` |
-| POST | `/clubs/{id}/join` | 클럽 가입 | `ClubMemberModel` |
-| DELETE | `/clubs/{id}/leave` | 클럽 탈퇴 | `void` |
-
-### Response JSON 스펙
-
-**`ClubModel`:**
-```json
-{
-  "id": "string",
-  "name": "파크골프 동호회",
-  "description": "null|string",
-  "imageUrl": "null|string",
-  "thumbnailUrl": "null|string",
-  "memberCount": 25,
-  "region": "null|string",
-  "ownerId": "null|string",
-  "ownerName": "null|string",
-  "isPublic": true,
-  "requiresApproval": false,
-  "createdAt": "datetime",
-  "updatedAt": "datetime"
-}
-```
-
-**`FeedItemModel`:**
-```json
-{
-  "id": "string",
-  "clubId": "string",
-  "authorId": "string",
-  "authorName": "홍길동",
-  "authorImage": "null|string",
-  "content": "오늘 라운드 후기입니다!",
-  "imageUrls": ["https://..."],
-  "likeCount": 5,
-  "commentCount": 3,
-  "isLiked": false,
-  "isBookmarked": false,
-  "createdAt": "datetime",
-  "updatedAt": "datetime"
-}
-```
-
-**`CreateFeedRequest`:**
-```json
-{
-  "clubId": "string (required)",
-  "content": "string (required)",
-  "imageUrls": ["string"]
-}
-```
-
-**`CreateCommentRequest`:**
-```json
-{
-  "content": "string (required)",
-  "parentId": "null|string (대댓글 시)"
-}
-```
-
----
-
-## 6. 서버 전용 API (앱 미사용)
-
-현재 서버에 존재하지만 Flutter 앱에서 아직 연동하지 않는 API들.
-필요 시 새로운 Service 파일 생성으로 활용 가능.
-
-### 6.1 프로필 관리 — `/api/profile/*`
-
-| Method | 경로 | 인증 | 설명 |
-|--------|------|------|------|
-| GET | `/api/profile` | Sanctum | 프로필 + 구독 정보 조회 |
-| POST | `/api/profile/subscribe` | Sanctum | 부서 구독 토글 |
-| POST | `/api/profile/photo` | Sanctum | 프로필 사진 변경 (multipart) |
-| POST | `/api/profile/delete` | Sanctum | 계정 삭제 |
-
-### 6.2 금시세 — `/api/gold/*`
-
-| Method | 경로 | 인증 | 설명 |
-|--------|------|------|------|
-| GET | `/api/gold/latest` | Public | 최신 금시세 |
-| GET | `/api/gold/history` | Public | 시세 히스토리 (`period`, `type`, `market`) |
-| GET | `/api/gold/statistics` | Public | 시세 통계 |
-
-### 6.3 교회 콘텐츠 — `/api/church/*`, `/api/c/*`
-
-| Method | 경로 | 인증 | 설명 |
-|--------|------|------|------|
-| GET | `/api/c/{slug}` | Public | 교회별 콘텐츠 조회 |
-| GET | `/api/c/{slug}/departments` | Public | 교회별 부서 목록 |
-| GET | `/api/contents/{id}` | Public | 콘텐츠 상세 |
-| GET | `/api/church/{slug}/contents` | Public | 교회 콘텐츠 (정렬, 필터 지원) |
-| GET | `/api/church/{slug}/videos` | Public | 교회 비디오 |
-
-### 6.4 피드 — `/api/feed`
-
-| Method | 경로 | 인증 | 설명 |
-|--------|------|------|------|
-| GET | `/api/feed` | Public | 전체 피드 조회 (15개/페이지) |
-| POST | `/api/feed` | Sanctum | 피드 작성 (이미지/비디오 지원) |
-
-### 6.5 댓글 — `/api/contents/{id}/comments`
-
-| Method | 경로 | 인증 | 설명 |
-|--------|------|------|------|
-| GET | `/api/contents/{id}/comments` | Public | 댓글 목록 (20개/페이지) |
-| POST | `/api/contents/{id}/comments` | Optional | 댓글 작성 (게스트 가능) |
-| DELETE | `/api/contents/{cId}/comments/{cmId}` | Optional | 댓글 삭제 |
-
-### 6.6 심링크 방문 추적 — `/api/symlink-visits/*`
-
-| Method | 경로 | 인증 | 설명 |
-|--------|------|------|------|
-| GET | `/api/symlink-visits` | API Token | 방문 목록 |
-| GET | `/api/symlink-visits/statistics` | API Token | 방문 통계 |
-| POST | `/api/symlink-visits` | API Token | 방문 기록 생성 |
-
-> 인증 방식: `Authorization: Bearer {token}` 또는 `X-API-Token: {token}`
-> 환경변수 `SYMLINK_API_TOKENS`에 설정된 토큰
-
----
-
-## 7. 공통 사항
-
-### 7.1 인증 헤더
-
-```
-Authorization: Bearer {sanctum_token}
-Content-Type: application/json
-Accept: application/json
-```
-
-> `AuthInterceptor`에서 자동 주입됨.
-
-### 7.2 서버 응답 구조 vs Flutter ApiResponse
-
-**서버 일반 응답:**
 ```json
 {
   "success": true,
-  "message": "처리 완료",
-  "data": { ... }
-}
-```
-
-**Flutter ApiResponse (Freezed):**
-```dart
-ApiResponse.success(data, message: '...', statusCode: 200, pagination: ...)
-ApiResponse.error(message, statusCode: 500, errors: {...})
-```
-
-> **주의:** 서버 응답을 `ApiResponse`로 변환하는 로직이 각 RepositoryImpl에 필요.
-> `BaseRepositoryMixin`에서 처리하되, 서버의 `success` 필드 기반 분기 추가 권장.
-
-### 7.3 페이지네이션
-
-**서버 (Laravel 기본):**
-```json
-{
-  "current_page": 1,
-  "data": [...],
-  "last_page": 5,
-  "per_page": 20,
-  "total": 100,
-  "next_page_url": "...",
-  "prev_page_url": "..."
-}
-```
-
-**Flutter PaginationModel:**
-```dart
-PaginationModel(
-  currentPage: json['current_page'],
-  totalPages: json['last_page'],
-  totalItems: json['total'],
-  itemsPerPage: json['per_page'],
-  hasNext: json['next_page_url'] != null,
-  hasPrevious: json['prev_page_url'] != null,
-)
-```
-
-### 7.4 에러 응답
-
-**서버 422 (유효성 검사):**
-```json
-{
-  "message": "The given data was invalid.",
-  "errors": {
-    "email": ["이메일 형식이 올바르지 않습니다."],
-    "password": ["비밀번호는 필수입니다."]
+  "data": {
+    "id": 1,
+    "ad_id": "coupang_001",
+    "ip": "192.168.1.1",
+    "user_agent": "...",
+    "referer": "..."
   }
 }
 ```
 
-**Flutter ErrorInterceptor 매핑:**
+---
+
+### GET `/api/symlink-visits/{adId}`
+
+특정 광고의 방문 기록을 조회합니다.
+
+**인증**: 필수 (`api.token`)
+
+**Path Parameters**:
+
+| 파라미터 | 타입 | 설명 |
+|---|---|---|
+| `adId` | string | 광고 ID |
+
+**Response** `200 OK`:
+
+```json
+{
+  "id": 1,
+  "ad_id": "coupang_001",
+  "ip": "192.168.1.1",
+  "user_agent": "...",
+  "referer": "...",
+  "created_at": "...",
+  "updated_at": "..."
+}
 ```
-422 → ValidationError (field errors 포함)
-401 → AuthError
-403 → AuthError (권한 없음)
-404 → BusinessError (not found)
-429 → NetworkError (rate limit)
-5xx → SystemError
-```
-
-### 7.5 ID 타입 주의
-
-```
-서버: id는 int 타입 (Laravel auto-increment)
-Flutter: id는 String 타입 (모델 정의)
-→ JSON 역직렬화 시 int→String 변환 필요
-→ fromJson에서 .toString() 처리 또는 JsonKey 커스텀 converter 사용
-```
-
-### 7.6 날짜 형식
-
-```
-서버:    "2026-02-10T09:00:00.000000Z" (ISO 8601, UTC)
-Flutter: DateTime (Freezed가 자동 파싱)
-```
-
-### 7.7 파일 업로드 (multipart)
-
-서버에서 파일 업로드가 필요한 경우 (프로필 사진, 피드 이미지 등):
-
-```dart
-// Dio FormData 사용
-final formData = FormData.fromMap({
-  'profile_photo': await MultipartFile.fromFile(filePath),
-});
-```
-
-> Retrofit `@Part()` 데코레이터 또는 직접 Dio 호출 필요.
 
 ---
 
-## 부록: 서버 API 구현 우선순위 제안
+### DELETE `/api/symlink-visits/{adId}`
 
-### P0 (필수 — 앱 핵심 기능)
+특정 광고의 방문 기록을 삭제합니다.
 
-| 우선순위 | 엔드포인트 그룹 | 이유 |
-|---------|---------------|------|
-| 1 | `POST /auth/social-login` | 카카오 로그인 연동 |
-| 2 | `GET/POST /rounds/*` | 파크골프 라운드 핵심 기능 |
-| 3 | `POST/PUT /rounds/{id}/scores` | 스코어 입력 핵심 기능 |
-| 4 | `GET /records/statistics` | 내 기록 통계 |
-| 5 | `GET /records/rounds` | 라운드 기록 목록 |
+**인증**: 필수 (`api.token`)
 
-### P1 (중요 — 앱 주요 기능)
+**Path Parameters**:
 
-| 우선순위 | 엔드포인트 그룹 | 이유 |
-|---------|---------------|------|
-| 6 | `GET /courses/popular` | 인기 코스 추천 |
-| 7 | `GET /courses/{id}/holes` | 코스 홀 정보 |
-| 8 | `GET /records/monthly` | 월별 기록 |
-| 9 | `GET /records/courses` | 코스별 기록 |
+| 파라미터 | 타입 | 설명 |
+|---|---|---|
+| `adId` | string | 광고 ID |
 
-### P2 (추가 — 소셜 기능)
+**Response** `200 OK`:
 
-| 우선순위 | 엔드포인트 그룹 | 이유 |
-|---------|---------------|------|
-| 10 | `GET/POST /clubs/*` | 클럽 CRUD |
-| 11 | `GET/POST /clubs/{id}/feed` | 클럽 피드 |
-| 12 | `POST /clubs/{id}/join` | 클럽 가입/탈퇴 |
-| 13 | 댓글/좋아요 관련 | 소셜 인터랙션 |
+```json
+{
+  "success": true,
+  "message": "Visit record deleted successfully"
+}
+```
 
-### P3 (개선)
+---
 
-| 우선순위 | 엔드포인트 그룹 | 이유 |
-|---------|---------------|------|
-| 14 | `POST /auth/refresh` | 토큰 갱신 (UX 개선) |
-| 15 | 경로 통일 (`/courses` ↔ `/parkgolf`) | 클라이언트-서버 일관성 |
+## 기타
+
+### GET `/api/symlink`
+
+쿠팡 파트너스 링크로 리다이렉트합니다.
+
+**인증**: 불필요
+
+**Response**: `302 Redirect` → `https://link.coupang.com/a/dmWLqr`
