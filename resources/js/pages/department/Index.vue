@@ -5,19 +5,74 @@ import DepartmentCard from '@/components/department/DepartmentCard.vue';
 import Header from '@/components/template/Header.vue';
 import { safeRoute } from '@/composables/useSafeRoute';
 import { Department } from '@/types/department';
-import { Head, usePage } from '@inertiajs/vue3';
+import { Head, router, usePage } from '@inertiajs/vue3';
 import { Plus } from 'lucide-vue-next';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 
-const props = defineProps<{ departments: Department[] }>();
+interface PaginatedDepartments {
+    data: Department[];
+    current_page: number;
+    last_page: number;
+    next_page_url: string | null;
+}
+
+const props = defineProps<{ departments: PaginatedDepartments }>();
+
+const allDepartments = ref<Department[]>(props.departments.data);
+const currentPage = ref(props.departments.current_page);
+const lastPage = ref(props.departments.last_page);
+const nextPageUrl = ref(props.departments.next_page_url);
+const isLoading = ref(false);
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
 
 // 첫 번째 부서의 교회 ID를 기본값으로 사용
 const defaultChurchId = computed(() => {
-    return props.departments.length > 0 && props.departments[0].church ? props.departments[0].church.id : 1;
+    return allDepartments.value.length > 0 && allDepartments.value[0].church ? allDepartments.value[0].church.id : 1;
 });
+
+// 무한 스크롤 함수
+const loadMoreDepartments = () => {
+    if (isLoading.value || !nextPageUrl.value || currentPage.value >= lastPage.value) {
+        return;
+    }
+
+    isLoading.value = true;
+
+    router.get(
+        nextPageUrl.value,
+        {},
+        {
+            preserveState: true,
+            preserveScroll: true,
+            only: ['departments'],
+            onSuccess: (page: any) => {
+                const newData = page.props.departments;
+                allDepartments.value = [...allDepartments.value, ...newData.data];
+                currentPage.value = newData.current_page;
+                lastPage.value = newData.last_page;
+                nextPageUrl.value = newData.next_page_url;
+                isLoading.value = false;
+            },
+            onError: () => {
+                isLoading.value = false;
+            },
+        }
+    );
+};
+
+// 스크롤 이벤트 핸들러
+const handleScroll = () => {
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+
+    // 페이지 하단에서 200px 이전에 로드 시작
+    if (scrollTop + windowHeight >= documentHeight - 200) {
+        loadMoreDepartments();
+    }
+};
 
 function goToContent(id: number) {
     window.location.href = safeRoute('department.show', { id: id });
@@ -55,12 +110,8 @@ const loadKakaoAd = () => {
 */
 
 onMounted(() => {
-    // 광고 로드 주석 처리
-    /*
-    setTimeout(() => {
-        loadKakaoAd();
-    }, 100);
-    */
+    // 스크롤 이벤트 리스너 추가
+    window.addEventListener('scroll', handleScroll);
 
     // JSON-LD structured data 추가
     const structuredData = document.createElement('script');
@@ -70,8 +121,8 @@ onMounted(() => {
         '@type': 'ItemList',
         name: '부서 목록',
         description: '주보고에 등록된 교회 부서 목록',
-        numberOfItems: props.departments.length,
-        itemListElement: props.departments.map((department, index) => ({
+        numberOfItems: allDepartments.value.length,
+        itemListElement: allDepartments.value.map((department, index) => ({
             '@type': 'ListItem',
             position: index + 1,
             item: {
@@ -83,6 +134,11 @@ onMounted(() => {
         })),
     });
     document.head.appendChild(structuredData);
+});
+
+onUnmounted(() => {
+    // 스크롤 이벤트 리스너 제거
+    window.removeEventListener('scroll', handleScroll);
 });
 </script>
 
@@ -133,7 +189,17 @@ onMounted(() => {
                     </div>
 
                     <!-- 기존 Department 카드들 -->
-                    <DepartmentCard v-for="department in departments" :key="department.id" :department="department" @click="goToContent" />
+                    <DepartmentCard v-for="department in allDepartments" :key="department.id" :department="department" @click="goToContent" />
+                </div>
+
+                <!-- 로딩 인디케이터 -->
+                <div v-if="isLoading" class="mt-6 flex justify-center">
+                    <div class="h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-blue-500"></div>
+                </div>
+
+                <!-- 더 이상 데이터가 없을 때 -->
+                <div v-else-if="currentPage >= lastPage && allDepartments.length > 0" class="mt-6 text-center text-sm text-gray-500">
+                    모든 부서를 불러왔습니다
                 </div>
 
                 <BusinessInfo class="mt-4" />

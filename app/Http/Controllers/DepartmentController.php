@@ -11,7 +11,8 @@ class DepartmentController extends Controller
 {
     public function index()
     {
-        $departments = Department::with('church')->get();
+        $departments = Department::with('church')
+            ->paginate(20);
 
         return Inertia::render('department/Index', ['departments' => $departments]);
     }
