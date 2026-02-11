@@ -177,4 +177,88 @@ class RecordController extends Controller
             }),
         ]);
     }
+
+    /**
+     * GET /api/parkgolf/home - Get home screen data
+     */
+    public function home(Request $request): JsonResponse
+    {
+        $userId = $request->user()->id;
+
+        // User summary
+        $allRounds = Round::where('user_id', $userId)
+            ->where('status', 'completed')
+            ->with(['players' => function ($q) {
+                $q->where('is_me', true);
+            }])
+            ->get();
+
+        $myPlayers   = $allRounds->pluck('players')->flatten();
+        $totalRounds = $allRounds->count();
+
+        $thisMonth       = now()->format('Y-m');
+        $thisMonthRounds = $allRounds->filter(function ($round) use ($thisMonth) {
+            return $round->played_at->format('Y-m') === $thisMonth;
+        })->count();
+
+        $avgScore  = $totalRounds > 0 ? round($myPlayers->avg('total_score'), 1) : 0;
+        $bestScore = $totalRounds > 0 ? $myPlayers->min('total_score') : null;
+
+        $userSummary = [
+            'total_rounds'      => $totalRounds,
+            'this_month_rounds' => $thisMonthRounds,
+            'avg_score'         => $avgScore,
+            'best_score'        => $bestScore,
+        ];
+
+        // In-progress round
+        $inProgressRound = Round::where('user_id', $userId)
+            ->where('status', 'in_progress')
+            ->with('players')
+            ->latest('started_at')
+            ->first();
+
+        $inProgressData = null;
+        if ($inProgressRound) {
+            $playerCount    = $inProgressRound->players->count();
+            $inProgressData = [
+                'id'           => $inProgressRound->id,
+                'course_name'  => $inProgressRound->course_name,
+                'started_at'   => $inProgressRound->started_at->toIso8601String(),
+                'player_count' => $playerCount,
+            ];
+        }
+
+        // Recent rounds (top 5)
+        $recentRounds = Round::where('user_id', $userId)
+            ->where('status', 'completed')
+            ->with(['players' => function ($q) {
+                $q->where('is_me', true);
+            }])
+            ->orderBy('played_at', 'desc')
+            ->limit(5)
+            ->get()
+            ->map(function (Round $round) {
+                $myPlayer    = $round->players->first();
+                $playerCount = RoundPlayer::where('round_id', $round->id)->count();
+
+                return [
+                    'id'           => $round->id,
+                    'course_name'  => $round->course_name,
+                    'total_score'  => $myPlayer?->total_score ?? 0,
+                    'score_vs_par' => $myPlayer?->score_vs_par ?? 0,
+                    'played_at'    => $round->played_at->format('Y-m-d'),
+                    'player_count' => $playerCount,
+                ];
+            });
+
+        return response()->json([
+            'success' => true,
+            'data'    => [
+                'user_summary'      => $userSummary,
+                'in_progress_round' => $inProgressData,
+                'recent_rounds'     => $recentRounds,
+            ],
+        ]);
+    }
 }
