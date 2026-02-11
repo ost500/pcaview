@@ -1,0 +1,250 @@
+### Park Golf API Test
+### Base URL
+@baseUrl = http://localhost:8000
+@token = your-token-here
+
+### Variables (Update these after each request)
+@roundId = 1
+@playerId1 = 1
+@playerId2 = 2
+
+###############################################
+# Authentication
+###############################################
+
+### 1. Login (Get Token)
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "password"
+}
+
+### 2. Get Current User
+GET {{baseUrl}}/api/auth/user
+Authorization: Bearer {{token}}
+
+###############################################
+# Round API
+###############################################
+
+### 3. Create Round (라운드 생성)
+POST {{baseUrl}}/api/parkgolf/rounds
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "course_id": null,
+  "course_name": "테스트 파크골프장",
+  "hole_count": 9,
+  "hole_pars": [3, 3, 4, 3, 3, 3, 4, 3, 3],
+  "played_at": "2026-02-11",
+  "memo": "날씨 좋음",
+  "players": [
+    {
+      "name": "홍길동",
+      "is_me": true,
+      "user_id": null
+    },
+    {
+      "name": "김철수",
+      "is_me": false,
+      "user_id": null
+    },
+    {
+      "name": "박영희",
+      "is_me": false,
+      "user_id": null
+    }
+  ]
+}
+
+### 4. Get My Rounds (내 라운드 목록)
+GET {{baseUrl}}/api/parkgolf/rounds?status=in_progress&per_page=20
+Authorization: Bearer {{token}}
+
+### 5. Get Round Detail (라운드 상세)
+GET {{baseUrl}}/api/parkgolf/rounds/{{roundId}}
+Authorization: Bearer {{token}}
+
+### 6. Get Scorecard (스코어카드 조회)
+GET {{baseUrl}}/api/parkgolf/rounds/{{roundId}}/scorecard
+Authorization: Bearer {{token}}
+
+### 7. Complete Round (라운드 완료 - 스코어 일괄 전송)
+POST {{baseUrl}}/api/parkgolf/rounds/{{roundId}}/complete
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "scores": [
+    {
+      "player_id": {{playerId1}},
+      "hole_scores": [
+        { "hole_number": 1, "score": 3, "memo": null },
+        { "hole_number": 2, "score": 2, "memo": "버디!" },
+        { "hole_number": 3, "score": 4, "memo": "벙커 빠짐" },
+        { "hole_number": 4, "score": 3, "memo": null },
+        { "hole_number": 5, "score": 3, "memo": null },
+        { "hole_number": 6, "score": 2, "memo": "이글!" },
+        { "hole_number": 7, "score": 4, "memo": null },
+        { "hole_number": 8, "score": 3, "memo": null },
+        { "hole_number": 9, "score": 3, "memo": null }
+      ]
+    },
+    {
+      "player_id": {{playerId2}},
+      "hole_scores": [
+        { "hole_number": 1, "score": 3, "memo": null },
+        { "hole_number": 2, "score": 3, "memo": null },
+        { "hole_number": 3, "score": 4, "memo": null },
+        { "hole_number": 4, "score": 4, "memo": null },
+        { "hole_number": 5, "score": 3, "memo": null },
+        { "hole_number": 6, "score": 3, "memo": null },
+        { "hole_number": 7, "score": 4, "memo": null },
+        { "hole_number": 8, "score": 3, "memo": null },
+        { "hole_number": 9, "score": 3, "memo": null }
+      ]
+    }
+  ]
+}
+
+### 8. Delete/Cancel Round (라운드 취소)
+DELETE {{baseUrl}}/api/parkgolf/rounds/{{roundId}}
+Authorization: Bearer {{token}}
+
+###############################################
+# Record & Statistics API
+###############################################
+
+### 9. Get Statistics (통계 요약)
+GET {{baseUrl}}/api/parkgolf/records/statistics?year=2026&month=2
+Authorization: Bearer {{token}}
+
+### 9-1. Get Yearly Statistics (연간 통계)
+GET {{baseUrl}}/api/parkgolf/records/statistics?year=2026
+Authorization: Bearer {{token}}
+
+### 10. Get Records/Rounds (기록 목록)
+GET {{baseUrl}}/api/parkgolf/records/rounds?year=2026&month=2&per_page=20
+Authorization: Bearer {{token}}
+
+### 10-1. Get Records with Course Filter (코스별 필터)
+GET {{baseUrl}}/api/parkgolf/records/rounds?course_id=1&per_page=20
+Authorization: Bearer {{token}}
+
+### 11. Get Monthly Summary (월별 요약)
+GET {{baseUrl}}/api/parkgolf/records/monthly?year=2026
+Authorization: Bearer {{token}}
+
+###############################################
+# Home API
+###############################################
+
+### 12. Get Home Data (홈 화면)
+GET {{baseUrl}}/api/parkgolf/home
+Authorization: Bearer {{token}}
+
+###############################################
+# Course API (Public - No Auth)
+###############################################
+
+### 13. Search Courses (코스 검색)
+GET {{baseUrl}}/api/parkgolf/search?name=서울&per_page=20
+
+### 14. Search Courses with Location (위치 기반 검색)
+GET {{baseUrl}}/api/parkgolf/search?lat=37.5665&lon=126.9780&radius=10&sort=distance
+
+### 15. Get Nearby Courses (주변 코스)
+GET {{baseUrl}}/api/parkgolf/nearby?lat=37.5665&lon=126.9780&radius=10
+
+### 16. Get Regions (지역 목록)
+GET {{baseUrl}}/api/parkgolf/regions
+
+### 17. Get Course Statistics (코스 통계)
+GET {{baseUrl}}/api/parkgolf/statistics
+
+### 18. Get Course Detail (코스 상세)
+GET {{baseUrl}}/api/parkgolf/1
+
+###############################################
+# Test Scenarios
+###############################################
+
+### Scenario 1: Complete Round Flow
+# 1. Login → Get token
+# 2. Create round → Get round_id and player_ids
+# 3. Complete round with scores
+# 4. Get round detail to verify
+# 5. Check statistics
+
+### Scenario 2: View Records
+# 1. Login → Get token
+# 2. Get home data
+# 3. Get statistics (monthly)
+# 4. Get records/rounds list
+# 5. Get specific round detail
+
+### Scenario 3: Cancel Round
+# 1. Login → Get token
+# 2. Create round → Get round_id
+# 3. Delete/Cancel round
+# 4. Verify it's cancelled (status check)
+
+###############################################
+# Error Test Cases
+###############################################
+
+### Test: Invalid Token
+GET {{baseUrl}}/api/parkgolf/rounds
+Authorization: Bearer invalid-token-here
+
+### Test: Complete Already Completed Round (409 Expected)
+POST {{baseUrl}}/api/parkgolf/rounds/{{roundId}}/complete
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "scores": []
+}
+
+### Test: Invalid Score Data (422 Expected)
+POST {{baseUrl}}/api/parkgolf/rounds/{{roundId}}/complete
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "scores": [
+    {
+      "player_id": 999,
+      "hole_scores": []
+    }
+  ]
+}
+
+### Test: Delete Completed Round (409 Expected)
+DELETE {{baseUrl}}/api/parkgolf/rounds/{{roundId}}
+Authorization: Bearer {{token}}
+
+###############################################
+# Notes
+###############################################
+
+# How to use:
+# 1. Install REST Client extension in VS Code
+# 2. Update @token after login (step 1)
+# 3. Update @roundId, @playerId1, @playerId2 after creating round (step 3)
+# 4. Click "Send Request" above each request
+# 5. View response in the right panel
+
+# Token Management:
+# - Copy token from login response
+# - Update @token variable at the top
+# - Token is used in Authorization header for all protected endpoints
+
+# Testing Tips:
+# - Follow scenarios in order for complete workflow testing
+# - Check response status codes (200, 201, 401, 403, 409, 422)
+# - Verify data structure matches API_SPEC.md
+# - Test error cases to ensure proper validation
