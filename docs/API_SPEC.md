@@ -108,7 +108,7 @@ in_progress ──→ completed
 
 ### 2-1. 라운드 생성
 
-### `POST /api/rounds`
+### `POST /api/parkgolf/rounds`
 
 **인증:** Sanctum (필수)
 
@@ -195,7 +195,7 @@ in_progress ──→ completed
 
 ### 2-2. 라운드 완료 (스코어 일괄 전송)
 
-### `POST /api/rounds/{id}/complete`
+### `POST /api/parkgolf/rounds/{id}/complete`
 
 **인증:** Sanctum (라운드 생성자만)
 
@@ -307,7 +307,7 @@ in_progress ──→ completed
 
 ### 2-3. 라운드 상세 조회
 
-### `GET /api/rounds/{id}`
+### `GET /api/parkgolf/rounds/{id}`
 
 **인증:** Sanctum
 
@@ -352,7 +352,7 @@ in_progress ──→ completed
 
 ### 2-4. 스코어카드 조회
 
-### `GET /api/rounds/{id}/scorecard`
+### `GET /api/parkgolf/rounds/{id}/scorecard`
 
 **인증:** Sanctum
 
@@ -388,7 +388,7 @@ in_progress ──→ completed
 
 ### 2-5. 내 라운드 목록
 
-### `GET /api/rounds`
+### `GET /api/parkgolf/rounds`
 
 **인증:** Sanctum
 
@@ -432,7 +432,7 @@ in_progress ──→ completed
 
 ### 2-6. 라운드 취소
 
-### `DELETE /api/rounds/{id}`
+### `DELETE /api/parkgolf/rounds/{id}`
 
 **인증:** Sanctum (라운드 생성자만)
 
@@ -454,7 +454,7 @@ in_progress ──→ completed
 
 ### 3-1. 통계 요약
 
-### `GET /api/records/statistics`
+### `GET /api/parkgolf/records/statistics`
 
 **인증:** Sanctum
 
@@ -519,7 +519,7 @@ WHERE r.user_id = ? AND r.status = 'completed' AND rs.score IS NOT NULL
 
 ### 3-2. 라운드 기록 목록
 
-### `GET /api/records/rounds`
+### `GET /api/parkgolf/records/rounds`
 
 **인증:** Sanctum
 
@@ -574,7 +574,7 @@ ORDER BY r.played_at DESC
 
 ### 3-3. 월별 요약
 
-### `GET /api/records/monthly`
+### `GET /api/parkgolf/records/monthly`
 
 **인증:** Sanctum
 
@@ -611,7 +611,7 @@ ORDER BY r.played_at DESC
 
 ## 4. 홈 화면 API (신규)
 
-### `GET /api/home`
+### `GET /api/parkgolf/home`
 
 **인증:** Sanctum
 
@@ -850,7 +850,9 @@ Schema::create('round_scores', function (Blueprint $table) {
 ## 8. 공통 규칙
 
 ### 8-1. 인증
-- 모든 `/api/*` 엔드포인트는 Sanctum 토큰 필수 (뉴스 제외 가능)
+- Round, Record, Home API(`/api/parkgolf/rounds`, `/api/parkgolf/records`, `/api/parkgolf/home`)는 모두 Sanctum 토큰 필수
+- 코스 검색 API(`/api/parkgolf/search`, `/api/parkgolf/nearby` 등)는 인증 불필요
+- 뉴스 API는 인증 선택적
 - `401 Unauthorized` → 앱에서 강제 로그아웃
 - Refresh token 없음
 
@@ -919,21 +921,21 @@ Schema::create('round_scores', function (Blueprint $table) {
 
 ### P0 — MVP 필수 (런칭 전)
 ```
-1. POST /api/rounds              라운드 생성
-2. POST /api/rounds/{id}/complete 라운드 완료 (스코어 일괄 전송)
-3. GET  /api/rounds/{id}         라운드 상세
-4. GET  /api/rounds              내 라운드 목록
-5. DELETE /api/rounds/{id}       라운드 취소
-6. GET /api/parkgolf/search 수정  위치 파라미터 추가
+1. POST /api/parkgolf/rounds              라운드 생성
+2. POST /api/parkgolf/rounds/{id}/complete 라운드 완료 (스코어 일괄 전송)
+3. GET  /api/parkgolf/rounds/{id}         라운드 상세
+4. GET  /api/parkgolf/rounds              내 라운드 목록
+5. DELETE /api/parkgolf/rounds/{id}       라운드 취소
+6. GET /api/parkgolf/search 수정           위치 파라미터 추가
 ```
 
 ### P1 — 1차 업데이트 (런칭 후)
 ```
-7.  GET  /api/home                홈 화면 데이터
-8.  GET  /api/records/statistics  통계 요약
-9.  GET  /api/records/rounds      기록 목록
-10. GET  /api/rounds/{id}/scorecard 스코어카드
-11. GET  /api/records/monthly     월별 요약
+7.  GET  /api/parkgolf/home                홈 화면 데이터
+8.  GET  /api/parkgolf/records/statistics  통계 요약
+9.  GET  /api/parkgolf/records/rounds      기록 목록
+10. GET  /api/parkgolf/rounds/{id}/scorecard 스코어카드
+11. GET  /api/parkgolf/records/monthly     월별 요약
 ```
 
 ### P2 — 2차 업데이트
