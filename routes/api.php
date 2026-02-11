@@ -62,3 +62,13 @@ Route::prefix('symlink-visits')->middleware('api.token')->group(function () {
     Route::get('/{adId}', [App\Http\Controllers\Api\SymlinkVisitController::class, 'show']);
     Route::delete('/{adId}', [App\Http\Controllers\Api\SymlinkVisitController::class, 'destroy']);
 });
+
+// Round API routes (Sanctum authentication required)
+Route::middleware('auth:sanctum')->prefix('rounds')->group(function () {
+    Route::get('/', [App\Http\Controllers\Api\RoundController::class, 'index']);
+    Route::post('/', [App\Http\Controllers\Api\RoundController::class, 'store']);
+    Route::get('/{round}', [App\Http\Controllers\Api\RoundController::class, 'show']);
+    Route::post('/{round}/complete', [App\Http\Controllers\Api\RoundController::class, 'complete']);
+    Route::get('/{round}/scorecard', [App\Http\Controllers\Api\RoundController::class, 'scorecard']);
+    Route::delete('/{round}', [App\Http\Controllers\Api\RoundController::class, 'destroy']);
+});
