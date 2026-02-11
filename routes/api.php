@@ -72,3 +72,10 @@ Route::middleware('auth:sanctum')->prefix('rounds')->group(function () {
     Route::get('/{round}/scorecard', [App\Http\Controllers\Api\RoundController::class, 'scorecard']);
     Route::delete('/{round}', [App\Http\Controllers\Api\RoundController::class, 'destroy']);
 });
+
+// Record/Statistics API routes (Sanctum authentication required)
+Route::middleware('auth:sanctum')->prefix('records')->group(function () {
+    Route::get('/statistics', [App\Http\Controllers\Api\RecordController::class, 'statistics']);
+    Route::get('/rounds', [App\Http\Controllers\Api\RecordController::class, 'rounds']);
+    Route::get('/monthly', [App\Http\Controllers\Api\RecordController::class, 'monthly']);
+});
