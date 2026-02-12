@@ -51,10 +51,12 @@ Route::prefix('parkgolf')->group(function () {
     Route::get('/nearby', [App\Http\Controllers\Api\ParkGolfCourseController::class, 'nearby']);
     Route::get('/regions', [App\Http\Controllers\Api\ParkGolfCourseController::class, 'regions']);
     Route::get('/statistics', [App\Http\Controllers\Api\ParkGolfCourseController::class, 'statistics']);
-    Route::get('/{id}', [App\Http\Controllers\Api\ParkGolfCourseController::class, 'show']);
 
-    // Home screen (Sanctum authentication required)
+    // Home screen (Sanctum authentication required) - Must be before /{id}
     Route::middleware('auth:sanctum')->get('/home', [App\Http\Controllers\Api\RecordController::class, 'home']);
+
+    // Course detail - Keep this AFTER specific routes
+    Route::get('/{id}', [App\Http\Controllers\Api\ParkGolfCourseController::class, 'show']);
 
     // Round API (Sanctum authentication required)
     Route::middleware('auth:sanctum')->prefix('rounds')->group(function () {

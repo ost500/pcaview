@@ -60,12 +60,12 @@ class ParkGolfCourseController extends Controller
     /**
      * 특정 파크골프장 상세 정보
      *
-     * @param int $id
+     * @param string $id
      * @return JsonResponse
      */
-    public function show(int $id): JsonResponse
+    public function show(string $id): JsonResponse
     {
-        $course = ParkGolfCourse::findOrFail($id);
+        $course = ParkGolfCourse::findOrFail((int) $id);
 
         return response()->json($course);
     }
