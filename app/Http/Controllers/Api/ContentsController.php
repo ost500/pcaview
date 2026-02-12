@@ -45,19 +45,23 @@ class ContentsController extends Controller
             });
         }
 
-        $contents = $contentsQuery->get();
+        $perPage = min((int) $request->input('per_page', 20), 50);
+        $contents = $contentsQuery->paginate($perPage);
 
         // news 타입 본문 필터링 (저작권 보호를 위해 body의 1/3만 표시)
-        $filteredContents = $contentsService->filterNewsContents($contents);
+        $filteredItems = $contentsService->filterNewsContents(collect($contents->items()));
 
         return response()->json([
             'success' => true,
             'message' => 'Contents retrieved successfully',
             'data'    => [
-                'church' => $churchModel,
-                'contents' => $filteredContents,
-                'total'    => $filteredContents->count(),
+                'church'   => $churchModel,
+                'contents' => $filteredItems->values(),
             ],
+            'current_page' => $contents->currentPage(),
+            'per_page'     => $contents->perPage(),
+            'total'        => $contents->total(),
+            'last_page'    => $contents->lastPage(),
         ]);
     }
 
