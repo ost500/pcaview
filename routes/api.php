@@ -87,15 +87,15 @@ Route::prefix('symlink-visits')->middleware('api.token')->group(function () {
 });
 
 // YTPlayer API routes
-Route::prefix('ytplayer')->group(function () {
-    // GET endpoints
+Route::prefix('ytplayer')->middleware('ytplayer.signature')->group(function () {
+    // GET endpoints (서명 검증 생략)
     Route::get('/notice', [App\Http\Controllers\Api\YTPlayerController::class, 'notice']);
     Route::get('/rewards', [App\Http\Controllers\Api\YTPlayerController::class, 'rewards']);
     Route::get('/version_check', [App\Http\Controllers\Api\YTPlayerController::class, 'versionCheck']);
     Route::get('/balance', [App\Http\Controllers\Api\YTPlayerController::class, 'balance']);
     Route::get('/reward_history', [App\Http\Controllers\Api\YTPlayerController::class, 'rewardHistory']);
 
-    // POST endpoints
+    // POST endpoints (서명 검증 필수)
     Route::post('/reward', [App\Http\Controllers\Api\YTPlayerController::class, 'reward']);
     Route::post('/use_reward', [App\Http\Controllers\Api\YTPlayerController::class, 'useReward']);
     Route::post('/install_count', [App\Http\Controllers\Api\YTPlayerController::class, 'installCount']);

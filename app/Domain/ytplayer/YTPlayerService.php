@@ -98,9 +98,15 @@ class YTPlayerService
      *     video_stringtime: string|null
      * } $data
      * @return RewardLog
+     * @throws \Exception
      */
     public function logReward(array $data): RewardLog
     {
+        // 중복 적립 방지 체크
+        if (config('ytplayer.duplicate_prevention.enabled')) {
+            $this->checkDuplicateReward($data['encrypted'], $data['reward_type'], $data['video_url'] ?? null);
+        }
+
         return DB::transaction(function () use ($data) {
             // 리워드 타입별 포인트 계산
             $pointsEarned = $this->calculateRewardPoints(
@@ -128,8 +134,66 @@ class YTPlayerService
             $userReward->increment('balance', $pointsEarned);
             $userReward->increment('total_earned', $pointsEarned);
 
+            // 중복 방지 캐시 저장
+            if (config('ytplayer.duplicate_prevention.enabled')) {
+                $this->markRewardAsProcessed($data['encrypted'], $data['reward_type'], $data['video_url'] ?? null);
+            }
+
             return $rewardLog;
         });
+    }
+
+    /**
+     * 중복 적립 체크
+     *
+     * @param string $encrypted
+     * @param string $rewardType
+     * @param string|null $videoUrl
+     * @return void
+     * @throws \Exception
+     */
+    private function checkDuplicateReward(string $encrypted, string $rewardType, ?string $videoUrl): void
+    {
+        $cacheKey = $this->getDuplicateCacheKey($encrypted, $rewardType, $videoUrl);
+
+        if (cache()->has($cacheKey)) {
+            throw new \Exception('Duplicate reward request detected');
+        }
+    }
+
+    /**
+     * 처리된 리워드로 표시
+     *
+     * @param string $encrypted
+     * @param string $rewardType
+     * @param string|null $videoUrl
+     * @return void
+     */
+    private function markRewardAsProcessed(string $encrypted, string $rewardType, ?string $videoUrl): void
+    {
+        $cacheKey = $this->getDuplicateCacheKey($encrypted, $rewardType, $videoUrl);
+        $window = config('ytplayer.duplicate_prevention.window', 60);
+
+        cache()->put($cacheKey, true, now()->addSeconds($window));
+    }
+
+    /**
+     * 중복 체크용 캐시 키 생성
+     *
+     * @param string $encrypted
+     * @param string $rewardType
+     * @param string|null $videoUrl
+     * @return string
+     */
+    private function getDuplicateCacheKey(string $encrypted, string $rewardType, ?string $videoUrl): string
+    {
+        $key = "ytplayer:reward:{$encrypted}:{$rewardType}";
+
+        if ($videoUrl) {
+            $key .= ':' . md5($videoUrl);
+        }
+
+        return $key;
     }
 
     /**

@@ -4,6 +4,7 @@ use App\Http\Middleware\AdminAuth;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\ValidateApiToken;
+use App\Http\Middleware\VerifyYTPlayerSignature;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Middleware\RedirectIfAuthenticated;
 use Illuminate\Foundation\Application;
@@ -38,6 +39,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => AdminAuth::class,
             'api.token' => ValidateApiToken::class,
+            'ytplayer.signature' => VerifyYTPlayerSignature::class,
         ]);
     })
     ->withEvents(discover: [
