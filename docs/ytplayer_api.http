@@ -1,0 +1,114 @@
+### YTPlayer API 테스트
+
+### 1. 공지사항 조회
+GET http://localhost/api/ytplayer/notice
+Accept: application/json
+
+###
+
+### 2. 리워드 목록 조회
+GET http://localhost/api/ytplayer/rewards
+Accept: application/json
+
+###
+
+### 3. 버전 체크 (현재 버전 1.0.0)
+GET http://localhost/api/ytplayer/version_check?appVersion=1.0.0
+Accept: application/json
+
+###
+
+### 4. 버전 체크 (현재 버전 1.1.0) - 업데이트 불필요
+GET http://localhost/api/ytplayer/version_check?appVersion=1.1.0
+Accept: application/json
+
+###
+
+### 5. 버전 체크 (현재 버전 0.9.0) - 강제 업데이트 필요
+GET http://localhost/api/ytplayer/version_check?appVersion=0.9.0
+Accept: application/json
+
+###
+
+### 6. 리워드 적립 (비디오 시청)
+POST http://localhost/api/ytplayer/reward
+Content-Type: application/json
+
+{
+  "encrypted": "user_hash_12345",
+  "reward_type": "watch",
+  "where": "home_feed",
+  "video_url": "https://youtube.com/watch?v=example",
+  "video_time": 300,
+  "video_stringtime": "00:05:00"
+}
+
+###
+
+### 7. 리워드 적립 (광고 시청)
+POST http://localhost/api/ytplayer/reward
+Content-Type: application/json
+
+{
+  "encrypted": "user_hash_12345",
+  "reward_type": "ad",
+  "where": "video_player"
+}
+
+###
+
+### 8. 리워드 적립 (공유)
+POST http://localhost/api/ytplayer/reward
+Content-Type: application/json
+
+{
+  "encrypted": "user_hash_12345",
+  "reward_type": "share",
+  "where": "video_detail"
+}
+
+###
+
+### 9. 설치 횟수 전송
+POST http://localhost/api/ytplayer/install_count
+Content-Type: application/json
+
+{
+  "referrer": "utm_source=google&utm_medium=cpc&utm_campaign=winter2026"
+}
+
+###
+
+### 10. 라이브 카운트 전송
+POST http://localhost/api/ytplayer/live_count
+Content-Type: application/json
+
+{
+  "referrer": "home_screen",
+  "session_id": "session_abc123xyz"
+}
+
+###
+
+### 11. 사용자 포인트 잔액 조회
+GET http://localhost/api/ytplayer/balance?encrypted=user_hash_12345
+Accept: application/json
+
+###
+
+### 12. 리워드 사용 (교환)
+POST http://localhost/api/ytplayer/use_reward
+Content-Type: application/json
+
+{
+  "encrypted": "user_hash_12345",
+  "reward_id": 1
+}
+
+###
+
+### 13. 리워드 사용 내역 조회
+GET http://localhost/api/ytplayer/reward_history?encrypted=user_hash_12345&limit=10
+Accept: application/json
+
+###

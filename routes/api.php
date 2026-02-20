@@ -85,3 +85,19 @@ Route::prefix('symlink-visits')->middleware('api.token')->group(function () {
     Route::get('/{adId}', [App\Http\Controllers\Api\SymlinkVisitController::class, 'show']);
     Route::delete('/{adId}', [App\Http\Controllers\Api\SymlinkVisitController::class, 'destroy']);
 });
+
+// YTPlayer API routes
+Route::prefix('ytplayer')->group(function () {
+    // GET endpoints
+    Route::get('/notice', [App\Http\Controllers\Api\YTPlayerController::class, 'notice']);
+    Route::get('/rewards', [App\Http\Controllers\Api\YTPlayerController::class, 'rewards']);
+    Route::get('/version_check', [App\Http\Controllers\Api\YTPlayerController::class, 'versionCheck']);
+    Route::get('/balance', [App\Http\Controllers\Api\YTPlayerController::class, 'balance']);
+    Route::get('/reward_history', [App\Http\Controllers\Api\YTPlayerController::class, 'rewardHistory']);
+
+    // POST endpoints
+    Route::post('/reward', [App\Http\Controllers\Api\YTPlayerController::class, 'reward']);
+    Route::post('/use_reward', [App\Http\Controllers\Api\YTPlayerController::class, 'useReward']);
+    Route::post('/install_count', [App\Http\Controllers\Api\YTPlayerController::class, 'installCount']);
+    Route::post('/live_count', [App\Http\Controllers\Api\YTPlayerController::class, 'liveCount']);
+});
