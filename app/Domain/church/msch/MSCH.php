@@ -2,12 +2,11 @@
 
 namespace App\Domain\church\msch;
 
-use App\Domain\church\DepartmentInterface;
 use App\Domain\church\ChurchNewsInterface;
 use App\Models\Department;
 use Carbon\Carbon;
 
-class MSCH implements DepartmentInterface, ChurchNewsInterface
+class MSCH implements ChurchNewsInterface
 {
     public function bulletinUrl(): string
     {

@@ -11,6 +11,7 @@
     "require": {
         "php": "^8.2",
         "ext-dom": "*",
+        "darkaonline/l5-swagger": "^10.1",
         "guzzlehttp/guzzle": "^7.10",
         "inertiajs/inertia-laravel": "^2.0",
         "intervention/image": "^3.11",

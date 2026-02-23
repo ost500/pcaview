@@ -1,0 +1,705 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "YTPlayer API",
+        "description": "YTPlayer 모바일 앱을 위한 RESTful API 문서",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://pcaview.abc",
+            "description": "Production server"
+        },
+        {
+            "url": "http://localhost",
+            "description": "Development server"
+        }
+    ],
+    "paths": {
+        "/api/ytplayer/notice": {
+            "get": {
+                "tags": [
+                    "YTPlayer"
+                ],
+                "summary": "공지사항 조회",
+                "operationId": "d23a67965c2576e7cc7ce2b8193cf142",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "title": {
+                                                        "type": "string",
+                                                        "example": "서비스 점검 안내"
+                                                    },
+                                                    "content": {
+                                                        "type": "string",
+                                                        "example": "2026년 2월 21일 새벽 2시부터 4시까지 서비스 점검이 예정되어 있습니다."
+                                                    },
+                                                    "priority": {
+                                                        "type": "integer",
+                                                        "example": 10
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2026-02-20T16:30:00+09:00"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/ytplayer/rewards": {
+            "get": {
+                "tags": [
+                    "YTPlayer"
+                ],
+                "summary": "리워드 목록 조회",
+                "operationId": "2312f1431a4c2122d004b4fd1b6046c5",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "프리미엄 구독권 1개월"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "광고 없이 무제한으로 음악을 즐기세요"
+                                                    },
+                                                    "points_required": {
+                                                        "type": "integer",
+                                                        "example": 1000
+                                                    },
+                                                    "image_url": {
+                                                        "type": "string",
+                                                        "example": "https://example.com/premium.jpg",
+                                                        "nullable": true
+                                                    },
+                                                    "expires_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "nullable": true
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/ytplayer/version_check": {
+            "get": {
+                "tags": [
+                    "YTPlayer"
+                ],
+                "summary": "앱 버전 체크",
+                "operationId": "43ad8f8d18b33cc83e925179fb9c7cd8",
+                "parameters": [
+                    {
+                        "name": "appVersion",
+                        "in": "query",
+                        "description": "현재 앱 버전 (예: 1.0.0)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "1.0.0"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "is_update_required": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "latest_version": {
+                                                    "type": "string",
+                                                    "example": "1.1.0"
+                                                },
+                                                "update_url": {
+                                                    "type": "string",
+                                                    "example": "https://play.google.com/store/apps/details?id=com.ytplayer",
+                                                    "nullable": true
+                                                },
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "중요한 보안 업데이트가 포함되어 있습니다.",
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/ytplayer/reward": {
+            "post": {
+                "tags": [
+                    "YTPlayer"
+                ],
+                "summary": "리워드 적립",
+                "operationId": "d4d9cdfd815c87c5139613ec0cbf4af1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "encrypted",
+                                    "reward_type"
+                                ],
+                                "properties": {
+                                    "encrypted": {
+                                        "description": "암호화된 사용자 식별자",
+                                        "type": "string",
+                                        "example": "user_hash_12345"
+                                    },
+                                    "reward_type": {
+                                        "description": "리워드 타입",
+                                        "type": "string",
+                                        "enum": [
+                                            "watch",
+                                            "ad",
+                                            "share"
+                                        ],
+                                        "example": "watch"
+                                    },
+                                    "where": {
+                                        "description": "리워드 발생 위치",
+                                        "type": "string",
+                                        "example": "home_feed",
+                                        "nullable": true
+                                    },
+                                    "video_url": {
+                                        "description": "비디오 URL",
+                                        "type": "string",
+                                        "example": "https://youtube.com/watch?v=example",
+                                        "nullable": true
+                                    },
+                                    "video_time": {
+                                        "description": "시청 시간 (초)",
+                                        "type": "integer",
+                                        "example": 300,
+                                        "nullable": true
+                                    },
+                                    "video_stringtime": {
+                                        "description": "시청 시간 (문자열)",
+                                        "type": "string",
+                                        "example": "00:05:00",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "points_earned": {
+                                                    "type": "integer",
+                                                    "example": 50
+                                                },
+                                                "balance": {
+                                                    "type": "integer",
+                                                    "example": 1550
+                                                },
+                                                "total_earned": {
+                                                    "type": "integer",
+                                                    "example": 2050
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Duplicate reward or validation error"
+                    },
+                    "401": {
+                        "description": "Invalid signature or timestamp expired"
+                    }
+                },
+                "security": [
+                    {
+                        "HMACSignature": [],
+                        "Timestamp": [],
+                        "Nonce": []
+                    }
+                ]
+            }
+        },
+        "/api/ytplayer/install_count": {
+            "post": {
+                "tags": [
+                    "YTPlayer"
+                ],
+                "summary": "설치 횟수 전송",
+                "operationId": "7b893d6b76ecce6c79b5e547a6d6a0c8",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "referrer": {
+                                        "type": "string",
+                                        "example": "utm_source=google&utm_medium=cpc",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "HMACSignature": [],
+                        "Timestamp": [],
+                        "Nonce": []
+                    }
+                ]
+            }
+        },
+        "/api/ytplayer/live_count": {
+            "post": {
+                "tags": [
+                    "YTPlayer"
+                ],
+                "summary": "라이브 카운트 전송",
+                "operationId": "24693dec76c1d5f3aefee1a6f9c4f4c5",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "referrer": {
+                                        "type": "string",
+                                        "example": "home_screen",
+                                        "nullable": true
+                                    },
+                                    "session_id": {
+                                        "type": "string",
+                                        "example": "session_abc123xyz",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "active_users": {
+                                                    "type": "integer",
+                                                    "example": 127
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HMACSignature": [],
+                        "Timestamp": [],
+                        "Nonce": []
+                    }
+                ]
+            }
+        },
+        "/api/ytplayer/balance": {
+            "get": {
+                "tags": [
+                    "YTPlayer"
+                ],
+                "summary": "포인트 잔액 조회",
+                "operationId": "c733d23ac813bd7736901dad552b6fb6",
+                "parameters": [
+                    {
+                        "name": "encrypted",
+                        "in": "query",
+                        "description": "암호화된 사용자 식별자",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "user_hash_12345"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "balance": {
+                                                    "type": "integer",
+                                                    "example": 1500
+                                                },
+                                                "total_earned": {
+                                                    "type": "integer",
+                                                    "example": 2000
+                                                },
+                                                "total_spent": {
+                                                    "type": "integer",
+                                                    "example": 500
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/ytplayer/use_reward": {
+            "post": {
+                "tags": [
+                    "YTPlayer"
+                ],
+                "summary": "리워드 사용 (교환)",
+                "operationId": "8e8fac17fcd92a73e72f38704eee11f4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "encrypted",
+                                    "reward_id"
+                                ],
+                                "properties": {
+                                    "encrypted": {
+                                        "type": "string",
+                                        "example": "user_hash_12345"
+                                    },
+                                    "reward_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "reward_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "reward_name": {
+                                                    "type": "string",
+                                                    "example": "프리미엄 구독권 1개월"
+                                                },
+                                                "points_spent": {
+                                                    "type": "integer",
+                                                    "example": 1000
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "completed"
+                                                },
+                                                "balance": {
+                                                    "type": "integer",
+                                                    "example": 500
+                                                },
+                                                "total_spent": {
+                                                    "type": "integer",
+                                                    "example": 1000
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Insufficient points or invalid reward",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Insufficient points"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HMACSignature": [],
+                        "Timestamp": [],
+                        "Nonce": []
+                    }
+                ]
+            }
+        },
+        "/api/ytplayer/reward_history": {
+            "get": {
+                "tags": [
+                    "YTPlayer"
+                ],
+                "summary": "리워드 사용 내역 조회",
+                "operationId": "1e6f69a12eccf5794eee861a9537768f",
+                "parameters": [
+                    {
+                        "name": "encrypted",
+                        "in": "query",
+                        "description": "암호화된 사용자 식별자",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "user_hash_12345"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "조회할 개수 (기본: 20, 최대: 100)",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "reward_name": {
+                                                        "type": "string",
+                                                        "example": "프리미엄 구독권 1개월"
+                                                    },
+                                                    "points_spent": {
+                                                        "type": "integer",
+                                                        "example": 1000
+                                                    },
+                                                    "status": {
+                                                        "type": "string",
+                                                        "example": "completed"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "HMACSignature": {
+                "type": "apiKey",
+                "description": "HMAC-SHA256 서명",
+                "name": "X-YTPlayer-Signature",
+                "in": "header"
+            },
+            "Timestamp": {
+                "type": "apiKey",
+                "description": "Unix 타임스탬프 (초 단위)",
+                "name": "X-YTPlayer-Timestamp",
+                "in": "header"
+            },
+            "Nonce": {
+                "type": "apiKey",
+                "description": "고유 식별자 (UUID)",
+                "name": "X-YTPlayer-Nonce",
+                "in": "header"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "YTPlayer",
+            "description": "YTPlayer"
+        }
+    ]
+}
