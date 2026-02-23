@@ -13,6 +13,11 @@ return [
                  * Route for accessing api documentation interface
                  */
                 'api' => 'docs',
+
+                /*
+                 * Route for accessing parsed swagger annotations.
+                 */
+                'docs' => 'docs/api-docs',
             ],
             'paths' => [
                 /*
