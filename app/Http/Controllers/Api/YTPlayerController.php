@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Domain\gold\GoldnityService;
 use App\Domain\gold\GoldPriceService;
 use App\Domain\ytplayer\YTPlayerService;
 use App\Http\Controllers\Controller;
@@ -52,7 +53,8 @@ class YTPlayerController extends Controller
 {
     public function __construct(
         private readonly YTPlayerService $ytPlayerService,
-        private readonly GoldPriceService $goldPriceService
+        private readonly GoldPriceService $goldPriceService,
+        private readonly GoldnityService $goldnityService
     ) {}
 
     #[OA\Get(
@@ -133,6 +135,17 @@ class YTPlayerController extends Controller
                                     new OA\Property(property: 'duration', type: 'integer', example: 2592000, description: '리워드 지속 시간 (초)', nullable: true),
                                     new OA\Property(property: 'image_url', type: 'string', example: 'https://example.com/premium.jpg', nullable: true),
                                     new OA\Property(property: 'expires_at', type: 'string', format: 'date-time', nullable: true),
+                                    new OA\Property(
+                                        property: 'gold_info',
+                                        properties: [
+                                            new OA\Property(property: 'grams', type: 'number', format: 'float', example: 0.001176471, description: '포인트로 구매 가능한 금 그램 수'),
+                                            new OA\Property(property: 'formatted_grams', type: 'string', example: '0.001176471', description: '포맷된 금 그램 수'),
+                                            new OA\Property(property: 'unit', type: 'string', example: 'g'),
+                                        ],
+                                        type: 'object',
+                                        description: 'GOLDNITY 앱 전용 금 정보',
+                                        nullable: true
+                                    ),
                                 ]
                             )
                         ),
@@ -161,22 +174,31 @@ class YTPlayerController extends Controller
 
         $rewards = $this->ytPlayerService->getAvailableRewards($validated['application'] ?? null);
 
+        $rewardsData = $rewards->map(fn ($reward) => [
+            'id'              => $reward->id,
+            'application_id'  => $reward->application_id,
+            'name'            => $reward->name,
+            'description'     => $reward->description,
+            'points_required' => $reward->points_required,
+            'duration'        => $reward->duration,
+            'image_url'       => $reward->image_url,
+            'expires_at'      => $reward->expires_at?->toIso8601String(),
+        ])->toArray();
+
+        // GOLDNITY 앱의 경우 금 정보 추가
+        $isGoldnity = isset($validated['application']) && $validated['application'] === 'GOLDNITY';
+
+        if ($isGoldnity) {
+            $rewardsData = $this->goldnityService->enrichRewardsWithGoldInfo($rewardsData);
+        }
+
         $response = [
             'success' => true,
-            'data'    => $rewards->map(fn ($reward) => [
-                'id'              => $reward->id,
-                'application_id'  => $reward->application_id,
-                'name'            => $reward->name,
-                'description'     => $reward->description,
-                'points_required' => $reward->points_required,
-                'duration'        => $reward->duration,
-                'image_url'       => $reward->image_url,
-                'expires_at'      => $reward->expires_at?->toIso8601String(),
-            ]),
+            'data'    => $rewardsData,
         ];
 
         // GOLDNITY 앱의 경우 금 시세 정보 추가
-        if (isset($validated['application']) && $validated['application'] === 'GOLDNITY') {
+        if ($isGoldnity) {
             $response['gold_price_info'] = $this->goldPriceService->getSmallUnitPrice();
         }
 
