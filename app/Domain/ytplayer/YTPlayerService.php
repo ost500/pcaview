@@ -38,10 +38,14 @@ class YTPlayerService
      *
      * @return Collection<Reward>
      */
-    public function getAvailableRewards(?int $applicationId = null): Collection
+    public function getAvailableRewards(?string $applicationName = null): Collection
     {
         return Reward::where('is_active', true)
-            ->when($applicationId, fn ($query) => $query->where('application_id', $applicationId))
+            ->when($applicationName, function ($query) use ($applicationName) {
+                $query->whereHas('application', function ($q) use ($applicationName) {
+                    $q->where('name', $applicationName);
+                });
+            })
             ->where(function ($query) {
                 $query->whereNull('expires_at')
                     ->orWhere('expires_at', '>', now());

@@ -104,11 +104,11 @@ class YTPlayerController extends Controller
         tags: ['YTPlayer'],
         parameters: [
             new OA\Parameter(
-                name: 'application_id',
+                name: 'application',
                 in: 'query',
                 required: false,
-                description: '애플리케이션 ID (필터링 용도)',
-                schema: new OA\Schema(type: 'integer', example: 1)
+                description: '애플리케이션 이름 (필터링 용도)',
+                schema: new OA\Schema(type: 'string', example: 'GOLDNITY')
             ),
         ],
         responses: [
@@ -140,10 +140,10 @@ class YTPlayerController extends Controller
     public function rewards(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'application_id' => 'nullable|integer|exists:applications,id',
+            'application' => 'nullable|string|exists:applications,name',
         ]);
 
-        $rewards = $this->ytPlayerService->getAvailableRewards($validated['application_id'] ?? null);
+        $rewards = $this->ytPlayerService->getAvailableRewards($validated['application'] ?? null);
 
         return response()->json([
             'success' => true,
