@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Domain\gold\GoldPriceService;
 use App\Domain\ytplayer\YTPlayerService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -50,7 +51,8 @@ use OpenApi\Attributes as OA;
 class YTPlayerController extends Controller
 {
     public function __construct(
-        private readonly YTPlayerService $ytPlayerService
+        private readonly YTPlayerService $ytPlayerService,
+        private readonly GoldPriceService $goldPriceService
     ) {}
 
     #[OA\Get(
@@ -134,6 +136,18 @@ class YTPlayerController extends Controller
                                 ]
                             )
                         ),
+                        new OA\Property(
+                            property: 'gold_price_info',
+                            properties: [
+                                new OA\Property(property: 'price_per_gram', type: 'number', format: 'float', example: 85000.0, description: '1g 당 금 시세 (KRW)'),
+                                new OA\Property(property: 'price_per_0_001g', type: 'number', format: 'float', example: 85.0, description: '0.001g 당 금액 (KRW)'),
+                                new OA\Property(property: 'unit', type: 'string', example: 'KRW'),
+                                new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),
+                            ],
+                            type: 'object',
+                            description: 'GOLDNITY 앱 전용 금 시세 정보',
+                            nullable: true
+                        ),
                     ]
                 )
             ),
@@ -147,7 +161,7 @@ class YTPlayerController extends Controller
 
         $rewards = $this->ytPlayerService->getAvailableRewards($validated['application'] ?? null);
 
-        return response()->json([
+        $response = [
             'success' => true,
             'data'    => $rewards->map(fn ($reward) => [
                 'id'              => $reward->id,
@@ -159,7 +173,14 @@ class YTPlayerController extends Controller
                 'image_url'       => $reward->image_url,
                 'expires_at'      => $reward->expires_at?->toIso8601String(),
             ]),
-        ]);
+        ];
+
+        // GOLDNITY 앱의 경우 금 시세 정보 추가
+        if (isset($validated['application']) && $validated['application'] === 'GOLDNITY') {
+            $response['gold_price_info'] = $this->goldPriceService->getSmallUnitPrice();
+        }
+
+        return response()->json($response);
     }
 
     #[OA\Get(
