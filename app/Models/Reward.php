@@ -37,7 +37,7 @@ class Reward extends Model
     ];
 
     protected $casts = [
-        'points_required' => 'decimal:2',
+        'points_required' => 'decimal:9',
         'is_active'       => 'boolean',
         'expires_at'      => 'datetime',
     ];
