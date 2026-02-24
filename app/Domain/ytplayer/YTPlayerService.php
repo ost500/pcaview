@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Domain\ytplayer;
 
-use App\Models\Notice;
-use App\Models\Reward;
 use App\Models\AppVersion;
-use App\Models\RewardLog;
 use App\Models\InstallCount;
 use App\Models\LiveCount;
-use App\Models\UserReward;
+use App\Models\Notice;
+use App\Models\Reward;
+use App\Models\RewardLog;
 use App\Models\RewardUsage;
+use App\Models\UserReward;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -66,12 +66,12 @@ class YTPlayerService
             ->orderBy('version', 'desc')
             ->first();
 
-        if (!$latestVersion) {
+        if (! $latestVersion) {
             return [
                 'is_update_required' => false,
-                'latest_version' => $currentVersion,
-                'update_url' => null,
-                'message' => null,
+                'latest_version'     => $currentVersion,
+                'update_url'         => null,
+                'message'            => null,
             ];
         }
 
@@ -80,9 +80,9 @@ class YTPlayerService
 
         return [
             'is_update_required' => $isUpdateRequired,
-            'latest_version' => $latestVersion->version,
-            'update_url' => $latestVersion->update_url,
-            'message' => $latestVersion->update_message,
+            'latest_version'     => $latestVersion->version,
+            'update_url'         => $latestVersion->update_url,
+            'message'            => $latestVersion->update_message,
         ];
     }
 
@@ -97,17 +97,17 @@ class YTPlayerService
      *     video_time: int|null,
      *     video_stringtime: string|null
      * } $data
-     * @return RewardLog
+     *
      * @throws \Exception
      */
-    public function logReward(array $data): RewardLog
+    public function logReward(array $data, ?int $userId = null): RewardLog
     {
         // 중복 적립 방지 체크
         if (config('ytplayer.duplicate_prevention.enabled')) {
             $this->checkDuplicateReward($data['encrypted'], $data['reward_type'], $data['video_url'] ?? null);
         }
 
-        return DB::transaction(function () use ($data) {
+        return DB::transaction(function () use ($data, $userId) {
             // 리워드 타입별 포인트 계산
             $pointsEarned = $this->calculateRewardPoints(
                 $data['reward_type'],
@@ -116,20 +116,30 @@ class YTPlayerService
 
             // 리워드 로그 생성
             $rewardLog = RewardLog::create([
-                'encrypted' => $data['encrypted'],
-                'reward_type' => $data['reward_type'],
-                'where' => $data['where'] ?? null,
-                'video_url' => $data['video_url'] ?? null,
-                'video_time' => $data['video_time'] ?? null,
+                'encrypted'        => $data['encrypted'],
+                'reward_type'      => $data['reward_type'],
+                'where'            => $data['where'] ?? null,
+                'video_url'        => $data['video_url'] ?? null,
+                'video_time'       => $data['video_time'] ?? null,
                 'video_stringtime' => $data['video_stringtime'] ?? null,
-                'points_earned' => $pointsEarned,
+                'points_earned'    => $pointsEarned,
             ]);
 
             // 사용자 리워드 잔액 업데이트
             $userReward = UserReward::firstOrCreate(
                 ['encrypted' => $data['encrypted']],
-                ['balance' => 0, 'total_earned' => 0, 'total_spent' => 0]
+                [
+                    'user_id'      => $userId,
+                    'balance'      => 0,
+                    'total_earned' => 0,
+                    'total_spent'  => 0,
+                ]
             );
+
+            // 로그인한 유저라면 user_id 업데이트
+            if ($userId && ! $userReward->user_id) {
+                $userReward->update(['user_id' => $userId]);
+            }
 
             $userReward->increment('balance', $pointsEarned);
             $userReward->increment('total_earned', $pointsEarned);
@@ -146,10 +156,6 @@ class YTPlayerService
     /**
      * 중복 적립 체크
      *
-     * @param string $encrypted
-     * @param string $rewardType
-     * @param string|null $videoUrl
-     * @return void
      * @throws \Exception
      */
     private function checkDuplicateReward(string $encrypted, string $rewardType, ?string $videoUrl): void
@@ -163,34 +169,24 @@ class YTPlayerService
 
     /**
      * 처리된 리워드로 표시
-     *
-     * @param string $encrypted
-     * @param string $rewardType
-     * @param string|null $videoUrl
-     * @return void
      */
     private function markRewardAsProcessed(string $encrypted, string $rewardType, ?string $videoUrl): void
     {
         $cacheKey = $this->getDuplicateCacheKey($encrypted, $rewardType, $videoUrl);
-        $window = config('ytplayer.duplicate_prevention.window', 60);
+        $window   = config('ytplayer.duplicate_prevention.window', 60);
 
         cache()->put($cacheKey, true, now()->addSeconds($window));
     }
 
     /**
      * 중복 체크용 캐시 키 생성
-     *
-     * @param string $encrypted
-     * @param string $rewardType
-     * @param string|null $videoUrl
-     * @return string
      */
     private function getDuplicateCacheKey(string $encrypted, string $rewardType, ?string $videoUrl): string
     {
         $key = "ytplayer:reward:{$encrypted}:{$rewardType}";
 
         if ($videoUrl) {
-            $key .= ':' . md5($videoUrl);
+            $key .= ':'.md5($videoUrl);
         }
 
         return $key;
@@ -198,16 +194,12 @@ class YTPlayerService
 
     /**
      * 리워드 포인트 계산
-     *
-     * @param string $rewardType
-     * @param int $videoTime
-     * @return int
      */
     private function calculateRewardPoints(string $rewardType, int $videoTime): int
     {
         return match ($rewardType) {
             'watch' => (int) ($videoTime / 60) * 10, // 1분당 10포인트
-            'ad' => 50, // 광고 시청 시 50포인트
+            'ad'    => 50, // 광고 시청 시 50포인트
             'share' => 100, // 공유 시 100포인트
             default => 0,
         };
@@ -215,16 +207,11 @@ class YTPlayerService
 
     /**
      * 설치 횟수 기록
-     *
-     * @param string|null $referrer
-     * @param string|null $userAgent
-     * @param string|null $ipAddress
-     * @return InstallCount
      */
     public function logInstall(?string $referrer, ?string $userAgent, ?string $ipAddress): InstallCount
     {
         return InstallCount::create([
-            'referrer' => $referrer,
+            'referrer'   => $referrer,
             'user_agent' => $userAgent,
             'ip_address' => $ipAddress,
         ]);
@@ -232,12 +219,6 @@ class YTPlayerService
 
     /**
      * 라이브 카운트 기록
-     *
-     * @param string|null $referrer
-     * @param string|null $userAgent
-     * @param string|null $ipAddress
-     * @param string|null $sessionId
-     * @return LiveCount
      */
     public function logLiveCount(
         ?string $referrer,
@@ -246,7 +227,7 @@ class YTPlayerService
         ?string $sessionId
     ): LiveCount {
         return LiveCount::create([
-            'referrer' => $referrer,
+            'referrer'   => $referrer,
             'user_agent' => $userAgent,
             'ip_address' => $ipAddress,
             'session_id' => $sessionId,
@@ -255,9 +236,6 @@ class YTPlayerService
 
     /**
      * 사용자별 총 적립 포인트 조회
-     *
-     * @param string $encrypted
-     * @return int
      */
     public function getTotalPoints(string $encrypted): int
     {
@@ -269,54 +247,60 @@ class YTPlayerService
     /**
      * 사용자 포인트 잔액 조회
      *
-     * @param string $encrypted
      * @return array{
      *     balance: int,
      *     total_earned: int,
      *     total_spent: int
      * }
      */
-    public function getUserBalance(string $encrypted): array
+    public function getUserBalance(string $encrypted, ?int $userId = null): array
     {
         $userReward = UserReward::where('encrypted', $encrypted)->first();
 
-        if (!$userReward) {
+        if (! $userReward) {
             return [
-                'balance' => 0,
+                'balance'      => 0,
                 'total_earned' => 0,
-                'total_spent' => 0,
+                'total_spent'  => 0,
             ];
         }
 
+        // 로그인한 유저라면 user_id 업데이트
+        if ($userId && ! $userReward->user_id) {
+            $userReward->update(['user_id' => $userId]);
+        }
+
         return [
-            'balance' => $userReward->balance,
+            'balance'      => $userReward->balance,
             'total_earned' => $userReward->total_earned,
-            'total_spent' => $userReward->total_spent,
+            'total_spent'  => $userReward->total_spent,
         ];
     }
 
     /**
      * 리워드 사용 (교환)
      *
-     * @param string $encrypted
-     * @param int $rewardId
-     * @return RewardUsage
      * @throws \Exception
      */
-    public function useReward(string $encrypted, int $rewardId): RewardUsage
+    public function useReward(string $encrypted, int $rewardId, ?int $userId = null): RewardUsage
     {
-        return DB::transaction(function () use ($encrypted, $rewardId) {
+        return DB::transaction(function () use ($encrypted, $rewardId, $userId) {
             // 사용자 리워드 조회
             $userReward = UserReward::where('encrypted', $encrypted)->lockForUpdate()->first();
 
-            if (!$userReward) {
+            if (! $userReward) {
                 throw new \Exception('User reward not found');
+            }
+
+            // 로그인한 유저라면 user_id 업데이트
+            if ($userId && ! $userReward->user_id) {
+                $userReward->update(['user_id' => $userId]);
             }
 
             // 리워드 조회
             $reward = Reward::findOrFail($rewardId);
 
-            if (!$reward->is_active) {
+            if (! $reward->is_active) {
                 throw new \Exception('Reward is not available');
             }
 
@@ -337,9 +321,9 @@ class YTPlayerService
             // 사용 내역 생성
             return RewardUsage::create([
                 'user_reward_id' => $userReward->id,
-                'reward_id' => $rewardId,
-                'points_spent' => $reward->points_required,
-                'status' => 'completed',
+                'reward_id'      => $rewardId,
+                'points_spent'   => $reward->points_required,
+                'status'         => 'completed',
             ]);
         });
     }
@@ -347,15 +331,13 @@ class YTPlayerService
     /**
      * 리워드 사용 내역 조회
      *
-     * @param string $encrypted
-     * @param int $limit
      * @return Collection<RewardUsage>
      */
     public function getRewardUsageHistory(string $encrypted, int $limit = 20): Collection
     {
         $userReward = UserReward::where('encrypted', $encrypted)->first();
 
-        if (!$userReward) {
+        if (! $userReward) {
             return collect();
         }
 
@@ -368,9 +350,6 @@ class YTPlayerService
 
     /**
      * 일별 설치 통계
-     *
-     * @param int $days
-     * @return Collection
      */
     public function getInstallStatistics(int $days = 7): Collection
     {
@@ -383,8 +362,6 @@ class YTPlayerService
 
     /**
      * 실시간 활성 사용자 수 (최근 5분)
-     *
-     * @return int
      */
     public function getActiveUserCount(): int
     {

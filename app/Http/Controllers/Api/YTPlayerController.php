@@ -88,11 +88,11 @@ class YTPlayerController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $notices->map(fn ($notice) => [
-                'id' => $notice->id,
-                'title' => $notice->title,
-                'content' => $notice->content,
-                'priority' => $notice->priority,
+            'data'    => $notices->map(fn ($notice) => [
+                'id'         => $notice->id,
+                'title'      => $notice->title,
+                'content'    => $notice->content,
+                'priority'   => $notice->priority,
                 'created_at' => $notice->created_at->toIso8601String(),
             ]),
         ]);
@@ -134,13 +134,13 @@ class YTPlayerController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $rewards->map(fn ($reward) => [
-                'id' => $reward->id,
-                'name' => $reward->name,
-                'description' => $reward->description,
+            'data'    => $rewards->map(fn ($reward) => [
+                'id'              => $reward->id,
+                'name'            => $reward->name,
+                'description'     => $reward->description,
                 'points_required' => $reward->points_required,
-                'image_url' => $reward->image_url,
-                'expires_at' => $reward->expires_at?->toIso8601String(),
+                'image_url'       => $reward->image_url,
+                'expires_at'      => $reward->expires_at?->toIso8601String(),
             ]),
         ]);
     }
@@ -187,11 +187,11 @@ class YTPlayerController extends Controller
         ]);
 
         $currentVersion = $request->input('appVersion');
-        $versionInfo = $this->ytPlayerService->checkVersion($currentVersion);
+        $versionInfo    = $this->ytPlayerService->checkVersion($currentVersion);
 
         return response()->json([
             'success' => true,
-            'data' => $versionInfo,
+            'data'    => $versionInfo,
         ]);
     }
 
@@ -244,25 +244,25 @@ class YTPlayerController extends Controller
     public function reward(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'encrypted' => 'required|string',
-            'reward_type' => 'required|string|in:watch,ad,share',
-            'where' => 'nullable|string',
-            'video_url' => 'nullable|string',
-            'video_time' => 'nullable|integer|min:0',
+            'encrypted'        => 'required|string',
+            'reward_type'      => 'required|string|in:watch,ad,share',
+            'where'            => 'nullable|string',
+            'video_url'        => 'nullable|string',
+            'video_time'       => 'nullable|integer|min:0',
             'video_stringtime' => 'nullable|string',
         ]);
 
-        $rewardLog = $this->ytPlayerService->logReward($validated);
-        $balance = $this->ytPlayerService->getUserBalance($validated['encrypted']);
+        $rewardLog = $this->ytPlayerService->logReward($validated, auth()->id());
+        $balance   = $this->ytPlayerService->getUserBalance($validated['encrypted'], auth()->id());
 
         return response()->json([
             'success' => true,
-            'data' => [
-                'id' => $rewardLog->id,
+            'data'    => [
+                'id'            => $rewardLog->id,
                 'points_earned' => $rewardLog->points_earned,
-                'balance' => $balance['balance'],
-                'total_earned' => $balance['total_earned'],
-                'created_at' => $rewardLog->created_at->toIso8601String(),
+                'balance'       => $balance['balance'],
+                'total_earned'  => $balance['total_earned'],
+                'created_at'    => $rewardLog->created_at->toIso8601String(),
             ],
         ], 201);
     }
@@ -299,8 +299,8 @@ class YTPlayerController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => [
-                'id' => $installCount->id,
+            'data'    => [
+                'id'         => $installCount->id,
                 'created_at' => $installCount->created_at->toIso8601String(),
             ],
         ], 201);
@@ -345,7 +345,7 @@ class YTPlayerController extends Controller
     public function liveCount(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'referrer' => 'nullable|string',
+            'referrer'   => 'nullable|string',
             'session_id' => 'nullable|string',
         ]);
 
@@ -358,10 +358,10 @@ class YTPlayerController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => [
-                'id' => $liveCount->id,
+            'data'    => [
+                'id'           => $liveCount->id,
                 'active_users' => $this->ytPlayerService->getActiveUserCount(),
-                'created_at' => $liveCount->created_at->toIso8601String(),
+                'created_at'   => $liveCount->created_at->toIso8601String(),
             ],
         ], 201);
     }
@@ -406,11 +406,14 @@ class YTPlayerController extends Controller
             'encrypted' => 'required|string',
         ]);
 
-        $balance = $this->ytPlayerService->getUserBalance($validated['encrypted']);
+        $balance = $this->ytPlayerService->getUserBalance(
+            $validated['encrypted'],
+            auth()->id()
+        );
 
         return response()->json([
             'success' => true,
-            'data' => $balance,
+            'data'    => $balance,
         ]);
     }
 
@@ -477,28 +480,29 @@ class YTPlayerController extends Controller
         try {
             $usage = $this->ytPlayerService->useReward(
                 $validated['encrypted'],
-                $validated['reward_id']
+                $validated['reward_id'],
+                auth()->id()
             );
 
-            $balance = $this->ytPlayerService->getUserBalance($validated['encrypted']);
+            $balance = $this->ytPlayerService->getUserBalance($validated['encrypted'], auth()->id());
 
             return response()->json([
                 'success' => true,
-                'data' => [
-                    'id' => $usage->id,
-                    'reward_id' => $usage->reward_id,
-                    'reward_name' => $usage->reward->name,
+                'data'    => [
+                    'id'           => $usage->id,
+                    'reward_id'    => $usage->reward_id,
+                    'reward_name'  => $usage->reward->name,
                     'points_spent' => $usage->points_spent,
-                    'status' => $usage->status,
-                    'balance' => $balance['balance'],
-                    'total_spent' => $balance['total_spent'],
-                    'created_at' => $usage->created_at->toIso8601String(),
+                    'status'       => $usage->status,
+                    'balance'      => $balance['balance'],
+                    'total_spent'  => $balance['total_spent'],
+                    'created_at'   => $usage->created_at->toIso8601String(),
                 ],
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'error' => $e->getMessage(),
+                'error'   => $e->getMessage(),
             ], 400);
         }
     }
@@ -551,7 +555,7 @@ class YTPlayerController extends Controller
     {
         $validated = $request->validate([
             'encrypted' => 'required|string',
-            'limit' => 'nullable|integer|min:1|max:100',
+            'limit'     => 'nullable|integer|min:1|max:100',
         ]);
 
         $history = $this->ytPlayerService->getRewardUsageHistory(
@@ -561,12 +565,12 @@ class YTPlayerController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $history->map(fn ($usage) => [
-                'id' => $usage->id,
-                'reward_name' => $usage->reward->name,
+            'data'    => $history->map(fn ($usage) => [
+                'id'           => $usage->id,
+                'reward_name'  => $usage->reward->name,
                 'points_spent' => $usage->points_spent,
-                'status' => $usage->status,
-                'created_at' => $usage->created_at->toIso8601String(),
+                'status'       => $usage->status,
+                'created_at'   => $usage->created_at->toIso8601String(),
             ]),
         ]);
     }

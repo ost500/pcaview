@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -54,7 +55,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
         ];
     }
 
@@ -64,6 +65,14 @@ class User extends Authenticatable
     public function departments()
     {
         return $this->belongsToMany(Department::class)->withTimestamps();
+    }
+
+    /**
+     * 사용자 리워드 정보
+     */
+    public function userReward(): HasOne
+    {
+        return $this->hasOne(UserReward::class);
     }
 
     /**
@@ -93,6 +102,7 @@ class User extends Authenticatable
 
         // Gravatar 생성
         $hash = md5(strtolower(trim($this->email)));
+
         return "https://www.gravatar.com/avatar/{$hash}?s=200&d=mp";
     }
 }
