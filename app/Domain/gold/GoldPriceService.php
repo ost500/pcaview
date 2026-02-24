@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\gold;
 
+use App\Models\DomesticMetalPrice;
 use Illuminate\Support\Facades\Cache;
 
 /**
@@ -17,10 +18,14 @@ class GoldPriceService
     public function getCurrentGoldPrice(): float
     {
         return Cache::remember('gold_price_per_gram', now()->addMinutes(30), function () {
-            // TODO: 실제 금 시세 API 연동
-            // 예: 한국금거래소, MetalPriceAPI 등
+            // metal_domestic_prices 테이블에서 최신 순금 판매가 조회
+            $latestPrice = DomesticMetalPrice::getLatest();
 
-            // 임시: 평균 금 시세 (1g 기준 약 85,000원)
+            if ($latestPrice && $latestPrice->s_pure > 0) {
+                return (float) $latestPrice->s_pure;
+            }
+
+            // 데이터가 없는 경우 기본값 (1g 기준 약 85,000원)
             return 85000.0;
         });
     }
