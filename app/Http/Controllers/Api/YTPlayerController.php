@@ -124,9 +124,11 @@ class YTPlayerController extends Controller
                             items: new OA\Items(
                                 properties: [
                                     new OA\Property(property: 'id', type: 'integer', example: 1),
+                                    new OA\Property(property: 'application_id', type: 'integer', example: 1, nullable: true),
                                     new OA\Property(property: 'name', type: 'string', example: '프리미엄 구독권 1개월'),
                                     new OA\Property(property: 'description', type: 'string', example: '광고 없이 무제한으로 음악을 즐기세요'),
-                                    new OA\Property(property: 'points_required', type: 'integer', example: 1000),
+                                    new OA\Property(property: 'points_required', type: 'number', format: 'float', example: 1000.5),
+                                    new OA\Property(property: 'duration', type: 'integer', example: 2592000, description: '리워드 지속 시간 (초)', nullable: true),
                                     new OA\Property(property: 'image_url', type: 'string', example: 'https://example.com/premium.jpg', nullable: true),
                                     new OA\Property(property: 'expires_at', type: 'string', format: 'date-time', nullable: true),
                                 ]
@@ -153,6 +155,7 @@ class YTPlayerController extends Controller
                 'name'            => $reward->name,
                 'description'     => $reward->description,
                 'points_required' => $reward->points_required,
+                'duration'        => $reward->duration,
                 'image_url'       => $reward->image_url,
                 'expires_at'      => $reward->expires_at?->toIso8601String(),
             ]),

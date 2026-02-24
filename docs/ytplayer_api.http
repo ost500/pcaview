@@ -8,7 +8,7 @@ Accept: application/json
 ###
 
 ### 2. 리워드 목록 조회
-GET {{baseUrl}}/api/ytplayer/rewards
+GET {{baseUrl}}/api/ytplayer/rewards?application=goldnity
 Accept: application/json
 
 ###

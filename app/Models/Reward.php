@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string                          $name            리워드 이름
  * @property string|null                     $description     설명
  * @property float                           $points_required 필요한 포인트
+ * @property int|null                        $duration        리워드 지속 시간 (초)
  * @property string|null                     $image_url       이미지 URL
  * @property bool                            $is_active       활성화 여부
  * @property \Illuminate\Support\Carbon|null $expires_at      만료일
@@ -31,6 +32,7 @@ class Reward extends Model
         'name',
         'description',
         'points_required',
+        'duration',
         'image_url',
         'is_active',
         'expires_at',
@@ -38,6 +40,7 @@ class Reward extends Model
 
     protected $casts = [
         'points_required' => 'decimal:9',
+        'duration'        => 'integer',
         'is_active'       => 'boolean',
         'expires_at'      => 'datetime',
     ];
