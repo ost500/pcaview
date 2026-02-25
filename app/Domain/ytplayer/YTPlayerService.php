@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\ytplayer;
 
+use App\Models\Application;
 use App\Models\AppVersion;
 use App\Models\InstallCount;
 use App\Models\LiveCount;
@@ -97,6 +98,7 @@ class YTPlayerService
      * @param array{
      *     encrypted: string,
      *     reward_type: string,
+     *     application: string,
      *     where: string|null,
      *     video_url: string|null,
      *     video_time: int|null,
@@ -113,10 +115,14 @@ class YTPlayerService
         }
 
         return DB::transaction(function () use ($data, $userId) {
+            // 애플리케이션 조회
+            $application = Application::where('name', $data['application'])->first();
+
             // 리워드 타입별 포인트 계산
             $pointsEarned = $this->calculateRewardPoints(
                 $data['reward_type'],
-                $data['video_time'] ?? 0
+                $data['video_time'] ?? 0,
+                $application?->id
             );
 
             // 리워드 로그 생성
@@ -200,13 +206,19 @@ class YTPlayerService
     /**
      * 리워드 포인트 계산
      */
-    private function calculateRewardPoints(string $rewardType, int $videoTime): int
+    private function calculateRewardPoints(string $rewardType, int $videoTime, ?int $applicationId = null): int
     {
         // rewards 테이블에서 적립용 리워드 찾기
-        $reward = Reward::where('code', $rewardType)
+        $query = Reward::where('code', $rewardType)
             ->where('type', 'accumulation')
-            ->where('is_active', true)
-            ->first();
+            ->where('is_active', true);
+
+        // application_id가 있으면 필터링
+        if ($applicationId) {
+            $query->where('application_id', $applicationId);
+        }
+
+        $reward = $query->first();
 
         if ($reward) {
             // watch의 경우 시청 시간에 비례

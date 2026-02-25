@@ -282,7 +282,8 @@
                             "schema": {
                                 "required": [
                                     "encrypted",
-                                    "reward_type"
+                                    "reward_type",
+                                    "application"
                                 ],
                                 "properties": {
                                     "encrypted": {
@@ -300,6 +301,11 @@
                                             "mining"
                                         ],
                                         "example": "watch"
+                                    },
+                                    "application": {
+                                        "description": "애플리케이션 이름",
+                                        "type": "string",
+                                        "example": "GOLDNITY"
                                     },
                                     "where": {
                                         "description": "리워드 발생 위치",

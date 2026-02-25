@@ -59,13 +59,14 @@ Accept: application/json
 
 ###
 
-### 6. 리워드 적립 (비디오 시청)
+### 6. 리워드 적립 (비디오 시청 - YTPlayer)
 POST {{baseUrl}}/api/ytplayer/reward
 Content-Type: application/json
 
 {
   "encrypted": "user_hash_12345",
   "reward_type": "watch",
+  "application": "YTPLAYER",
   "where": "home_feed",
   "video_url": "https://youtube.com/watch?v=example",
   "video_time": 300,
@@ -74,25 +75,27 @@ Content-Type: application/json
 
 ###
 
-### 7. 리워드 적립 (광고 시청)
+### 7. 리워드 적립 (광고 시청 - YTPlayer)
 POST {{baseUrl}}/api/ytplayer/reward
 Content-Type: application/json
 
 {
   "encrypted": "user_hash_12345",
   "reward_type": "ad",
+  "application": "YTPLAYER",
   "where": "video_player"
 }
 
 ###
 
-### 8. 리워드 적립 (공유)
+### 8. 리워드 적립 (공유 - YTPlayer)
 POST {{baseUrl}}/api/ytplayer/reward
 Content-Type: application/json
 
 {
   "encrypted": "user_hash_12345",
   "reward_type": "share",
+  "application": "YTPLAYER",
   "where": "video_detail"
 }
 
@@ -105,6 +108,7 @@ Content-Type: application/json
 {
   "encrypted": "user_hash_12345",
   "reward_type": "mining",
+  "application": "GOLDNITY",
   "where": "mining_screen"
 }
 
