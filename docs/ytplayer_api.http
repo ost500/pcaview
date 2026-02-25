@@ -98,6 +98,18 @@ Content-Type: application/json
 
 ###
 
+### 8-1. 리워드 적립 (마이닝 - GOLDNITY)
+POST {{baseUrl}}/api/ytplayer/reward
+Content-Type: application/json
+
+{
+  "encrypted": "user_hash_12345",
+  "reward_type": "mining",
+  "where": "mining_screen"
+}
+
+###
+
 ### 9. 설치 횟수 전송
 POST {{baseUrl}}/api/ytplayer/install_count
 Content-Type: application/json

@@ -267,7 +267,7 @@ class YTPlayerController extends Controller
                 required: ['encrypted', 'reward_type'],
                 properties: [
                     new OA\Property(property: 'encrypted', type: 'string', example: 'user_hash_12345', description: '암호화된 사용자 식별자'),
-                    new OA\Property(property: 'reward_type', type: 'string', enum: ['watch', 'ad', 'share'], example: 'watch', description: '리워드 타입'),
+                    new OA\Property(property: 'reward_type', type: 'string', enum: ['watch', 'ad', 'share', 'mining'], example: 'watch', description: '리워드 타입'),
                     new OA\Property(property: 'where', type: 'string', example: 'home_feed', description: '리워드 발생 위치', nullable: true),
                     new OA\Property(property: 'video_url', type: 'string', example: 'https://youtube.com/watch?v=example', description: '비디오 URL', nullable: true),
                     new OA\Property(property: 'video_time', type: 'integer', example: 300, description: '시청 시간 (초)', nullable: true),
@@ -305,7 +305,7 @@ class YTPlayerController extends Controller
     {
         $validated = $request->validate([
             'encrypted'        => 'required|string',
-            'reward_type'      => 'required|string|in:watch,ad,share',
+            'reward_type'      => 'required|string|in:watch,ad,share,mining',
             'where'            => 'nullable|string',
             'video_url'        => 'nullable|string',
             'video_time'       => 'nullable|integer|min:0',

@@ -203,10 +203,11 @@ class YTPlayerService
     private function calculateRewardPoints(string $rewardType, int $videoTime): int
     {
         return match ($rewardType) {
-            'watch' => (int) ($videoTime / 60) * 10, // 1분당 10포인트
-            'ad'    => 50, // 광고 시청 시 50포인트
-            'share' => 100, // 공유 시 100포인트
-            default => 0,
+            'watch'  => (int) ($videoTime / 60) * 10, // 1분당 10포인트
+            'ad'     => 50, // 광고 시청 시 50포인트
+            'share'  => 100, // 공유 시 100포인트
+            'mining' => 10, // 마이닝 시 10포인트
+            default  => 0,
         };
     }
 
