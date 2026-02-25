@@ -31,7 +31,7 @@ return [
     | 요청의 타임스탬프가 현재 시간과 이 값보다 차이나면 거부합니다. (초 단위)
     |
     */
-    'request_timeout' => env('YTPLAYER_REQUEST_TIMEOUT', 300), // 5분
+    'request_timeout' => (int) env('YTPLAYER_REQUEST_TIMEOUT', 300), // 5분
 
     /*
     |--------------------------------------------------------------------------
@@ -42,7 +42,7 @@ return [
     |
     */
     'duplicate_prevention' => [
-        'enabled' => env('YTPLAYER_DUPLICATE_PREVENTION', true),
-        'window'  => env('YTPLAYER_DUPLICATE_WINDOW', 60), // 60초 이내 중복 방지
+        'enabled' => (bool) env('YTPLAYER_DUPLICATE_PREVENTION', true),
+        'window'  => (int) env('YTPLAYER_DUPLICATE_WINDOW', 60), // 60초 이내 중복 방지
     ],
 ];
