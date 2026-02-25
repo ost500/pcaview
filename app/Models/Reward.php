@@ -29,6 +29,8 @@ class Reward extends Model
 
     protected $fillable = [
         'application_id',
+        'code',
+        'type',
         'name',
         'description',
         'points_required',
