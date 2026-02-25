@@ -1,6 +1,34 @@
 ### YTPlayer API 테스트
 @baseUrl = https://pcaview.abc
 
+###
+### ⚠️ POST 요청 테스트 방법:
+###
+### 방법 1 (개발/테스트): .env에 YTPLAYER_DISABLE_SIGNATURE=true 설정
+### 방법 2 (실제 환경): 아래 HMAC 서명 헤더 추가
+###
+### HMAC 서명 생성 방법:
+### 1. timestamp: 현재 Unix 타임스탬프 (초 단위)
+### 2. nonce: 고유 식별자 (UUID)
+### 3. payload: timestamp + nonce + request_body
+### 4. signature: HMAC-SHA256(payload, secret)
+###
+### Secret: dev-secret-key-please-change-in-production
+###
+### 예시 (Node.js):
+### const crypto = require('crypto');
+### const timestamp = Math.floor(Date.now() / 1000).toString();
+### const nonce = crypto.randomUUID();
+### const body = JSON.stringify(requestBody);
+### const payload = timestamp + nonce + body;
+### const signature = crypto.createHmac('sha256', 'dev-secret-key-please-change-in-production').update(payload).digest('hex');
+###
+### 헤더 추가:
+### X-YTPlayer-Signature: {signature}
+### X-YTPlayer-Timestamp: {timestamp}
+### X-YTPlayer-Nonce: {nonce}
+###
+
 ### 1. 공지사항 조회
 GET {{baseUrl}}/api/ytplayer/notice
 Accept: application/json

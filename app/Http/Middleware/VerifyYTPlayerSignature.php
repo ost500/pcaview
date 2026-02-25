@@ -17,10 +17,6 @@ class VerifyYTPlayerSignature
 {
     /**
      * 요청 처리
-     *
-     * @param Request $request
-     * @param Closure $next
-     * @return Response
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -29,28 +25,33 @@ class VerifyYTPlayerSignature
             return $next($request);
         }
 
+        // 개발 환경에서 서명 검증 비활성화 옵션
+        if (config('ytplayer.disable_signature_verification', false)) {
+            return $next($request);
+        }
+
         // 서명 검증이 필요한 POST 요청
         $signature = $request->header('X-YTPlayer-Signature');
         $timestamp = $request->header('X-YTPlayer-Timestamp');
-        $nonce = $request->header('X-YTPlayer-Nonce');
+        $nonce     = $request->header('X-YTPlayer-Nonce');
 
         // 필수 헤더 확인
-        if (!$signature || !$timestamp || !$nonce) {
+        if (! $signature || ! $timestamp || ! $nonce) {
             return response()->json([
                 'success' => false,
-                'error' => 'Missing required headers (X-YTPlayer-Signature, X-YTPlayer-Timestamp, X-YTPlayer-Nonce)',
+                'error'   => 'Missing required headers (X-YTPlayer-Signature, X-YTPlayer-Timestamp, X-YTPlayer-Nonce)',
             ], 401);
         }
 
         // 타임스탬프 검증 (5분 이내)
         $requestTime = (int) $timestamp;
         $currentTime = time();
-        $maxAge = 300; // 5분
+        $maxAge      = 300; // 5분
 
         if (abs($currentTime - $requestTime) > $maxAge) {
             return response()->json([
                 'success' => false,
-                'error' => 'Request timestamp expired',
+                'error'   => 'Request timestamp expired',
             ], 401);
         }
 
@@ -61,10 +62,10 @@ class VerifyYTPlayerSignature
             $nonce
         );
 
-        if (!hash_equals($expectedSignature, $signature)) {
+        if (! hash_equals($expectedSignature, $signature)) {
             return response()->json([
                 'success' => false,
-                'error' => 'Invalid signature',
+                'error'   => 'Invalid signature',
             ], 401);
         }
 
@@ -73,7 +74,7 @@ class VerifyYTPlayerSignature
         if (cache()->has($cacheKey)) {
             return response()->json([
                 'success' => false,
-                'error' => 'Duplicate request (nonce already used)',
+                'error'   => 'Duplicate request (nonce already used)',
             ], 409);
         }
 
@@ -85,22 +86,17 @@ class VerifyYTPlayerSignature
 
     /**
      * HMAC-SHA256 서명 생성
-     *
-     * @param string $body
-     * @param string $timestamp
-     * @param string $nonce
-     * @return string
      */
     private function generateSignature(string $body, string $timestamp, string $nonce): string
     {
         $secret = config('ytplayer.signature_secret');
 
-        if (!$secret) {
+        if (! $secret) {
             throw new \RuntimeException('YTPlayer signature secret not configured');
         }
 
         // 서명 대상 문자열: timestamp + nonce + body
-        $payload = $timestamp . $nonce . $body;
+        $payload = $timestamp.$nonce.$body;
 
         return hash_hmac('sha256', $payload, $secret);
     }

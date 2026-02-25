@@ -14,6 +14,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Disable Signature Verification
+    |--------------------------------------------------------------------------
+    |
+    | 개발/테스트 환경에서 서명 검증을 비활성화합니다.
+    | ⚠️ 프로덕션에서는 절대 true로 설정하지 마세요!
+    |
+    */
+    'disable_signature_verification' => env('YTPLAYER_DISABLE_SIGNATURE', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Request Timeout
     |--------------------------------------------------------------------------
     |
@@ -32,6 +43,6 @@ return [
     */
     'duplicate_prevention' => [
         'enabled' => env('YTPLAYER_DUPLICATE_PREVENTION', true),
-        'window' => env('YTPLAYER_DUPLICATE_WINDOW', 60), // 60초 이내 중복 방지
+        'window'  => env('YTPLAYER_DUPLICATE_WINDOW', 60), // 60초 이내 중복 방지
     ],
 ];
