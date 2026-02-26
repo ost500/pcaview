@@ -125,17 +125,6 @@ class YTPlayerService
                 $application?->id
             );
 
-            // 리워드 로그 생성
-            $rewardLog = RewardLog::create([
-                'encrypted'        => $data['encrypted'],
-                'reward_type'      => $data['reward_type'],
-                'where'            => $data['where'] ?? null,
-                'video_url'        => $data['video_url'] ?? null,
-                'video_time'       => $data['video_time'] ?? null,
-                'video_stringtime' => $data['video_stringtime'] ?? null,
-                'points_earned'    => $pointsEarned,
-            ]);
-
             // 사용자 리워드 잔액 업데이트
             $userReward = UserReward::firstOrCreate(
                 ['encrypted' => $data['encrypted']],
@@ -152,8 +141,27 @@ class YTPlayerService
                 $userReward->update(['user_id' => $userId]);
             }
 
+            // 적립 전 잔액 저장
+            $beforeBalance = $userReward->balance;
+
             $userReward->increment('balance', $pointsEarned);
             $userReward->increment('total_earned', $pointsEarned);
+
+            // 적립 후 잔액
+            $afterBalance = $userReward->fresh()->balance;
+
+            // 리워드 로그 생성 (잔액 정보 포함)
+            $rewardLog = RewardLog::create([
+                'encrypted'        => $data['encrypted'],
+                'reward_type'      => $data['reward_type'],
+                'where'            => $data['where'] ?? null,
+                'video_url'        => $data['video_url'] ?? null,
+                'video_time'       => $data['video_time'] ?? null,
+                'video_stringtime' => $data['video_stringtime'] ?? null,
+                'points_earned'    => $pointsEarned,
+                'before_balance'   => $beforeBalance,
+                'after_balance'    => $afterBalance,
+            ]);
 
             // 중복 방지 캐시 저장
             if (config('ytplayer.duplicate_prevention.enabled')) {
