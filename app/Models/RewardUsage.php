@@ -11,11 +11,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * 리워드 사용(교환) 내역 모델
  *
- * @property int $id
- * @property int $user_reward_id UserReward ID
- * @property int $reward_id Reward ID
- * @property int $points_spent 사용한 포인트
- * @property string $status 상태 (pending, completed, cancelled)
+ * @property int                             $id
+ * @property int                             $user_reward_id UserReward ID
+ * @property int                             $reward_id      Reward ID
+ * @property float                           $points_spent   사용한 포인트
+ * @property string                          $status         상태 (pending, completed, cancelled)
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  */
@@ -32,8 +32,8 @@ class RewardUsage extends Model
 
     protected $casts = [
         'user_reward_id' => 'integer',
-        'reward_id' => 'integer',
-        'points_spent' => 'integer',
+        'reward_id'      => 'integer',
+        'points_spent'   => 'decimal:9',
     ];
 
     protected $attributes = [
