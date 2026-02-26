@@ -288,9 +288,9 @@ class YTPlayerController extends Controller
                             property: 'data',
                             properties: [
                                 new OA\Property(property: 'id', type: 'integer', example: 1),
-                                new OA\Property(property: 'points_earned', type: 'integer', example: 50),
-                                new OA\Property(property: 'balance', type: 'integer', example: 1550),
-                                new OA\Property(property: 'total_earned', type: 'integer', example: 2050),
+                                new OA\Property(property: 'points_earned', type: 'number', format: 'float', example: 10.5),
+                                new OA\Property(property: 'balance', type: 'number', format: 'float', example: 1550.5),
+                                new OA\Property(property: 'total_earned', type: 'number', format: 'float', example: 2050.5),
                                 new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
                             ],
                             type: 'object'
@@ -307,12 +307,24 @@ class YTPlayerController extends Controller
         $validated = $request->validate([
             'encrypted'        => 'required|string',
             'reward_type'      => 'required|string|in:watch,ad,share,mining',
-            'application'      => 'required|string|exists:applications,name',
+            'application'      => 'required|string',
             'where'            => 'nullable|string',
             'video_url'        => 'nullable|string',
             'video_time'       => 'nullable|integer|min:0',
             'video_stringtime' => 'nullable|string',
         ]);
+
+        // application을 대문자로 변환 (대소문자 구분 없이 처리)
+        $validated['application'] = strtoupper($validated['application']);
+
+        // application이 존재하는지 확인
+        $application = \App\Models\Application::where('name', $validated['application'])->first();
+        if (! $application) {
+            return response()->json([
+                'success' => false,
+                'error'   => 'Invalid application name',
+            ], 422);
+        }
 
         $rewardLog = $this->ytPlayerService->logReward($validated, auth()->id());
         $balance   = $this->ytPlayerService->getUserBalance($validated['encrypted'], auth()->id());
@@ -451,9 +463,9 @@ class YTPlayerController extends Controller
                         new OA\Property(
                             property: 'data',
                             properties: [
-                                new OA\Property(property: 'balance', type: 'integer', example: 1500),
-                                new OA\Property(property: 'total_earned', type: 'integer', example: 2000),
-                                new OA\Property(property: 'total_spent', type: 'integer', example: 500),
+                                new OA\Property(property: 'balance', type: 'number', format: 'float', example: 1500.5),
+                                new OA\Property(property: 'total_earned', type: 'number', format: 'float', example: 2000.5),
+                                new OA\Property(property: 'total_spent', type: 'number', format: 'float', example: 500.5),
                             ],
                             type: 'object'
                         ),
@@ -509,10 +521,10 @@ class YTPlayerController extends Controller
                                 new OA\Property(property: 'id', type: 'integer', example: 1),
                                 new OA\Property(property: 'reward_id', type: 'integer', example: 1),
                                 new OA\Property(property: 'reward_name', type: 'string', example: '프리미엄 구독권 1개월'),
-                                new OA\Property(property: 'points_spent', type: 'integer', example: 1000),
+                                new OA\Property(property: 'points_spent', type: 'number', format: 'float', example: 1000.5),
                                 new OA\Property(property: 'status', type: 'string', example: 'completed'),
-                                new OA\Property(property: 'balance', type: 'integer', example: 500),
-                                new OA\Property(property: 'total_spent', type: 'integer', example: 1000),
+                                new OA\Property(property: 'balance', type: 'number', format: 'float', example: 500.5),
+                                new OA\Property(property: 'total_spent', type: 'number', format: 'float', example: 1000.5),
                                 new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
                             ],
                             type: 'object'
@@ -602,7 +614,7 @@ class YTPlayerController extends Controller
                                 properties: [
                                     new OA\Property(property: 'id', type: 'integer', example: 1),
                                     new OA\Property(property: 'reward_name', type: 'string', example: '프리미엄 구독권 1개월'),
-                                    new OA\Property(property: 'points_spent', type: 'integer', example: 1000),
+                                    new OA\Property(property: 'points_spent', type: 'number', format: 'float', example: 1000.5),
                                     new OA\Property(property: 'status', type: 'string', example: 'completed'),
                                     new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
                                 ]

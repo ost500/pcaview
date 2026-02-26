@@ -206,7 +206,7 @@ class YTPlayerService
     /**
      * 리워드 포인트 계산
      */
-    private function calculateRewardPoints(string $rewardType, int $videoTime, ?int $applicationId = null): int
+    private function calculateRewardPoints(string $rewardType, int $videoTime, ?int $applicationId = null): float
     {
         // rewards 테이블에서 적립용 리워드 찾기
         $query = Reward::where('code', $rewardType)
@@ -223,18 +223,18 @@ class YTPlayerService
         if ($reward) {
             // watch의 경우 시청 시간에 비례
             if ($rewardType === 'watch' && $videoTime > 0) {
-                $pointsPerMinute = $reward->points_required;
+                $pointsPerMinute = (float) $reward->points_required;
 
-                return (int) ($videoTime / 60) * $pointsPerMinute;
+                return ($videoTime / 60) * $pointsPerMinute;
             }
 
             // 나머지는 고정 포인트
-            return (int) $reward->points_required;
+            return (float) $reward->points_required;
         }
 
         // 테이블에 없으면 기본값 (하위 호환성)
         return match ($rewardType) {
-            'watch'  => (int) ($videoTime / 60) * 10, // 1분당 10포인트
+            'watch'  => ($videoTime / 60) * 10, // 1분당 10포인트
             'ad'     => 50, // 광고 시청 시 50포인트
             'share'  => 100, // 공유 시 100포인트
             'mining' => 10, // 마이닝 시 10포인트
