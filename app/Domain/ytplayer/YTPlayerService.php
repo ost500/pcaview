@@ -153,6 +153,11 @@ class YTPlayerService
 
             // 현재 금 시세 ID 조회
             $currentGoldPrice = DomesticMetalPrice::getLatest();
+            $goldPrice        = $currentGoldPrice?->s_pure ?? 0;
+
+            // 포인트와 잔액의 원화 가치 계산 (포인트 = 원화)
+            $pointsValue       = $pointsEarned;
+            $afterBalanceValue = $afterBalance;
 
             // 리워드 로그 생성 (잔액 정보 및 금 시세 ID 포함)
             $rewardLog = RewardLog::create([
@@ -163,8 +168,10 @@ class YTPlayerService
                 'video_time'              => $data['video_time'] ?? null,
                 'video_stringtime'        => $data['video_stringtime'] ?? null,
                 'points_earned'           => $pointsEarned,
+                'points_value'            => $pointsValue,
                 'before_balance'          => $beforeBalance,
                 'after_balance'           => $afterBalance,
+                'after_balance_value'     => $afterBalanceValue,
                 'metal_domestic_price_id' => $currentGoldPrice?->id,
             ]);
 
