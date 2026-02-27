@@ -48,9 +48,9 @@ class RewardLog extends Model
     protected $casts = [
         'video_time'          => 'integer',
         'points_earned'       => 'decimal:9',
-        'points_value'        => 'decimal:9',
+        'points_value'        => 'decimal:15',
         'before_balance'      => 'decimal:9',
         'after_balance'       => 'decimal:9',
-        'after_balance_value' => 'decimal:9',
+        'after_balance_value' => 'decimal:15',
     ];
 }

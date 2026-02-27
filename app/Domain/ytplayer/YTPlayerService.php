@@ -153,11 +153,12 @@ class YTPlayerService
 
             // 현재 금 시세 ID 조회
             $currentGoldPrice = DomesticMetalPrice::getLatest();
-            $goldPrice        = $currentGoldPrice?->s_pure ?? 0;
+            // 한돈(3.75g) 시세를 1g 시세로 변환
+            $goldPricePerGram = $currentGoldPrice?->s_pure ? $currentGoldPrice->s_pure / 3.75 : 0;
 
             // 포인트와 잔액의 금 가치 계산 (금 시세 적용)
-            $pointsValue       = $goldPrice > 0 ? $pointsEarned * $goldPrice : 0;
-            $afterBalanceValue = $goldPrice > 0 ? $afterBalance * $goldPrice : 0;
+            $pointsValue       = $goldPricePerGram > 0 ? $pointsEarned * $goldPricePerGram : 0;
+            $afterBalanceValue = $goldPricePerGram > 0 ? $afterBalance * $goldPricePerGram : 0;
 
             // 리워드 로그 생성 (잔액 정보 및 금 시세 ID 포함)
             $rewardLog = RewardLog::create([
