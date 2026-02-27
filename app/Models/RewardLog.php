@@ -17,9 +17,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null                     $video_url        시청한 비디오 URL
  * @property int|null                        $video_time       비디오 시청 시간 (초)
  * @property string|null                     $video_stringtime 비디오 시청 시간 (문자열)
- * @property float|null                      $points_earned    적립된 포인트
- * @property float|null                      $before_balance   적립 전 잔액
- * @property float|null                      $after_balance    적립 후 잔액
+ * @property float|null                      $points_earned             적립된 포인트
+ * @property float|null                      $before_balance            적립 전 잔액
+ * @property float|null                      $after_balance             적립 후 잔액
+ * @property int|null                        $metal_domestic_price_id   적립 당시 금 시세 ID
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  */
@@ -37,6 +38,7 @@ class RewardLog extends Model
         'points_earned',
         'before_balance',
         'after_balance',
+        'metal_domestic_price_id',
     ];
 
     protected $casts = [

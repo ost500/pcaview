@@ -6,6 +6,7 @@ namespace App\Domain\ytplayer;
 
 use App\Models\Application;
 use App\Models\AppVersion;
+use App\Models\DomesticMetalPrice;
 use App\Models\InstallCount;
 use App\Models\LiveCount;
 use App\Models\Notice;
@@ -150,17 +151,21 @@ class YTPlayerService
             // 적립 후 잔액
             $afterBalance = $userReward->fresh()->balance;
 
-            // 리워드 로그 생성 (잔액 정보 포함)
+            // 현재 금 시세 ID 조회
+            $currentGoldPrice = DomesticMetalPrice::getLatest();
+
+            // 리워드 로그 생성 (잔액 정보 및 금 시세 ID 포함)
             $rewardLog = RewardLog::create([
-                'encrypted'        => $data['encrypted'],
-                'reward_type'      => $data['reward_type'],
-                'where'            => $data['where'] ?? null,
-                'video_url'        => $data['video_url'] ?? null,
-                'video_time'       => $data['video_time'] ?? null,
-                'video_stringtime' => $data['video_stringtime'] ?? null,
-                'points_earned'    => $pointsEarned,
-                'before_balance'   => $beforeBalance,
-                'after_balance'    => $afterBalance,
+                'encrypted'               => $data['encrypted'],
+                'reward_type'             => $data['reward_type'],
+                'where'                   => $data['where'] ?? null,
+                'video_url'               => $data['video_url'] ?? null,
+                'video_time'              => $data['video_time'] ?? null,
+                'video_stringtime'        => $data['video_stringtime'] ?? null,
+                'points_earned'           => $pointsEarned,
+                'before_balance'          => $beforeBalance,
+                'after_balance'           => $afterBalance,
+                'metal_domestic_price_id' => $currentGoldPrice?->id,
             ]);
 
             // 중복 방지 캐시 저장
