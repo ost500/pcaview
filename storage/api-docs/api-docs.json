@@ -16,6 +16,111 @@
         }
     ],
     "paths": {
+        "/api/ytplayer/reward_chart": {
+            "get": {
+                "tags": [
+                    "YTPlayer"
+                ],
+                "summary": "일별 리워드 잔액 및 가치 그래프 데이터",
+                "operationId": "90b5692092115e32ee0089f0f04250b0",
+                "parameters": [
+                    {
+                        "name": "encrypted",
+                        "in": "query",
+                        "description": "암호화된 사용자 식별자",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "user_hash_12345"
+                        }
+                    },
+                    {
+                        "name": "days",
+                        "in": "query",
+                        "description": "조회 기간 (일) - 기본 30일",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 365,
+                            "minimum": 1,
+                            "example": 30
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "chart": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "date": {
+                                                                "type": "string",
+                                                                "example": "2026-02-26"
+                                                            },
+                                                            "balance": {
+                                                                "description": "해당 일자 종료 시점 잔액",
+                                                                "type": "number",
+                                                                "format": "float",
+                                                                "example": 1500.5
+                                                            },
+                                                            "gold_price": {
+                                                                "description": "해당 일자 금 시세 (1g)",
+                                                                "type": "number",
+                                                                "format": "float",
+                                                                "example": 85000
+                                                            },
+                                                            "value": {
+                                                                "description": "잔액의 원화 가치 (balance)",
+                                                                "type": "number",
+                                                                "format": "float",
+                                                                "example": 1500.5
+                                                            },
+                                                            "gold_grams": {
+                                                                "description": "금 그램 환산",
+                                                                "type": "number",
+                                                                "format": "float",
+                                                                "example": 0.017653
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "start_date": {
+                                                    "type": "string",
+                                                    "example": "2026-01-27"
+                                                },
+                                                "end_date": {
+                                                    "type": "string",
+                                                    "example": "2026-02-26"
+                                                },
+                                                "current_balance": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 1500.5
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/ytplayer/notice": {
             "get": {
                 "tags": [

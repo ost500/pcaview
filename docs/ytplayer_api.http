@@ -157,3 +157,9 @@ GET {{baseUrl}}/api/ytplayer/reward_history?encrypted=user_hash_12345&limit=10
 Accept: application/json
 
 ###
+
+### 14. 일별 리워드 잔액 그래프 데이터
+GET {{baseUrl}}/api/ytplayer/reward_chart?encrypted=user_hash_12345&days=30
+Accept: application/json
+
+###

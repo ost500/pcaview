@@ -94,6 +94,7 @@ Route::prefix('ytplayer')->middleware('ytplayer.signature')->group(function () {
     Route::get('/version_check', [App\Http\Controllers\Api\YTPlayerController::class, 'versionCheck']);
     Route::get('/balance', [App\Http\Controllers\Api\YTPlayerController::class, 'balance']);
     Route::get('/reward_history', [App\Http\Controllers\Api\YTPlayerController::class, 'rewardHistory']);
+    Route::get('/reward_chart', [App\Http\Controllers\Api\RewardStatsController::class, 'rewardChart']);
 
     // POST endpoints (서명 검증 필수)
     Route::post('/reward', [App\Http\Controllers\Api\YTPlayerController::class, 'reward']);
