@@ -72,7 +72,7 @@ class User extends Authenticatable
      */
     public function userReward(): HasOne
     {
-        return $this->hasOne(UserReward::class);
+        return $this->hasOne(RewardBalance::class);
     }
 
     /**

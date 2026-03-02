@@ -12,9 +12,9 @@ use App\Models\InstallCount;
 use App\Models\LiveCount;
 use App\Models\Notice;
 use App\Models\Reward;
+use App\Models\RewardBalance;
 use App\Models\RewardLog;
 use App\Models\RewardUsage;
-use App\Models\UserReward;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -129,7 +129,7 @@ class YTPlayerService
             );
 
             // 사용자 리워드 잔액 업데이트
-            $userReward = UserReward::firstOrCreate(
+            $userReward = RewardBalance::firstOrCreate(
                 ['encrypted' => $data['encrypted']],
                 [
                     'user_id'      => $userId,
@@ -311,7 +311,7 @@ class YTPlayerService
      */
     public function getTotalPoints(string $encrypted): int
     {
-        $userReward = UserReward::where('encrypted', $encrypted)->first();
+        $userReward = RewardBalance::where('encrypted', $encrypted)->first();
 
         return $userReward?->total_earned ?? 0;
     }
@@ -327,7 +327,7 @@ class YTPlayerService
      */
     public function getUserBalance(string $encrypted, ?int $userId = null): array
     {
-        $userReward = UserReward::where('encrypted', $encrypted)->first();
+        $userReward = RewardBalance::where('encrypted', $encrypted)->first();
 
         if (! $userReward) {
             return [
@@ -358,7 +358,7 @@ class YTPlayerService
     {
         return DB::transaction(function () use ($encrypted, $rewardId, $userId) {
             // 사용자 리워드 조회
-            $userReward = UserReward::where('encrypted', $encrypted)->lockForUpdate()->first();
+            $userReward = RewardBalance::where('encrypted', $encrypted)->lockForUpdate()->first();
 
             if (! $userReward) {
                 throw new \Exception('User reward not found');
@@ -407,7 +407,7 @@ class YTPlayerService
      */
     public function getRewardUsageHistory(string $encrypted, int $limit = 20): Collection
     {
-        $userReward = UserReward::where('encrypted', $encrypted)->first();
+        $userReward = RewardBalance::where('encrypted', $encrypted)->first();
 
         if (! $userReward) {
             return collect();

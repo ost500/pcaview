@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * 리워드 사용(교환) 내역 모델
  *
  * @property int                             $id
- * @property int                             $user_reward_id UserReward ID
+ * @property int                             $user_reward_id RewardBalance ID
  * @property int                             $reward_id      Reward ID
  * @property float                           $points_spent   사용한 포인트
  * @property string                          $status         상태 (pending, completed, cancelled)
@@ -41,11 +41,11 @@ class RewardUsage extends Model
     ];
 
     /**
-     * 사용자 리워드
+     * 사용자 리워드 잔액
      */
-    public function userReward(): BelongsTo
+    public function rewardBalance(): BelongsTo
     {
-        return $this->belongsTo(UserReward::class);
+        return $this->belongsTo(RewardBalance::class, 'user_reward_id');
     }
 
     /**
