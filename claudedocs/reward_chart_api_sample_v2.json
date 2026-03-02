@@ -1,0 +1,83 @@
+{
+  "success": true,
+  "data": {
+    "chart": [
+      {
+        "date": "2026-02-25",
+        "open_balance": 0,
+        "close_balance": 150.5,
+        "gold_earned": 150.5,
+        "gold_price": 22666.67,
+        "open_value": 0,
+        "close_value": 150.5,
+        "open_balance_value": 0,
+        "close_balance_value": 3410325.835,
+        "gold_grams": 0.006639752
+      },
+      {
+        "date": "2026-02-26",
+        "open_balance": 150.5,
+        "close_balance": 320.8,
+        "gold_earned": 170.3,
+        "gold_price": 22800.0,
+        "open_value": 150.5,
+        "close_value": 320.8,
+        "open_balance_value": 3410325.835,
+        "close_balance_value": 7314240.0,
+        "gold_grams": 0.014070175
+      },
+      {
+        "date": "2026-02-27",
+        "open_balance": 320.8,
+        "close_balance": 500.0,
+        "gold_earned": 179.2,
+        "gold_price": 22850.0,
+        "open_value": 320.8,
+        "close_value": 500.0,
+        "open_balance_value": 7314240.0,
+        "close_balance_value": 11425000.0,
+        "gold_grams": 0.021881838
+      },
+      {
+        "date": "2026-02-28",
+        "open_balance": 500.0,
+        "close_balance": 720.5,
+        "gold_earned": 220.5,
+        "gold_price": 23000.0,
+        "open_value": 500.0,
+        "close_value": 720.5,
+        "open_balance_value": 11425000.0,
+        "close_balance_value": 16571500.0,
+        "gold_grams": 0.031326087
+      },
+      {
+        "date": "2026-03-01",
+        "open_balance": 720.5,
+        "close_balance": 1050.2,
+        "gold_earned": 329.7,
+        "gold_price": 23100.0,
+        "open_value": 720.5,
+        "close_value": 1050.2,
+        "open_balance_value": 16571500.0,
+        "close_balance_value": 24259620.0,
+        "gold_grams": 0.045464502
+      },
+      {
+        "date": "2026-03-02",
+        "open_balance": 1050.2,
+        "close_balance": 1050.2,
+        "gold_earned": 0,
+        "gold_price": 23200.0,
+        "open_value": 1050.2,
+        "close_value": 1050.2,
+        "open_balance_value": 24259620.0,
+        "close_balance_value": 24364640.0,
+        "gold_grams": 0.045267241
+      }
+    ],
+    "start_date": "2026-02-25",
+    "end_date": "2026-03-02",
+    "current_balance": 1050.2,
+    "current_gold_price": 23200.0
+  }
+}

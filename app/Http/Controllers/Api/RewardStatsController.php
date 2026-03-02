@@ -56,6 +56,8 @@ class RewardStatsController extends Controller
                                             new OA\Property(property: 'gold_price', type: 'number', format: 'float', example: 85000.0, description: '당일 금 시세 (1g 기준 KRW)'),
                                             new OA\Property(property: 'open_value', type: 'number', format: 'float', example: 1400.0, description: '시작 잔액 원화 가치'),
                                             new OA\Property(property: 'close_value', type: 'number', format: 'float', example: 1500.5, description: '종료 잔액 원화 가치'),
+                                            new OA\Property(property: 'open_balance_value', type: 'number', format: 'float', example: 31800000.0, description: '시작 잔액의 금 가치 (원화)'),
+                                            new OA\Property(property: 'close_balance_value', type: 'number', format: 'float', example: 34100000.0, description: '종료 잔액의 금 가치 (원화)'),
                                             new OA\Property(property: 'gold_grams', type: 'number', format: 'float', example: 0.017653, description: '종료 시점 금 그램 환산'),
                                         ]
                                     )
@@ -84,7 +86,7 @@ class RewardStatsController extends Controller
         $endDate   = now();
         $startDate = now()->subDays($days - 1)->startOfDay();
 
-        // 일별 시가(첫 before_balance), 종가(마지막 after_balance), 획득 금 합계 조회
+        // 일별 시가(첫 before_balance), 종가(마지막 after_balance), 획득 금 합계, 금 가치 조회
         $dailyStats = RewardLog::where('encrypted', $encrypted)
             ->where('created_at', '>=', $startDate)
             ->where('created_at', '<=', $endDate)
@@ -93,7 +95,9 @@ class RewardStatsController extends Controller
                 DB::raw('DATE(created_at) as date'),
                 DB::raw('(SELECT before_balance FROM reward_logs WHERE encrypted = "'.$encrypted.'" AND DATE(created_at) = DATE(reward_logs.created_at) ORDER BY created_at ASC LIMIT 1) as open_balance'),
                 DB::raw('MAX(after_balance) as close_balance'),
-                DB::raw('SUM(points_earned) as gold_earned')
+                DB::raw('SUM(points_earned) as gold_earned'),
+                DB::raw('(SELECT after_balance_value FROM reward_logs WHERE encrypted = "'.$encrypted.'" AND DATE(created_at) = DATE(reward_logs.created_at) ORDER BY created_at ASC LIMIT 1) as open_balance_value'),
+                DB::raw('MAX(after_balance_value) as close_balance_value')
             )
             ->groupBy('date')
             ->orderBy('date')
@@ -108,34 +112,40 @@ class RewardStatsController extends Controller
             ->keyBy(fn ($item) => $item->price_date->format('Y-m-d'));
 
         // 날짜별 데이터 생성
-        $chartData        = [];
-        $previousBalance  = 0;
-        $latestGoldPrice  = DomesticMetalPrice::getLatest();
-        $currentGoldPrice = $latestGoldPrice?->s_pure ? $latestGoldPrice->s_pure / 3.75 : 85000.0;
+        $chartData            = [];
+        $previousBalance      = 0;
+        $previousBalanceValue = 0;
+        $latestGoldPrice      = DomesticMetalPrice::getLatest();
+        $currentGoldPrice     = $latestGoldPrice?->s_pure ? $latestGoldPrice->s_pure / 3.75 : 85000.0;
 
         for ($i = 0; $i < $days; $i++) {
-            $date         = $startDate->copy()->addDays($i);
-            $dateStr      = $date->format('Y-m-d');
-            $stats        = $dailyStats[$dateStr] ?? null;
-            $openBalance  = $stats?->open_balance ?? $previousBalance;
-            $closeBalance = $stats?->close_balance ?? $previousBalance;
-            $goldEarned   = $stats?->gold_earned ?? 0;
-            $goldPrice    = $goldPrices[$dateStr]?->gold_price ?? $currentGoldPrice;
+            $date              = $startDate->copy()->addDays($i);
+            $dateStr           = $date->format('Y-m-d');
+            $stats             = $dailyStats[$dateStr] ?? null;
+            $openBalance       = $stats?->open_balance ?? $previousBalance;
+            $closeBalance      = $stats?->close_balance ?? $previousBalance;
+            $goldEarned        = $stats?->gold_earned ?? 0;
+            $goldPrice         = $goldPrices[$dateStr]?->gold_price ?? $currentGoldPrice;
+            $openBalanceValue  = $stats?->open_balance_value ?? $previousBalanceValue;
+            $closeBalanceValue = $stats?->close_balance_value ?? $previousBalanceValue;
 
             // 잔액이 업데이트되면 이후 날짜의 기본값으로 사용
             if ($stats) {
-                $previousBalance = $closeBalance;
+                $previousBalance      = $closeBalance;
+                $previousBalanceValue = $closeBalanceValue;
             }
 
             $chartData[] = [
-                'date'          => $dateStr,
-                'open_balance'  => (float) $openBalance,
-                'close_balance' => (float) $closeBalance,
-                'gold_earned'   => (float) $goldEarned,
-                'gold_price'    => (float) $goldPrice,
-                'open_value'    => (float) $openBalance,
-                'close_value'   => (float) $closeBalance,
-                'gold_grams'    => $goldPrice > 0 ? round($closeBalance / $goldPrice, 9) : 0,
+                'date'                => $dateStr,
+                'open_balance'        => (float) $openBalance,
+                'close_balance'       => (float) $closeBalance,
+                'gold_earned'         => (float) $goldEarned,
+                'gold_price'          => (float) $goldPrice,
+                'open_value'          => (float) $openBalance,
+                'close_value'         => (float) $closeBalance,
+                'open_balance_value'  => (float) $openBalanceValue,
+                'close_balance_value' => (float) $closeBalanceValue,
+                'gold_grams'          => $goldPrice > 0 ? round($closeBalance / $goldPrice, 9) : 0,
             ];
         }
 
