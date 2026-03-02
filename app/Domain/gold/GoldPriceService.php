@@ -6,6 +6,8 @@ namespace App\Domain\gold;
 
 use App\Models\DomesticMetalPrice;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 /**
  * 금 시세 조회 서비스
@@ -28,6 +30,81 @@ class GoldPriceService
             // 데이터가 없는 경우 기본값 (1g 기준 약 85,000원)
             return 85000.0;
         });
+    }
+
+    /**
+     * API에서 최신 금 시세를 가져와 DB에 저장
+     */
+    public function fetchAndSaveLatestPrice(): ?DomesticMetalPrice
+    {
+        try {
+            // 최근 7일간의 금 시세 가져오기
+            $endDate   = now();
+            $startDate = now()->subDays(7);
+
+            $response = Http::withHeaders([
+                'Accept'       => 'application/json',
+                'Content-Type' => 'application/json',
+            ])->post('https://www.koreagoldx.co.kr/api/price/chart/list', [
+                'srchDt'        => '7D',
+                'type'          => 'Au',
+                'dataDateStart' => $startDate->format('Y.m.d'),
+                'dataDateEnd'   => $endDate->format('Y.m.d'),
+            ]);
+
+            if (! $response->successful()) {
+                Log::error('Failed to fetch gold price from API', [
+                    'status' => $response->status(),
+                    'body'   => $response->body(),
+                ]);
+
+                return null;
+            }
+
+            $data = $response->json();
+
+            if (! isset($data['list']) || empty($data['list'])) {
+                Log::warning('No gold price data received from API');
+
+                return null;
+            }
+
+            // 최신 데이터만 저장
+            $latestItem = $data['list'][0];
+
+            $metalPrice = DomesticMetalPrice::updateOrCreate(
+                ['price_date' => $latestItem['date']],
+                [
+                    'p_pure'     => $latestItem['p_pure'],
+                    's_pure'     => $latestItem['s_pure'],
+                    'p_18k'      => $latestItem['p_18k'],
+                    's_18k'      => $latestItem['s_18k'],
+                    'p_14k'      => $latestItem['p_14k'],
+                    's_14k'      => $latestItem['s_14k'],
+                    'p_platinum' => $latestItem['p_white'] ?? null,
+                    's_platinum' => $latestItem['s_white'] ?? null,
+                    'p_silver'   => $latestItem['p_silver'] ?? null,
+                    's_silver'   => $latestItem['s_silver'] ?? null,
+                ]
+            );
+
+            // 캐시 클리어
+            Cache::forget('gold_price_per_gram');
+
+            Log::info('Successfully fetched and saved latest gold price', [
+                'price_date' => $metalPrice->price_date,
+                's_pure'     => $metalPrice->s_pure,
+            ]);
+
+            return $metalPrice;
+        } catch (\Exception $e) {
+            Log::error('Error fetching gold price from API', [
+                'message' => $e->getMessage(),
+                'trace'   => $e->getTraceAsString(),
+            ]);
+
+            return null;
+        }
     }
 
     /**

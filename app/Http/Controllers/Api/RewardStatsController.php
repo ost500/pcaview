@@ -50,16 +50,20 @@ class RewardStatsController extends Controller
                                     items: new OA\Items(
                                         properties: [
                                             new OA\Property(property: 'date', type: 'string', example: '2026-02-26'),
-                                            new OA\Property(property: 'balance', type: 'number', format: 'float', example: 1500.5, description: '해당 일자 종료 시점 잔액'),
-                                            new OA\Property(property: 'gold_price', type: 'number', format: 'float', example: 85000.0, description: '해당 일자 금 시세 (1g)'),
-                                            new OA\Property(property: 'value', type: 'number', format: 'float', example: 1500.5, description: '잔액의 원화 가치 (balance)'),
-                                            new OA\Property(property: 'gold_grams', type: 'number', format: 'float', example: 0.017653, description: '금 그램 환산'),
+                                            new OA\Property(property: 'open_balance', type: 'number', format: 'float', example: 1400.0, description: '당일 시작 잔액 (시가)'),
+                                            new OA\Property(property: 'close_balance', type: 'number', format: 'float', example: 1500.5, description: '당일 종료 잔액 (종가)'),
+                                            new OA\Property(property: 'gold_earned', type: 'number', format: 'float', example: 100.5, description: '당일 획득 금 양'),
+                                            new OA\Property(property: 'gold_price', type: 'number', format: 'float', example: 85000.0, description: '당일 금 시세 (1g 기준 KRW)'),
+                                            new OA\Property(property: 'open_value', type: 'number', format: 'float', example: 1400.0, description: '시작 잔액 원화 가치'),
+                                            new OA\Property(property: 'close_value', type: 'number', format: 'float', example: 1500.5, description: '종료 잔액 원화 가치'),
+                                            new OA\Property(property: 'gold_grams', type: 'number', format: 'float', example: 0.017653, description: '종료 시점 금 그램 환산'),
                                         ]
                                     )
                                 ),
                                 new OA\Property(property: 'start_date', type: 'string', example: '2026-01-27'),
                                 new OA\Property(property: 'end_date', type: 'string', example: '2026-02-26'),
                                 new OA\Property(property: 'current_balance', type: 'number', format: 'float', example: 1500.5),
+                                new OA\Property(property: 'current_gold_price', type: 'number', format: 'float', example: 85000.0, description: '현재 금 시세'),
                             ],
                             type: 'object'
                         ),
@@ -80,49 +84,58 @@ class RewardStatsController extends Controller
         $endDate   = now();
         $startDate = now()->subDays($days - 1)->startOfDay();
 
-        // 일별 마지막 잔액 조회 (reward_logs의 after_balance 기준)
-        $dailyBalances = RewardLog::where('encrypted', $encrypted)
+        // 일별 시가(첫 before_balance), 종가(마지막 after_balance), 획득 금 합계 조회
+        $dailyStats = RewardLog::where('encrypted', $encrypted)
             ->where('created_at', '>=', $startDate)
             ->where('created_at', '<=', $endDate)
             ->whereNotNull('after_balance')
             ->select(
                 DB::raw('DATE(created_at) as date'),
-                DB::raw('MAX(after_balance) as balance')
+                DB::raw('(SELECT before_balance FROM reward_logs WHERE encrypted = "'.$encrypted.'" AND DATE(created_at) = DATE(reward_logs.created_at) ORDER BY created_at ASC LIMIT 1) as open_balance'),
+                DB::raw('MAX(after_balance) as close_balance'),
+                DB::raw('SUM(points_earned) as gold_earned')
             )
             ->groupBy('date')
             ->orderBy('date')
             ->get()
             ->keyBy('date');
 
-        // 일별 금 시세 조회
+        // 일별 금 시세 조회 (한돈 3.75g -> 1g 변환)
         $goldPrices = DomesticMetalPrice::where('price_date', '>=', $startDate)
             ->where('price_date', '<=', $endDate)
-            ->select('price_date', 's_pure as gold_price')
+            ->select('price_date', DB::raw('s_pure / 3.75 as gold_price'))
             ->get()
             ->keyBy(fn ($item) => $item->price_date->format('Y-m-d'));
 
         // 날짜별 데이터 생성
-        $chartData       = [];
-        $previousBalance = 0;
-        $latestGoldPrice = DomesticMetalPrice::getLatest()?->s_pure ?? 85000.0;
+        $chartData        = [];
+        $previousBalance  = 0;
+        $latestGoldPrice  = DomesticMetalPrice::getLatest();
+        $currentGoldPrice = $latestGoldPrice?->s_pure ? $latestGoldPrice->s_pure / 3.75 : 85000.0;
 
         for ($i = 0; $i < $days; $i++) {
-            $date      = $startDate->copy()->addDays($i);
-            $dateStr   = $date->format('Y-m-d');
-            $balance   = $dailyBalances[$dateStr]->balance ?? $previousBalance;
-            $goldPrice = $goldPrices[$dateStr]->gold_price ?? $latestGoldPrice;
+            $date         = $startDate->copy()->addDays($i);
+            $dateStr      = $date->format('Y-m-d');
+            $stats        = $dailyStats[$dateStr] ?? null;
+            $openBalance  = $stats?->open_balance ?? $previousBalance;
+            $closeBalance = $stats?->close_balance ?? $previousBalance;
+            $goldEarned   = $stats?->gold_earned ?? 0;
+            $goldPrice    = $goldPrices[$dateStr]?->gold_price ?? $currentGoldPrice;
 
             // 잔액이 업데이트되면 이후 날짜의 기본값으로 사용
-            if (isset($dailyBalances[$dateStr])) {
-                $previousBalance = $balance;
+            if ($stats) {
+                $previousBalance = $closeBalance;
             }
 
             $chartData[] = [
-                'date'       => $dateStr,
-                'balance'    => (float) $balance,
-                'gold_price' => (float) $goldPrice,
-                'value'      => (float) $balance, // 포인트 = 원화
-                'gold_grams' => $goldPrice > 0 ? round($balance / $goldPrice, 9) : 0,
+                'date'          => $dateStr,
+                'open_balance'  => (float) $openBalance,
+                'close_balance' => (float) $closeBalance,
+                'gold_earned'   => (float) $goldEarned,
+                'gold_price'    => (float) $goldPrice,
+                'open_value'    => (float) $openBalance,
+                'close_value'   => (float) $closeBalance,
+                'gold_grams'    => $goldPrice > 0 ? round($closeBalance / $goldPrice, 9) : 0,
             ];
         }
 
@@ -135,10 +148,11 @@ class RewardStatsController extends Controller
         return response()->json([
             'success' => true,
             'data'    => [
-                'chart'           => $chartData,
-                'start_date'      => $startDate->format('Y-m-d'),
-                'end_date'        => $endDate->format('Y-m-d'),
-                'current_balance' => (float) $currentBalance,
+                'chart'              => $chartData,
+                'start_date'         => $startDate->format('Y-m-d'),
+                'end_date'           => $endDate->format('Y-m-d'),
+                'current_balance'    => (float) $currentBalance,
+                'current_gold_price' => (float) $currentGoldPrice,
             ],
         ]);
     }

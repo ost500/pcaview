@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\ytplayer;
 
+use App\Domain\gold\GoldPriceService;
 use App\Models\Application;
 use App\Models\AppVersion;
 use App\Models\DomesticMetalPrice;
@@ -16,6 +17,7 @@ use App\Models\RewardUsage;
 use App\Models\UserReward;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * YTPlayer 앱 관련 비즈니스 로직 서비스
@@ -153,6 +155,18 @@ class YTPlayerService
 
             // 현재 금 시세 ID 조회
             $currentGoldPrice = DomesticMetalPrice::getLatest();
+
+            // 금 시세가 없으면 API에서 가져오기
+            if (! $currentGoldPrice) {
+                Log::info('No gold price found in DB, fetching from API...');
+                $goldPriceService = app(GoldPriceService::class);
+                $currentGoldPrice = $goldPriceService->fetchAndSaveLatestPrice();
+
+                if (! $currentGoldPrice) {
+                    Log::warning('Failed to fetch gold price from API, using default value');
+                }
+            }
+
             // 한돈(3.75g) 시세를 1g 시세로 변환
             $goldPricePerGram = $currentGoldPrice?->s_pure ? $currentGoldPrice->s_pure / 3.75 : 0;
 
