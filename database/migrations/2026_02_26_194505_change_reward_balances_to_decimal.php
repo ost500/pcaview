@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('user_rewards', function (Blueprint $table) {
+        Schema::table('reward_balances', function (Blueprint $table) {
             $table->decimal('balance', 18, 9)->default(0)->change();
             $table->decimal('total_earned', 18, 9)->default(0)->change();
             $table->decimal('total_spent', 18, 9)->default(0)->change();
@@ -31,7 +31,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('user_rewards', function (Blueprint $table) {
+        Schema::table('reward_balances', function (Blueprint $table) {
             $table->integer('balance')->default(0)->change();
             $table->integer('total_earned')->default(0)->change();
             $table->integer('total_spent')->default(0)->change();

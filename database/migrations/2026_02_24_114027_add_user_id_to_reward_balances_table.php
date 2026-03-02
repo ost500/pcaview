@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('user_rewards', function (Blueprint $table) {
+        Schema::table('reward_balances', function (Blueprint $table) {
             $table->foreignId('user_id')->nullable()->after('id')->constrained()->nullOnDelete();
             $table->index('user_id');
         });
@@ -22,7 +22,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('user_rewards', function (Blueprint $table) {
+        Schema::table('reward_balances', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
             $table->dropIndex(['user_id']);
             $table->dropColumn('user_id');

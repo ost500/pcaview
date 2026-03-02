@@ -25,6 +25,8 @@ class UserReward extends Model
 {
     use HasFactory;
 
+    protected $table = 'reward_balances';
+
     protected $fillable = [
         'user_id',
         'encrypted',

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_rewards', function (Blueprint $table) {
+        Schema::create('reward_balances', function (Blueprint $table) {
             $table->id();
             $table->string('encrypted')->unique(); // 암호화된 사용자 식별자
             $table->integer('balance')->default(0); // 현재 포인트 잔액
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_rewards');
+        Schema::dropIfExists('reward_balances');
     }
 };

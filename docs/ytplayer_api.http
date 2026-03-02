@@ -1,5 +1,5 @@
 ### YTPlayer API 테스트
-@baseUrl = https://pcaview.abc
+@baseUrl = https://pcaview.com
 
 ###
 ### ⚠️ POST 요청 테스트 방법:
@@ -159,7 +159,7 @@ Accept: application/json
 ###
 
 ### 14. 일별 리워드 잔액 그래프 데이터
-GET {{baseUrl}}/api/ytplayer/reward_chart?encrypted=user_hash_12345&days=30
+GET {{baseUrl}}/api/ytplayer/reward_chart?encrypted=c76c3ece7d8096d3&days=30
 Accept: application/json
 
 ###
