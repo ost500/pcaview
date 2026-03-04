@@ -30,31 +30,57 @@ class RewardLogSeeder extends Seeder
         );
 
         // 30일간 데이터 생성
-        $startDate      = now()->subDays(30)->startOfDay();
-        $currentBalance = 0;
+        $startDate       = now()->subDays(30)->startOfDay();
+        $currentBalance  = 0;
+        $latestGoldPrice = null; // 가장 최근 금 시세 캐시
 
         for ($day = 0; $day < 30; $day++) {
             $date = $startDate->copy()->addDays($day);
 
-            // 해당 날짜의 금 시세 조회 (없으면 생성)
+            // 해당 날짜의 금 시세 조회 (없으면 가장 최근 금 시세 사용)
             $goldPrice = DomesticMetalPrice::whereDate('price_date', $date->format('Y-m-d'))->first();
 
             if (! $goldPrice) {
-                // 금 시세가 없으면 임의의 값으로 생성 (한돈 기준 85,000 ~ 90,000원)
-                $sPure     = rand(85000, 90000);
-                $goldPrice = DomesticMetalPrice::create([
-                    'price_date'  => $date,
-                    'p_pure'      => $sPure - 1000,
-                    's_pure'      => $sPure,
-                    'p_18k'       => intval($sPure * 0.75 - 500),
-                    's_18k'       => intval($sPure * 0.75),
-                    'p_14k'       => intval($sPure * 0.58 - 500),
-                    's_14k'       => intval($sPure * 0.58),
-                    'p_platinum'  => rand(40000, 45000),
-                    's_platinum'  => rand(45000, 50000),
-                    'p_silver'    => rand(1000, 1200),
-                    's_silver'    => rand(1200, 1400),
-                ]);
+                // 가장 최근 금 시세 조회 (캐시되지 않았으면)
+                if (! $latestGoldPrice) {
+                    $latestGoldPrice = DomesticMetalPrice::orderBy('price_date', 'desc')->first();
+                }
+
+                // 최근 금 시세를 해당 날짜로 복사
+                if ($latestGoldPrice) {
+                    $goldPrice = DomesticMetalPrice::create([
+                        'price_date'  => $date,
+                        'p_pure'      => $latestGoldPrice->p_pure,
+                        's_pure'      => $latestGoldPrice->s_pure,
+                        'p_18k'       => $latestGoldPrice->p_18k,
+                        's_18k'       => $latestGoldPrice->s_18k,
+                        'p_14k'       => $latestGoldPrice->p_14k,
+                        's_14k'       => $latestGoldPrice->s_14k,
+                        'p_platinum'  => $latestGoldPrice->p_platinum,
+                        's_platinum'  => $latestGoldPrice->s_platinum,
+                        'p_silver'    => $latestGoldPrice->p_silver,
+                        's_silver'    => $latestGoldPrice->s_silver,
+                    ]);
+                } else {
+                    // DB에 금 시세가 하나도 없는 경우 기본값으로 생성
+                    $goldPrice = DomesticMetalPrice::create([
+                        'price_date'  => $date,
+                        'p_pure'      => 84000,
+                        's_pure'      => 85000,
+                        'p_18k'       => 63000,
+                        's_18k'       => 63750,
+                        'p_14k'       => 48000,
+                        's_14k'       => 49300,
+                        'p_platinum'  => 42000,
+                        's_platinum'  => 47000,
+                        'p_silver'    => 1100,
+                        's_silver'    => 1300,
+                    ]);
+                    $latestGoldPrice = $goldPrice;
+                }
+            } else {
+                // 해당 날짜의 금 시세를 최근 금 시세로 업데이트
+                $latestGoldPrice = $goldPrice;
             }
 
             $goldPricePerGram = $goldPrice->s_pure / 3.75;
