@@ -36,24 +36,38 @@ class RewardLogSeeder extends Seeder
         for ($day = 0; $day < 30; $day++) {
             $date = $startDate->copy()->addDays($day);
 
-            // 해당 날짜의 금 시세 조회 (없으면 기본값 사용)
-            $goldPrice        = DomesticMetalPrice::whereDate('price_date', $date->format('Y-m-d'))->first();
-            $goldPricePerGram = $goldPrice?->s_pure ? $goldPrice->s_pure / 3.75 : 85000.0;
+            // 해당 날짜의 금 시세 조회 (없으면 생성)
+            $goldPrice = DomesticMetalPrice::whereDate('price_date', $date->format('Y-m-d'))->first();
+
+            if (! $goldPrice) {
+                // 금 시세가 없으면 임의의 값으로 생성 (한돈 기준 85,000 ~ 90,000원)
+                $sPure     = rand(85000, 90000);
+                $goldPrice = DomesticMetalPrice::create([
+                    'price_date'  => $date,
+                    'p_pure'      => $sPure - 1000,
+                    's_pure'      => $sPure,
+                    'p_18k'       => intval($sPure * 0.75 - 500),
+                    's_18k'       => intval($sPure * 0.75),
+                    'p_14k'       => intval($sPure * 0.58 - 500),
+                    's_14k'       => intval($sPure * 0.58),
+                    'p_platinum'  => rand(40000, 45000),
+                    's_platinum'  => rand(45000, 50000),
+                    'p_silver'    => rand(1000, 1200),
+                    's_silver'    => rand(1200, 1400),
+                ]);
+            }
+
+            $goldPricePerGram = $goldPrice->s_pure / 3.75;
 
             // 하루에 3-7번 리워드 적립 (랜덤)
             $rewardCount = rand(3, 7);
 
             for ($i = 0; $i < $rewardCount; $i++) {
-                // 리워드 타입별 포인트 (랜덤)
-                $rewardTypes = [
-                    ['type' => 'watch', 'where' => 'mobile_app', 'points' => rand(50, 200) / 10],  // 5-20 포인트
-                    ['type' => 'ad', 'where' => 'mobile_app', 'points' => rand(30, 100) / 10],      // 3-10 포인트
-                    ['type' => 'mining', 'where' => 'mining', 'points' => rand(10, 50) / 10],       // 1-5 포인트
-                    ['type' => 'mining', 'where' => 'mining_screen', 'points' => rand(10, 50) / 10], // 1-5 포인트
-                ];
+                // mining과 mining_screen만 사용
+                $whereValues = ['mining', 'mining_screen'];
+                $whereValue  = $whereValues[array_rand($whereValues)];
 
-                $reward        = $rewardTypes[array_rand($rewardTypes)];
-                $pointsEarned  = $reward['points'];
+                $pointsEarned  = rand(10, 50) / 10; // 1-5 포인트
                 $beforeBalance = $currentBalance;
                 $currentBalance += $pointsEarned;
 
@@ -66,10 +80,10 @@ class RewardLogSeeder extends Seeder
 
                 RewardLog::create([
                     'encrypted'               => $encrypted,
-                    'reward_type'             => $reward['type'],
-                    'where'                   => $reward['where'],
-                    'video_url'               => $reward['type'] === 'watch' ? 'https://youtube.com/watch?v='.bin2hex(random_bytes(5)) : null,
-                    'video_time'              => $reward['type'] === 'watch' ? rand(60, 600) : null,
+                    'reward_type'             => 'mining',
+                    'where'                   => $whereValue,
+                    'video_url'               => null,
+                    'video_time'              => null,
                     'points_earned'           => $pointsEarned,
                     'points_value'            => $pointsValue,
                     'before_balance'          => $beforeBalance,
