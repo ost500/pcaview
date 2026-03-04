@@ -46,9 +46,10 @@ class RewardLogSeeder extends Seeder
             for ($i = 0; $i < $rewardCount; $i++) {
                 // 리워드 타입별 포인트 (랜덤)
                 $rewardTypes = [
-                    ['type' => 'watch', 'points' => rand(50, 200) / 10],  // 5-20 포인트
-                    ['type' => 'ad', 'points' => rand(30, 100) / 10],      // 3-10 포인트
-                    ['type' => 'mining', 'points' => rand(10, 50) / 10],   // 1-5 포인트
+                    ['type' => 'watch', 'where' => 'mobile_app', 'points' => rand(50, 200) / 10],  // 5-20 포인트
+                    ['type' => 'ad', 'where' => 'mobile_app', 'points' => rand(30, 100) / 10],      // 3-10 포인트
+                    ['type' => 'mining', 'where' => 'mining', 'points' => rand(10, 50) / 10],       // 1-5 포인트
+                    ['type' => 'mining', 'where' => 'mining_screen', 'points' => rand(10, 50) / 10], // 1-5 포인트
                 ];
 
                 $reward        = $rewardTypes[array_rand($rewardTypes)];
@@ -66,7 +67,7 @@ class RewardLogSeeder extends Seeder
                 RewardLog::create([
                     'encrypted'               => $encrypted,
                     'reward_type'             => $reward['type'],
-                    'where'                   => 'mobile_app',
+                    'where'                   => $reward['where'],
                     'video_url'               => $reward['type'] === 'watch' ? 'https://youtube.com/watch?v='.bin2hex(random_bytes(5)) : null,
                     'video_time'              => $reward['type'] === 'watch' ? rand(60, 600) : null,
                     'points_earned'           => $pointsEarned,
