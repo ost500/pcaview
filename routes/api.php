@@ -4,7 +4,9 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\ContentsController;
 use App\Http\Controllers\Api\FeedController;
+use App\Http\Controllers\Api\NoticeController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\RewardProductController;
 use App\Http\Controllers\Auth\KakaoController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +24,14 @@ Route::get('/auth/user', [AuthController::class, 'user'])->middleware('auth:sanc
 Route::post('/auth/kakao/callback', [KakaoController::class, 'apiCallback']);
 
 Route::get('/feed', [FeedController::class, 'index']);
+
+// Notice routes
+Route::get('/notices', [NoticeController::class, 'index']);
+Route::get('/notices/all', [NoticeController::class, 'all'])->middleware('auth:sanctum');
+Route::get('/notices/{notice}', [NoticeController::class, 'show']);
+Route::post('/notices', [NoticeController::class, 'store'])->middleware('auth:sanctum');
+Route::put('/notices/{notice}', [NoticeController::class, 'update'])->middleware('auth:sanctum');
+Route::delete('/notices/{notice}', [NoticeController::class, 'destroy'])->middleware('auth:sanctum');
 
 Route::get('/c/{church}', [ContentsController::class, 'getByChurch']);
 Route::get('/c/{church}/departments', [ContentsController::class, 'getDepartments']);
@@ -101,4 +111,15 @@ Route::prefix('ytplayer')->middleware('ytplayer.signature')->group(function () {
     Route::post('/use_reward', [App\Http\Controllers\Api\YTPlayerController::class, 'useReward']);
     Route::post('/install_count', [App\Http\Controllers\Api\YTPlayerController::class, 'installCount']);
     Route::post('/live_count', [App\Http\Controllers\Api\YTPlayerController::class, 'liveCount']);
+});
+
+// Reward Product API routes
+Route::prefix('reward-products')->middleware('ytplayer.signature')->group(function () {
+    Route::get('/', [RewardProductController::class, 'index']);
+    Route::get('/categories', [RewardProductController::class, 'categories']);
+    Route::get('/all', [RewardProductController::class, 'all'])->middleware('auth:sanctum');
+    Route::get('/{rewardProduct}', [RewardProductController::class, 'show']);
+    Route::post('/', [RewardProductController::class, 'store'])->middleware('auth:sanctum');
+    Route::put('/{rewardProduct}', [RewardProductController::class, 'update'])->middleware('auth:sanctum');
+    Route::delete('/{rewardProduct}', [RewardProductController::class, 'destroy'])->middleware('auth:sanctum');
 });

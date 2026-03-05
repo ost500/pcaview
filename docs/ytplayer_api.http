@@ -159,7 +159,7 @@ Accept: application/json
 ###
 
 ### 14. 일별 리워드 잔액 그래프 데이터
-GET {{baseUrl}}/api/ytplayer/reward_chart?encrypted=c76c3ece7d8096d3&days=30
+GET {{baseUrl}}/api/ytplayer/reward_chart?encrypted=test_user_4bd929caef613f23&days=30
 Accept: application/json
 
 ###

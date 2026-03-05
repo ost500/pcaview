@@ -3,23 +3,44 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Church;
 use App\Models\Contents;
 use App\Models\Department;
+use App\Models\Notice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Church; // Added for Church model
 
 class FeedController extends Controller
 {
     public function index(Request $request)
     {
+        // 활성화된 공지사항 조회
+        $now = now();
+        $notices = Notice::query()
+            ->where('is_active', true)
+            ->where(function ($q) use ($now) {
+                $q->whereNull('start_at')
+                    ->orWhere('start_at', '<=', $now);
+            })
+            ->where(function ($q) use ($now) {
+                $q->whereNull('end_at')
+                    ->orWhere('end_at', '>=', $now);
+            })
+            ->orderBy('priority', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         $contents = Contents::with(['user', 'church', 'departments', 'images'])
             ->orderBy('published_at', 'desc')
             ->paginate(15);
 
-        return response()->json($contents);
+        // 공지사항과 컨텐츠를 함께 반환
+        $response = $contents->toArray();
+        $response['notices'] = $notices;
+
+        return response()->json($response);
     }
 
     /**

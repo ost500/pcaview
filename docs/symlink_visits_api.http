@@ -1,6 +1,6 @@
 ### Symlink Visits API 테스트
 @baseUrl = https://pcaview.com
-@apiToken = your-api-token-here
+@apiToken = juwgHs6dhLrKS+okiKDbVqB+sZXtAGOkjrvs6dr4MqA=
 
 ###
 ### ⚠️ API 토큰 인증 필요:
