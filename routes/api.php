@@ -11,7 +11,7 @@ use App\Http\Controllers\Auth\KakaoController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/symlink', function () {
-    return redirect('https://link.coupang.com/a/dmWLqr');
+    return redirect('https://link.coupang.com/a/dYRxKS');
 });
 
 // Auth routes
