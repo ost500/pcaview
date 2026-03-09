@@ -14,6 +14,7 @@ use App\Models\Notice;
 use App\Models\Reward;
 use App\Models\RewardBalance;
 use App\Models\RewardLog;
+use App\Models\RewardProduct;
 use App\Models\RewardUsage;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
@@ -354,9 +355,9 @@ class YTPlayerService
      *
      * @throws \Exception
      */
-    public function useReward(string $encrypted, int $rewardId, ?int $userId = null): RewardUsage
+    public function useReward(string $encrypted, int $rewardId, ?int $userId = null, ?int $rewardProductId = null): RewardUsage
     {
-        return DB::transaction(function () use ($encrypted, $rewardId, $userId) {
+        return DB::transaction(function () use ($encrypted, $rewardId, $userId, $rewardProductId) {
             // 사용자 리워드 조회
             $userReward = RewardBalance::where('encrypted', $encrypted)->lockForUpdate()->first();
 
@@ -369,33 +370,62 @@ class YTPlayerService
                 $userReward->update(['user_id' => $userId]);
             }
 
-            // 리워드 조회
-            $reward = Reward::findOrFail($rewardId);
+            $pointsRequired = 0;
 
-            if (! $reward->is_active) {
-                throw new \Exception('Reward is not available');
-            }
+            // RewardProduct 구매
+            if ($rewardProductId) {
+                $product = RewardProduct::findOrFail($rewardProductId);
 
-            // 만료 체크
-            if ($reward->expires_at && $reward->expires_at < now()) {
-                throw new \Exception('Reward has expired');
-            }
+                if (! $product->is_active) {
+                    throw new \Exception('Product is not available');
+                }
 
-            // 포인트 부족 체크
-            if ($userReward->balance < $reward->points_required) {
-                throw new \Exception('Insufficient points');
+                // 재고 체크
+                if ($product->stock <= 0) {
+                    throw new \Exception('Product is out of stock');
+                }
+
+                $pointsRequired = $product->price;
+
+                // 포인트 부족 체크
+                if ($userReward->balance < $pointsRequired) {
+                    throw new \Exception('Insufficient points');
+                }
+
+                // 재고 차감
+                $product->decrement('stock');
+            } else {
+                // 기존 Reward 구매
+                $reward = Reward::findOrFail($rewardId);
+
+                if (! $reward->is_active) {
+                    throw new \Exception('Reward is not available');
+                }
+
+                // 만료 체크
+                if ($reward->expires_at && $reward->expires_at < now()) {
+                    throw new \Exception('Reward has expired');
+                }
+
+                $pointsRequired = $reward->points_required;
+
+                // 포인트 부족 체크
+                if ($userReward->balance < $pointsRequired) {
+                    throw new \Exception('Insufficient points');
+                }
             }
 
             // 포인트 차감
-            $userReward->decrement('balance', $reward->points_required);
-            $userReward->increment('total_spent', $reward->points_required);
+            $userReward->decrement('balance', $pointsRequired);
+            $userReward->increment('total_spent', $pointsRequired);
 
             // 사용 내역 생성
             return RewardUsage::create([
-                'user_reward_id' => $userReward->id,
-                'reward_id'      => $rewardId,
-                'points_spent'   => $reward->points_required,
-                'status'         => 'completed',
+                'user_reward_id'    => $userReward->id,
+                'reward_id'         => $rewardProductId ? null : $rewardId,
+                'reward_product_id' => $rewardProductId,
+                'points_spent'      => $pointsRequired,
+                'status'            => 'completed',
             ]);
         });
     }

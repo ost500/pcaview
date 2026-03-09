@@ -547,31 +547,51 @@ class YTPlayerController extends Controller
     public function useReward(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'encrypted' => 'required|string',
-            'reward_id' => 'required|integer|exists:rewards,id',
+            'encrypted'         => 'required|string',
+            'reward_id'         => 'nullable|integer|exists:rewards,id',
+            'reward_product_id' => 'nullable|integer|exists:reward_products,id',
         ]);
+
+        // reward_id 또는 reward_product_id 중 하나는 필수
+        if (! isset($validated['reward_id']) && ! isset($validated['reward_product_id'])) {
+            return response()->json([
+                'success' => false,
+                'error'   => 'Either reward_id or reward_product_id is required',
+            ], 400);
+        }
 
         try {
             $usage = $this->ytPlayerService->useReward(
                 $validated['encrypted'],
-                $validated['reward_id'],
-                auth()->id()
+                $validated['reward_id'] ?? 0,
+                auth()->id(),
+                $validated['reward_product_id'] ?? null
             );
 
             $balance = $this->ytPlayerService->getUserBalance($validated['encrypted'], auth()->id());
 
+            // 응답 데이터 구성
+            $responseData = [
+                'id'           => $usage->id,
+                'points_spent' => $usage->points_spent,
+                'status'       => $usage->status,
+                'balance'      => $balance['balance'],
+                'total_spent'  => $balance['total_spent'],
+                'created_at'   => $usage->created_at->toIso8601String(),
+            ];
+
+            // Reward 또는 RewardProduct 정보 추가
+            if ($usage->reward_id) {
+                $responseData['reward_id'] = $usage->reward_id;
+                $responseData['reward_name'] = $usage->reward->name;
+            } else {
+                $responseData['reward_product_id'] = $usage->reward_product_id;
+                $responseData['product_name'] = $usage->rewardProduct->name;
+            }
+
             return response()->json([
                 'success' => true,
-                'data'    => [
-                    'id'           => $usage->id,
-                    'reward_id'    => $usage->reward_id,
-                    'reward_name'  => $usage->reward->name,
-                    'points_spent' => $usage->points_spent,
-                    'status'       => $usage->status,
-                    'balance'      => $balance['balance'],
-                    'total_spent'  => $balance['total_spent'],
-                    'created_at'   => $usage->created_at->toIso8601String(),
-                ],
+                'data'    => $responseData,
             ], 201);
         } catch (\Exception $e) {
             return response()->json([

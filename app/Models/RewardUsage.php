@@ -26,14 +26,16 @@ class RewardUsage extends Model
     protected $fillable = [
         'user_reward_id',
         'reward_id',
+        'reward_product_id',
         'points_spent',
         'status',
     ];
 
     protected $casts = [
-        'user_reward_id' => 'integer',
-        'reward_id'      => 'integer',
-        'points_spent'   => 'decimal:9',
+        'user_reward_id'    => 'integer',
+        'reward_id'         => 'integer',
+        'reward_product_id' => 'integer',
+        'points_spent'      => 'decimal:9',
     ];
 
     protected $attributes = [
@@ -54,5 +56,13 @@ class RewardUsage extends Model
     public function reward(): BelongsTo
     {
         return $this->belongsTo(Reward::class);
+    }
+
+    /**
+     * 교환한 리워드 상품
+     */
+    public function rewardProduct(): BelongsTo
+    {
+        return $this->belongsTo(RewardProduct::class);
     }
 }
