@@ -618,75 +618,7 @@ class YTPlayerController extends Controller
     }
 
     #[OA\Get(
-        path: '/api/ytplayer/reward_history',
-        summary: '리워드 사용 내역 조회',
-        tags: ['YTPlayer'],
-        parameters: [
-            new OA\Parameter(
-                name: 'encrypted',
-                in: 'query',
-                required: true,
-                description: '암호화된 사용자 식별자',
-                schema: new OA\Schema(type: 'string', example: 'user_hash_12345')
-            ),
-            new OA\Parameter(
-                name: 'limit',
-                in: 'query',
-                description: '조회할 개수 (기본: 20, 최대: 100)',
-                schema: new OA\Schema(type: 'integer', example: 10, minimum: 1, maximum: 100)
-            ),
-        ],
-        responses: [
-            new OA\Response(
-                response: 200,
-                description: 'Success',
-                content: new OA\JsonContent(
-                    properties: [
-                        new OA\Property(property: 'success', type: 'boolean', example: true),
-                        new OA\Property(
-                            property: 'data',
-                            type: 'array',
-                            items: new OA\Items(
-                                properties: [
-                                    new OA\Property(property: 'id', type: 'integer', example: 1),
-                                    new OA\Property(property: 'reward_name', type: 'string', example: '프리미엄 구독권 1개월'),
-                                    new OA\Property(property: 'points_spent', type: 'number', format: 'float', example: 1000.5),
-                                    new OA\Property(property: 'status', type: 'string', example: 'completed'),
-                                    new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
-                                ]
-                            )
-                        ),
-                    ]
-                )
-            ),
-        ]
-    )]
-    public function rewardHistory(Request $request): JsonResponse
-    {
-        $validated = $request->validate([
-            'encrypted' => 'required|string',
-            'limit'     => 'nullable|integer|min:1|max:100',
-        ]);
-
-        $history = $this->ytPlayerService->getRewardUsageHistory(
-            $validated['encrypted'],
-            $validated['limit'] ?? 20
-        );
-
-        return response()->json([
-            'success' => true,
-            'data'    => $history->map(fn ($usage) => [
-                'id'           => $usage->id,
-                'reward_name'  => $usage->reward->name,
-                'points_spent' => $usage->points_spent,
-                'status'       => $usage->status,
-                'created_at'   => $usage->created_at->toIso8601String(),
-            ]),
-        ]);
-    }
-
-    #[OA\Get(
-        path: '/api/ytplayer/reward_usages',
+        path: '/api/ytplayer/reward/usages',
         summary: '리워드 사용 내역 조회 (Reward + RewardProduct)',
         tags: ['YTPlayer'],
         parameters: [

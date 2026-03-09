@@ -298,18 +298,18 @@ Content-Type: application/json
 ###
 
 ### 14. 사용 내역 조회 (Reward + RewardProduct 통합)
-GET {{baseUrl}}/api/ytplayer/reward_usages?encrypted={{encrypted}}
+GET {{baseUrl}}/api/ytplayer/reward/usages?encrypted={{encrypted}}
 Accept: application/json
 
 ### 15. 사용 내역 조회 (limit 지정)
-GET {{baseUrl}}/api/ytplayer/reward_usages?encrypted={{encrypted}}&limit=50
+GET {{baseUrl}}/api/ytplayer/reward/usages?encrypted={{encrypted}}&limit=50
 Accept: application/json
 
 ###
 ### 사용 내역 응답 예시
 ###
 
-### GET /api/ytplayer/reward_usages - 성공 응답
+### GET /api/ytplayer/reward/usages - 성공 응답
 # {
 #   "success": true,
 #   "data": [

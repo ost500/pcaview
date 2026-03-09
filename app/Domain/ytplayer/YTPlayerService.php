@@ -475,25 +475,6 @@ class YTPlayerService
         });
     }
 
-    /**
-     * 리워드 사용 내역 조회
-     *
-     * @return Collection<RewardUsage>
-     */
-    public function getRewardUsageHistory(string $encrypted, int $limit = 20): Collection
-    {
-        $userReward = RewardBalance::where('encrypted', $encrypted)->first();
-
-        if (! $userReward) {
-            return collect();
-        }
-
-        return RewardUsage::with('reward')
-            ->where('user_reward_id', $userReward->id)
-            ->orderBy('created_at', 'desc')
-            ->limit($limit)
-            ->get();
-    }
 
     /**
      * 일별 설치 통계
