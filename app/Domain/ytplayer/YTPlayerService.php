@@ -464,7 +464,7 @@ class YTPlayerService
 
             // 사용 내역 생성
             return RewardUsage::create([
-                'user_reward_id'    => $userReward->id,
+                'user_id'           => $userId,
                 'reward_id'         => $rewardProductId ? null : $rewardId,
                 'reward_product_id' => $rewardProductId,
                 'points_spent'      => $pointsRequired,

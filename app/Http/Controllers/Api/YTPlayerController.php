@@ -737,10 +737,18 @@ class YTPlayerController extends Controller
             'limit'     => 'nullable|integer|min:1|max:100',
         ]);
 
+        // encrypted로 user_id 조회
+        $rewardBalance = \App\Models\RewardBalance::where('encrypted', $validated['encrypted'])->first();
+
+        if (! $rewardBalance || ! $rewardBalance->user_id) {
+            return response()->json([
+                'success' => true,
+                'data'    => [],
+            ]);
+        }
+
         $usages = \App\Models\RewardUsage::with(['reward', 'rewardProduct'])
-            ->whereHas('rewardBalance', function ($query) use ($validated) {
-                $query->where('encrypted', $validated['encrypted']);
-            })
+            ->where('user_id', $rewardBalance->user_id)
             ->orderBy('created_at', 'desc')
             ->limit($validated['limit'] ?? 20)
             ->get();

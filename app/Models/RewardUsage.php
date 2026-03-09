@@ -12,8 +12,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * 리워드 사용(교환) 내역 모델
  *
  * @property int                             $id
- * @property int                             $user_reward_id RewardBalance ID
- * @property int                             $reward_id      Reward ID
+ * @property int|null                        $user_id        User ID
+ * @property int|null                        $reward_id      Reward ID
+ * @property int|null                        $reward_product_id RewardProduct ID
  * @property float                           $points_spent   사용한 포인트
  * @property string                          $status         상태 (pending, completed, cancelled)
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -24,7 +25,7 @@ class RewardUsage extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_reward_id',
+        'user_id',
         'reward_id',
         'reward_product_id',
         'points_spent',
@@ -32,7 +33,7 @@ class RewardUsage extends Model
     ];
 
     protected $casts = [
-        'user_reward_id'    => 'integer',
+        'user_id'           => 'integer',
         'reward_id'         => 'integer',
         'reward_product_id' => 'integer',
         'points_spent'      => 'decimal:9',
@@ -43,11 +44,11 @@ class RewardUsage extends Model
     ];
 
     /**
-     * 사용자 리워드 잔액
+     * 사용자
      */
-    public function rewardBalance(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(RewardBalance::class, 'user_reward_id');
+        return $this->belongsTo(User::class);
     }
 
     /**
