@@ -594,9 +594,23 @@ class YTPlayerController extends Controller
                 'data'    => $responseData,
             ], 201);
         } catch (\Exception $e) {
+            // 프로덕션 환경에서는 상세 에러 메시지 숨김
+            $errorMessage = app()->environment('production')
+                ? 'Failed to process reward exchange'
+                : $e->getMessage();
+
+            // SQL 에러는 로그에만 기록
+            if (str_contains($e->getMessage(), 'SQLSTATE')) {
+                \Log::error('Reward exchange SQL error', [
+                    'encrypted' => $validated['encrypted'] ?? null,
+                    'error'     => $e->getMessage(),
+                ]);
+                $errorMessage = 'Failed to process reward exchange';
+            }
+
             return response()->json([
                 'success' => false,
-                'error'   => $e->getMessage(),
+                'error'   => $errorMessage,
             ], 400);
         }
     }
