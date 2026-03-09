@@ -695,16 +695,136 @@ class YTPlayerController extends Controller
             'data'    => $usages->map(function ($usage) {
                 $isProduct = $usage->reward_product_id !== null;
 
-                return [
+                $data = [
                     'id'           => $usage->id,
                     'type'         => $isProduct ? 'product' : 'reward',
                     'item_id'      => $isProduct ? $usage->reward_product_id : $usage->reward_id,
                     'item_name'    => $isProduct ? $usage->rewardProduct->name : $usage->reward->name,
                     'points_spent' => $usage->points_spent,
                     'status'       => $usage->status,
+                    'phone'        => $usage->phone,
                     'created_at'   => $usage->created_at->toIso8601String(),
                 ];
+
+                // RewardProduct인 경우 추가 정보
+                if ($isProduct) {
+                    $data['image_url'] = $usage->rewardProduct->image_url;
+                    $data['gold_grams'] = $usage->rewardProduct->gold_grams;
+                    $data['category'] = $usage->rewardProduct->category;
+                } else {
+                    $data['image_url'] = $usage->reward->image_url;
+                    $data['gold_grams'] = null;
+                    $data['category'] = null;
+                }
+
+                return $data;
             }),
+        ]);
+    }
+
+    #[OA\Get(
+        path: '/api/ytplayer/reward/usages/{id}',
+        summary: '리워드 사용 내역 상세 조회',
+        security: [
+            ['BearerAuth' => []],
+        ],
+        tags: ['YTPlayer'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                in: 'path',
+                required: true,
+                description: 'RewardUsage ID',
+                schema: new OA\Schema(type: 'integer', example: 123)
+            ),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Success',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: true),
+                        new OA\Property(
+                            property: 'data',
+                            properties: [
+                                new OA\Property(property: 'id', type: 'integer', example: 123),
+                                new OA\Property(property: 'user_id', type: 'integer', example: 1),
+                                new OA\Property(property: 'phone', type: 'string', example: '01012345678'),
+                                new OA\Property(property: 'type', type: 'string', example: 'product'),
+                                new OA\Property(property: 'item_id', type: 'integer', example: 9),
+                                new OA\Property(property: 'item_name', type: 'string', example: '순금 1돈 (3.75g)'),
+                                new OA\Property(property: 'image_url', type: 'string', example: 'https://example.com/image.jpg'),
+                                new OA\Property(property: 'gold_grams', type: 'number', format: 'float', example: 3.75),
+                                new OA\Property(property: 'category', type: 'string', example: '실물금'),
+                                new OA\Property(property: 'points_spent', type: 'number', format: 'float', example: 3.75),
+                                new OA\Property(property: 'status', type: 'string', example: 'pending'),
+                                new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
+                                new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),
+                            ],
+                            type: 'object'
+                        ),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Not found',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
+                        new OA\Property(property: 'error', type: 'string', example: 'Reward usage not found'),
+                    ]
+                )
+            ),
+        ]
+    )]
+    public function rewardUsageDetail(Request $request, int $id): JsonResponse
+    {
+        $usage = \App\Models\RewardUsage::with(['reward', 'rewardProduct', 'user'])
+            ->where('id', $id)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if (! $usage) {
+            return response()->json([
+                'success' => false,
+                'error'   => 'Reward usage not found',
+            ], 404);
+        }
+
+        $isProduct = $usage->reward_product_id !== null;
+
+        $data = [
+            'id'           => $usage->id,
+            'user_id'      => $usage->user_id,
+            'phone'        => $usage->phone,
+            'type'         => $isProduct ? 'product' : 'reward',
+            'item_id'      => $isProduct ? $usage->reward_product_id : $usage->reward_id,
+            'item_name'    => $isProduct ? $usage->rewardProduct->name : $usage->reward->name,
+            'points_spent' => $usage->points_spent,
+            'status'       => $usage->status,
+            'created_at'   => $usage->created_at->toIso8601String(),
+            'updated_at'   => $usage->updated_at->toIso8601String(),
+        ];
+
+        // RewardProduct인 경우 추가 정보
+        if ($isProduct) {
+            $data['image_url'] = $usage->rewardProduct->image_url;
+            $data['gold_grams'] = $usage->rewardProduct->gold_grams;
+            $data['category'] = $usage->rewardProduct->category;
+            $data['description'] = $usage->rewardProduct->description;
+            $data['price'] = $usage->rewardProduct->price;
+        } else {
+            $data['image_url'] = $usage->reward->image_url;
+            $data['gold_grams'] = null;
+            $data['category'] = null;
+            $data['description'] = $usage->reward->description;
+        }
+
+        return response()->json([
+            'success' => true,
+            'data'    => $data,
         ]);
     }
 }
