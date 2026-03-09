@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\ytplayer;
 
 use App\Domain\gold\GoldPriceService;
+use App\Enums\RewardUsageStatus;
 use App\Models\Application;
 use App\Models\AppVersion;
 use App\Models\DomesticMetalPrice;
@@ -462,13 +463,13 @@ class YTPlayerService
                 'metal_domestic_price_id' => $currentGoldPrice?->id,
             ]);
 
-            // 사용 내역 생성
+            // 사용 내역 생성 (기본값 pending)
             return RewardUsage::create([
                 'user_id'           => $userId,
                 'reward_id'         => $rewardProductId ? null : $rewardId,
                 'reward_product_id' => $rewardProductId,
                 'points_spent'      => $pointsRequired,
-                'status'            => 'completed',
+                'status'            => RewardUsageStatus::PENDING,
             ]);
         });
     }

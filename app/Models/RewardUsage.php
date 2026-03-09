@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\RewardUsageStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -37,10 +38,11 @@ class RewardUsage extends Model
         'reward_id'         => 'integer',
         'reward_product_id' => 'integer',
         'points_spent'      => 'decimal:9',
+        'status'            => RewardUsageStatus::class,
     ];
 
     protected $attributes = [
-        'status' => 'pending',
+        'status' => RewardUsageStatus::PENDING->value,
     ];
 
     /**
