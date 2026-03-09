@@ -1,5 +1,36 @@
 ### YTPlayer API 테스트
 @baseUrl = https://pcaview.com
+@email = test@example.com
+@password = password
+@bearerToken =
+
+###
+### 🔐 로그인 & 토큰 발급
+###
+
+### 0. 로그인 (Sanctum 토큰 발급)
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+### 응답 예시:
+# {
+#   "success": true,
+#   "data": {
+#     "token": "1|abcdef123456...",
+#     "user": {
+#       "id": 1,
+#       "name": "Test User",
+#       "email": "test@example.com"
+#     }
+#   }
+# }
+#
+# 🔹 발급받은 token 값을 위의 @bearerToken 변수에 복사하세요
 
 ###
 ### ⚠️ POST 요청 테스트 방법:
@@ -135,14 +166,22 @@ Content-Type: application/json
 
 ###
 
-### 11. 사용자 포인트 잔액 조회
+### 11. 사용자 포인트 잔액 조회 (로그인 없이)
 GET {{baseUrl}}/api/ytplayer/balance?encrypted=user_hash_12345
 Accept: application/json
 
 ###
 
-### 12. 리워드 사용 (교환)
+### 11-1. 사용자 포인트 잔액 조회 (로그인 상태 - user_id 자동 연결)
+GET {{baseUrl}}/api/ytplayer/balance?encrypted=user_hash_12345
+Authorization: Bearer {{bearerToken}}
+Accept: application/json
+
+###
+
+### 12. 리워드 사용 (교환) - Sanctum 토큰 필수
 POST {{baseUrl}}/api/ytplayer/use_reward
+Authorization: Bearer {{bearerToken}}
 Content-Type: application/json
 
 {
@@ -152,14 +191,15 @@ Content-Type: application/json
 
 ###
 
-### 13. 리워드 사용 내역 조회
-GET {{baseUrl}}/api/ytplayer/reward_history?encrypted=user_hash_12345&limit=10
+### 13. 리워드 사용 내역 조회 - Sanctum 토큰 필수
+GET {{baseUrl}}/api/ytplayer/reward/usages?encrypted=user_hash_12345&limit=10
+Authorization: Bearer {{bearerToken}}
 Accept: application/json
 
 ###
 
 ### 14. 일별 리워드 잔액 그래프 데이터
-GET {{baseUrl}}/api/ytplayer/reward_chart?encrypted=test_user_4bd929caef613f23&days=30
+GET {{baseUrl}}/api/ytplayer/reward/chart?encrypted=test_user_4bd929caef613f23&days=30
 Accept: application/json
 
 ###
