@@ -102,13 +102,15 @@ Route::prefix('ytplayer')->middleware('ytplayer.signature')->group(function () {
     Route::get('/notice', [App\Http\Controllers\Api\YTPlayerController::class, 'notice']);
     Route::get('/rewards', [App\Http\Controllers\Api\YTPlayerController::class, 'rewards']);
     Route::get('/version_check', [App\Http\Controllers\Api\YTPlayerController::class, 'versionCheck']);
-    Route::get('/balance', [App\Http\Controllers\Api\YTPlayerController::class, 'balance']);
-    Route::get('/reward/usages', [App\Http\Controllers\Api\YTPlayerController::class, 'rewardUsages']);
+
+    // Auth required endpoints (Sanctum token)
+    Route::get('/balance', [App\Http\Controllers\Api\YTPlayerController::class, 'balance'])->middleware('auth:sanctum');
+    Route::get('/reward/usages', [App\Http\Controllers\Api\YTPlayerController::class, 'rewardUsages'])->middleware('auth:sanctum');
     Route::get('/reward/chart', [App\Http\Controllers\Api\RewardStatsController::class, 'rewardChart']);
 
     // POST endpoints (서명 검증 필수)
     Route::post('/reward', [App\Http\Controllers\Api\YTPlayerController::class, 'reward']);
-    Route::post('/use_reward', [App\Http\Controllers\Api\YTPlayerController::class, 'useReward']);
+    Route::post('/use_reward', [App\Http\Controllers\Api\YTPlayerController::class, 'useReward'])->middleware('auth:sanctum');
     Route::post('/install_count', [App\Http\Controllers\Api\YTPlayerController::class, 'installCount']);
     Route::post('/live_count', [App\Http\Controllers\Api\YTPlayerController::class, 'liveCount']);
 });
