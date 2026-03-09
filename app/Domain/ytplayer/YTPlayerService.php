@@ -415,9 +415,52 @@ class YTPlayerService
                 }
             }
 
+            // 사용 전 잔액 저장
+            $beforeBalance = $userReward->balance;
+
             // 포인트 차감
             $userReward->decrement('balance', $pointsRequired);
             $userReward->increment('total_spent', $pointsRequired);
+
+            // 사용 후 잔액
+            $afterBalance = $userReward->fresh()->balance;
+
+            // 현재 금 시세 ID 조회
+            $currentGoldPrice = DomesticMetalPrice::getLatest();
+
+            // 금 시세가 없으면 API에서 가져오기
+            if (! $currentGoldPrice) {
+                Log::info('No gold price found in DB, fetching from API...');
+                $goldPriceService = app(GoldPriceService::class);
+                $currentGoldPrice = $goldPriceService->fetchAndSaveLatestPrice();
+
+                if (! $currentGoldPrice) {
+                    Log::warning('Failed to fetch gold price from API, using default value');
+                }
+            }
+
+            // 한돈(3.75g) 시세를 1g 시세로 변환
+            $goldPricePerGram = $currentGoldPrice?->s_pure ? $currentGoldPrice->s_pure / 3.75 : 0;
+
+            // 포인트와 잔액의 금 가치 계산 (금 시세 적용)
+            $pointsValue       = $goldPricePerGram > 0 ? $pointsRequired * $goldPricePerGram : 0;
+            $afterBalanceValue = $goldPricePerGram > 0 ? $afterBalance * $goldPricePerGram : 0;
+
+            // 리워드 로그 생성 (사용 내역 기록) - 음수로 기록
+            RewardLog::create([
+                'encrypted'               => $encrypted,
+                'reward_type'             => $rewardProductId ? 'use_product' : 'use_reward',
+                'where'                   => $rewardProductId ? "product_id:{$rewardProductId}" : "reward_id:{$rewardId}",
+                'video_url'               => null,
+                'video_time'              => null,
+                'video_stringtime'        => null,
+                'points_earned'           => -$pointsRequired, // 음수로 기록 (사용)
+                'points_value'            => -$pointsValue,
+                'before_balance'          => $beforeBalance,
+                'after_balance'           => $afterBalance,
+                'after_balance_value'     => $afterBalanceValue,
+                'metal_domestic_price_id' => $currentGoldPrice?->id,
+            ]);
 
             // 사용 내역 생성
             return RewardUsage::create([
