@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int                             $id
  * @property string                          $encrypted        암호화된 사용자 식별 정보
+ * @property int|null                        $user_id          사용자 ID (로그인 시)
  * @property string                          $reward_type      리워드 종류 (watch, ad 등)
  * @property string|null                     $where            리워드 발생 위치/출처
  * @property string|null                     $video_url        시청한 비디오 URL
@@ -32,6 +33,7 @@ class RewardLog extends Model
 
     protected $fillable = [
         'encrypted',
+        'user_id',
         'reward_type',
         'where',
         'video_url',

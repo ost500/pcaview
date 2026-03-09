@@ -8,6 +8,7 @@ use App\Domain\gold\GoldnityService;
 use App\Domain\gold\GoldPriceService;
 use App\Domain\ytplayer\YTPlayerService;
 use App\Http\Controllers\Controller;
+use App\Models\RewardBalance;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
@@ -675,7 +676,7 @@ class YTPlayerController extends Controller
         ]);
 
         // encrypted로 user_id 조회
-        $rewardBalance = \App\Models\RewardBalance::where('encrypted', $validated['encrypted'])->first();
+        $rewardBalance = RewardBalance::where('encrypted', $validated['encrypted'])->first();
 
         if (! $rewardBalance || ! $rewardBalance->user_id) {
             return response()->json([

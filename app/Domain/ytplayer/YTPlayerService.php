@@ -182,6 +182,7 @@ class YTPlayerService
             // 리워드 로그 생성 (잔액 정보 및 금 시세 ID 포함)
             $rewardLog = RewardLog::create([
                 'encrypted'               => $data['encrypted'],
+                'user_id'                 => $userId,
                 'reward_type'             => $data['reward_type'],
                 'where'                   => $data['where'] ?? null,
                 'video_url'               => $data['video_url'] ?? null,
@@ -504,6 +505,7 @@ class YTPlayerService
             // 리워드 로그 생성 (사용 내역 기록) - 음수로 기록
             RewardLog::create([
                 'encrypted'               => $encrypted,
+                'user_id'                 => $userId,
                 'reward_type'             => $rewardProductId ? 'use_product' : 'use_reward',
                 'where'                   => $rewardProductId ? "product_id:{$rewardProductId}" : "reward_id:{$rewardId}",
                 'video_url'               => null,
