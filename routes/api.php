@@ -108,6 +108,7 @@ Route::prefix('ytplayer')->middleware('ytplayer.signature')->group(function () {
     // Auth required endpoints (Sanctum token)
     Route::get('/reward/usages', [App\Http\Controllers\Api\YTPlayerController::class, 'rewardUsages'])->middleware('auth:sanctum');
     Route::get('/reward/usages/{id}', [App\Http\Controllers\Api\YTPlayerController::class, 'rewardUsageDetail'])->middleware('auth:sanctum');
+    Route::patch('/reward/usages/{id}/phone', [App\Http\Controllers\Api\YTPlayerController::class, 'updateRewardUsagePhone'])->middleware('auth:sanctum');
 
     // POST endpoints (서명 검증 필수)
     Route::post('/reward', [App\Http\Controllers\Api\YTPlayerController::class, 'reward']);

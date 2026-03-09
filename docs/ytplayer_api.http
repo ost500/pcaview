@@ -267,6 +267,28 @@ Accept: application/json
 
 ###
 
+### 13-2. 리워드 사용 내역 휴대폰 번호 변경 - Sanctum 토큰 필수
+PATCH {{baseUrl}}/api/ytplayer/reward/usages/124/phone
+Authorization: Bearer {{bearerToken}}
+Content-Type: application/json
+
+{
+  "phone": "01087654321"
+}
+
+### 응답 예시:
+# {
+#   "success": true,
+#   "data": {
+#     "id": 124,
+#     "phone": "01087654321"
+#   }
+# }
+#
+# 💡 본인이 사용한 내역만 변경 가능합니다. 다른 사용자의 내역 변경 시 404 에러가 발생합니다.
+
+###
+
 ### 14. 일별 리워드 잔액 그래프 데이터
 GET {{baseUrl}}/api/ytplayer/reward/chart?encrypted=test_user_4bd929caef613f23&days=30
 Accept: application/json

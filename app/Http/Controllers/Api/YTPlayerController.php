@@ -828,4 +828,103 @@ class YTPlayerController extends Controller
             'data'    => $data,
         ]);
     }
+
+    #[OA\Patch(
+        path: '/api/ytplayer/reward/usages/{id}/phone',
+        summary: '리워드 사용 내역 휴대폰 번호 변경',
+        security: [
+            ['BearerAuth' => []],
+        ],
+        tags: ['YTPlayer'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                in: 'path',
+                required: true,
+                description: 'RewardUsage ID',
+                schema: new OA\Schema(type: 'integer', example: 123)
+            ),
+        ],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['phone'],
+                properties: [
+                    new OA\Property(
+                        property: 'phone',
+                        type: 'string',
+                        description: '변경할 휴대폰 번호',
+                        example: '01012345678'
+                    ),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Success',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: true),
+                        new OA\Property(
+                            property: 'data',
+                            properties: [
+                                new OA\Property(property: 'id', type: 'integer', example: 123),
+                                new OA\Property(property: 'phone', type: 'string', example: '01012345678'),
+                            ],
+                            type: 'object'
+                        ),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Not found',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
+                        new OA\Property(property: 'error', type: 'string', example: 'Reward usage not found'),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 422,
+                description: 'Validation error',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
+                        new OA\Property(property: 'error', type: 'string', example: 'The phone field is required.'),
+                    ]
+                )
+            ),
+        ]
+    )]
+    public function updateRewardUsagePhone(Request $request, int $id): JsonResponse
+    {
+        $validated = $request->validate([
+            'phone' => 'required|string|max:20',
+        ]);
+
+        $usage = \App\Models\RewardUsage::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if (! $usage) {
+            return response()->json([
+                'success' => false,
+                'error'   => 'Reward usage not found',
+            ], 404);
+        }
+
+        $usage->phone = $validated['phone'];
+        $usage->save();
+
+        return response()->json([
+            'success' => true,
+            'data'    => [
+                'id'    => $usage->id,
+                'phone' => $usage->phone,
+            ],
+        ]);
+    }
 }
