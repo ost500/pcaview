@@ -385,7 +385,7 @@ class YTPlayerService
                     throw new \Exception('Product is out of stock');
                 }
 
-                $pointsRequired = $product->price;
+                $pointsRequired = $product->gold_grams;
 
                 // 포인트 부족 체크
                 if ($userReward->balance < $pointsRequired) {
