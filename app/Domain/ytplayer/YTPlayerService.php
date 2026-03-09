@@ -123,6 +123,9 @@ class YTPlayerService
             // 애플리케이션 조회
             $application = Application::where('name', $data['application'])->first();
 
+            // Duration 체크 (적립 간격 검증)
+            $this->checkRewardDuration($data['encrypted'], $data['reward_type'], $application?->id);
+
             // 리워드 타입별 포인트 계산
             $pointsEarned = $this->calculateRewardPoints(
                 $data['reward_type'],
@@ -199,6 +202,46 @@ class YTPlayerService
 
             return $rewardLog;
         });
+    }
+
+    /**
+     * Duration 체크 (적립 간격 검증)
+     *
+     * @throws \Exception
+     */
+    private function checkRewardDuration(string $encrypted, string $rewardType, ?int $applicationId): void
+    {
+        // rewards 테이블에서 적립용 리워드 찾기
+        $query = Reward::where('code', $rewardType)
+            ->where('type', 'accumulation')
+            ->where('is_active', true);
+
+        if ($applicationId) {
+            $query->where('application_id', $applicationId);
+        }
+
+        $reward = $query->first();
+
+        // duration이 설정되지 않았거나 리워드가 없으면 체크하지 않음
+        if (! $reward || ! $reward->duration) {
+            return;
+        }
+
+        // 마지막 적립 시간 조회
+        $lastReward = RewardLog::where('encrypted', $encrypted)
+            ->where('reward_type', $rewardType)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        if ($lastReward) {
+            $timeSinceLastReward = now()->diffInSeconds($lastReward->created_at);
+
+            // duration보다 빨리 적립 요청이 온 경우
+            if ($timeSinceLastReward < $reward->duration) {
+                $remainingTime = $reward->duration - $timeSinceLastReward;
+                throw new \Exception("Too early to earn reward. Please wait {$remainingTime} seconds.");
+            }
+        }
     }
 
     /**
