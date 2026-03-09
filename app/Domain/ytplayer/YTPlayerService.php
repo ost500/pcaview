@@ -332,14 +332,25 @@ class YTPlayerService
         $userReward = RewardBalance::where('encrypted', $encrypted)->first();
 
         if (! $userReward) {
-            return [
-                'balance'      => 0,
-                'total_earned' => 0,
-                'total_spent'  => 0,
-            ];
+            // RewardBalance가 없으면 생성 시도 (userId가 있는 경우)
+            if ($userId) {
+                $userReward = RewardBalance::create([
+                    'encrypted'    => $encrypted,
+                    'user_id'      => $userId,
+                    'balance'      => 0,
+                    'total_earned' => 0,
+                    'total_spent'  => 0,
+                ]);
+            } else {
+                return [
+                    'balance'      => 0,
+                    'total_earned' => 0,
+                    'total_spent'  => 0,
+                ];
+            }
         }
 
-        // 로그인한 유저라면 user_id 업데이트
+        // user_id가 없고 userId가 제공된 경우 업데이트
         if ($userId && ! $userReward->user_id) {
             $userReward->update(['user_id' => $userId]);
         }

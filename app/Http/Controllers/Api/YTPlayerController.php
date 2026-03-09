@@ -478,11 +478,15 @@ class YTPlayerController extends Controller
     {
         $validated = $request->validate([
             'encrypted' => 'required|string',
+            'user_id'   => 'nullable|integer|exists:users,id',
         ]);
+
+        // auth()->id() 또는 요청에 포함된 user_id 사용
+        $userId = auth()->id() ?? $validated['user_id'] ?? null;
 
         $balance = $this->ytPlayerService->getUserBalance(
             $validated['encrypted'],
-            auth()->id()
+            $userId
         );
 
         return response()->json([
