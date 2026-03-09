@@ -102,11 +102,11 @@ Route::prefix('ytplayer')->middleware('ytplayer.signature')->group(function () {
     Route::get('/notice', [App\Http\Controllers\Api\YTPlayerController::class, 'notice']);
     Route::get('/rewards', [App\Http\Controllers\Api\YTPlayerController::class, 'rewards']);
     Route::get('/version_check', [App\Http\Controllers\Api\YTPlayerController::class, 'versionCheck']);
+    Route::get('/balance', [App\Http\Controllers\Api\YTPlayerController::class, 'balance']); // 토큰 선택적
+    Route::get('/reward/chart', [App\Http\Controllers\Api\RewardStatsController::class, 'rewardChart']);
 
     // Auth required endpoints (Sanctum token)
-    Route::get('/balance', [App\Http\Controllers\Api\YTPlayerController::class, 'balance'])->middleware('auth:sanctum');
     Route::get('/reward/usages', [App\Http\Controllers\Api\YTPlayerController::class, 'rewardUsages'])->middleware('auth:sanctum');
-    Route::get('/reward/chart', [App\Http\Controllers\Api\RewardStatsController::class, 'rewardChart']);
 
     // POST endpoints (서명 검증 필수)
     Route::post('/reward', [App\Http\Controllers\Api\YTPlayerController::class, 'reward']);

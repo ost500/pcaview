@@ -5,11 +5,13 @@
 @bearerToken = your-sanctum-token-here
 
 ###
-### ⚠️ API 인증 필요:
+### ⚠️ API 인증 정보:
 ###
 ### 1. YTPlayer 서명 검증: POST 요청에 필요 (개발 환경에서는 YTPLAYER_DISABLE_SIGNATURE=true로 생략 가능)
-### 2. Sanctum 토큰 인증: /balance, /use_reward, /reward/usages 엔드포인트에 필요
-###    Authorization: Bearer {token} 헤더 필요
+### 2. Sanctum 토큰 인증:
+###    - 필수: /use_reward, /reward/usages
+###    - 선택: /balance (토큰 있으면 user_id 자동 연결, 없어도 조회 가능)
+###    Authorization: Bearer {token} 헤더
 ###
 
 ### 1. 활성화된 상품 목록 조회 (사용자용)

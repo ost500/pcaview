@@ -480,10 +480,12 @@ class YTPlayerController extends Controller
             'encrypted' => 'required|string',
         ]);
 
-        // auth:sanctum 미들웨어로 인증된 user_id만 사용
+        // 토큰이 있으면 user_id 자동 연결, 없어도 조회 가능
+        $userId = auth('sanctum')->id();
+
         $balance = $this->ytPlayerService->getUserBalance(
             $validated['encrypted'],
-            auth()->id()
+            $userId
         );
 
         return response()->json([
