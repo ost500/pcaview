@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  *
  * @property int                             $id
  * @property int|null                        $user_id        User ID
+ * @property string|null                     $phone          휴대폰 번호
  * @property int|null                        $reward_id      Reward ID
  * @property int|null                        $reward_product_id RewardProduct ID
  * @property float                           $points_spent   사용한 포인트
@@ -27,6 +28,7 @@ class RewardUsage extends Model
 
     protected $fillable = [
         'user_id',
+        'phone',
         'reward_id',
         'reward_product_id',
         'points_spent',

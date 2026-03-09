@@ -550,6 +550,7 @@ class YTPlayerController extends Controller
             'encrypted'         => 'required|string',
             'reward_id'         => 'nullable|integer|exists:rewards,id',
             'reward_product_id' => 'nullable|integer|exists:reward_products,id',
+            'phone'             => 'nullable|string|max:20',
         ]);
 
         // reward_id 또는 reward_product_id 중 하나는 필수
@@ -565,7 +566,8 @@ class YTPlayerController extends Controller
                 $validated['encrypted'],
                 $validated['reward_id'] ?? 0,
                 auth()->id(),
-                $validated['reward_product_id'] ?? null
+                $validated['reward_product_id'] ?? null,
+                $validated['phone'] ?? null
             );
 
             $balance = $this->ytPlayerService->getUserBalance($validated['encrypted'], auth()->id());

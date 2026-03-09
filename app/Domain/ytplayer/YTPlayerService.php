@@ -356,9 +356,9 @@ class YTPlayerService
      *
      * @throws \Exception
      */
-    public function useReward(string $encrypted, int $rewardId, ?int $userId = null, ?int $rewardProductId = null): RewardUsage
+    public function useReward(string $encrypted, int $rewardId, ?int $userId = null, ?int $rewardProductId = null, ?string $phone = null): RewardUsage
     {
-        return DB::transaction(function () use ($encrypted, $rewardId, $userId, $rewardProductId) {
+        return DB::transaction(function () use ($encrypted, $rewardId, $userId, $rewardProductId, $phone) {
             // 사용자 리워드 조회
             $userReward = RewardBalance::where('encrypted', $encrypted)->lockForUpdate()->first();
 
@@ -466,6 +466,7 @@ class YTPlayerService
             // 사용 내역 생성 (기본값 pending)
             return RewardUsage::create([
                 'user_id'           => $userId,
+                'phone'             => $phone,
                 'reward_id'         => $rewardProductId ? null : $rewardId,
                 'reward_product_id' => $rewardProductId,
                 'points_spent'      => $pointsRequired,

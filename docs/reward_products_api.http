@@ -225,6 +225,16 @@ Content-Type: application/json
   "reward_product_id": 9
 }
 
+### 13-1. RewardProduct 구매 (휴대폰 번호 포함)
+POST {{baseUrl}}/api/ytplayer/use_reward
+Content-Type: application/json
+
+{
+  "encrypted": "{{encrypted}}",
+  "reward_product_id": 9,
+  "phone": "01012345678"
+}
+
 ###
 ### 구매 응답 예시
 ###
