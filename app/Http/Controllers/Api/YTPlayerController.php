@@ -668,4 +668,84 @@ class YTPlayerController extends Controller
             ]),
         ]);
     }
+
+    #[OA\Get(
+        path: '/api/ytplayer/reward_usages',
+        summary: '리워드 사용 내역 조회 (Reward + RewardProduct)',
+        tags: ['YTPlayer'],
+        parameters: [
+            new OA\Parameter(
+                name: 'encrypted',
+                in: 'query',
+                required: true,
+                description: '암호화된 사용자 식별자',
+                schema: new OA\Schema(type: 'string', example: 'user_hash_12345')
+            ),
+            new OA\Parameter(
+                name: 'limit',
+                in: 'query',
+                required: false,
+                description: '조회할 내역 개수 (기본값: 20, 최대: 100)',
+                schema: new OA\Schema(type: 'integer', example: 20)
+            ),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Success',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: true),
+                        new OA\Property(
+                            property: 'data',
+                            type: 'array',
+                            items: new OA\Items(
+                                properties: [
+                                    new OA\Property(property: 'id', type: 'integer', example: 123),
+                                    new OA\Property(property: 'type', type: 'string', example: 'reward', description: 'reward 또는 product'),
+                                    new OA\Property(property: 'item_id', type: 'integer', example: 1, description: 'reward_id 또는 reward_product_id'),
+                                    new OA\Property(property: 'item_name', type: 'string', example: '순금 1돈 (3.75g)'),
+                                    new OA\Property(property: 'points_spent', type: 'number', format: 'float', example: 3.75),
+                                    new OA\Property(property: 'status', type: 'string', example: 'completed'),
+                                    new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
+                                ]
+                            )
+                        ),
+                    ]
+                )
+            ),
+        ]
+    )]
+    public function rewardUsages(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'encrypted' => 'required|string',
+            'limit'     => 'nullable|integer|min:1|max:100',
+        ]);
+
+        $usages = \App\Models\RewardUsage::with(['reward', 'rewardProduct'])
+            ->whereHas('rewardBalance', function ($query) use ($validated) {
+                $query->where('encrypted', $validated['encrypted']);
+            })
+            ->orderBy('created_at', 'desc')
+            ->limit($validated['limit'] ?? 20)
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data'    => $usages->map(function ($usage) {
+                $isProduct = $usage->reward_product_id !== null;
+
+                return [
+                    'id'           => $usage->id,
+                    'type'         => $isProduct ? 'product' : 'reward',
+                    'item_id'      => $isProduct ? $usage->reward_product_id : $usage->reward_id,
+                    'item_name'    => $isProduct ? $usage->rewardProduct->name : $usage->reward->name,
+                    'points_spent' => $usage->points_spent,
+                    'status'       => $usage->status,
+                    'created_at'   => $usage->created_at->toIso8601String(),
+                ];
+            }),
+        ]);
+    }
 }
