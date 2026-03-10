@@ -7,12 +7,11 @@ use App\Http\Controllers\Api\FeedController;
 use App\Http\Controllers\Api\NoticeController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\RewardProductController;
+use App\Http\Controllers\Api\SymlinkController;
 use App\Http\Controllers\Auth\KakaoController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/symlink', function () {
-    return redirect('https://link.coupang.com/a/dYRxKS');
-});
+Route::get('/symlink', [SymlinkController::class, 'index']);
 
 // Auth routes
 Route::post('/auth/login', [AuthController::class, 'login']);
