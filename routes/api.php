@@ -11,7 +11,7 @@ use App\Http\Controllers\Api\SymlinkController;
 use App\Http\Controllers\Auth\KakaoController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/symlink', [SymlinkController::class, 'index']);
+Route::get('/live/count', [SymlinkController::class, 'count']);
 
 // Auth routes
 Route::post('/auth/login', [AuthController::class, 'login']);

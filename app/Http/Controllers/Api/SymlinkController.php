@@ -3,83 +3,60 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\JsonResponse;
+use App\Models\AdClick;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 
 class SymlinkController extends Controller
 {
-    // AES-256 암호화 키 (32 bytes)
-    private const ENCRYPTION_KEY = 'pcaview-symlink-key-2026-secure';
-
-    /**
-     * AES-256-CBC 암호화
-     */
-    private function encrypt(string $data): string
-    {
-        $iv = random_bytes(16); // 16 bytes IV for AES
-        $encrypted = openssl_encrypt(
-            $data,
-            'AES-256-CBC',
-            self::ENCRYPTION_KEY,
-            OPENSSL_RAW_DATA,
-            $iv
-        );
-
-        // IV + encrypted data를 base64로 인코딩
-        return base64_encode($iv.$encrypted);
-    }
-
-
     #[OA\Get(
-        path: '/api/symlink',
-        summary: 'Symlink URL 생성 (AES-256-CBC 암호화)',
-        tags: ['Symlink'],
+        path: '/api/live/count',
+        summary: 'Track ad click and redirect to target URL',
+        tags: ['Ad Tracking'],
         parameters: [
             new OA\Parameter(
                 name: 'ad_id',
                 in: 'query',
-                required: false,
-                description: 'Advertising ID (optional)',
-                schema: new OA\Schema(type: 'string', example: 'dYRxKS')
+                required: true,
+                description: 'Advertising ID to track',
+                schema: new OA\Schema(type: 'string', example: 'coupang_partner_001')
             ),
         ],
         responses: [
             new OA\Response(
-                response: 200,
-                description: 'Success',
-                content: new OA\JsonContent(
-                    properties: [
-                        new OA\Property(property: 'success', type: 'boolean', example: true),
-                        new OA\Property(
-                            property: 'data',
-                            type: 'array',
-                            items: new OA\Items(type: 'string'),
-                            example: ['YWJjZGVmZ2hpamtsbW5vcA==...encrypted']
-                        ),
-                    ]
-                )
+                response: 302,
+                description: 'Redirect to target URL after tracking click',
+            ),
+            new OA\Response(
+                response: 400,
+                description: 'Ad ID is required',
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Ad ID not found',
             ),
         ]
     )]
-    public function index(Request $request): JsonResponse
+    public function count(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'ad_id' => 'nullable|string|max:255',
+            'ad_id' => 'required|string|max:255',
         ]);
 
-        $adId = $validated['ad_id'] ?? '';
-        $url = "https://ddcou.com/redirect/symlink?ad_id=$adId";
+        $adId = $validated['ad_id'];
 
-        // AES-256-CBC 암호화
-        $encryptedUrl = $this->encrypt($url);
+        // Find ad click record by ad_id
+        $adClick = AdClick::where('ad_id', $adId)->first();
 
-        return response()->json([
-            'success' => true,
-            'data'    => [
-                $encryptedUrl,
-            ],
-        ]);
+        if (!$adClick) {
+            abort(404, 'Ad ID not found');
+        }
+
+        // Increment click count
+        $adClick->incrementClickCount();
+
+        // Redirect to target URL
+        return redirect($adClick->redirect_url);
     }
-
 }
