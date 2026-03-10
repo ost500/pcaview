@@ -10,6 +10,7 @@ class AdClick extends Model
         'ad_id',
         'click_count',
         'redirect_url',
+        'encrypted',
     ];
 
     protected $casts = [
