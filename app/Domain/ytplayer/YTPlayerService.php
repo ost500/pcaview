@@ -235,7 +235,7 @@ class YTPlayerService
             ->first();
 
         if ($lastReward) {
-            $timeSinceLastReward = now()->diffInSeconds($lastReward->created_at);
+            $timeSinceLastReward = $lastReward->created_at->diffInSeconds(now());
 
             // duration보다 빨리 적립 요청이 온 경우
             if ($timeSinceLastReward < $reward->duration) {

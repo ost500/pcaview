@@ -10,8 +10,8 @@ use OpenApi\Attributes as OA;
 
 class SymlinkController extends Controller
 {
-    // AES-256 암호화 키 (32 bytes)
-    private const ENCRYPTION_KEY = 'pcaview-symlink-key-2026-secure';
+    // AES-256 암호화 키 (32 bytes) - Cryptographically secure random key
+    private const ENCRYPTION_KEY = '81f483f800328c8e61deaef1734bd2d6b465200da9f4a6fd50bf7961b724d947';
 
     /**
      * AES-256-CBC 암호화
@@ -138,7 +138,7 @@ class SymlinkController extends Controller
         $adClick = AdClick::firstOrCreate(
             ['ad_id' => $adId],
             [
-                'redirect_url' => 'https://link.coupang.com/a/dYRxKS',
+                'redirect_url' => $url,
                 'click_count' => 0,
                 'encrypted' => $customEncrypted ?? $encryptedUrl,
             ]
