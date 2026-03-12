@@ -66,6 +66,30 @@ class RewardProductSeeder extends Seeder
                 'category' => '기프티콘',
             ],
 
+            // 네이버페이 포인트 카테고리
+            [
+                'name' => '네이버페이 포인트 5천원',
+                'description' => '네이버페이에서 사용 가능한 5천원 포인트',
+                'image_url' => asset('image/naver5000.jpg'),
+                'price' => 5000,
+                'gold_grams' => 5000 / $goldPricePerGram,
+                'stock' => 100,
+                'is_active' => true,
+                'priority' => 95,
+                'category' => '네이버페이',
+            ],
+            [
+                'name' => '네이버페이 포인트 1만원',
+                'description' => '네이버페이에서 사용 가능한 1만원 포인트',
+                'image_url' => asset('image/naver10000.jpg'),
+                'price' => 10000,
+                'gold_grams' => 10000 / $goldPricePerGram,
+                'stock' => 100,
+                'is_active' => true,
+                'priority' => 94,
+                'category' => '네이버페이',
+            ],
+
             // 상품권 카테고리
             [
                 'name' => '해피머니 상품권 1만원',
@@ -139,12 +163,26 @@ class RewardProductSeeder extends Seeder
             ],
         ];
 
+        $created = 0;
+        $skipped = 0;
+
         foreach ($products as $product) {
+            // 이름으로 중복 체크
+            if (RewardProduct::where('name', $product['name'])->exists()) {
+                $this->command->warn("⊘ Skipped: {$product['name']} (already exists)");
+                $skipped++;
+                continue;
+            }
+
             RewardProduct::create($product);
             $this->command->info("✓ Created: {$product['name']} ({$product['price']} points)");
+            $created++;
         }
 
         $this->command->newLine();
-        $this->command->info('✓ Created '.count($products).' reward products');
+        $this->command->info("✓ Created {$created} reward products");
+        if ($skipped > 0) {
+            $this->command->info("⊘ Skipped {$skipped} existing products");
+        }
     }
 }
